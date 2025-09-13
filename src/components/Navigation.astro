@@ -1,76 +1,83 @@
 ---
 // Navigation component for Seeker追光者 photography group
+import ThemeToggle from './ThemeToggle.astro';
 ---
 
 <nav class="navigation">
   <div class="nav-container">
-    <div class="nav-logo">
-      <a href="/">Seeker追光者</a>
+    <div class="nav-left">
+      <div class="nav-logo">
+        <a href="/">Seeker追光者</a>
+      </div>
+
+      <div class="nav-menu" id="nav-menu">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a class="nav-link" href="#gallery">作品展示</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#about">小组简介</a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item">
+                <a class="dropdown-link" href="#members">成员构成</a>
+                <ul class="sub-dropdown">
+                  <li><a href="#main-leader">主理人</a></li>
+                  <li><a href="#core-members">核心成员</a></li>
+                  <li><a href="#group-members">小组成员</a></li>
+                  <li><a href="#exchange-members">交流成员</a></li>
+                </ul>
+              </li>
+              <li class="dropdown-item">
+                <a class="dropdown-link" href="#branches">地区分部简介</a>
+                <ul class="sub-dropdown">
+                  <li><a href="#guangfo">广佛分部</a></li>
+                  <li><a href="#jinling">金陵分部</a></li>
+                  <li><a href="#more">更多分部...</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#activities">小组活动</a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item">
+                <a class="dropdown-link" href="#online">线上</a>
+                <ul class="sub-dropdown">
+                  <li><a href="#time-story">时间的故事</a></li>
+                  <li><a href="#focus">一种关注</a></li>
+                  <li><a href="#young-blood">Young Blood</a></li>
+                  <li><a href="#lectures">线上讲座</a></li>
+                  <li><a href="#public-welfare">Seeker公益</a></li>
+                  <li><a href="#annual-contest">年度大赛</a></li>
+                </ul>
+              </li>
+              <li class="dropdown-item">
+                <a class="dropdown-link" href="#offline">线下</a>
+                <ul class="sub-dropdown">
+                  <li><a href="#anniversary">周年庆</a></li>
+                  <li><a href="#annual-meeting">年会</a></li>
+                  <li><a href="#interest-groups">兴趣小组</a></li>
+                  <li><a href="#badminton">羽毛球社</a></li>
+                  <li><a href="#anime">动漫社</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#join">加入小组</a>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="nav-menu" id="nav-menu">
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a class="nav-link" href="#gallery">作品展示</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link" href="#about">小组简介</a>
-          <ul class="dropdown-menu">
-            <li class="dropdown-item">
-              <a class="dropdown-link" href="#members">成员构成</a>
-              <ul class="sub-dropdown">
-                <li><a href="#main-leader">主理人</a></li>
-                <li><a href="#core-members">核心成员</a></li>
-                <li><a href="#group-members">小组成员</a></li>
-                <li><a href="#exchange-members">交流成员</a></li>
-              </ul>
-            </li>
-            <li class="dropdown-item">
-              <a class="dropdown-link" href="#branches">地区分部简介</a>
-              <ul class="sub-dropdown">
-                <li><a href="#guangfo">广佛分部</a></li>
-                <li><a href="#jinling">金陵分部</a></li>
-                <li><a href="#more">更多分部...</a></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link" href="#activities">小组活动</a>
-          <ul class="dropdown-menu">
-            <li class="dropdown-item">
-              <a class="dropdown-link" href="#online">线上</a>
-              <ul class="sub-dropdown">
-                <li><a href="#time-story">时间的故事</a></li>
-                <li><a href="#focus">一种关注</a></li>
-                <li><a href="#young-blood">Young Blood</a></li>
-                <li><a href="#lectures">线上讲座</a></li>
-                <li><a href="#public-welfare">Seeker公益</a></li>
-                <li><a href="#annual-contest">年度大赛</a></li>
-              </ul>
-            </li>
-            <li class="dropdown-item">
-              <a class="dropdown-link" href="#offline">线下</a>
-              <ul class="sub-dropdown">
-                <li><a href="#anniversary">周年庆</a></li>
-                <li><a href="#annual-meeting">年会</a></li>
-                <li><a href="#interest-groups">兴趣小组</a></li>
-                <li><a href="#badminton">羽毛球社</a></li>
-                <li><a href="#anime">动漫社</a></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#join">加入小组</a>
-        </li>
-      </ul>
-    </div>
+    <div class="nav-right">
+      <ThemeToggle />
 
-    <div class="nav-toggle" id="nav-toggle">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
+      <div class="nav-toggle" id="nav-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
     </div>
   </div>
 </nav>
@@ -91,10 +98,22 @@
     margin: 0 60px;
     padding: 0 20px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     height: 70px;
     gap: 60px;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 
   .nav-logo a {
