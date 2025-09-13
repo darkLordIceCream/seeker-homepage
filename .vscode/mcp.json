@@ -1,0 +1,35 @@
+{
+  "servers": {
+    "sequentialthinking": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-sequential-thinking"
+			],
+			"type": "stdio"
+		},
+    "context7": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp@latest"
+			],
+			"type": "stdio"
+		},
+		"deepwiki": {
+			"url": "https://mcp.deepwiki.com/sse",
+			"type": "http"
+		},
+		"astro": {
+			"url": "https://mcp.docs.astro.build/mcp",
+			"type": "http"
+		},
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    }
+  }
+}

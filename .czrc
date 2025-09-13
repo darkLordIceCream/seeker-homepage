@@ -1,0 +1,103 @@
+{
+  "path": "cz-emoji-conventional",
+  "config": {
+    "cz-emoji-conventional": {
+      "types": [
+        {
+          "emoji": "✨",
+          "code": "feat",
+          "description": "新增功能",
+          "name": "feat"
+        },
+        {
+          "emoji": "🐛",
+          "code": "fix",
+          "description": "修复缺陷",
+          "name": "fix"
+        },
+        {
+          "emoji": "📝",
+          "code": "docs",
+          "description": "文档变更",
+          "name": "docs"
+        },
+        {
+          "emoji": "💄",
+          "code": "style",
+          "description": "代码格式（不影响功能）",
+          "name": "style"
+        },
+        {
+          "emoji": "♻️",
+          "code": "refactor",
+          "description": "代码重构",
+          "name": "refactor"
+        },
+        {
+          "emoji": "⚡️",
+          "code": "perf",
+          "description": "性能优化",
+          "name": "perf"
+        },
+        {
+          "emoji": "✅",
+          "code": "test",
+          "description": "添加或修改测试",
+          "name": "test"
+        },
+        {
+          "emoji": "📦️",
+          "code": "build",
+          "description": "构建流程、依赖变更",
+          "name": "build"
+        },
+        {
+          "emoji": "👷",
+          "code": "ci",
+          "description": "修改 CI 配置、脚本",
+          "name": "ci"
+        },
+        {
+          "emoji": "🔧",
+          "code": "chore",
+          "description": "辅助工具和库的更改",
+          "name": "chore"
+        },
+        {
+          "emoji": "⏪️",
+          "code": "revert",
+          "description": "回滚 commit",
+          "name": "revert"
+        },
+        {
+          "emoji": "🎉",
+          "code": "init",
+          "description": "初始化项目",
+          "name": "init"
+        },
+        {
+          "emoji": "🔥",
+          "code": "remove",
+          "description": "删除代码或文件",
+          "name": "remove"
+        },
+        {
+          "emoji": "🚀",
+          "code": "deploy",
+          "description": "部署功能",
+          "name": "deploy"
+        }
+      ],
+      "scopes": [
+        "api",
+        "ui",
+        "component",
+        "style",
+        "config",
+        "deps",
+        "docs",
+        "test"
+      ]
+    }
+  }
+}
