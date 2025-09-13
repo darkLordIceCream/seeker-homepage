@@ -1,0 +1,360 @@
+---
+// Navigation component for Seeker追光者 photography group
+---
+
+<nav class="navigation">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="/">Seeker追光者</a>
+    </div>
+    
+    <div class="nav-menu" id="nav-menu">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="#gallery" class="nav-link">作品展示</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#about" class="nav-link">小组简介</a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item">
+              <a href="#members" class="dropdown-link">成员构成</a>
+              <ul class="sub-dropdown">
+                <li><a href="#main-leader">主理人</a></li>
+                <li><a href="#core-members">核心成员</a></li>
+                <li><a href="#group-members">小组成员</a></li>
+                <li><a href="#exchange-members">交流成员</a></li>
+              </ul>
+            </li>
+            <li class="dropdown-item">
+              <a href="#branches" class="dropdown-link">地区分部简介</a>
+              <ul class="sub-dropdown">
+                <li><a href="#guangfo">广佛分部</a></li>
+                <li><a href="#jinling">金陵分部</a></li>
+                <li><a href="#more">更多分部...</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#activities" class="nav-link">小组活动</a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item">
+              <a href="#online" class="dropdown-link">线上</a>
+              <ul class="sub-dropdown">
+                <li><a href="#time-story">时间的故事</a></li>
+                <li><a href="#focus">一种关注</a></li>
+                <li><a href="#young-blood">Young Blood</a></li>
+                <li><a href="#lectures">线上讲座</a></li>
+                <li><a href="#public-welfare">Seeker公益</a></li>
+                <li><a href="#annual-contest">年度大赛</a></li>
+              </ul>
+            </li>
+            <li class="dropdown-item">
+              <a href="#offline" class="dropdown-link">线下</a>
+              <ul class="sub-dropdown">
+                <li><a href="#anniversary">周年庆</a></li>
+                <li><a href="#annual-meeting">年会</a></li>
+                <li><a href="#interest-groups">兴趣小组</a></li>
+                <li><a href="#badminton">羽毛球社</a></li>
+                <li><a href="#anime">动漫社</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#join" class="nav-link">加入小组</a>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="nav-toggle" id="nav-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: transparent;
+    z-index: 1002;
+    transition: all 0.3s ease;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 60px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 70px;
+    gap: 60px;
+  }
+
+  .nav-logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 60px;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 0;
+    transition: color 0.3s ease;
+    display: block;
+  }
+
+  .nav-link:hover {
+    color: #4ecdc4;
+  }
+
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    position: relative;
+  }
+
+  .dropdown-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 12px 20px;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  .dropdown-link:hover {
+    background: rgba(78, 205, 196, 0.1);
+    color: #4ecdc4;
+  }
+
+  .sub-dropdown {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown-item:hover .sub-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .sub-dropdown li {
+    margin: 0;
+  }
+
+  .sub-dropdown a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 10px 20px;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  .sub-dropdown a:hover {
+    background: rgba(78, 205, 196, 0.1);
+    color: #4ecdc4;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .bar {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .nav-container {
+      margin: 0;
+      padding: 0 20px;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    .nav-menu {
+      position: fixed;
+      top: 70px;
+      left: -100%;
+      width: 100%;
+      height: calc(100vh - 70px);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 50px;
+      transition: left 0.3s ease;
+      z-index: 1001;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-menu.active {
+      left: 0;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: center;
+    }
+
+    .nav-link {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-menu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      transform: none;
+    }
+
+    .sub-dropdown {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: none;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dropdown-item:hover .sub-dropdown {
+      transform: none;
+    }
+
+    .nav-toggle {
+      display: flex;
+    }
+
+    .nav-toggle.active .bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.active .bar:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .nav-toggle.active .bar:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+</style>
+
+<script>
+  // Mobile menu toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+        navToggle.classList.toggle('active');
+      });
+
+      // Close menu when clicking on a link
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navMenu.classList.remove('active');
+          navToggle.classList.remove('active');
+        });
+      });
+    }
+  });
+</script>
