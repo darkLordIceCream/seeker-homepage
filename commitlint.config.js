@@ -1,5 +1,5 @@
 export default {
-  extends: ['@commitlint/config-conventional'],
+  extends: ['gitmoji'],
   rules: {
     // 类型枚举，git提交type必须是以下类型
     'type-enum': [
