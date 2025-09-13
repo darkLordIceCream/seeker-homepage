@@ -1,0 +1,224 @@
+---
+// Banner component with video background and slogan
+---
+
+<section class="banner">
+  <div class="video-container">
+    <video 
+      class="banner-video" 
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      poster="/src/assets/images/videos/banner-poster.jpg"
+    >
+      <source src="/src/assets/images/videos/banner.mp4" type="video/mp4">
+      您的浏览器不支持视频播放。
+    </video>
+    <div class="video-overlay"></div>
+  </div>
+  
+  <div class="banner-content">
+    <div class="slogan-container">
+      <h1 class="slogan">拍一张照片，交一个朋友</h1>
+    </div>
+  </div>
+  
+  <div class="scroll-indicator">
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<style>
+  .banner {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .banner-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.6) 50%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+    z-index: 2;
+  }
+
+  .banner-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .slogan-container {
+    animation: fadeInUp 1.5s ease-out;
+  }
+
+  .slogan {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    background: linear-gradient(45deg, #fff, #4ecdc4, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+  }
+
+  .slogan-subtitle {
+    font-size: 1.3rem;
+    margin: 0 0 40px 0;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-arrow {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    40% {
+      transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+      transform: translateX(-50%) translateY(-5px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .slogan {
+      font-size: 2.5rem;
+    }
+
+    .slogan-subtitle {
+      font-size: 1.1rem;
+    }
+
+  }
+
+  @media (max-width: 480px) {
+    .slogan {
+      font-size: 2rem;
+    }
+
+    .slogan-subtitle {
+      font-size: 1rem;
+    }
+
+    .banner-content {
+      padding: 0 15px;
+    }
+  }
+
+  /* 确保视频在移动设备上正确显示 */
+  @media (max-width: 768px) {
+    .banner-video {
+      object-position: center center;
+    }
+  }
+</style>
+
+<script>
+  // 确保视频在移动设备上自动播放
+  document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('.banner-video') as HTMLVideoElement;
+    if (video) {
+      // 尝试播放视频
+      video.play().catch(function(error: any) {
+        console.log('视频自动播放失败:', error);
+        // 如果自动播放失败，可以显示一个播放按钮
+        const playButton = document.createElement('div');
+        playButton.className = 'play-button';
+        playButton.innerHTML = '▶';
+        playButton.style.cssText = `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 80px;
+          height: 80px;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 30px;
+          color: #333;
+          cursor: pointer;
+          z-index: 4;
+          transition: all 0.3s ease;
+        `;
+        
+        playButton.addEventListener('click', function() {
+          video.play();
+          playButton.remove();
+        });
+        
+        const banner = document.querySelector('.banner');
+        if (banner) {
+          banner.appendChild(playButton);
+        }
+      });
+    }
+  });
+</script>
