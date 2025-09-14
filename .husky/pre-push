@@ -1,0 +1,15 @@
+# Run build to ensure code compiles without errors
+
+pnpm run build
+
+# Run full test suite before pushing
+
+# pnpm run test # Uncomment when tests are added
+
+# Run type checking
+
+pnpm run astro:check
+
+# Run full linting (not just staged files)
+
+pnpm run lint

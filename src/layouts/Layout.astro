@@ -1,17 +1,26 @@
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Seeker追光者 - 摄影小组官网</title>
-		<meta name="description" content="Seeker追光者摄影小组官网，拍一张照片，交一个朋友" />
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+// 导入全局样式
+import '@/styles/global.css';
+---
+
+<script is:inline>
+  const getThemePreference = () => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+  const isDark = getThemePreference() === 'dark';
+  document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+
+  if (typeof localStorage !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
+</script>
 
 <style>
 	html,
@@ -30,3 +39,17 @@
 		box-sizing: border-box;
 	}
 </style>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+    <meta content={Astro.generator} name="generator" />
+    <title>Seeker追光者 - 摄影小组官网</title>
+    <meta content="Seeker追光者摄影小组官网，拍一张照片，交一个朋友" name="description" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
