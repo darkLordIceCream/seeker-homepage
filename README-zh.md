@@ -2,7 +2,7 @@
 
 > 拍一张照片，交一个朋友
 
-一个基于 Astro 构建的现代化摄影小组官网，采用 TypeScript + Tailwind CSS +
+一个基于 Astro 构建的现代化seeker摄影小组官网，采用 TypeScript + Tailwind CSS +
 Less 技术栈。
 
 [English](./README.md) | 简体中文
