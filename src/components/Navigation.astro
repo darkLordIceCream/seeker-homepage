@@ -3,7 +3,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
-<nav class="navigation">
+<nav aria-label="主导航" class="navigation">
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
@@ -16,7 +16,7 @@ import ThemeToggle from './ThemeToggle.astro';
             <a class="nav-link" href="#gallery">作品展示</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#about">小组简介</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="#about">小组简介</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="#members">成员构成</a>
@@ -38,7 +38,7 @@ import ThemeToggle from './ThemeToggle.astro';
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#activities">小组活动</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="#activities">小组活动</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="#online">线上</a>
@@ -73,11 +73,11 @@ import ThemeToggle from './ThemeToggle.astro';
     <div class="nav-right">
       <ThemeToggle />
 
-      <div class="nav-toggle" id="nav-toggle">
+      <button aria-controls="nav-menu" aria-expanded="false" aria-label="切换导航菜单" class="nav-toggle" id="nav-toggle">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
-      </div>
+      </button>
     </div>
   </div>
 </nav>
@@ -150,7 +150,8 @@ import ThemeToggle from './ThemeToggle.astro';
     display: block;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link:focus {
     color: #4ecdc4;
   }
 
@@ -176,7 +177,8 @@ import ThemeToggle from './ThemeToggle.astro';
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
-  .dropdown:hover .dropdown-menu {
+  .dropdown:hover .dropdown-menu,
+  .dropdown:focus-within .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -195,7 +197,8 @@ import ThemeToggle from './ThemeToggle.astro';
     transition: all 0.3s ease;
   }
 
-  .dropdown-link:hover {
+  .dropdown-link:hover,
+  .dropdown-link:focus {
     background: rgba(78, 205, 196, 0.1);
     color: #4ecdc4;
   }
@@ -218,7 +221,8 @@ import ThemeToggle from './ThemeToggle.astro';
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
-  .dropdown-item:hover .sub-dropdown {
+  .dropdown-item:hover .sub-dropdown,
+  .dropdown-item:focus-within .sub-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
@@ -237,7 +241,8 @@ import ThemeToggle from './ThemeToggle.astro';
     transition: all 0.3s ease;
   }
 
-  .sub-dropdown a:hover {
+  .sub-dropdown a:hover,
+  .sub-dropdown a:focus {
     background: rgba(78, 205, 196, 0.1);
     color: #4ecdc4;
   }
@@ -247,6 +252,14 @@ import ThemeToggle from './ThemeToggle.astro';
     flex-direction: column;
     cursor: pointer;
     padding: 5px;
+    background: none;
+    border: none;
+    color: #fff;
+  }
+
+  .nav-toggle:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 2px;
   }
 
   .bar {
@@ -316,7 +329,8 @@ import ThemeToggle from './ThemeToggle.astro';
       padding: 0;
     }
 
-    .dropdown:hover .dropdown-menu {
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
       transform: none;
     }
 
@@ -332,7 +346,8 @@ import ThemeToggle from './ThemeToggle.astro';
       padding: 0;
     }
 
-    .dropdown-item:hover .sub-dropdown {
+    .dropdown-item:hover .sub-dropdown,
+    .dropdown-item:focus-within .sub-dropdown {
       transform: none;
     }
 
@@ -362,8 +377,10 @@ import ThemeToggle from './ThemeToggle.astro';
 
     if (navToggle && navMenu) {
       navToggle.addEventListener('click', () => {
+        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', String(!isExpanded));
       });
 
       // Close menu when clicking on a link
@@ -372,6 +389,7 @@ import ThemeToggle from './ThemeToggle.astro';
         link.addEventListener('click', () => {
           navMenu.classList.remove('active');
           navToggle.classList.remove('active');
+          navToggle.setAttribute('aria-expanded', 'false');
         });
       });
     }
