@@ -38,7 +38,7 @@
       "description": "三栏页脚：品牌介绍+社交链接 / 快速链接 / 联系方式",
       "dependencies": [],
       "status": "done",
-      "evidence": "Footer.astro 组件已实现，响应式布局"
+      "evidence": "Footer.astro 组件已实现，响应式布局，包含抖音/小红书/500px 图标"
     },
     {
       "id": "feat-006",
@@ -66,6 +66,38 @@
     },
     {
       "id": "feat-009",
+      "name": "可访问性修复",
+      "description": "修复 Astro Dev Toolbar Audit 发现的可访问性问题：汉堡菜单、键盘导航、跳转链接、标题层级、对比度",
+      "dependencies": ["feat-008"],
+      "status": "done",
+      "evidence": "修复汉堡菜单(button+aria)、下拉菜单(focus-within)、skip-to-content、main 标记、标题层级、对比度"
+    },
+    {
+      "id": "feat-010",
+      "name": "小红书图标修复",
+      "description": "修复小红书 SVG 图标显示问题，替换为 Simple Icons 标准图标",
+      "dependencies": ["feat-005"],
+      "status": "done",
+      "evidence": "MemberSocial.astro 和 Footer.astro 已更新，图标正常显示"
+    },
+    {
+      "id": "feat-011",
+      "name": "下拉菜单 Liquid Glass 效果",
+      "description": "为导航栏下拉菜单添加 Apple 风格的毛玻璃效果，统一透明度",
+      "dependencies": ["feat-002"],
+      "status": "done",
+      "evidence": "backdrop-filter: blur(20px) saturate(200%)，统一透明度 0.5"
+    },
+    {
+      "id": "feat-012",
+      "name": "导航栏字体优化",
+      "description": "调小导航栏字体大小，Logo 24px→20px，链接 16px→14px",
+      "dependencies": ["feat-002"],
+      "status": "done",
+      "evidence": "Navigation.astro 字体已调整"
+    },
+    {
+      "id": "feat-013",
       "name": "作品展示画廊",
       "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
       "dependencies": ["feat-001", "feat-008"],
@@ -73,7 +105,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-010",
+      "id": "feat-014",
       "name": "小组简介内容",
       "description": "小组介绍、成员构成、地区分部等内容区块",
       "dependencies": ["feat-002", "feat-008"],
@@ -81,7 +113,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-011",
+      "id": "feat-015",
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
@@ -89,7 +121,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-012",
+      "id": "feat-016",
       "name": "加入小组入口",
       "description": "加入小组的引导页面或联系方式展示",
       "dependencies": ["feat-005", "feat-008"],
