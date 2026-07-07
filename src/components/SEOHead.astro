@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonical?: string;
+}
+
+const { title, description, image, canonical } = Astro.props;
+const siteTitle = 'Seeker追光者';
+const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+---
+
+<meta charset="UTF-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+<meta content={Astro.generator} name="generator" />
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta content={fullTitle} name="title" />
+<meta content={description} name="description" />
+
+<!-- Open Graph / Facebook -->
+<meta content="website" property="og:type" />
+<meta content={Astro.url} property="og:url" />
+<meta content={fullTitle} property="og:title" />
+<meta content={description} property="og:description" />
+{image && <meta content={new URL(image, Astro.url)} property="og:image" />}
+
+<!-- Twitter -->
+<meta content="summary_large_image" property="twitter:card" />
+<meta content={Astro.url} property="twitter:url" />
+<meta content={fullTitle} property="twitter:title" />
+<meta content={description} property="twitter:description" />
+{image && <meta content={new URL(image, Astro.url)} property="twitter:image" />}
+
+<!-- Canonical -->
+{canonical && <link href={canonical} rel="canonical" />}
