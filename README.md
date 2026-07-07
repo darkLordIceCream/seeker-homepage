@@ -131,7 +131,13 @@ seeker-homepage/
 │   │   ├── Banner.astro   # Video banner component
 │   │   ├── Navigation.astro # Navigation bar
 │   │   ├── Footer.astro   # Site footer
-│   │   └── ThemeToggle.astro # Theme switcher
+│   │   ├── ThemeToggle.astro # Theme switcher
+│   │   ├── SEOHead.astro  # SEO meta tags
+│   │   ├── TeamHero.astro # Team page hero
+│   │   ├── MemberCard.astro # Member card
+│   │   └── MemberSocial.astro # Social links
+│   ├── content/           # Content Collections
+│   │   └── members/       # Member markdown files
 │   ├── layouts/           # Page layouts
 │   │   └── Layout.astro   # Root layout
 │   ├── pages/             # Page files
@@ -145,6 +151,7 @@ seeker-homepage/
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code configuration
 ├── AGENTS.md              # Agent working manual
+├── DEVELOPMENT_STANDARDS.md # Development standards
 ├── feature_list.json      # Feature state tracker
 ├── progress.md            # Session continuity log
 ├── session-handoff.md     # Session handoff document
