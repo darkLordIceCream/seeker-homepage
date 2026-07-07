@@ -3,36 +3,38 @@
 > Take a photo, make a friend
 
 A modern photography group website built with Astro, featuring TypeScript +
-Tailwind CSS + Less tech stack.
+Tailwind CSS + React tech stack.
 
 English | [简体中文](./README-zh.md)
 
 ## ✨ Features
 
-- 🚀 **Astro 5.x** - Modern static site generator
+- 🚀 **Astro 7.x** - Modern static site generator
+- ⚛️ **React 19** - UI component library
 - 🎨 **Tailwind CSS 4.x** - Atomic CSS framework
-- 💎 **Less** - CSS preprocessor with variables and mixins
-- 📝 **TypeScript** - Type-safe JavaScript
+- 🧩 **shadcn/ui** - Re-usable component library
+- 📝 **TypeScript 6** - Type-safe JavaScript
 - 🛠️ **Complete dev toolchain** - ESLint + Prettier + Husky
 - 📦 **Commitizen** - Standardized Git commit messages
 - 🎯 **Responsive design** - Mobile-friendly
+- 🤖 **Agent Harness** - AI-assisted development workflow
 
 ## 🚀 Quick Start
 
 ### Requirements
 
-- Node.js 22.17.1+ (recommended using nvm)
+- Node.js 22.12.0+ (recommended using nvm)
 - pnpm 9.0+
 
 ### Installation
 
 ```bash
 # Clone the project
-git clone <repository-url>
+git clone https://github.com/darkLordIceCream/seeker-homepage.git
 cd seeker-homepage
 
 # Use specified Node.js version
-nvm use 22.17.1
+nvm use
 
 # Install dependencies
 pnpm install
@@ -43,16 +45,17 @@ pnpm dev
 
 ## 📋 Available Commands
 
-| Command           | Description                      |
-| ----------------- | -------------------------------- |
-| `pnpm dev`        | Start development server         |
-| `pnpm build`      | Build for production             |
-| `pnpm preview`    | Preview build                    |
-| `pnpm lint`       | Lint code                        |
-| `pnpm lint:fix`   | Auto-fix code issues             |
-| `pnpm format`     | Format code                      |
-| `pnpm type-check` | TypeScript type checking         |
-| `pnpm commit`     | Interactive commit (recommended) |
+| Command           | Description                                             |
+| ----------------- | ------------------------------------------------------- |
+| `pnpm dev`        | Start development server                                |
+| `pnpm build`      | Build for production                                    |
+| `pnpm preview`    | Preview build                                           |
+| `pnpm lint`       | Lint code                                               |
+| `pnpm lint:fix`   | Auto-fix code issues                                    |
+| `pnpm format`     | Format code                                             |
+| `pnpm type-check` | TypeScript type checking                                |
+| `pnpm commit`     | Interactive commit (recommended)                        |
+| `./init.sh`       | Full verification (install + type-check + lint + build) |
 
 ## 🎯 Git Commit Convention
 
@@ -78,9 +81,9 @@ git commit -m "📝 docs: update README documentation"
 | 📝    | `docs`     | Documentation    |
 | 💄    | `style`    | Code style       |
 | ♻️    | `refactor` | Code refactoring |
-| ⚡️   | `perf`     | Performance      |
+| ⚡️    | `perf`     | Performance      |
 | ✅    | `test`     | Tests            |
-| 📦️   | `build`    | Build system     |
+| 📦️    | `build`    | Build system     |
 | 👷    | `ci`       | CI configuration |
 | 🔧    | `chore`    | Maintenance      |
 
@@ -88,9 +91,9 @@ git commit -m "📝 docs: update README documentation"
 
 ### Code Quality
 
-- **ESLint 9.x** - Static code analysis for JavaScript/TypeScript/Astro
+- **ESLint 10.x** - Static code analysis for JavaScript/TypeScript/Astro
 - **Prettier** - Code formatting with Astro plugin
-- **TypeScript** - Strict type checking with path mapping
+- **TypeScript 6** - Strict type checking with path mapping
 
 ### Git Hooks
 
@@ -113,19 +116,25 @@ seeker-homepage/
 ├── public/                 # Static assets
 ├── src/
 │   ├── assets/            # Images, videos, etc.
-│   ├── components/        # Astro components
+│   ├── components/        # Astro & React components
+│   │   └── ui/            # shadcn/ui components
 │   ├── layouts/           # Page layouts
 │   ├── pages/             # Page files
 │   ├── styles/            # Style files
-│   │   ├── global.less    # Global styles
-│   │   └── variables.less # Design system variables
+│   │   └── global.css     # Global styles + shadcn theme
 │   └── lib/               # Utility functions
+├── .agents/               # Agent skills (Matt Pocock)
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code configuration
+├── AGENTS.md              # Agent working manual
+├── feature_list.json      # Feature state tracker
+├── progress.md            # Session continuity log
+├── init.sh                # Verification script
 ├── eslint.config.js       # ESLint configuration
 ├── commitlint.config.js   # Commitlint configuration
+├── components.json        # shadcn/ui configuration
 ├── tsconfig.json          # TypeScript configuration
-└── tailwind.config.js     # Tailwind CSS configuration
+└── astro.config.mjs       # Astro configuration
 ```
 
 ## 🎨 Style System
@@ -138,26 +147,35 @@ Using Tailwind CSS 4.x as the main styling framework with:
 - Custom color system
 - Unified spacing and typography
 
-### Less Preprocessor
+### shadcn/ui
 
-- **Global styles**: `src/styles/global.less`
-- **Design variables**: `src/styles/variables.less`
-- Support for nesting, variables, mixins, and more
+Using shadcn/ui (New York style, Zinc base) for:
+
+- Pre-built accessible components
+- CSS variables for theming
+- Dark/light mode support
 
 ### Design System
 
-```less
-// Color system
-@color-primary: #000;
-@color-accent: #007acc;
+```css
+/* Color system (CSS variables) */
+--primary: oklch(0.21 0.006 285.885);
+--accent: oklch(0.967 0.001 286.375);
 
-// Typography system
-@font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', ...;
-
-// Spacing system (8px grid-based)
-@spacing-4: 1rem; // 16px
-@spacing-8: 2rem; // 32px
+/* Custom colors */
+#4ecdc4 (teal) + #ff6b6b (coral) gradient
 ```
+
+## 🤖 Agent Harness
+
+This project includes a harness for reliable AI-assisted development:
+
+- **AGENTS.md** - Agent working manual with startup workflow
+- **feature_list.json** - Feature state tracker
+- **progress.md** - Session continuity log
+- **init.sh** - Verification script
+
+Run `./init.sh` before starting any agent session to verify environment health.
 
 ## 🚀 Deployment
 
@@ -200,6 +218,7 @@ service.
 
 - [Astro](https://astro.build/) - Modern static site generator
 - [Tailwind CSS](https://tailwindcss.com/) - Atomic CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Component library
 - [TypeScript](https://www.typescriptlang.org/) - JavaScript superset
 
 ---

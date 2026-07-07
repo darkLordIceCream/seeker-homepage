@@ -2,37 +2,39 @@
 
 > 拍一张照片，交一个朋友
 
-一个基于 Astro 构建的现代化seeker摄影小组官网，采用 TypeScript + Tailwind CSS +
-Less 技术栈。
+一个基于 Astro 构建的现代化摄影小组官网，采用 TypeScript + Tailwind CSS +
+React 技术栈。
 
 [English](./README.md) | 简体中文
 
 ## ✨ 特性
 
-- 🚀 **Astro 5.x** - 现代化静态站点生成器
+- 🚀 **Astro 7.x** - 现代化静态站点生成器
+- ⚛️ **React 19** - UI 组件库
 - 🎨 **Tailwind CSS 4.x** - 原子化 CSS 框架
-- 💎 **Less** - CSS 预处理器，支持变量和混入
-- 📝 **TypeScript** - 类型安全的 JavaScript
+- 🧩 **shadcn/ui** - 可复用组件库
+- 📝 **TypeScript 6** - 类型安全的 JavaScript
 - 🛠️ **完整的开发工具链** - ESLint + Prettier + Husky
 - 📦 **Commitizen** - 规范化 Git 提交信息
 - 🎯 **响应式设计** - 移动端友好
+- 🤖 **Agent Harness** - AI 辅助开发工作流
 
 ## 🚀 快速开始
 
 ### 环境要求
 
-- Node.js 22.17.1+ (推荐使用 nvm 管理)
+- Node.js 22.12.0+ (推荐使用 nvm 管理)
 - pnpm 9.0+
 
 ### 安装
 
 ```bash
 # 克隆项目
-git clone <repository-url>
+git clone https://github.com/darkLordIceCream/seeker-homepage.git
 cd seeker-homepage
 
 # 使用指定 Node.js 版本
-nvm use 22.17.1
+nvm use
 
 # 安装依赖
 pnpm install
@@ -43,16 +45,17 @@ pnpm dev
 
 ## 📋 可用命令
 
-| 命令              | 说明                |
-| ----------------- | ------------------- |
-| `pnpm dev`        | 启动开发服务器      |
-| `pnpm build`      | 构建生产版本        |
-| `pnpm preview`    | 预览构建结果        |
-| `pnpm lint`       | 代码检查            |
-| `pnpm lint:fix`   | 自动修复代码问题    |
-| `pnpm format`     | 格式化代码          |
-| `pnpm type-check` | TypeScript 类型检查 |
-| `pnpm commit`     | 交互式提交（推荐）  |
+| 命令              | 说明                            |
+| ----------------- | ------------------------------- |
+| `pnpm dev`        | 启动开发服务器                  |
+| `pnpm build`      | 构建生产版本                    |
+| `pnpm preview`    | 预览构建结果                    |
+| `pnpm lint`       | 代码检查                        |
+| `pnpm lint:fix`   | 自动修复代码问题                |
+| `pnpm format`     | 格式化代码                      |
+| `pnpm type-check` | TypeScript 类型检查             |
+| `pnpm commit`     | 交互式提交（推荐）              |
+| `./init.sh`       | 完整验证（安装+类型+lint+构建） |
 
 ## 🎯 Git 提交规范
 
@@ -78,9 +81,9 @@ git commit -m "📝 docs: 更新 README 文档"
 | 📝    | `docs`     | 文档变更 |
 | 💄    | `style`    | 代码格式 |
 | ♻️    | `refactor` | 代码重构 |
-| ⚡️   | `perf`     | 性能优化 |
+| ⚡️    | `perf`     | 性能优化 |
 | ✅    | `test`     | 测试相关 |
-| 📦️   | `build`    | 构建相关 |
+| 📦️    | `build`    | 构建相关 |
 | 👷    | `ci`       | CI 配置  |
 | 🔧    | `chore`    | 杂项任务 |
 
@@ -88,9 +91,9 @@ git commit -m "📝 docs: 更新 README 文档"
 
 ### 代码质量
 
-- **ESLint 9.x** - 代码静态分析，支持 JavaScript/TypeScript/Astro
+- **ESLint 10.x** - 代码静态分析，支持 JavaScript/TypeScript/Astro
 - **Prettier** - 代码格式化，集成 Astro 插件
-- **TypeScript** - 严格类型检查，支持路径映射
+- **TypeScript 6** - 严格类型检查，支持路径映射
 
 ### Git Hooks
 
@@ -113,19 +116,25 @@ seeker-homepage/
 ├── public/                 # 静态资源
 ├── src/
 │   ├── assets/            # 图片、视频等资源
-│   ├── components/        # Astro 组件
+│   ├── components/        # Astro 和 React 组件
+│   │   └── ui/            # shadcn/ui 组件
 │   ├── layouts/           # 页面布局
 │   ├── pages/             # 页面文件
 │   ├── styles/            # 样式文件
-│   │   ├── global.less    # 全局样式
-│   │   └── variables.less # 设计系统变量
+│   │   └── global.css     # 全局样式 + shadcn 主题
 │   └── lib/               # 工具函数
+├── .agents/               # Agent 技能 (Matt Pocock)
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code 配置
+├── AGENTS.md              # Agent 工作手册
+├── feature_list.json      # 功能状态追踪
+├── progress.md            # 会话连续性日志
+├── init.sh                # 验证脚本
 ├── eslint.config.js       # ESLint 配置
 ├── commitlint.config.js   # Commitlint 配置
+├── components.json        # shadcn/ui 配置
 ├── tsconfig.json          # TypeScript 配置
-└── tailwind.config.js     # Tailwind CSS 配置
+└── astro.config.mjs       # Astro 配置
 ```
 
 ## 🎨 样式系统
@@ -138,26 +147,35 @@ seeker-homepage/
 - 自定义颜色系统
 - 统一的间距和字体规范
 
-### Less 预处理器
+### shadcn/ui
 
-- **全局样式**: `src/styles/global.less`
-- **设计变量**: `src/styles/variables.less`
-- 支持嵌套、变量、混入等高级功能
+使用 shadcn/ui（New York 风格，Zinc 基色）提供：
+
+- 预构建的无障碍组件
+- CSS 变量主题系统
+- 深色/浅色模式支持
 
 ### 设计系统
 
-```less
-// 颜色系统
-@color-primary: #000;
-@color-accent: #007acc;
+```css
+/* 颜色系统（CSS 变量） */
+--primary: oklch(0.21 0.006 285.885);
+--accent: oklch(0.967 0.001 286.375);
 
-// 字体系统
-@font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', ...;
-
-// 间距系统（基于 8px 网格）
-@spacing-4: 1rem; // 16px
-@spacing-8: 2rem; // 32px
+/* 自定义颜色 */
+#4ecdc4 (青色) + #ff6b6b (珊瑚红) 渐变
 ```
+
+## 🤖 Agent Harness
+
+本项目包含用于可靠 AI 辅助开发的 harness：
+
+- **AGENTS.md** - Agent 工作手册，含启动流程
+- **feature_list.json** - 功能状态追踪器
+- **progress.md** - 会话连续性日志
+- **init.sh** - 验证脚本
+
+在启动任何 agent 会话前运行 `./init.sh` 验证环境健康状态。
 
 ## 🚀 部署
 
@@ -199,6 +217,7 @@ pnpm build
 
 - [Astro](https://astro.build/) - 现代化的静态站点生成器
 - [Tailwind CSS](https://tailwindcss.com/) - 原子化 CSS 框架
+- [shadcn/ui](https://ui.shadcn.com/) - 组件库
 - [TypeScript](https://www.typescriptlang.org/) - JavaScript 的超集
 
 ---
