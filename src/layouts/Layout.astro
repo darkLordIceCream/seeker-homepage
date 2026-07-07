@@ -50,6 +50,23 @@ const {
 	* {
 		box-sizing: border-box;
 	}
+
+	.skip-to-content {
+		position: absolute;
+		top: -100%;
+		left: 0;
+		background: #4ecdc4;
+		color: #000;
+		padding: 8px 16px;
+		z-index: 10000;
+		font-weight: 600;
+		text-decoration: none;
+		border-radius: 0 0 4px 0;
+	}
+
+	.skip-to-content:focus {
+		top: 0;
+	}
 </style>
 
 <html lang="zh-CN">
@@ -57,6 +74,7 @@ const {
     <SEOHead description={description} image={image} title={title} />
   </head>
   <body>
+    <a class="skip-to-content" href="#main-content">跳转到主要内容</a>
     <slot />
   </body>
 </html>
