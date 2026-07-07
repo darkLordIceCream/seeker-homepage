@@ -50,17 +50,19 @@ pnpm dev
 
 ## 📋 Available Commands
 
-| Command           | Description                                             |
-| ----------------- | ------------------------------------------------------- |
-| `pnpm dev`        | Start development server                                |
-| `pnpm build`      | Build for production                                    |
-| `pnpm preview`    | Preview build                                           |
-| `pnpm lint`       | Lint code                                               |
-| `pnpm lint:fix`   | Auto-fix code issues                                    |
-| `pnpm format`     | Format code                                             |
-| `pnpm type-check` | TypeScript type checking                                |
-| `pnpm commit`     | Interactive commit (recommended)                        |
-| `./init.sh`       | Full verification (install + type-check + lint + build) |
+| Command             | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| `pnpm dev`          | Start development server                                |
+| `pnpm build`        | Build for production                                    |
+| `pnpm preview`      | Preview build                                           |
+| `pnpm lint`         | Lint code                                               |
+| `pnpm lint:fix`     | Auto-fix code issues                                    |
+| `pnpm format`       | Format code                                             |
+| `pnpm format:check` | Check code formatting                                   |
+| `pnpm type-check`   | TypeScript type checking                                |
+| `pnpm astro:check`  | Astro type checking                                     |
+| `pnpm commit`       | Interactive commit (recommended)                        |
+| `./init.sh`         | Full verification (install + type-check + lint + build) |
 
 ## 🎯 Git Commit Convention
 
@@ -119,27 +121,44 @@ Complete VS Code configuration included:
 ```
 seeker-homepage/
 ├── public/                 # Static assets
+│   └── favicon.svg        # Site favicon
 ├── src/
 │   ├── assets/            # Images, videos, etc.
+│   │   ├── images/        # Image assets
+│   │   └── videos/        # Video assets
 │   ├── components/        # Astro & React components
-│   │   └── ui/            # shadcn/ui components
+│   │   ├── ui/            # shadcn/ui components
+│   │   ├── Banner.astro   # Video banner component
+│   │   ├── Navigation.astro # Navigation bar
+│   │   ├── Footer.astro   # Site footer
+│   │   └── ThemeToggle.astro # Theme switcher
 │   ├── layouts/           # Page layouts
+│   │   └── Layout.astro   # Root layout
 │   ├── pages/             # Page files
+│   │   ├── index.astro    # Homepage
+│   │   └── team.astro     # Team page
 │   ├── styles/            # Style files
 │   │   └── global.css     # Global styles + shadcn theme
 │   └── lib/               # Utility functions
+│       └── utils.ts       # cn() utility
 ├── .agents/               # Agent skills (Matt Pocock)
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code configuration
 ├── AGENTS.md              # Agent working manual
 ├── feature_list.json      # Feature state tracker
 ├── progress.md            # Session continuity log
+├── session-handoff.md     # Session handoff document
 ├── init.sh                # Verification script
-├── eslint.config.js       # ESLint configuration
-├── commitlint.config.js   # Commitlint configuration
+├── .czrc                  # Commitizen configuration
+├── .lintstagedrc.json     # lint-staged configuration
+├── .prettierrc.mjs        # Prettier configuration
+├── .nvmrc                 # Node.js version
 ├── components.json        # shadcn/ui configuration
+├── commitlint.config.js   # Commitlint configuration
+├── eslint.config.js       # ESLint configuration
 ├── tsconfig.json          # TypeScript configuration
-└── astro.config.mjs       # Astro configuration
+├── astro.config.mjs       # Astro configuration
+└── package.json           # Package configuration
 ```
 
 ## 🎨 Style System
@@ -178,6 +197,7 @@ This project includes a harness for reliable AI-assisted development:
 - **AGENTS.md** - Agent working manual with startup workflow
 - **feature_list.json** - Feature state tracker
 - **progress.md** - Session continuity log
+- **session-handoff.md** - Session handoff document
 - **init.sh** - Verification script
 
 Run `./init.sh` before starting any agent session to verify environment health.
