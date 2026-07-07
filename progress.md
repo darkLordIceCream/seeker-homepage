@@ -2,8 +2,8 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-07 **Branch:** main **Active Feature:**
-feat-008 - 项目结构优化（已完成）
+**Last Updated:** 2026-07-07 **Branch:** main **Active Feature:** UI
+Polish - 导航栏 R角框 + 透明度优化（已完成）
 
 ## Status
 
@@ -47,6 +47,17 @@ feat-008 - 项目结构优化（已完成）
 
 ## Decisions Made
 
+- **导航栏 R角框设计**: 将导航栏改为浮动圆角胶囊形态
+  - Context: 用户反馈导航栏太暗，且缺少圆角设计
+  - 决策:
+    - border-radius: 16px（桌面端）/ 14px（移动端）
+    - 浮动定位: top: 8px, left/right: 12px
+    - 背景透明度: 0.65 → 0.42（更通透）
+    - 下拉菜单统一使用 16px 圆角
+  - 验证: pnpm build 通过
+
+## Decisions Made
+
 - **全面依赖升级**: 从 Astro 5.x 升级到 7.x，包括所有主要依赖
   - Context: 项目依赖版本较旧，需要更新到最新版本
   - 验证: pnpm build/type-check/lint 均通过
@@ -75,6 +86,7 @@ feat-008 - 项目结构优化（已完成）
 - `src/pages/team.astro` - 使用 Content Collections
 - `DEVELOPMENT_STANDARDS.md` - 开发规范文档
 - `package.json` - 添加 sharp 依赖
+- `src/components/Navigation.astro` - 导航栏 R角框 + 透明度优化
 
 ## Evidence of Completion
 
