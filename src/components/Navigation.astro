@@ -3,7 +3,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
-<nav class="navigation">
+<nav aria-label="主导航" class="navigation">
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
@@ -16,7 +16,7 @@ import ThemeToggle from './ThemeToggle.astro';
             <a class="nav-link" href="#gallery">作品展示</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#about">小组简介</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="#about">小组简介</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="#members">成员构成</a>
@@ -38,7 +38,7 @@ import ThemeToggle from './ThemeToggle.astro';
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#activities">小组活动</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="#activities">小组活动</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="#online">线上</a>
@@ -73,16 +73,21 @@ import ThemeToggle from './ThemeToggle.astro';
     <div class="nav-right">
       <ThemeToggle />
 
-      <div class="nav-toggle" id="nav-toggle">
+      <button aria-controls="nav-menu" aria-expanded="false" aria-label="切换导航菜单" class="nav-toggle" id="nav-toggle">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
-      </div>
+      </button>
     </div>
   </div>
 </nav>
 
 <style>
+  /* ============================================================
+     LIQUID GLASS NAVIGATION
+     Apple-style glassmorphism for dark photography theme
+     ============================================================ */
+
   .navigation {
     position: fixed;
     top: 0;
@@ -94,14 +99,15 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-container {
+    position: relative;
     max-width: 1200px;
     margin: 0 60px;
-    padding: 0 20px;
+    padding: 0 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 70px;
-    gap: 60px;
+    gap: 48px;
   }
 
   .nav-left {
@@ -117,10 +123,16 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-logo a {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #fff;
     text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-logo a:hover {
+    opacity: 0.8;
   }
 
   .nav-menu {
@@ -141,45 +153,91 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-link {
-    color: #fff;
+    color: oklch(0.95 0 0);
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     padding: 10px 0;
     transition: color 0.3s ease;
     display: block;
+    letter-spacing: 0.01em;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link:focus-visible {
     color: #4ecdc4;
+  }
+
+  /* Focus ring for keyboard navigation */
+  .nav-link:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   .dropdown {
     position: relative;
   }
 
+  /* ============================================================
+     DROPDOWN GLASS PANEL
+     ============================================================ */
   .dropdown-menu {
     position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    min-width: 200px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    top: calc(100% + 10px);
+    left: -8px;
+    min-width: 220px;
     list-style: none;
     margin: 0;
-    padding: 10px 0;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 8px 0;
+    border-radius: 16px;
+
+    /* --- Visibility + animation --- */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top center;
+    transition:
+      opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.25s;
+
+    /* --- Glass effect (unified transparency) --- */
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%);
+    background: oklch(0.1 0.005 280 / 0.5);
+    background-image:
+      linear-gradient(
+        135deg,
+        oklch(1 0 0 / 0.07) 0%,
+        oklch(1 0 0 / 0.02) 50%,
+        transparent 100%
+      );
+
+    /* --- Glass edge + depth --- */
+    border: 1px solid oklch(1 0 0 / 0.12);
+    box-shadow:
+      0 0 0 0.5px oklch(0 0 0 / 0.4) inset,
+      0 8px 40px oklch(0 0 0 / 0.35),
+      0 2px 8px oklch(0 0 0 / 0.15);
   }
 
-  .dropdown:hover .dropdown-menu {
+  /* Connect dropdown to trigger visually with a subtle gradient seam */
+  .dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    right: 20px;
+    height: 8px;
+    background: transparent;
+  }
+
+  .dropdown:hover .dropdown-menu,
+  .dropdown:focus-within .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
   .dropdown-item {
@@ -187,41 +245,97 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .dropdown-link {
-    color: #fff;
+    color: oklch(0.9 0 0);
     text-decoration: none;
     font-size: 14px;
-    padding: 12px 20px;
-    display: block;
-    transition: all 0.3s ease;
+    font-weight: 450;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
   }
 
-  .dropdown-link:hover {
-    background: rgba(78, 205, 196, 0.1);
+  /* Arrow indicator for items with sub-dropdowns */
+  .dropdown-item > .dropdown-link::after {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: auto;
+    border-right: 1.5px solid oklch(0.6 0 0);
+    border-top: 1.5px solid oklch(0.6 0 0);
+    transform: rotate(45deg);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .dropdown-link:hover,
+  .dropdown-link:focus-visible {
+    background: oklch(0.3 0.04 185 / 0.3);
     color: #4ecdc4;
   }
 
-  .sub-dropdown {
-    position: absolute;
-    left: 100%;
-    top: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    min-width: 180px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  .dropdown-link:hover::after,
+  .dropdown-link:focus-visible::after {
+    border-color: #4ecdc4;
+    transform: rotate(45deg) translateX(2px);
   }
 
-  .dropdown-item:hover .sub-dropdown {
+  .dropdown-link:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: -2px;
+  }
+
+  /* ============================================================
+     SUB-DROPDOWN GLASS PANEL (flyout)
+     ============================================================ */
+  .sub-dropdown {
+    position: absolute;
+    left: calc(100% + 6px);
+    top: -6px;
+    min-width: 180px;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    border-radius: 16px;
+
+    /* --- Visibility + animation --- */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-8px) scale(0.97);
+    transform-origin: left center;
+    transition:
+      opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.2s;
+
+    /* --- Glass effect (compensate for nesting blur stacking) --- */
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+    background: oklch(0.1 0.005 280 / 0.65);
+    background-image:
+      linear-gradient(
+        135deg,
+        oklch(1 0 0 / 0.07) 0%,
+        oklch(1 0 0 / 0.02) 50%,
+        transparent 100%
+      );
+
+    /* --- Glass edge + depth --- */
+    border: 1px solid oklch(1 0 0 / 0.12);
+    box-shadow:
+      0 0 0 0.5px oklch(0 0 0 / 0.4) inset,
+      0 8px 40px oklch(0 0 0 / 0.35),
+      0 2px 8px oklch(0 0 0 / 0.15);
+  }
+
+  .dropdown-item:hover > .sub-dropdown,
+  .dropdown-item:focus-within > .sub-dropdown {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 
   .sub-dropdown li {
@@ -229,56 +343,100 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .sub-dropdown a {
-    color: #ccc;
+    color: oklch(0.82 0 0);
     text-decoration: none;
     font-size: 13px;
-    padding: 10px 20px;
+    font-weight: 400;
+    padding: 8px 14px;
     display: block;
-    transition: all 0.3s ease;
+    margin: 2px 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
   }
 
-  .sub-dropdown a:hover {
-    background: rgba(78, 205, 196, 0.1);
+  .sub-dropdown a:hover,
+  .sub-dropdown a:focus-visible {
+    background: oklch(0.3 0.04 185 / 0.3);
     color: #4ecdc4;
   }
 
+  .sub-dropdown a:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: -2px;
+  }
+
+  /* ============================================================
+     MOBILE TOGGLE
+     ============================================================ */
   .nav-toggle {
     display: none;
     flex-direction: column;
     cursor: pointer;
     padding: 5px;
+    background: none;
+    border: none;
+    color: #fff;
+  }
+
+  .nav-toggle:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 2px;
   }
 
   .bar {
     width: 25px;
-    height: 3px;
-    background: #fff;
-    margin: 3px 0;
-    transition: 0.3s;
+    height: 2px;
+    background: oklch(0.95 0 0);
+    margin: 4px 0;
+    transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 2px;
   }
 
+  /* ============================================================
+     MOBILE RESPONSIVE
+     ============================================================ */
   @media (max-width: 768px) {
+    .navigation {
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
     .nav-container {
       margin: 0;
-      padding: 0 20px;
+      padding: 0 16px;
       justify-content: space-between;
       gap: 0;
+      height: 52px;
     }
 
     .nav-menu {
       position: fixed;
-      top: 70px;
+      top: 64px;
       left: -100%;
       width: 100%;
-      height: calc(100vh - 70px);
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(10px);
+      height: calc(100vh - 72px);
+
+      /* Mobile glass panel */
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
+      backdrop-filter: blur(32px) saturate(180%);
+      background: oklch(0.06 0.005 280 / 0.65);
+      background-image:
+        linear-gradient(
+          180deg,
+          oklch(1 0 0 / 0.04) 0%,
+          transparent 30%
+        );
+
+      border: 1px solid oklch(1 0 0 / 0.08);
+      border-radius: 14px;
+      margin: 0 8px;
+
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      padding-top: 50px;
-      transition: left 0.3s ease;
+      padding-top: 24px;
+      transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 1001;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
@@ -300,23 +458,28 @@ import ThemeToggle from './ThemeToggle.astro';
     }
 
     .nav-link {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 16px 20px;
+      border-bottom: 1px solid oklch(1 0 0 / 0.06);
     }
 
+    /* Mobile dropdown: inline expand */
     .dropdown-menu {
       position: static;
       opacity: 1;
       visibility: visible;
       transform: none;
-      background: rgba(0, 0, 0, 0.8);
-      box-shadow: none;
+      background: oklch(0.08 0.005 280 / 0.35);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border: none;
       border-radius: 0;
+      box-shadow: none;
       margin: 0;
       padding: 0;
     }
 
-    .dropdown:hover .dropdown-menu {
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
       transform: none;
     }
 
@@ -325,14 +488,18 @@ import ThemeToggle from './ThemeToggle.astro';
       opacity: 1;
       visibility: visible;
       transform: none;
-      background: rgba(0, 0, 0, 0.6);
-      box-shadow: none;
+      background: oklch(0.06 0.005 280 / 0.3);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      border: none;
       border-radius: 0;
+      box-shadow: none;
       margin: 0;
       padding: 0;
     }
 
-    .dropdown-item:hover .sub-dropdown {
+    .dropdown-item:hover > .sub-dropdown,
+    .dropdown-item:focus-within > .sub-dropdown {
       transform: none;
     }
 
@@ -362,8 +529,10 @@ import ThemeToggle from './ThemeToggle.astro';
 
     if (navToggle && navMenu) {
       navToggle.addEventListener('click', () => {
+        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', String(!isExpanded));
       });
 
       // Close menu when clicking on a link
@@ -372,6 +541,7 @@ import ThemeToggle from './ThemeToggle.astro';
         link.addEventListener('click', () => {
           navMenu.classList.remove('active');
           navToggle.classList.remove('active');
+          navToggle.setAttribute('aria-expanded', 'false');
         });
       });
     }
