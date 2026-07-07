@@ -1,6 +1,18 @@
 ---
-// 导入全局样式
 import '@/styles/global.css';
+import SEOHead from '../components/SEOHead.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = 'Seeker追光者',
+  description = 'Seeker追光者官网，拍一张照片，交一个朋友',
+  image,
+} = Astro.props;
 ---
 
 <script is:inline>
@@ -42,12 +54,7 @@ import '@/styles/global.css';
 
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-    <meta content={Astro.generator} name="generator" />
-    <title>Seeker追光者</title>
-    <meta content="Seeker追光者官网，拍一张照片，交一个朋友" name="description" />
+    <SEOHead description={description} image={image} title={title} />
   </head>
   <body>
     <slot />
