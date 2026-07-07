@@ -50,17 +50,19 @@ pnpm dev
 
 ## 📋 可用命令
 
-| 命令              | 说明                            |
-| ----------------- | ------------------------------- |
-| `pnpm dev`        | 启动开发服务器                  |
-| `pnpm build`      | 构建生产版本                    |
-| `pnpm preview`    | 预览构建结果                    |
-| `pnpm lint`       | 代码检查                        |
-| `pnpm lint:fix`   | 自动修复代码问题                |
-| `pnpm format`     | 格式化代码                      |
-| `pnpm type-check` | TypeScript 类型检查             |
-| `pnpm commit`     | 交互式提交（推荐）              |
-| `./init.sh`       | 完整验证（安装+类型+lint+构建） |
+| 命令                | 说明                            |
+| ------------------- | ------------------------------- |
+| `pnpm dev`          | 启动开发服务器                  |
+| `pnpm build`        | 构建生产版本                    |
+| `pnpm preview`      | 预览构建结果                    |
+| `pnpm lint`         | 代码检查                        |
+| `pnpm lint:fix`     | 自动修复代码问题                |
+| `pnpm format`       | 格式化代码                      |
+| `pnpm format:check` | 检查代码格式                    |
+| `pnpm type-check`   | TypeScript 类型检查             |
+| `pnpm astro:check`  | Astro 类型检查                  |
+| `pnpm commit`       | 交互式提交（推荐）              |
+| `./init.sh`         | 完整验证（安装+类型+lint+构建） |
 
 ## 🎯 Git 提交规范
 
@@ -119,27 +121,44 @@ git commit -m "📝 docs: 更新 README 文档"
 ```
 seeker-homepage/
 ├── public/                 # 静态资源
+│   └── favicon.svg        # 网站图标
 ├── src/
 │   ├── assets/            # 图片、视频等资源
+│   │   ├── images/        # 图片资源
+│   │   └── videos/        # 视频资源
 │   ├── components/        # Astro 和 React 组件
-│   │   └── ui/            # shadcn/ui 组件
+│   │   ├── ui/            # shadcn/ui 组件
+│   │   ├── Banner.astro   # 视频横幅组件
+│   │   ├── Navigation.astro # 导航栏
+│   │   ├── Footer.astro   # 页脚
+│   │   └── ThemeToggle.astro # 主题切换器
 │   ├── layouts/           # 页面布局
+│   │   └── Layout.astro   # 根布局
 │   ├── pages/             # 页面文件
+│   │   ├── index.astro    # 首页
+│   │   └── team.astro     # 团队页面
 │   ├── styles/            # 样式文件
 │   │   └── global.css     # 全局样式 + shadcn 主题
 │   └── lib/               # 工具函数
+│       └── utils.ts       # cn() 工具函数
 ├── .agents/               # Agent 技能 (Matt Pocock)
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code 配置
 ├── AGENTS.md              # Agent 工作手册
 ├── feature_list.json      # 功能状态追踪
 ├── progress.md            # 会话连续性日志
+├── session-handoff.md     # 会话交接文档
 ├── init.sh                # 验证脚本
-├── eslint.config.js       # ESLint 配置
-├── commitlint.config.js   # Commitlint 配置
+├── .czrc                  # Commitizen 配置
+├── .lintstagedrc.json     # lint-staged 配置
+├── .prettierrc.mjs        # Prettier 配置
+├── .nvmrc                 # Node.js 版本
 ├── components.json        # shadcn/ui 配置
+├── commitlint.config.js   # Commitlint 配置
+├── eslint.config.js       # ESLint 配置
 ├── tsconfig.json          # TypeScript 配置
-└── astro.config.mjs       # Astro 配置
+├── astro.config.mjs       # Astro 配置
+└── package.json           # 包配置
 ```
 
 ## 🎨 样式系统
@@ -178,6 +197,7 @@ seeker-homepage/
 - **AGENTS.md** - Agent 工作手册，含启动流程
 - **feature_list.json** - 功能状态追踪器
 - **progress.md** - 会话连续性日志
+- **session-handoff.md** - 会话交接文档
 - **init.sh** - 验证脚本
 
 在启动任何 agent 会话前运行 `./init.sh` 验证环境健康状态。
