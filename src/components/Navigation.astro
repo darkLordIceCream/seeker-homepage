@@ -202,10 +202,10 @@ import ThemeToggle from './ThemeToggle.astro';
       transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0.25s;
 
-    /* --- Glass effect (matching frame transparency) --- */
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
-    backdrop-filter: blur(40px) saturate(200%);
-    background: oklch(0.1 0.005 280 / 0.52);
+    /* --- Glass effect (unified transparency) --- */
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%);
+    background: oklch(0.1 0.005 280 / 0.5);
     background-image:
       linear-gradient(
         135deg,
@@ -311,23 +311,24 @@ import ThemeToggle from './ThemeToggle.astro';
       transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0.2s;
 
-    /* --- Glass effect (slightly more opaque for depth layering) --- */
-    -webkit-backdrop-filter: blur(48px) saturate(200%);
-    backdrop-filter: blur(48px) saturate(200%);
-    background: oklch(0.09 0.005 280 / 0.58);
+    /* --- Glass effect (compensate for nesting blur stacking) --- */
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+    background: oklch(0.1 0.005 280 / 0.65);
     background-image:
       linear-gradient(
-        160deg,
-        oklch(1 0 0 / 0.06) 0%,
-        transparent 60%
+        135deg,
+        oklch(1 0 0 / 0.07) 0%,
+        oklch(1 0 0 / 0.02) 50%,
+        transparent 100%
       );
 
-    /* --- Glass edge + deeper shadow --- */
+    /* --- Glass edge + depth --- */
     border: 1px solid oklch(1 0 0 / 0.12);
     box-shadow:
       0 0 0 0.5px oklch(0 0 0 / 0.4) inset,
-      0 12px 48px oklch(0 0 0 / 0.4),
-      0 2px 8px oklch(0 0 0 / 0.2);
+      0 8px 40px oklch(0 0 0 / 0.35),
+      0 2px 8px oklch(0 0 0 / 0.15);
   }
 
   .dropdown-item:hover > .sub-dropdown,
