@@ -1,0 +1,92 @@
+{
+  "features": [
+    {
+      "id": "feat-001",
+      "name": "首页视频 Banner",
+      "description": "全屏视频背景 + 标语 '拍一张照片，交一个朋友'，含滚动指示器",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "pnpm build 通过，浏览器验证视频播放正常"
+    },
+    {
+      "id": "feat-002",
+      "name": "响应式导航栏",
+      "description": "固定顶部导航栏，支持多级下拉菜单（作品展示/小组简介/小组活动/加入小组），移动端汉堡菜单",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "pnpm build 通过，浏览器验证导航功能正常"
+    },
+    {
+      "id": "feat-003",
+      "name": "团队成员页面",
+      "description": "/team 路由，展示主理人信息卡片，支持头像、专长标签、社交媒体链接",
+      "dependencies": ["feat-002"],
+      "status": "done",
+      "evidence": "pnpm build 通过，数据驱动模板已实现"
+    },
+    {
+      "id": "feat-004",
+      "name": "深色主题系统",
+      "description": "shadcn/ui CSS 变量设计系统，支持深色/浅色模式切换",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "ThemeToggle 组件已实现，localStorage 持久化"
+    },
+    {
+      "id": "feat-005",
+      "name": "页脚组件",
+      "description": "三栏页脚：品牌介绍+社交链接 / 快速链接 / 联系方式",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "Footer.astro 组件已实现，响应式布局"
+    },
+    {
+      "id": "feat-006",
+      "name": "依赖升级到 Astro 7",
+      "description": "从 Astro 5.x 升级到 7.x，包括 TypeScript 6、ESLint 10 等所有依赖",
+      "dependencies": ["feat-001", "feat-002", "feat-003", "feat-004", "feat-005"],
+      "status": "done",
+      "evidence": "chore/update-dependencies 分支，pnpm build/type-check/lint 通过"
+    },
+    {
+      "id": "feat-007",
+      "name": "项目 Harness 工程",
+      "description": "创建 AGENTS.md、feature_list.json、progress.md、init.sh 等 agent 工作环境文件",
+      "dependencies": ["feat-006"],
+      "status": "in-progress",
+      "evidence": ""
+    },
+    {
+      "id": "feat-008",
+      "name": "作品展示画廊",
+      "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
+      "dependencies": ["feat-001"],
+      "status": "not-started",
+      "evidence": ""
+    },
+    {
+      "id": "feat-009",
+      "name": "小组简介内容",
+      "description": "小组介绍、成员构成、地区分部等内容区块",
+      "dependencies": ["feat-002"],
+      "status": "not-started",
+      "evidence": ""
+    },
+    {
+      "id": "feat-010",
+      "name": "小组活动页面",
+      "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
+      "dependencies": ["feat-002"],
+      "status": "not-started",
+      "evidence": ""
+    },
+    {
+      "id": "feat-011",
+      "name": "加入小组入口",
+      "description": "加入小组的引导页面或联系方式展示",
+      "dependencies": ["feat-005"],
+      "status": "not-started",
+      "evidence": ""
+    }
+  ]
+}
