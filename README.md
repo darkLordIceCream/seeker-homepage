@@ -1,5 +1,10 @@
 # Seeker Light Chasers - Photography Group Website
 
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss)
+
 > Take a photo, make a friend
 
 A modern photography group website built with Astro, featuring TypeScript +

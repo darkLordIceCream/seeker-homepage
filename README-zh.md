@@ -1,5 +1,10 @@
 # Seeker追光者
 
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss)
+
 > 拍一张照片，交一个朋友
 
 一个基于 Astro 构建的现代化摄影小组官网，采用 TypeScript + Tailwind CSS +
