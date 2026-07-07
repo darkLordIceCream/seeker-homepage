@@ -131,7 +131,13 @@ seeker-homepage/
 │   │   ├── Banner.astro   # 视频横幅组件
 │   │   ├── Navigation.astro # 导航栏
 │   │   ├── Footer.astro   # 页脚
-│   │   └── ThemeToggle.astro # 主题切换器
+│   │   ├── ThemeToggle.astro # 主题切换器
+│   │   ├── SEOHead.astro  # SEO 元数据
+│   │   ├── TeamHero.astro # 团队页面 Hero
+│   │   ├── MemberCard.astro # 成员卡片
+│   │   └── MemberSocial.astro # 社交链接
+│   ├── content/           # Content Collections
+│   │   └── members/       # 成员 Markdown 文件
 │   ├── layouts/           # 页面布局
 │   │   └── Layout.astro   # 根布局
 │   ├── pages/             # 页面文件
@@ -145,6 +151,7 @@ seeker-homepage/
 ├── .husky/                # Git hooks
 ├── .vscode/               # VS Code 配置
 ├── AGENTS.md              # Agent 工作手册
+├── DEVELOPMENT_STANDARDS.md # 开发规范
 ├── feature_list.json      # 功能状态追踪
 ├── progress.md            # 会话连续性日志
 ├── session-handoff.md     # 会话交接文档
