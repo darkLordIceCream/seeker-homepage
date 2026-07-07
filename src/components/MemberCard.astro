@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import MemberSocial from './MemberSocial.astro';
 
@@ -13,8 +14,8 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
 
 <div class="member-card" style={`animation-delay: ${index * 0.1}s`}>
   <div class="member-image-wrapper">
-    <img
-      alt={name}       class="member-avatar"       loading="lazy"       src={avatar}
+    <Image
+      alt={name}       class="member-avatar"       format="webp"       height={200}       loading="lazy"       src={avatar}       width={200}
     />
   </div>
 
