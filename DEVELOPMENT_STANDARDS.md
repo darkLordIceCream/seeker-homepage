@@ -322,6 +322,55 @@ const { title, description, image, canonical } = Astro.props;
 
 ---
 
+## 部署
+
+### 部署平台
+
+- **主平台**: Cloudflare Pages
+- **部署方式**: GitHub 集成，推送到 `main` 分支自动部署
+- **自定义域名**: xn--seeker-ng2jm403afb4a.club
+- **Pages 域名**: seeker-homepage.pages.dev
+
+### 大文件存储
+
+Cloudflare Pages 限制单文件最大 **25 MiB**。超过此限制的文件（如高清视频）需要使用 **Cloudflare R2** 对象存储。
+
+**R2 配置：**
+- Bucket 名称: `seeker-homepage-assets`
+- 公开访问 URL: `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev`
+- 免费额度: 10 GB 存储 + 1000 万次读取/月
+- 出口带宽: 免费
+
+**使用方式：**
+```bash
+# 上传文件到 R2
+wrangler r2 object put seeker-homepage-assets/<path> --file=<local-path> --remote
+
+# 在代码中引用
+<source src="https://pub-xxx.r2.dev/<path>" type="video/mp4" />
+```
+
+### 部署检查清单
+
+- [ ] `pnpm build` 构建成功
+- [ ] `pnpm type-check` 无错误
+- [ ] `pnpm lint` 无错误（warnings 可接受）
+- [ ] 大文件（>25 MiB）已上传到 R2
+- [ ] 推送到 `main` 分支触发自动部署
+
+### 常见问题
+
+**Q: 视频在本地播放正常，但部署后不播放？**
+A: 检查视频文件是否超过 25 MiB。如果是，需要迁移到 R2。
+
+**Q: 如何查看部署状态？**
+A: 使用 `wrangler pages deployment list --project-name seeker-homepage`
+
+**Q: 如何查看 R2 文件？**
+A: 使用 `wrangler r2 object get seeker-homepage-assets/<path>`
+
+---
+
 ## 项目结构
 
 ```
