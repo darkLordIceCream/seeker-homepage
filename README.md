@@ -220,6 +220,22 @@ pnpm build
 Build output is in the `dist/` directory, ready to deploy to any static hosting
 service.
 
+### Current Deployment
+
+This project is deployed on **Cloudflare Pages** with GitHub integration:
+
+- **Auto-deploy**: Push to `main` branch triggers automatic deployment
+- **Custom domain**: xn--seeker-ng2jm403afb4a.club
+- **Pages domain**: seeker-homepage.pages.dev
+
+### Large File Storage
+
+Cloudflare Pages has a 25 MiB per-file limit. Large files (videos, high-res images) are stored in **Cloudflare R2**:
+
+- **Bucket**: `seeker-homepage-assets`
+- **Public URL**: `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev`
+- **Free tier**: 10 GB storage + 10M reads/month + free egress
+
 ### Supported Platforms
 
 - Vercel

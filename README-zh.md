@@ -219,6 +219,22 @@ pnpm build
 
 构建输出位于 `dist/` 目录，可以部署到任何静态托管服务。
 
+### 当前部署
+
+本项目部署在 **Cloudflare Pages**，使用 GitHub 集成：
+
+- **自动部署**: 推送到 `main` 分支自动触发部署
+- **自定义域名**: xn--seeker-ng2jm403afb4a.club
+- **Pages 域名**: seeker-homepage.pages.dev
+
+### 大文件存储
+
+Cloudflare Pages 限制单文件最大 25 MiB。大文件（视频、高清图片）存储在 **Cloudflare R2**：
+
+- **Bucket**: `seeker-homepage-assets`
+- **公开 URL**: `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev`
+- **免费额度**: 10 GB 存储 + 1000 万次读取/月 + 免费出口带宽
+
 ### 支持的平台
 
 - Vercel

@@ -98,6 +98,22 @@
     },
     {
       "id": "feat-013",
+      "name": "Cloudflare Pages 部署",
+      "description": "配置 Cloudflare Pages 自动部署，连接 GitHub 仓库",
+      "dependencies": ["feat-008"],
+      "status": "done",
+      "evidence": "已配置 GitHub 集成，推送到 main 分支自动部署"
+    },
+    {
+      "id": "feat-014",
+      "name": "视频托管迁移到 R2",
+      "description": "将视频文件从 Pages 直接托管迁移到 Cloudflare R2 对象存储，解决 25 MiB 文件大小限制",
+      "dependencies": ["feat-013"],
+      "status": "done",
+      "evidence": "R2 bucket 'seeker-homepage-assets' 已创建，视频已上传，公开访问已启用"
+    },
+    {
+      "id": "feat-015",
       "name": "作品展示画廊",
       "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
       "dependencies": ["feat-001", "feat-008"],
@@ -105,7 +121,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-014",
+      "id": "feat-016",
       "name": "小组简介内容",
       "description": "小组介绍、成员构成、地区分部等内容区块",
       "dependencies": ["feat-002", "feat-008"],
@@ -113,7 +129,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-015",
+      "id": "feat-017",
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
@@ -121,7 +137,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-016",
+      "id": "feat-018",
       "name": "加入小组入口",
       "description": "加入小组的引导页面或联系方式展示",
       "dependencies": ["feat-005", "feat-008"],
