@@ -142,7 +142,8 @@ seeker-homepage/
 │   │   └── Layout.astro   # 根布局
 │   ├── pages/             # 页面文件
 │   │   ├── index.astro    # 首页
-│   │   └── team.astro     # 团队页面
+│   │   ├── team.astro     # 团队页面
+│   │   └── under-construction.astro # 施工中占位页面
 │   ├── styles/            # 样式文件
 │   │   └── global.css     # 全局样式 + shadcn 主题
 │   └── lib/               # 工具函数
@@ -229,7 +230,8 @@ pnpm build
 
 ### 大文件存储
 
-Cloudflare Pages 限制单文件最大 25 MiB。大文件（视频、高清图片）存储在 **Cloudflare R2**：
+Cloudflare Pages 限制单文件最大 25 MiB。大文件（视频、高清图片）存储在
+**Cloudflare R2**：
 
 - **Bucket**: `seeker-homepage-assets`
 - **公开 URL**: `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev`
