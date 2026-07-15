@@ -114,6 +114,14 @@
     },
     {
       "id": "feat-015",
+      "name": "施工中占位页面",
+      "description": "统一 /under-construction 占位页面，摄影主题趣味风设计（SVG 相机/胶卷装饰 + 渐变文字 + fadeInUp 动画），noindex SEO，返回首页按钮，导航栏和页脚占位链接统一指向该页面",
+      "dependencies": ["feat-002", "feat-005"],
+      "status": "done",
+      "evidence": "PR #7 已合并，F1-F4 验证全部通过，29 个链接指向 /under-construction，noindex 正确注入"
+    },
+    {
+      "id": "feat-016",
       "name": "作品展示画廊",
       "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
       "dependencies": ["feat-001", "feat-008"],
@@ -121,7 +129,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-016",
+      "id": "feat-017",
       "name": "小组简介内容",
       "description": "小组介绍、成员构成、地区分部等内容区块",
       "dependencies": ["feat-002", "feat-008"],
@@ -129,7 +137,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-017",
+      "id": "feat-018",
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
@@ -137,7 +145,7 @@
       "evidence": ""
     },
     {
-      "id": "feat-018",
+      "id": "feat-019",
       "name": "加入小组入口",
       "description": "加入小组的引导页面或联系方式展示",
       "dependencies": ["feat-005", "feat-008"],

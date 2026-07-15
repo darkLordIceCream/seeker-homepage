@@ -142,7 +142,8 @@ seeker-homepage/
 │   │   └── Layout.astro   # Root layout
 │   ├── pages/             # Page files
 │   │   ├── index.astro    # Homepage
-│   │   └── team.astro     # Team page
+│   │   ├── team.astro     # Team page
+│   │   └── under-construction.astro # Under construction placeholder
 │   ├── styles/            # Style files
 │   │   └── global.css     # Global styles + shadcn theme
 │   └── lib/               # Utility functions
@@ -230,7 +231,8 @@ This project is deployed on **Cloudflare Pages** with GitHub integration:
 
 ### Large File Storage
 
-Cloudflare Pages has a 25 MiB per-file limit. Large files (videos, high-res images) are stored in **Cloudflare R2**:
+Cloudflare Pages has a 25 MiB per-file limit. Large files (videos, high-res
+images) are stored in **Cloudflare R2**:
 
 - **Bucket**: `seeker-homepage-assets`
 - **Public URL**: `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev`
