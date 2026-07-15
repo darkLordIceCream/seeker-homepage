@@ -2,42 +2,50 @@
 
 ## Current Objective
 
-- Goal: 完善 harness 文件并提交 PR
-- Current status: harness 文件已生成，内容已完善
-- Branch: chore/update-dependencies
+- Goal: 文档更新以反映施工页面功能（feat-015）的完成状态
+- Current status: 施工页面功能已完成并合并到 main，文档正在同步更新
+- Branch: docs/update-harness-for-under-construction
 
 ## Completed This Session
 
-- [x] 依赖升级到 Astro 7（feat-006）
-- [x] 创建项目 Harness 文件（feat-007）
-- [x] 更新 feature_list.json 为项目实际功能
-- [x] 更新 progress.md 记录当前状态
-- [x] 浏览器验证首页渲染正常
+- [x] 施工中占位页面（feat-015）— 完整开发、验证、合并
+  - 创建 /under-construction 统一占位页面
+  - 摄影主题趣味风设计：SVG 相机/胶卷装饰 + 渐变文字 + fadeInUp 动画
+  - 导航栏 25 个占位链接 + 页脚 4 个快速链接统一指向 /under-construction
+  - noindex SEO meta + 返回首页按钮
+  - PR #7 已合并（fast-forward merge）
+  - F1-F4 验证全部通过
+  - 用户后续修改了页面副标题文案（commit fe76839）
+- [x] 更新 feature_list.json — 添加 feat-015 施工页面条目，重新编号 feat-016~019
+- [x] 更新 progress.md — 记录施工页面完成状态、决策、文件变更
+- [x] 更新 README.md — 项目结构添加 under-construction.astro
+- [x] 更新 README-zh.md — 项目结构添加 under-construction.astro
 
 ## Verification Evidence
 
-| Check      | Command                  | Result | Notes                    |
-| ---------- | ------------------------ | ------ | ------------------------ |
-| build      | `pnpm build`             | ✓ 通过 | 2 个页面构建成功         |
-| type-check | `pnpm type-check`        | ✓ 通过 | 0 errors                 |
-| lint       | `pnpm lint`              | ✓ 通过 | 12 warnings（无 errors） |
-| 浏览器验证 | agent-browser screenshot | ✓ 通过 | 首页渲染正常             |
+| Check      | Command               | Result | Notes                      |
+| ---------- | --------------------- | ------ | -------------------------- |
+| build      | `pnpm build`          | ✓ 通过 | 3 个页面构建成功           |
+| type-check | `pnpm type-check`     | ✓ 通过 | 0 errors                   |
+| lint       | `pnpm lint`           | ✓ 通过 | 0 errors（1 预存 warning） |
+| F1 合规    | Plan Compliance Audit | ✓ 通过 | 0 违规                     |
+| F2 质量    | Code Quality Review   | ✓ 通过 | type-check + lint + build  |
+| F3 QA      | Real Manual QA        | ✓ 通过 | 29 个链接全部正确          |
+| F4 范围    | Scope Fidelity Check  | ✓ 通过 | 实现与计划 1:1 对应        |
 
 ## Files Changed
 
-- `package.json` - 更新所有依赖版本
-- `pnpm-lock.yaml` - 重新生成锁文件
-- `tsconfig.json` - 添加 ignoreDeprecations 兼容 TypeScript 6
-- `AGENTS.md` - 新增，agent 工作手册
-- `feature_list.json` - 新增，功能状态追踪
-- `progress.md` - 新增，会话连续性日志
-- `session-handoff.md` - 新增，会话交接文档
-- `init.sh` - 新增，初始化脚本
+- `feature_list.json` - 添加 feat-015 施工页面条目，重新编号后续功能
+- `progress.md` - 更新施工页面完成状态、决策、文件变更、验证证据
+- `README.md` - 项目结构添加 under-construction.astro
+- `README-zh.md` - 项目结构添加 under-construction.astro
+- `session-handoff.md` - 更新为当前状态
 
 ## Decisions Made
 
-- **全面依赖升级**: 从 Astro 5.x 升级到 7.x，包括所有主要依赖
-- **创建项目 Harness**: 为项目添加 agent 工作环境文件
+- **施工页面统一路由**: 所有占位链接统一指向 /under-construction，不带查询参数
+- **摄影主题趣味风**: SVG 相机/胶卷装饰 + 渐变文字 + 趣味文案
+- **功能编号调整**: 施工页面插入为 feat-015，后续功能顺延为 feat-016~019
 
 ## Blockers / Risks
 
@@ -52,6 +60,5 @@
 
 ## Recommended Next Step
 
-- 提交 harness 文件并创建 PR
-- 合并到 master 分支
-- 后续可继续实现 feat-008 到 feat-011 的功能
+- 合并文档更新 PR 到 main
+- 后续可继续实现 feat-016（作品展示画廊）到 feat-019（加入小组入口）的功能
