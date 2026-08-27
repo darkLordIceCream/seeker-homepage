@@ -81,10 +81,16 @@
 
 ## Evidence of Completion（本会话）
 
-- [x] ./init.sh 通过：pnpm install / type-check（0 errors）/ lint（0 errors）/
-      build（3 pages）
+- [x] ./init.sh 通过：pnpm install / type-check（0 errors）/ lint（0 errors 0
+      warnings）/ build（3 pages）
 - [x] 构建产物 16 项结构检查全部通过（snap 容器、四个区块 id、进度点、锚点、玻璃卡、动态年份、emoji 清除、logo 无小图标、CSS
       snap 规则、Archivo 等）
+- [x] 浏览器实测（dev 4321 + 生产 preview
+      4322，1280×800）：五屏 snap 吸附逐屏截图验证 ✓；scrollspy 下划线与进度圆点逐屏联动 ✓；视觉验证发现并修复 3 个问题：① 页脚不可达（Footer 在 .snap-scroll 外）→ 改 html:has(.snap-scroll)
+      .footer；② 带锚点进入被 snap 拉回首屏且 load 被 R2 大视频拖住 →
+      DOMContentLoaded 即刻 scrollIntoView + load 兜底；③
+      800px 高视口下 #activities 超一屏标题被顶出 → 压缩节奏 +
+      max-height:880px 隐藏卡片标签行
 
 ## Notes for Next Session
 
