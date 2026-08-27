@@ -8,6 +8,7 @@ export default [
     ignores: [
       '.astro/**',
       '.husky/**',
+      '.agents/**',
       'dist/**',
       'node_modules/**',
       '*.min.js',
