@@ -76,6 +76,13 @@ const offline = [
     background:
       radial-gradient(55% 40% at 12% 80%, oklch(0.75 0.11 185 / 0.08), transparent 70%),
       #000;
+    /* 8 张卡内容较高：压缩纵向节奏，保证 800px 高视口下整屏放下 */
+    padding-top: 88px;
+    padding-bottom: 48px;
+  }
+
+  .activities-section .section-lead {
+    margin-bottom: 28px;
   }
 
   .activity-columns {
@@ -91,7 +98,7 @@ const offline = [
     font-size: 15px;
     font-weight: 600;
     color: #4ecdc4;
-    margin: 0 0 14px;
+    margin: 0 0 12px;
     letter-spacing: 0.08em;
   }
 
@@ -103,24 +110,24 @@ const offline = [
   .activity-column {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
   }
 
   .activity-card {
-    padding: 20px 22px;
+    padding: 14px 18px;
     cursor: default;
   }
 
   .activity-name {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #fff;
-    margin: 0 0 6px;
+    margin: 0 0 4px;
   }
 
   .activity-desc {
-    font-size: 13.5px;
-    line-height: 1.65;
+    font-size: 13px;
+    line-height: 1.55;
     color: oklch(0.75 0 0);
     margin: 0;
   }
@@ -129,12 +136,12 @@ const offline = [
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 12px;
+    margin-top: 8px;
   }
 
   .card-tags span {
-    font-size: 11px;
-    padding: 2px 10px;
+    font-size: 10.5px;
+    padding: 2px 8px;
     border-radius: 999px;
     border: 1px solid oklch(1 0 0 / 0.15);
     color: oklch(0.78 0 0);
@@ -149,6 +156,18 @@ const offline = [
 
     .activity-card {
       padding: 18px;
+    }
+  }
+
+  /* 矮视口（如 1280×800 笔记本外接屏）：8 张卡略超一屏，
+     隐藏标签行保证标题在吸附停留时可见 */
+  @media (max-height: 880px) and (min-width: 769px) {
+    .activity-card .card-tags {
+      display: none;
+    }
+
+    .activity-card {
+      padding: 12px 18px;
     }
   }
 </style>
