@@ -1,0 +1,133 @@
+---
+// 首页右侧进度圆点：滚动叙事模式的章节指示器（仅桌面端显示）
+const sections = [
+  { id: 'home', label: '首页' },
+  { id: 'about', label: '关于我们' },
+  { id: 'branches', label: '地区分部' },
+  { id: 'activities', label: '小组活动' },
+  { id: 'join', label: '加入我们' },
+];
+---
+
+<nav aria-label="页面章节" class="page-progress">
+  <ul class="progress-list">
+    {sections.map(section => (
+      <li>
+        <a
+          aria-label={section.label}           class="progress-dot"           data-progress={section.id}           href={`#${section.id}`}
+        >
+          <span class="dot-tip">{section.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .page-progress {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+  }
+
+  .progress-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .progress-dot {
+    position: relative;
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: oklch(1 0 0 / 0.28);
+    transition:
+      background 0.25s ease,
+      height 0.25s ease;
+  }
+
+  .progress-dot:hover {
+    background: oklch(1 0 0 / 0.55);
+  }
+
+  .progress-dot.active {
+    height: 22px;
+    background: linear-gradient(180deg, #4ecdc4, #ff6b6b);
+  }
+
+  .progress-dot:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 3px;
+  }
+
+  .dot-tip {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%) translateX(6px);
+    white-space: nowrap;
+    font-size: 12px;
+    color: #fff;
+    background: oklch(0.1 0.005 280 / 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid oklch(1 0 0 / 0.12);
+    padding: 4px 10px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .progress-dot:hover .dot-tip,
+  .progress-dot:focus-visible .dot-tip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  @media (max-width: 768px) {
+    .page-progress {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // 进度圆点与章节滚动状态同步
+  const dots = document.querySelectorAll<HTMLElement>('.progress-dot[data-progress]');
+  const dotById = new Map<string, HTMLElement>();
+  dots.forEach(dot => {
+    const id = dot.dataset.progress;
+    if (id) {dotById.set(id, dot);}
+  });
+
+  const targets = Array.from(document.querySelectorAll<HTMLElement>('section[id]')).filter(
+    section => dotById.has(section.id),
+);
+
+  if (targets.length > 0 && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            dotById.forEach((dot, id) => {
+              dot.classList.toggle('active', id === entry.target.id);
+            });
+          }
+        }
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+  );
+
+    targets.forEach(target => spy.observe(target));
+  }
+</script>

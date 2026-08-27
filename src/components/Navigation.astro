@@ -1,13 +1,17 @@
 ---
 // Navigation component for Seeker追光者 photography group
 import ThemeToggle from './ThemeToggle.astro';
+
+// 首页区块锚点：首页内用 #id 平滑滚动，其他页面跳回首页对应区块
+const isHome = Astro.url.pathname.replace(/\/+$/, '') === '';
+const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
 <nav aria-label="主导航" class="navigation">
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
-        <a href="/">Seeker追光者</a>
+        <a href="/">Seeker<span class="logo-accent">追光者</span></a>
       </div>
 
       <div class="nav-menu" id="nav-menu">
@@ -16,7 +20,7 @@ import ThemeToggle from './ThemeToggle.astro';
             <a class="nav-link" href="/under-construction">作品展示</a>
           </li>
           <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="/under-construction">小组简介</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" data-section="about" href={anchor('about')}>小组简介</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="/under-construction">成员构成</a>
@@ -28,17 +32,17 @@ import ThemeToggle from './ThemeToggle.astro';
                 </ul>
               </li>
               <li class="dropdown-item">
-                <a class="dropdown-link" href="/under-construction">地区分部简介</a>
+                <a class="dropdown-link" href={anchor('branches')}>地区分部简介</a>
                 <ul class="sub-dropdown">
-                  <li><a href="/under-construction">广佛分部</a></li>
-                  <li><a href="/under-construction">金陵分部</a></li>
-                  <li><a href="/under-construction">更多分部...</a></li>
+                  <li><a href={anchor('branches')}>广佛分部</a></li>
+                  <li><a href={anchor('branches')}>金陵分部</a></li>
+                  <li><a href={anchor('branches')}>更多分部...</a></li>
                 </ul>
               </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="/under-construction">小组活动</a>
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link" data-section="activities" href={anchor('activities')}>小组活动</a>
             <ul class="dropdown-menu">
               <li class="dropdown-item">
                 <a class="dropdown-link" href="/under-construction">线上</a>
@@ -64,7 +68,7 @@ import ThemeToggle from './ThemeToggle.astro';
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/under-construction">加入小组</a>
+            <a class="nav-link" data-section="join" href={anchor('join')}>加入小组</a>
           </li>
         </ul>
       </div>
@@ -95,7 +99,18 @@ import ThemeToggle from './ThemeToggle.astro';
     width: 100%;
     background: transparent;
     z-index: 1002;
-    transition: all 0.3s ease;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* 滚过第一屏后：导航「落地」为玻璃条，与下拉菜单同一材质 */
+  .navigation.scrolled {
+    background: oklch(0.08 0.005 280 / 0.55);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%);
+    border-bottom-color: oklch(1 0 0 / 0.1);
   }
 
   .nav-container {
@@ -108,6 +123,11 @@ import ThemeToggle from './ThemeToggle.astro';
     align-items: center;
     height: 70px;
     gap: 48px;
+    transition: height 0.3s ease;
+  }
+
+  .navigation.scrolled .nav-container {
+    height: 58px;
   }
 
   .nav-left {
@@ -123,12 +143,21 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-logo a {
+    display: inline-flex;
+    align-items: center;
     font-size: 20px;
     font-weight: bold;
     color: #fff;
     text-decoration: none;
     letter-spacing: -0.02em;
     transition: opacity 0.3s ease;
+  }
+
+  .logo-accent {
+    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .nav-logo a:hover {
@@ -161,11 +190,42 @@ import ThemeToggle from './ThemeToggle.astro';
     transition: color 0.3s ease;
     display: block;
     letter-spacing: 0.01em;
+    position: relative;
+  }
+
+  /* 渐变下划线：hover 滑入，scrollspy 当前区块常驻 */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #4ecdc4, #ff6b6b);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after,
+  .nav-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .nav-link.active {
+    color: #fff;
   }
 
   .nav-link:hover,
   .nav-link:focus-visible {
     color: #4ecdc4;
+  }
+
+  .nav-link.active:hover,
+  .nav-link.active:focus-visible {
+    color: #fff;
   }
 
   /* Focus ring for keyboard navigation */
@@ -462,6 +522,16 @@ import ThemeToggle from './ThemeToggle.astro';
       border-bottom: 1px solid oklch(1 0 0 / 0.06);
     }
 
+    /* 移动端已有分隔线，下划线改为颜色高亮 */
+    .nav-link::after {
+      display: none;
+    }
+
+    .nav-link.active,
+    .nav-link:hover {
+      color: #4ecdc4;
+    }
+
     /* Mobile dropdown: inline expand */
     .dropdown-menu {
       position: static;
@@ -546,4 +616,51 @@ import ThemeToggle from './ThemeToggle.astro';
       });
     }
   });
+
+  // 滚过第一屏 60% 后，导航切换为玻璃实底
+  const navigation = document.querySelector('.navigation');
+  const onScroll = () => {
+    navigation?.classList.toggle('scrolled', window.scrollY > window.innerHeight * 0.6);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scrollspy：当前区块对应的导航项常驻高亮
+  const spyLinks = document.querySelectorAll<HTMLElement>('.nav-link[data-section]');
+  const linkById = new Map<string, HTMLElement>();
+  spyLinks.forEach(link => {
+    const id = link.dataset.section;
+    if (id) {linkById.set(id, link);}
+  });
+
+  const spyTargets = Array.from(document.querySelectorAll<HTMLElement>('section[id]')).filter(
+    section => linkById.has(section.id),
+);
+
+  if (spyTargets.length > 0 && 'IntersectionObserver' in window) {
+    const setActive = (id: string) => {
+      linkById.forEach((link, linkId) => {
+        const isActive = linkId === id;
+        link.classList.toggle('active', isActive);
+        if (isActive) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const spy = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+  );
+
+    spyTargets.forEach(target => spy.observe(target));
+  }
 </script>

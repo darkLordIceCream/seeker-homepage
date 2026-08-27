@@ -16,6 +16,8 @@ const {
 ---
 
 <script is:inline>
+  document.documentElement.classList.add('js');
+
   const getThemePreference = () => {
     if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
       return localStorage.getItem('theme');

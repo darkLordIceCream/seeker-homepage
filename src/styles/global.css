@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -116,5 +117,170 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================================
+   HOMEPAGE FULLPAGE SCROLL SYSTEM
+   整屏滚动（CSS scroll-snap）+ 展示区块公共样式
+   仅当页面存在 .snap-scroll 容器（首页）时启用吸附，
+   其他页面（/team 等）保持正常滚动。
+   ============================================================ */
+
+html:has(.snap-scroll) {
+  scroll-snap-type: y mandatory;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.font-display {
+  font-family:
+    'Archivo',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+/* —— 区块骨架：每屏一整屏，顶部 padding 避开固定导航 —— */
+.section {
+  position: relative;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  padding: 96px 24px 64px;
+  overflow: hidden;
+}
+
+/* 区块之间的品牌渐变分隔线 */
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.18), transparent);
+}
+
+.section-inner {
+  width: 100%;
+  max-width: 1080px;
+  margin: auto;
+}
+
+/* 页脚也是吸附点（mandatory 模式下没有吸附点就无法停留在该区域） */
+.snap-scroll .footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.section-kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #4ecdc4;
+  margin: 0 0 12px;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.section-lead {
+  font-size: 16px;
+  line-height: 1.7;
+  color: oklch(0.75 0 0);
+  max-width: 620px;
+  margin: 0 0 40px;
+}
+
+/* 品牌渐变文字（无 text-shadow，避免渐变字发虚） */
+.grad-text {
+  background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* —— 玻璃卡片：与导航下拉菜单同一配方 —— */
+.glass-card {
+  background: oklch(0.1 0.005 280 / 0.5);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid oklch(1 0 0 / 0.12);
+  border-radius: 16px;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.75 0.12 185 / 0.5);
+  box-shadow: 0 12px 40px oklch(0.7 0.12 185 / 0.18);
+}
+
+/* 章节末尾的小 CTA（滚动叙事模式：每章一收束） */
+.mini-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 36px;
+  color: #4ecdc4;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.mini-cta:hover {
+  color: #7be8e0;
+}
+
+.mini-cta:focus-visible {
+  outline: 2px solid #4ecdc4;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* —— 滚动入场动画：仅在有 JS 时启用（无 JS 内容直接可见） —— */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+html.js .reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

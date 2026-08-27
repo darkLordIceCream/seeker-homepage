@@ -151,6 +151,14 @@
       "dependencies": ["feat-005", "feat-008"],
       "status": "not-started",
       "evidence": ""
+    },
+    {
+      "id": "feat-020",
+      "name": "首页整屏滚动改版",
+      "description": "CSS scroll-snap 整屏吸附 + 4 个展示区块（关于/分部/活动/加入，玻璃卡风格）+ Topbar 玻璃态与 scrollspy + 右侧进度圆点 + 依赖升级 Astro 7.2.8",
+      "dependencies": ["feat-002", "feat-005"],
+      "status": "done",
+      "evidence": "./init.sh 全部通过；构建产物 16 项结构检查通过（分支 feat/update-astro-homepage，待 PR）；#join 联系方式为占位待补"
     }
   ]
 }

@@ -3,7 +3,7 @@
 import bannerPoster from '../assets/images/banner-poster.jpg';
 ---
 
-<section class="banner">
+<section class="banner" id="home">
   <div class="video-container">
     <video
       autoplay
@@ -25,9 +25,9 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     </div>
   </div>
 
-  <div class="scroll-indicator">
-    <div class="scroll-arrow"></div>
-  </div>
+  <button aria-label="滚动到下一屏" class="scroll-indicator">
+    <span class="scroll-arrow"></span>
+  </button>
 </section>
 
 <style>
@@ -35,10 +35,13 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     position: relative;
     width: 100%;
     height: 100vh;
+    height: 100svh;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
   .video-container {
@@ -93,16 +96,9 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    /* 渐变透明文字上 text-shadow 会糊在字上，用 drop-shadow 跟随文字形状 */
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.45));
     line-height: 1.2;
-  }
-
-  .slogan-subtitle {
-    font-size: 1.3rem;
-    margin: 0 0 40px 0;
-    opacity: 0.9;
-    font-weight: 300;
-    letter-spacing: 1px;
   }
 
   .scroll-indicator {
@@ -112,6 +108,16 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     transform: translateX(-50%);
     z-index: 3;
     animation: bounce 2s infinite;
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .scroll-indicator:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 2px;
+    border-radius: 8px;
   }
 
   .scroll-arrow {
@@ -165,10 +171,6 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
       font-size: 2.5rem;
     }
 
-    .slogan-subtitle {
-      font-size: 1.1rem;
-    }
-
     .banner-video {
       object-position: center center;
     }
@@ -179,10 +181,6 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
       font-size: 2rem;
     }
 
-    .slogan-subtitle {
-      font-size: 1rem;
-    }
-
     .banner-content {
       padding: 0 15px;
     }
@@ -190,13 +188,38 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
 </style>
 
 <script>
-  // 确保视频在移动设备上自动播放
-  document.addEventListener('DOMContentLoaded', () => {
-    const video = document.querySelector('.banner-video') as HTMLVideoElement;
-    if (video) {
-      video.play().catch((error: unknown) => {
-        console.log('视频自动播放失败:', error);
-      });
+  const banner = document.querySelector('.banner');
+  const video = document.querySelector('.banner-video') as HTMLVideoElement | null;
+
+  // 确保视频在移动设备上自动播放；离屏时暂停省资源
+  if (video) {
+    video.play().catch(() => {
+      // 自动播放被浏览器策略拦截时静默失败，poster 已兜底
+    });
+
+    if ('IntersectionObserver' in window) {
+      const videoObserver = new IntersectionObserver(
+        entries => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          }
+        },
+        { threshold: 0.25 },
+    );
+      videoObserver.observe(video);
     }
+  }
+
+  // 点击下滑箭头，平滑滚动到下一屏（#about）
+  const scrollBtn = banner?.querySelector('.scroll-indicator');
+  scrollBtn?.addEventListener('click', () => {
+    document.getElementById('about')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   });
 </script>

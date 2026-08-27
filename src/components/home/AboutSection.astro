@@ -1,0 +1,128 @@
+---
+// 首页第2屏：关于 Seeker —— 简介 + 三张特色卡
+---
+
+<section aria-labelledby="about-title" class="section about-section" id="about">
+  <div class="section-inner">
+    <p class="section-kicker reveal">About Us · 关于我们</p>
+    <h2 class="section-title reveal" id="about-title">
+      关于 <span class="grad-text">Seeker追光者</span>
+    </h2>
+    <p class="section-lead reveal" style="--reveal-delay: 0.05s">
+      我们是一群拿着相机追光的人。「拍一张照片，交一个朋友」不只是口号——
+      按下快门的瞬间，我们记录世界，也认识彼此。
+    </p>
+
+    <div class="feature-grid">
+      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.1s">
+        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+          <circle cx="12" cy="13" r="3" />
+        </svg>
+        <h3 class="card-title">定期外拍</h3>
+        <p class="card-desc">从城市街头到山野湖畔，和一群人一起出门追光，边走边拍。</p>
+        <div class="card-tags">
+          <span>城市漫游</span>
+          <span>风光</span>
+          <span>街拍</span>
+        </div>
+      </div>
+
+      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.18s">
+        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="m22 8-6 4 6 4V8Z" />
+          <rect height="12" rx="2" ry="2" width="14" x="2" y="6" />
+        </svg>
+        <h3 class="card-title">线上活动</h3>
+        <p class="card-desc">时间的故事、一种关注……相隔千里，也能在屏幕前分享同一束光。</p>
+        <div class="card-tags">
+          <span>每周分享</span>
+          <span>主题征集</span>
+        </div>
+      </div>
+
+      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.26s">
+        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <h3 class="card-title">城市分部</h3>
+        <p class="card-desc">广佛、金陵……越来越多的城市亮起灯光，在你的身边找到同路人。</p>
+        <div class="card-tags">
+          <span>广佛</span>
+          <span>金陵</span>
+          <span>更多</span>
+        </div>
+      </div>
+    </div>
+
+    <a class="mini-cta reveal" href="/team">认识主理人团队 →</a>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    background:
+      radial-gradient(60% 45% at 50% 0%, oklch(0.75 0.11 185 / 0.09), transparent 70%),
+      #000;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card {
+    padding: 28px 24px;
+    cursor: default;
+  }
+
+  .card-icon {
+    width: 26px;
+    height: 26px;
+    color: #4ecdc4;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 8px;
+  }
+
+  .card-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: oklch(0.75 0 0);
+    margin: 0;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .card-tags span {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid oklch(1 0 0 / 0.15);
+    color: oklch(0.78 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .feature-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .feature-card {
+      padding: 22px 20px;
+    }
+  }
+</style>
