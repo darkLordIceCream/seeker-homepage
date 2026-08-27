@@ -1,0 +1,154 @@
+---
+// 首页第4屏：小组活动 —— 线上/线下两栏活动卡
+const online = [
+  { name: '时间的故事', desc: '以时间为题的长期摄影企划，用镜头收藏岁月。', tags: ['长期企划'] },
+  { name: '一种关注', desc: '每周一个主题征集，优秀作品群内分享点评。', tags: ['每周征集'] },
+  { name: 'Young Blood', desc: '新人作品专场，让新鲜视角被看见。', tags: ['新人向'] },
+  { name: '年度大赛', desc: '一年一度的摄影比拼，全员参与。', tags: ['年度'] },
+];
+
+const offline = [
+  { name: '周年庆', desc: '每年一次的线下大聚，见网友的日子。', tags: ['年度聚会'] },
+  { name: '年会', desc: '复盘一年的照片、故事与朋友。', tags: ['年度聚会'] },
+  { name: '兴趣小组', desc: '胶片、人像、风光……找到同好一起深入。', tags: ['常驻'] },
+  { name: '羽毛球社 & 动漫社', desc: '拍照之外的我们，也很会玩。', tags: ['生活'] },
+];
+---
+
+<section aria-labelledby="activities-title" class="section activities-section" id="activities">
+  <div class="section-inner">
+    <p class="section-kicker reveal">Activities · 小组活动</p>
+    <h2 class="section-title reveal" id="activities-title">
+      快门之外，<span class="grad-text">还有生活</span>
+    </h2>
+    <p class="section-lead reveal" style="--reveal-delay: 0.05s">
+      线上隔空互动，线下当面碰头。活动不追求数量，只希望每次都有人因为一次活动，
+      多认识一个朋友。
+    </p>
+
+    <div class="activity-columns">
+      <div class="activity-column">
+        <h3 class="column-label reveal">
+          <svg aria-hidden="true" class="label-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+            <path d="M2 12h20" />
+          </svg>
+          线上
+        </h3>
+        {online.map((item, i) => (
+          <div class="glass-card activity-card reveal" style={`--reveal-delay: ${0.08 + i * 0.06}s`}>
+            <h4 class="activity-name">{item.name}</h4>
+            <p class="activity-desc">{item.desc}</p>
+            <div class="card-tags">
+              {item.tags.map(tag => <span>{tag}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="activity-column">
+        <h3 class="column-label reveal">
+          <svg aria-hidden="true" class="label-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          线下
+        </h3>
+        {offline.map((item, i) => (
+          <div class="glass-card activity-card reveal" style={`--reveal-delay: ${0.12 + i * 0.06}s`}>
+            <h4 class="activity-name">{item.name}</h4>
+            <p class="activity-desc">{item.desc}</p>
+            <div class="card-tags">
+              {item.tags.map(tag => <span>{tag}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <a class="mini-cta reveal" href="/under-construction">查看全部活动 →</a>
+  </div>
+</section>
+
+<style>
+  .activities-section {
+    background:
+      radial-gradient(55% 40% at 12% 80%, oklch(0.75 0.11 185 / 0.08), transparent 70%),
+      #000;
+  }
+
+  .activity-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .column-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4ecdc4;
+    margin: 0 0 14px;
+    letter-spacing: 0.08em;
+  }
+
+  .label-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .activity-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .activity-card {
+    padding: 20px 22px;
+    cursor: default;
+  }
+
+  .activity-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 6px;
+  }
+
+  .activity-desc {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: oklch(0.75 0 0);
+    margin: 0;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .card-tags span {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid oklch(1 0 0 / 0.15);
+    color: oklch(0.78 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .activity-columns {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .activity-card {
+      padding: 18px;
+    }
+  }
+</style>

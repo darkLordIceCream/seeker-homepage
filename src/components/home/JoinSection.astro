@@ -1,0 +1,105 @@
+---
+// 首页第5屏：加入小组 —— 收尾 CTA（联系方式暂占位）
+---
+
+<section aria-labelledby="join-title" class="section join-section" id="join">
+  <div class="section-inner join-inner">
+    <p class="section-kicker reveal">Join Us · 加入我们</p>
+    <h2 class="join-title reveal" id="join-title">
+      <span class="grad-text">用镜头记录美好</span>
+    </h2>
+    <p class="join-lead reveal" style="--reveal-delay: 0.08s">
+      无论你用相机还是手机，无论你是老法师还是刚入坑——<br />
+      只要愿意按下快门，这里就有你的位置。
+    </p>
+
+    <div class="join-actions reveal" style="--reveal-delay: 0.16s">
+      <a class="join-btn" href="/under-construction">加入我们</a>
+      <span class="join-contact">微信：seeker-photo（占位）</span>
+    </div>
+
+    <p class="join-note reveal" style="--reveal-delay: 0.22s">
+      联系方式待补充 · 也欢迎在抖音 / 小红书 / 500px 找到我们
+    </p>
+  </div>
+</section>
+
+<style>
+  .join-section {
+    background:
+      radial-gradient(65% 55% at 50% 100%, oklch(0.7 0.14 25 / 0.14), transparent 65%),
+      radial-gradient(55% 45% at 50% 30%, oklch(0.75 0.11 185 / 0.1), transparent 70%),
+      #000;
+    text-align: center;
+  }
+
+  .join-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .join-title {
+    font-size: clamp(2.25rem, 6vw, 3.75rem);
+    font-weight: 700;
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+
+  .join-lead {
+    font-size: 16px;
+    line-height: 1.8;
+    color: oklch(0.78 0 0);
+    max-width: 560px;
+    margin: 0 0 40px;
+  }
+
+  .join-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .join-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 36px;
+    border-radius: 999px;
+    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    color: #000;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  .join-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px oklch(0.7 0.14 185 / 0.35);
+    opacity: 0.95;
+  }
+
+  .join-btn:focus-visible {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 4px;
+  }
+
+  .join-contact {
+    font-size: 14px;
+    color: oklch(0.7 0 0);
+  }
+
+  .join-note {
+    font-size: 12.5px;
+    color: oklch(0.55 0 0);
+    margin: 0;
+  }
+</style>
