@@ -17,7 +17,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
       <div class="nav-menu" id="nav-menu">
         <ul class="nav-list">
           <li class="nav-item">
-            <a class="nav-link" href="/under-construction">作品展示</a>
+            <a class="nav-link" data-section="works" href={anchor('works')}>作品展示</a>
           </li>
           <li class="nav-item dropdown">
             <a aria-expanded="false" aria-haspopup="true" class="nav-link" data-section="about" href={anchor('about')}>小组简介</a>
@@ -68,7 +68,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-section="join" href={anchor('join')}>加入小组</a>
+            <a class="nav-link" href={anchor('join')}>加入小组</a>
           </li>
         </ul>
       </div>

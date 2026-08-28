@@ -3,10 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Banner from '../components/Banner.astro';
 import Footer from '../components/Footer.astro';
+import WorksSection from '../components/home/WorksSection.astro';
+import ActsSection from '../components/home/ActsSection.astro';
 import AboutSection from '../components/home/AboutSection.astro';
-import BranchesSection from '../components/home/BranchesSection.astro';
-import ActivitiesSection from '../components/home/ActivitiesSection.astro';
-import JoinSection from '../components/home/JoinSection.astro';
 import PageProgress from '../components/home/PageProgress.astro';
 ---
 
@@ -15,10 +14,9 @@ import PageProgress from '../components/home/PageProgress.astro';
   <PageProgress />
   <main class="snap-scroll" id="main-content">
     <Banner />
+    <WorksSection />
+    <ActsSection />
     <AboutSection />
-    <BranchesSection />
-    <ActivitiesSection />
-    <JoinSection />
   </main>
   <Footer />
 </Layout>
@@ -94,7 +92,7 @@ import PageProgress from '../components/home/PageProgress.astro';
         }
       },
       { threshold: 0.15 },
-  );
+    );
 
     revealed.forEach(el => revealObserver.observe(el));
   } else {

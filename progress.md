@@ -37,10 +37,20 @@
   - 修复 ThemeToggle 固有 bug：initThemeToggle 双重注册导致单击切换两次（等于没切）
   - 修复 under-construction 死代码：.light 覆盖规则永不生效（Layout 从不加 .light 类），改令牌后自动跟随主题
   - 修复非首页导航白字压浅底不可读：Navigation--solid 常驻玻璃底（isHome 判断）
+- [x] 首页画册式改版（feat-022，替代 feat-020 的四屏区块结构）
+  - 用户诊断「像个人博客不像摄影小组」→ 影像主导重设计：照片即版式
+  - 作品墙 WorksSection：满版错落拼贴（7 块 grid-areas）+ 底片风占位（暗房渐变 + 全局 .ph-tile 胶片颗粒 +
+    EXIF 悬浮小字），恒定深底
+  - 活动 ActsSection：3 条全宽大图横条，活动名压图，单一「全部活动」入口
+  - 介绍 AboutSection：左文右图单屏，浅色「画册文字页」与深色照片区形成节奏
+  - 节奏：Hero(深·视频)→作品墙(深)→活动条(深)→介绍(浅)→Footer(浅)，翻屏 6→4
+  - scrollspy：works/activities/about 平级 section 各自映射；进度点改 4 点
+  - 修复：活动区 padding-top 56→88（标题被导航压住）
+  - 旧 ShowcaseSection/IntroSection 及四屏区块组件已删除（内容并入新组件）
 
 ### What's In Progress
 
-- 无（feat-021 已验证；分支已推送，等用户指令再建 PR）
+- 无（feat-022 已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 

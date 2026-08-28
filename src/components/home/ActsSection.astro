@@ -1,0 +1,115 @@
+---
+// 首页第3层「活动」：全宽大图横条，活动名压图（feat-018 落地前指向占位页）
+const events = [
+  {
+    name: '时间的故事',
+    desc: '以时间为题的长期摄影企划，用镜头收藏岁月',
+    tag: '长期企划',
+    g: 'radial-gradient(circle at 75% 20%, rgba(45,212,191,0.20), transparent 55%), radial-gradient(circle at 15% 85%, rgba(129,140,248,0.16), transparent 55%), linear-gradient(100deg, #171a26 0%, #0b0d14 100%)',
+  },
+  {
+    name: '一种关注',
+    desc: '每周一个主题征集，优秀作品群内分享点评',
+    tag: '每周征集',
+    g: 'radial-gradient(circle at 20% 25%, rgba(244,114,182,0.18), transparent 55%), radial-gradient(circle at 80% 75%, rgba(251,191,36,0.12), transparent 50%), linear-gradient(100deg, #1a1420 0%, #0e0a12 100%)',
+  },
+  {
+    name: 'Young Blood · 年度大赛',
+    desc: '新人作品专场与一年一度的全员摄影比拼',
+    tag: '赛事',
+    g: 'radial-gradient(circle at 80% 30%, rgba(251,146,60,0.18), transparent 55%), radial-gradient(circle at 15% 75%, rgba(56,189,248,0.15), transparent 52%), linear-gradient(100deg, #16141c 0%, #0c0a10 100%)',
+  },
+] as const;
+---
+
+<section aria-labelledby="acts-title" class="section acts-section" id="activities">
+  <header class="wall-head">
+    <h2 class="wall-title" id="acts-title">
+      活动 <span class="wall-en">Activities</span>
+    </h2>
+    <a class="wall-link" href="/under-construction">全部活动 →</a>
+  </header>
+
+  <div class="acts-stack">
+    {events.map(event => (
+      <a
+        aria-label={`${event.name}：${event.desc}（活动页建设中）`}
+        class="ph-tile act-banner"
+        href="/under-construction"
+        style={`background:${event.g}`}
+      >
+        <span class="act-tag">{event.tag}</span>
+        <span class="act-name">{event.name}</span>
+        <span class="act-desc">{event.desc}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .acts-section {
+    background: #0d0f16;
+    padding: 88px 32px 44px;
+  }
+
+  .acts-section::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+
+  .acts-stack {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    min-height: 0;
+  }
+
+  .act-banner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 4px;
+    min-height: 120px;
+    padding: 20px 26px;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .act-banner:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .act-banner:focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 3px;
+  }
+
+  .act-tag {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #5eead4;
+    margin-bottom: 4px;
+  }
+
+  .act-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .act-desc {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+</style>

@@ -1,0 +1,152 @@
+---
+// 首页第2层「作品墙」：满版错落拼贴 + 底片风占位
+// 真实作品就位后逐块替换背景（feat-016 画廊数据源可复用此结构）
+const tiles = [
+  { area: '1 / 1 / 3 / 4', exif: '35mm · f/1.8 · 1/500 · ISO100', g: 'radial-gradient(circle at 28% 30%, rgba(45,212,191,0.20), transparent 52%), radial-gradient(circle at 78% 72%, rgba(129,140,248,0.15), transparent 55%), linear-gradient(160deg, #171a26, #0b0d14)' },
+  { area: '1 / 4 / 2 / 7', exif: '85mm · f/2.0 · 1/250 · ISO400', g: 'radial-gradient(circle at 72% 28%, rgba(244,114,182,0.16), transparent 55%), radial-gradient(circle at 20% 80%, rgba(251,191,36,0.10), transparent 45%), linear-gradient(160deg, #1a1420, #0e0a12)' },
+  { area: '2 / 4 / 3 / 6', exif: '24mm · f/8 · 1/125 · ISO200', g: 'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.16), transparent 50%), linear-gradient(160deg, #101823, #0a0f16)' },
+  { area: '2 / 6 / 3 / 7', exif: '50mm · f/1.4 · 1/1000 · ISO64', g: 'radial-gradient(circle at 40% 70%, rgba(74,222,128,0.13), transparent 50%), linear-gradient(160deg, #121a16, #0a100d)' },
+  { area: '3 / 1 / 4 / 3', exif: '28mm · f/5.6 · 1/60 · ISO1600', g: 'radial-gradient(circle at 30% 65%, rgba(251,146,60,0.16), transparent 50%), linear-gradient(160deg, #1b1512, #100c0a)' },
+  { area: '3 / 3 / 4 / 5', exif: '135mm · f/4 · 1/320 · ISO800', g: 'radial-gradient(circle at 65% 35%, rgba(232,121,249,0.14), transparent 52%), linear-gradient(160deg, #171223, #0d0a14)' },
+  { area: '3 / 5 / 4 / 7', exif: '40mm · f/2.8 · 1/200 · ISO500', g: 'radial-gradient(circle at 25% 40%, rgba(94,234,212,0.15), transparent 50%), radial-gradient(circle at 80% 60%, rgba(252,165,165,0.10), transparent 48%), linear-gradient(160deg, #12171d, #0a0d11)' },
+] as const;
+---
+
+<section aria-labelledby="works-title" class="section works-section" id="works">
+  <header class="wall-head">
+    <h2 class="wall-title" id="works-title">
+      作品 <span class="wall-en">Works</span>
+    </h2>
+    <a class="wall-link" href="/under-construction">查看全部 →</a>
+  </header>
+
+  <div class="wall">
+    {tiles.map(tile => (
+      <a
+        aria-label={`摄影作品（${tile.exif}），画廊建设中`}
+        class="ph-tile wall-tile"
+        href="/under-construction"
+        style={`grid-area:${tile.area};background:${tile.g}`}
+      >
+        <span class="ph-exif">{tile.exif}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* 照片墙恒定深底（黑卡纸贴照片的画册惯例，不随主题翻转） */
+  .works-section {
+    background: #0d0f16;
+    padding: 88px 32px 36px;
+  }
+
+  .works-section::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+
+  .wall-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    max-width: 1360px;
+    width: 100%;
+    margin: 0 auto 18px;
+  }
+
+  .wall-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.06em;
+  }
+
+  .wall-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-left: 6px;
+  }
+
+  .wall-link {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .wall-link:hover {
+    color: #5eead4;
+  }
+
+  .wall-link:focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .wall {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    min-height: 0;
+  }
+
+  .wall-tile {
+    display: block;
+    border-radius: 14px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .wall-tile:hover {
+    transform: scale(1.025);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+  }
+
+  .wall-tile:focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 3px;
+  }
+
+  .ph-exif {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .wall-tile:hover .ph-exif,
+  .wall-tile:focus-visible .ph-exif {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .wall {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: none;
+      grid-auto-rows: 130px;
+    }
+
+    .wall .wall-tile {
+      grid-area: auto !important;
+    }
+  }
+</style>

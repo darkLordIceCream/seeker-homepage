@@ -299,6 +299,22 @@ html:has(.snap-scroll) .footer {
   border-radius: 4px;
 }
 
+/* —— 底片风占位图块：暗房渐变底 + 胶片颗粒（真实照片就位后逐块替换）—— */
+.ph-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+.ph-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 /* —— 滚动入场动画：仅在有 JS 时启用（无 JS 内容直接可见） —— */
 html.js .reveal {
   opacity: 0;
