@@ -1,126 +1,186 @@
 ---
-// 首页第2屏：关于 Seeker —— 简介 + 三张特色卡
+// 首页第4层「介绍」：左文右图，浅色收尾（画册的文字页），含分部与加入入口
 ---
 
 <section aria-labelledby="about-title" class="section about-section" id="about">
-  <div class="section-inner">
-    <p class="section-kicker reveal">About Us · 关于我们</p>
-    <h2 class="section-title reveal" id="about-title">
-      关于 <span class="grad-text">Seeker追光者</span>
-    </h2>
-    <p class="section-lead reveal" style="--reveal-delay: 0.05s">
-      我们是一群拿着相机追光的人。「拍一张照片，交一个朋友」不只是口号——
-      按下快门的瞬间，我们记录世界，也认识彼此。
-    </p>
+  <div class="section-inner about-grid">
+    <div class="about-copy reveal">
+      <p class="section-kicker">About · 小组介绍</p>
+      <h2 class="section-title" id="about-title">
+        一群追光的<span class="grad-text">摄影爱好者</span>
+      </h2>
+      <p class="section-lead">
+        Seeker追光者是一个摄影爱好小组，相信「拍一张照片，交一个朋友」——
+        按下快门的瞬间，我们记录世界，也认识彼此。
+      </p>
 
-    <div class="feature-grid">
-      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.1s">
-        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
-          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-          <circle cx="12" cy="13" r="3" />
-        </svg>
-        <h3 class="card-title">定期外拍</h3>
-        <p class="card-desc">从城市街头到山野湖畔，和一群人一起出门追光，边走边拍。</p>
-        <div class="card-tags">
-          <span>城市漫游</span>
-          <span>风光</span>
-          <span>街拍</span>
-        </div>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>定期外拍</strong> · 从城市街头到山野湖畔</span>
+        </li>
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>线上活动</strong> · 相隔千里也分享同一束光</span>
+        </li>
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>城市分部</strong> · 越来越多城市亮起追光的灯</span>
+        </li>
+      </ul>
+
+      <div class="branch-chips" id="branches">
+        <span class="chip">广佛分部</span>
+        <span class="chip">金陵分部</span>
+        <span class="chip chip--more">你的城市 · 期待点亮</span>
       </div>
 
-      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.18s">
-        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
-          <path d="m22 8-6 4 6 4V8Z" />
-          <rect height="12" rx="2" ry="2" width="14" x="2" y="6" />
-        </svg>
-        <h3 class="card-title">线上活动</h3>
-        <p class="card-desc">时间的故事、一种关注……相隔千里，也能在屏幕前分享同一束光。</p>
-        <div class="card-tags">
-          <span>每周分享</span>
-          <span>主题征集</span>
-        </div>
-      </div>
-
-      <div class="glass-card feature-card reveal" style="--reveal-delay: 0.26s">
-        <svg aria-hidden="true" class="card-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
-          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-        <h3 class="card-title">城市分部</h3>
-        <p class="card-desc">广佛、金陵……越来越多的城市亮起灯光，在你的身边找到同路人。</p>
-        <div class="card-tags">
-          <span>广佛</span>
-          <span>金陵</span>
-          <span>更多</span>
-        </div>
+      <div class="join-row" id="join">
+        <a class="join-btn" href="/under-construction">加入我们</a>
+        <span class="join-contact">微信：seeker-photo（占位）</span>
       </div>
     </div>
 
-    <a class="mini-cta reveal" href="/team">认识主理人团队 →</a>
+    <div
+      class="ph-tile about-photo reveal"
+      style="--reveal-delay: 0.1s; background: radial-gradient(circle at 70% 25%, rgba(45,212,191,0.20), transparent 55%), radial-gradient(circle at 20% 80%, rgba(244,114,182,0.14), transparent 55%), linear-gradient(160deg, #171a26, #0b0d14)"
+    >
+      <span class="photo-label">外拍合影位 · 等一张你们的合照</span>
+    </div>
   </div>
 </section>
 
 <style>
   .about-section {
-    background: radial-gradient(60% 45% at 50% 0%, var(--glow-a), transparent 70%);
+    background: var(--background);
   }
 
-  .feature-grid {
+  .about-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 48px;
+    align-items: center;
   }
 
-  .feature-card {
-    padding: 28px 24px;
-    cursor: default;
+  .section-lead {
+    margin-bottom: 24px;
   }
 
-  .card-icon {
-    width: 26px;
-    height: 26px;
-    color: var(--grad-a);
-    margin-bottom: 16px;
+  .feature-list {
+    list-style: none;
+    margin: 0 0 22px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .card-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--foreground);
-    margin: 0 0 8px;
-  }
-
-  .card-desc {
-    font-size: 14px;
-    line-height: 1.7;
+  .feature-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 14.5px;
     color: var(--muted-foreground);
-    margin: 0;
   }
 
-  .card-tags {
+  .feature-list strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .feature-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+    transform: translateY(-1px);
+  }
+
+  .branch-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 16px;
+    gap: 8px;
+    margin-bottom: 22px;
   }
 
-  .card-tags span {
-    font-size: 11px;
-    padding: 3px 10px;
+  .chip {
+    padding: 6px 14px;
     border-radius: 999px;
     border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    font-size: 13px;
+    color: var(--foreground);
+  }
+
+  .chip--more {
+    border-style: dashed;
     color: var(--muted-foreground);
-    white-space: nowrap;
+  }
+
+  .join-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .join-btn {
+    display: inline-flex;
+    padding: 11px 30px;
+    border-radius: 999px;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
+    font-size: 14.5px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .join-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glass-hover-shadow);
+  }
+
+  .join-btn:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+  }
+
+  .join-contact {
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  .about-photo {
+    display: flex;
+    align-items: flex-end;
+    padding: 18px;
+    aspect-ratio: 4 / 4.6;
+    max-height: 560px;
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .photo-label {
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.55);
   }
 
   @media (max-width: 768px) {
-    .feature-grid {
+    .about-grid {
       grid-template-columns: 1fr;
-      gap: 14px;
+      gap: 28px;
     }
 
-    .feature-card {
-      padding: 22px 20px;
+    .about-photo {
+      aspect-ratio: 16 / 9;
+      max-height: none;
     }
   }
 </style>
