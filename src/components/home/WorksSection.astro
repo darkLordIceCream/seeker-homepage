@@ -35,14 +35,14 @@ const tiles = [
 </section>
 
 <style>
-  /* 照片墙恒定深底（黑卡纸贴照片的画册惯例，不随主题翻转） */
+  /* 浅色桌面上的照片墙：白边相框 + 微旋转，像手工贴上的照片 */
   .works-section {
-    background: #0d0f16;
+    background: var(--background);
     padding: 88px 32px 36px;
   }
 
   .works-section::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, var(--divider), transparent);
   }
 
   .wall-head {
@@ -51,13 +51,13 @@ const tiles = [
     justify-content: space-between;
     max-width: 1360px;
     width: 100%;
-    margin: 0 auto 18px;
+    margin: 0 auto 22px;
   }
 
   .wall-title {
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
-    color: #fff;
+    color: var(--foreground);
     margin: 0;
     letter-spacing: 0.06em;
   }
@@ -68,24 +68,24 @@ const tiles = [
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--muted-foreground);
     margin-left: 6px;
   }
 
   .wall-link {
     font-size: 13.5px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--grad-a);
     text-decoration: none;
-    transition: color 0.2s ease;
   }
 
   .wall-link:hover {
-    color: #5eead4;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .wall-link:focus-visible {
-    outline: 2px solid #5eead4;
+    outline: 2px solid var(--grad-a);
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -95,27 +95,40 @@ const tiles = [
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 12px;
+    gap: 18px;
     width: 100%;
     max-width: 1360px;
     margin: 0 auto;
     min-height: 0;
   }
 
+  /* 白边相框 + 微旋转：照片贴纸感，hover 转正抬起 */
   .wall-tile {
     display: block;
-    border-radius: 14px;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    border: 5px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(76, 79, 105, 0.24);
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+  }
+
+  .wall-tile:nth-child(odd) {
+    transform: rotate(-0.8deg);
+  }
+
+  .wall-tile:nth-child(even) {
+    transform: rotate(0.7deg);
   }
 
   .wall-tile:hover {
-    transform: scale(1.025);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    transform: rotate(0deg) scale(1.035);
+    box-shadow: 0 22px 55px rgba(76, 79, 105, 0.34);
     z-index: 2;
   }
 
   .wall-tile:focus-visible {
-    outline: 2px solid #5eead4;
+    outline: 2px solid var(--grad-a);
     outline-offset: 3px;
   }
 
@@ -126,7 +139,7 @@ const tiles = [
     font-family: 'Archivo', sans-serif;
     font-size: 10.5px;
     letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.55);
     opacity: 0;
     transform: translateY(4px);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -143,10 +156,15 @@ const tiles = [
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: none;
       grid-auto-rows: 130px;
+      gap: 14px;
     }
 
     .wall .wall-tile {
       grid-area: auto !important;
+    }
+
+    .wall-tile {
+      border-width: 4px;
     }
   }
 </style>

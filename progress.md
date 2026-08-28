@@ -47,10 +47,17 @@
   - scrollspy：works/activities/about 平级 section 各自映射；进度点改 4 点
   - 修复：活动区 padding-top 56→88（标题被导航压住）
   - 旧 ShowcaseSection/IntroSection 及四屏区块组件已删除（内容并入新组件）
+- [x] feat-022 迭代：内容层全部浅色化 + 卡片堆叠形式（用户反馈第二轮）
+  - 作品墙：恒定深底→浅色底，作品块加白边相框（5px）+ 交替微旋转（±0.7°）
+    - 层叠阴影，hover 转正放大
+  - 活动区：三条横条→拍立得照片堆（3 张白框厚底卡 38% 宽错位叠放，活动名写在下方白边，hover 抽出转正放大 z-index 置顶），移动端纵向堆叠
+  - 排障：vite 长时间 HMR 后模块状态损坏（ActsSection 样式整体失效、dev
+    server 启动 fetchModule 超时）→ 杀残留进程 + 清 node_modules/.astro
+    - 重启 dev server 解决
 
 ### What's In Progress
 
-- 无（feat-022 已验证；分支已推送，等用户指令再建 PR）
+- 无（feat-022 迭代已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 

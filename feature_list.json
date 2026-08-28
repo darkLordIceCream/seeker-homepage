@@ -170,11 +170,11 @@
     },
     {
       "id": "feat-022",
-      "name": "首页画册式改版（作品墙 + 活动横条）",
-      "description": "去博客化的影像主导布局：作品满版错落拼贴墙（底片风占位 + EXIF 悬浮字，7 块 grid-areas）+ 活动全宽大图横条×3 + 介绍页左文右图（浅色文字页与深色照片区形成画册节奏）；全局 .ph-tile 胶片颗粒公共类；翻屏次数 6→4",
+      "name": "首页画册式改版（作品墙 + 活动照片堆）",
+      "description": "去博客化的影像主导布局：作品满版错落拼贴墙（浅色底 + 白边相框 + 微旋转，底片风占位 + EXIF 悬浮字）+ 活动拍立得照片堆（3 张白框厚底卡错位叠放，hover 抽出转正，单一「全部活动」入口）+ 介绍页左文右图；全部内容层浅色化；翻屏次数 6→4",
       "dependencies": ["feat-020", "feat-021"],
       "status": "done",
-      "evidence": "./init.sh 0 错误 0 警告；浏览器逐屏截图验证（作品墙/活动条/介绍页）；scrollspy 与进度点 4 点联动正常（分支 feat/update-astro-homepage）"
+      "evidence": "./init.sh 0 错误 0 警告；浏览器逐屏截图验证（作品墙/照片堆含 hover 抽出/介绍页）；scrollspy 与进度点 4 点联动正常（分支 feat/update-astro-homepage）"
     }
   ]
 }
