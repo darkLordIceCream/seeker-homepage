@@ -123,13 +123,17 @@ seeker-homepage/
 ├── public/                 # 静态资源
 │   └── favicon.svg        # 网站图标
 ├── src/
-│   ├── assets/            # 图片、视频等资源
-│   │   ├── images/        # 图片资源
-│   │   └── videos/        # 视频资源
+│   ├── assets/            # 图片资源（大文件走 Cloudflare R2）
+│   │   └── images/        # 图片资源
 │   ├── components/        # Astro 和 React 组件
 │   │   ├── ui/            # shadcn/ui 组件
+│   │   ├── home/          # 首页区块组件
+│   │   │   ├── WorksSection.astro   # 画廊：35mm 胶片带（自动轮播）
+│   │   │   ├── ActsSection.astro    # 活动：拍立得照片堆
+│   │   │   ├── AboutSection.astro   # 小组介绍（左文右图）
+│   │   │   └── PageProgress.astro   # 右侧进度圆点（水滴动效）
 │   │   ├── Banner.astro   # 视频横幅组件
-│   │   ├── Navigation.astro # 导航栏
+│   │   ├── Navigation.astro # 导航栏（玻璃态 + scrollspy）
 │   │   ├── Footer.astro   # 页脚
 │   │   ├── ThemeToggle.astro # 主题切换器
 │   │   ├── SEOHead.astro  # SEO 元数据
@@ -141,11 +145,11 @@ seeker-homepage/
 │   ├── layouts/           # 页面布局
 │   │   └── Layout.astro   # 根布局
 │   ├── pages/             # 页面文件
-│   │   ├── index.astro    # 首页
+│   │   ├── index.astro    # 首页（整屏滚动：Hero→画廊→活动→介绍）
 │   │   ├── team.astro     # 团队页面
 │   │   └── under-construction.astro # 施工中占位页面
 │   ├── styles/            # 样式文件
-│   │   └── global.css     # 全局样式 + shadcn 主题
+│   │   └── global.css     # 全局样式 + shadcn 主题（Catppuccin Latte/Mocha）
 │   └── lib/               # 工具函数
 │       └── utils.ts       # cn() 工具函数
 ├── .agents/               # Agent 技能 (Matt Pocock)
@@ -190,12 +194,14 @@ seeker-homepage/
 ### 设计系统
 
 ```css
-/* 颜色系统（CSS 变量） */
---primary: oklch(0.21 0.006 285.885);
---accent: oklch(0.967 0.001 286.375);
+/* 主题：Catppuccin Latte（浅色，默认）/ Mocha（深色，ThemeToggle 切换） */
+--background: #eff1f5; /* Latte Base */
+--foreground: #4c4f69; /* Latte Text */
+--primary: #179299; /* Latte Teal */
 
-/* 自定义颜色 */
-#4ecdc4 (青色) + #ff6b6b (珊瑚红) 渐变
+/* 品牌渐变（标语下划线、CTA、进度点） */
+--grad-a: #179299; /* Teal */
+--grad-b: #d20f39; /* Red */
 ```
 
 ## 🤖 Agent Harness

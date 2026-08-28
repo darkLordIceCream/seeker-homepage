@@ -2,8 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-08-27 **Branch:** feat/update-astro-homepage（基于 main
-227a810）**Active Feature:** feat-020 - 首页整屏滚动改版（已完成，待 PR）
+**Last Updated:** 2026-08-29 **Branch:**
+main（feat/update-astro-homepage 已随 PR #10 合入，合并提交 05cd810）**Active
+Feature:** 无 —— 首页画册式改版（feat-020~022）已完成并合并
 
 ## Status
 
@@ -78,7 +79,7 @@
 
 ### What's In Progress
 
-- 无（迭代五已验证；分支已推送，等用户指令再建 PR）
+- 无（feat-020~022 已全部合入 main；待办：/join 联系方式素材、画廊真实作品、feat-016/018 详情页）
 
 ### What's Next
 
@@ -143,7 +144,7 @@
 
 ## Notes for Next Session
 
-- 当前在 feat/update-astro-homepage 分支，已本地提交，尚未推送
+- 当前在 main 分支，PR #10 已合并；feat-016~019 可基于新首页结构继续开发
 - 后续功能（feat-016~019）可基于首页区块的卡片语言继续开发
 - #join 联系方式占位内容待用户提供
 - 参考 DEVELOPMENT_STANDARDS.md 遵循开发规范
