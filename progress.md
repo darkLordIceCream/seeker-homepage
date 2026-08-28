@@ -26,10 +26,21 @@
   - 通用玻璃卡样式收口到 global.css（.glass-card 与导航下拉同配方）
   - reveal 入场动画（html.js 门控 + IntersectionObserver + 错峰延迟）
   - 顺手修复：渐变标语 text-shadow→drop-shadow；页脚社交图标统一 24px；页脚联系方式 emoji→SVG 图标；版权年份动态化；移除 console.log；视频离屏自动暂停；100vh→100svh
+- [x] 全站浅色主题 Catppuccin Latte（feat-021）
+  - shadcn 变量重映射：:root = Latte（浅色默认），.dark =
+    Mocha（ThemeToggle 切换保留）
+  - 品牌渐变 #4ecdc4→#ff6b6b → Latte Teal #179299 → Red
+    #d20f39（对比度核对：浅底大字 ≥3:1、按钮白字 ≥4.5:1）
+  - 新增界面令牌：--grad-a/b、--on-gradient、--glass-*、--divider、--glow-a/b、--icon-tile
+  - 组件去硬编码：Layout/Navigation/ThemeToggle/4 个 section/PageProgress/Footer/TeamHero/MemberCard/MemberSocial/team/under-construction
+  - 首屏视频区保持沉浸式深色（用户之前要求第一屏保持现状）；导航顶部悬浮白字、落地/非首页切换主题前景色（--nav-* 状态变量）
+  - 修复 ThemeToggle 固有 bug：initThemeToggle 双重注册导致单击切换两次（等于没切）
+  - 修复 under-construction 死代码：.light 覆盖规则永不生效（Layout 从不加 .light 类），改令牌后自动跟随主题
+  - 修复非首页导航白字压浅底不可读：Navigation--solid 常驻玻璃底（isHome 判断）
 
 ### What's In Progress
 
-- 无（feat-020 已完成验证，待用户确认后推送/建 PR）
+- 无（feat-021 已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 

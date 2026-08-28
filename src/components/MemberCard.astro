@@ -41,11 +41,11 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
 
 <style>
   .member-card {
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.8) 100%);
+    background: var(--card);
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.4s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
     animation: fadeInUp 0.8s ease-out;
     animation-fill-mode: both;
@@ -58,8 +58,8 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
 
   .member-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 60px rgba(78, 205, 196, 0.2);
-    border-color: rgba(78, 205, 196, 0.3);
+    box-shadow: var(--glass-hover-shadow);
+    border-color: var(--glass-hover-border);
   }
 
   .member-image-wrapper {
@@ -76,17 +76,17 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
     object-fit: cover;
     border-radius: 50%;
     transition: border-color 0.4s ease;
-    border: 4px solid rgba(78, 205, 196, 0.3);
+    border: 4px solid var(--glass-hover-border);
   }
 
   .member-card:hover .member-avatar {
-    border-color: rgba(78, 205, 196, 0.6);
+    border-color: var(--grad-a);
   }
 
   .member-info {
     flex: 1;
     padding: 0;
-    color: #fff;
+    color: var(--foreground);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -106,7 +106,7 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
     font-size: 2rem;
     font-weight: 700;
     margin: 0;
-    background: linear-gradient(45deg, #fff, #4ecdc4);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -115,8 +115,8 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
   .member-role {
     display: inline-block;
     padding: 6px 16px;
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
-    color: #fff;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
     border-radius: 20px;
     font-size: 0.875rem;
     font-weight: 600;
@@ -125,7 +125,7 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
 
   .member-title {
     font-size: 1.2rem;
-    color: #4ecdc4;
+    color: var(--grad-a);
     margin: 0 0 20px 0;
     font-weight: 500;
   }
@@ -133,7 +133,7 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
   .member-bio {
     font-size: 1rem;
     line-height: 1.8;
-    color: #ccc;
+    color: var(--muted-foreground);
     margin: 0 0 20px 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -151,17 +151,17 @@ const { name, role, title, avatar, bio, specialties, social } = member.data;
 
   .specialty-tag {
     padding: 6px 14px;
-    background: rgba(78, 205, 196, 0.15);
-    border: 1px solid rgba(78, 205, 196, 0.3);
+    background: var(--icon-tile);
+    border: 1px solid var(--glass-hover-border);
     border-radius: 15px;
     font-size: 0.875rem;
-    color: #4ecdc4;
+    color: var(--grad-a);
     transition: all 0.3s ease;
   }
 
   .specialty-tag:hover {
-    background: rgba(78, 205, 196, 0.25);
-    border-color: #4ecdc4;
+    background: var(--icon-tile);
+    border-color: var(--grad-a);
     transform: translateY(-2px);
   }
 

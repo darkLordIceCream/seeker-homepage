@@ -71,8 +71,8 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: #fff;
+    background: var(--secondary);
+    color: var(--foreground);
     padding: 60px 0 20px;
     margin-top: 0;
   }
@@ -99,7 +99,7 @@ const year = new Date().getFullYear();
     font-size: 28px;
     font-weight: 700;
     margin: 0 0 15px 0;
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -108,7 +108,7 @@ const year = new Date().getFullYear();
   .footer-description {
     font-size: 16px;
     line-height: 1.6;
-    color: #ccc;
+    color: var(--muted-foreground);
     margin: 0 0 20px 0;
   }
 
@@ -123,25 +123,25 @@ const year = new Date().getFullYear();
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--accent);
     border-radius: 50%;
-    color: #fff;
+    color: var(--foreground);
     text-decoration: none;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
   }
 
   .social-link:hover {
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+    box-shadow: var(--glass-hover-shadow);
   }
 
   .footer-subtitle {
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 20px 0;
-    color: #fff;
+    color: var(--foreground);
   }
 
   .footer-links {
@@ -155,19 +155,19 @@ const year = new Date().getFullYear();
   }
 
   .footer-links a {
-    color: #ccc;
+    color: var(--muted-foreground);
     text-decoration: none;
     font-size: 14px;
     transition: color 0.3s ease;
   }
 
   .footer-links a:hover {
-    color: #4ecdc4;
+    color: var(--grad-a);
   }
 
   .contact-info p {
     margin: 0 0 10px 0;
-    color: #ccc;
+    color: var(--muted-foreground);
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -178,11 +178,11 @@ const year = new Date().getFullYear();
     width: 16px;
     height: 16px;
     flex-shrink: 0;
-    color: #4ecdc4;
+    color: var(--grad-a);
   }
 
   .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--divider);
     padding-top: 20px;
     text-align: center;
   }
@@ -196,7 +196,7 @@ const year = new Date().getFullYear();
 
   .footer-copyright p {
     margin: 0;
-    color: #aaa;
+    color: var(--muted-foreground);
     font-size: 14px;
   }
 
@@ -207,9 +207,9 @@ const year = new Date().getFullYear();
   }
 
   .tech-name {
-    color: #4ecdc4;
+    color: var(--grad-a);
     font-weight: 600;
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -27,9 +27,8 @@
 <style>
   .join-section {
     background:
-      radial-gradient(65% 55% at 50% 100%, oklch(0.7 0.14 25 / 0.14), transparent 65%),
-      radial-gradient(55% 45% at 50% 30%, oklch(0.75 0.11 185 / 0.1), transparent 70%),
-      #000;
+      radial-gradient(65% 55% at 50% 100%, var(--glow-b), transparent 65%),
+      radial-gradient(55% 45% at 50% 30%, var(--glow-a), transparent 70%);
     text-align: center;
   }
 
@@ -49,7 +48,7 @@
   .join-lead {
     font-size: 16px;
     line-height: 1.8;
-    color: oklch(0.78 0 0);
+    color: var(--muted-foreground);
     max-width: 560px;
     margin: 0 0 40px;
   }
@@ -69,8 +68,8 @@
     gap: 8px;
     padding: 13px 36px;
     border-radius: 999px;
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
-    color: #000;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
@@ -83,23 +82,23 @@
 
   .join-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 32px oklch(0.7 0.14 185 / 0.35);
+    box-shadow: var(--glass-hover-shadow);
     opacity: 0.95;
   }
 
   .join-btn:focus-visible {
-    outline: 2px solid #4ecdc4;
+    outline: 2px solid var(--grad-a);
     outline-offset: 4px;
   }
 
   .join-contact {
     font-size: 14px;
-    color: oklch(0.7 0 0);
+    color: var(--muted-foreground);
   }
 
   .join-note {
     font-size: 12.5px;
-    color: oklch(0.55 0 0);
+    color: var(--muted-foreground);
     margin: 0;
   }
 </style>

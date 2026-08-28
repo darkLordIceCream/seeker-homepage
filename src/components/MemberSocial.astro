@@ -49,7 +49,7 @@ const { memberName, social } = Astro.props;
     gap: 15px;
     padding-top: 15px;
     margin-top: auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--glass-border);
   }
 
   .social-icon {
@@ -58,17 +58,17 @@ const { memberName, social } = Astro.props;
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--accent);
     border-radius: 50%;
-    color: #fff;
+    color: var(--foreground);
     text-decoration: none;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
   }
 
   .social-icon:hover {
-    background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+    box-shadow: var(--glass-hover-shadow);
   }
 </style>

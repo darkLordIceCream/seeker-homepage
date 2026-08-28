@@ -73,9 +73,7 @@ const offline = [
 
 <style>
   .activities-section {
-    background:
-      radial-gradient(55% 40% at 12% 80%, oklch(0.75 0.11 185 / 0.08), transparent 70%),
-      #000;
+    background: radial-gradient(55% 40% at 12% 80%, var(--glow-a), transparent 70%);
     /* 8 张卡内容较高：压缩纵向节奏，保证 800px 高视口下整屏放下 */
     padding-top: 88px;
     padding-bottom: 48px;
@@ -97,7 +95,7 @@ const offline = [
     gap: 8px;
     font-size: 15px;
     font-weight: 600;
-    color: #4ecdc4;
+    color: var(--grad-a);
     margin: 0 0 12px;
     letter-spacing: 0.08em;
   }
@@ -121,14 +119,14 @@ const offline = [
   .activity-name {
     font-size: 15px;
     font-weight: 600;
-    color: #fff;
+    color: var(--foreground);
     margin: 0 0 4px;
   }
 
   .activity-desc {
     font-size: 13px;
     line-height: 1.55;
-    color: oklch(0.75 0 0);
+    color: var(--muted-foreground);
     margin: 0;
   }
 
@@ -143,8 +141,8 @@ const offline = [
     font-size: 10.5px;
     padding: 2px 8px;
     border-radius: 999px;
-    border: 1px solid oklch(1 0 0 / 0.15);
-    color: oklch(0.78 0 0);
+    border: 1px solid var(--glass-border);
+    color: var(--muted-foreground);
     white-space: nowrap;
   }
 

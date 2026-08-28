@@ -62,9 +62,7 @@
 
 <style>
   .about-section {
-    background:
-      radial-gradient(60% 45% at 50% 0%, oklch(0.75 0.11 185 / 0.09), transparent 70%),
-      #000;
+    background: radial-gradient(60% 45% at 50% 0%, var(--glow-a), transparent 70%);
   }
 
   .feature-grid {
@@ -81,21 +79,21 @@
   .card-icon {
     width: 26px;
     height: 26px;
-    color: #4ecdc4;
+    color: var(--grad-a);
     margin-bottom: 16px;
   }
 
   .card-title {
     font-size: 18px;
     font-weight: 600;
-    color: #fff;
+    color: var(--foreground);
     margin: 0 0 8px;
   }
 
   .card-desc {
     font-size: 14px;
     line-height: 1.7;
-    color: oklch(0.75 0 0);
+    color: var(--muted-foreground);
     margin: 0;
   }
 
@@ -110,8 +108,8 @@
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 999px;
-    border: 1px solid oklch(1 0 0 / 0.15);
-    color: oklch(0.78 0 0);
+    border: 1px solid var(--glass-border);
+    color: var(--muted-foreground);
     white-space: nowrap;
   }
 

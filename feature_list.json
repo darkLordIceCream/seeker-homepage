@@ -159,6 +159,14 @@
       "dependencies": ["feat-002", "feat-005"],
       "status": "done",
       "evidence": "./init.sh 全部通过；构建产物 16 项结构检查通过（分支 feat/update-astro-homepage，待 PR）；#join 联系方式为占位待补"
+    },
+    {
+      "id": "feat-021",
+      "name": "全站浅色主题（Catppuccin Latte）",
+      "description": "shadcn 变量重映射为 Catppuccin Latte（浅色默认）/ Mocha（深色切换）；品牌渐变 #4ecdc4→#ff6b6b 换为 Latte Teal→Red；全部组件硬编码深色改读令牌；首屏视频区保持沉浸式深色；修复 ThemeToggle 双重绑定 bug 与非首页导航白字不可读问题",
+      "dependencies": ["feat-004", "feat-020"],
+      "status": "done",
+      "evidence": "./init.sh 0 错误 0 警告；浏览器实测浅色首页五屏/团队页/深色切换均正常（分支 feat/update-astro-homepage）"
     }
   ]
 }
