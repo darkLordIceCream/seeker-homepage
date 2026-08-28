@@ -123,13 +123,17 @@ seeker-homepage/
 ├── public/                 # Static assets
 │   └── favicon.svg        # Site favicon
 ├── src/
-│   ├── assets/            # Images, videos, etc.
-│   │   ├── images/        # Image assets
-│   │   └── videos/        # Video assets
+│   ├── assets/            # Image assets (large media lives in Cloudflare R2)
+│   │   └── images/        # Image assets
 │   ├── components/        # Astro & React components
 │   │   ├── ui/            # shadcn/ui components
+│   │   ├── home/          # Homepage section components
+│   │   │   ├── WorksSection.astro   # Gallery: 35mm film strip (auto-play)
+│   │   │   ├── ActsSection.astro    # Activities: polaroid photo stack
+│   │   │   ├── AboutSection.astro   # Group intro (text + photo)
+│   │   │   └── PageProgress.astro   # Progress dots (water-drop motion)
 │   │   ├── Banner.astro   # Video banner component
-│   │   ├── Navigation.astro # Navigation bar
+│   │   ├── Navigation.astro # Navigation bar (glass state + scrollspy)
 │   │   ├── Footer.astro   # Site footer
 │   │   ├── ThemeToggle.astro # Theme switcher
 │   │   ├── SEOHead.astro  # SEO meta tags
@@ -141,11 +145,11 @@ seeker-homepage/
 │   ├── layouts/           # Page layouts
 │   │   └── Layout.astro   # Root layout
 │   ├── pages/             # Page files
-│   │   ├── index.astro    # Homepage
+│   │   ├── index.astro    # Homepage (fullpage scroll: Hero→Gallery→Acts→About)
 │   │   ├── team.astro     # Team page
 │   │   └── under-construction.astro # Under construction placeholder
 │   ├── styles/            # Style files
-│   │   └── global.css     # Global styles + shadcn theme
+│   │   └── global.css     # Global styles + shadcn theme (Catppuccin Latte/Mocha)
 │   └── lib/               # Utility functions
 │       └── utils.ts       # cn() utility
 ├── .agents/               # Agent skills (Matt Pocock)
@@ -190,12 +194,14 @@ Using shadcn/ui (New York style, Zinc base) for:
 ### Design System
 
 ```css
-/* Color system (CSS variables) */
---primary: oklch(0.21 0.006 285.885);
---accent: oklch(0.967 0.001 286.375);
+/* Theme: Catppuccin Latte (light, default) / Mocha (dark, via ThemeToggle) */
+--background: #eff1f5; /* Latte Base */
+--foreground: #4c4f69; /* Latte Text */
+--primary: #179299; /* Latte Teal */
 
-/* Custom colors */
-#4ecdc4 (teal) + #ff6b6b (coral) gradient
+/* Brand gradient (headlines, underline, CTA, progress dots) */
+--grad-a: #179299; /* Teal */
+--grad-b: #d20f39; /* Red */
 ```
 
 ## 🤖 Agent Harness
