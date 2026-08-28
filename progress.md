@@ -54,10 +54,15 @@
   - 排障：vite 长时间 HMR 后模块状态损坏（ActsSection 样式整体失效、dev
     server 启动 fetchModule 超时）→ 杀残留进程 + 清 node_modules/.astro
     - 重启 dev server 解决
+- [x] feat-022 迭代二：作品页改胶片带画廊 + 活动卡 sticky 突出（用户反馈第三轮）
+  - 作品页标题改「画廊 GALLERY」；错落拼贴→35mm 胶片带：上下齿孔（repeating-gradient + 走带动画）、帧线分隔、帧号 No.01~07、内容双份渲染 +
+    translateX(-50%) 无缝自动轮播（42s，hover/focus 暂停，reduced-motion 降级为横向滚动）
+  - 活动拍立得：突出态从 :hover 改为 JS 维护的 .active 类（mouseenter/focus 跟随，鼠标移开后保持到下一张），第二张默认突出
+  - 排障补充：浏览器端样式异常时先确认是否同页 hash 跳转未真正重新加载；生产构建（build+preview）是可靠的验收路径
 
 ### What's In Progress
 
-- 无（feat-022 迭代已验证；分支已推送，等用户指令再建 PR）
+- 无（迭代二已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 
