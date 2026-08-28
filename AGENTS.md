@@ -7,9 +7,13 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
 ## Project Layout
 
 - `src/pages/` — routes (`index.astro`, `team.astro`,
-  `under-construction.astro`); keep pages thin
-- `src/components/` — reusable `.astro` components (Navigation, Banner, Footer,
-  TeamHero, MemberCard, MemberSocial, ThemeToggle, SEOHead)
+  `under-construction.astro`); keep pages thin. `index.astro` is a fullpage
+  scroll-snap layout: Hero video → Gallery → Activities → About
+- `src/components/` — reusable `.astro` components (Navigation with glass
+  scrolled state + scrollspy, Banner, Footer, ThemeToggle, SEOHead, TeamHero,
+  MemberCard, MemberSocial)
+- `src/components/home/` — homepage sections (WorksSection film-strip gallery,
+  ActsSection polaroid stack, AboutSection intro, PageProgress dots)
 - `src/components/ui/` — shadcn/ui components (New York style, zinc base, lucide
   icons); add via shadcn conventions, don't hand-roll equivalents
 - `src/layouts/Layout.astro` — root layout; every page must reuse it
@@ -17,7 +21,8 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   (currently `members`); site content lives here as Markdown, NOT hardcoded in
   pages
 - `src/styles/global.css` — Tailwind 4 CSS-first config + shadcn CSS variables
-  (no `tailwind.config.js`)
+  (no `tailwind.config.js`); theme = Catppuccin Latte (light, default) / Mocha
+  (dark via `.dark`), brand gradient tokens `--grad-a/--grad-b`
 - `src/assets/` — images processed by `astro:assets`
 - `public/` — static files served as-is
 
