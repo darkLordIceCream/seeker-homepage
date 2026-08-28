@@ -3,12 +3,99 @@ import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Banner from '../components/Banner.astro';
 import Footer from '../components/Footer.astro';
+import WorksSection from '../components/home/WorksSection.astro';
+import ActsSection from '../components/home/ActsSection.astro';
+import AboutSection from '../components/home/AboutSection.astro';
+import PageProgress from '../components/home/PageProgress.astro';
 ---
 
 <Layout description="Seeker追光者官网，拍一张照片，交一个朋友" title="Seeker追光者">
   <Navigation />
-  <main id="main-content">
+  <PageProgress />
+  <main class="snap-scroll" id="main-content">
     <Banner />
+    <WorksSection />
+    <ActsSection />
+    <AboutSection />
   </main>
   <Footer />
 </Layout>
+
+<style>
+  /* snap 容器：global.css 通过 html:has(.snap-scroll) 启用整屏吸附 */
+  .snap-scroll {
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<script>
+  // 带锚点进入时（如 /team 页点「小组简介」→ /#about）重新定位：
+  // 锚点跳转发生在样式加载前，scroll-snap 生效后位置会被拉回首屏。
+  // 不能等 load 事件——R2 大视频会把 load 拖到十几秒之后
+  if (window.location.hash) {
+    let userScrolled = false;
+    const markUserScrolled = () => {
+      userScrolled = true;
+    };
+    window.addEventListener('wheel', markUserScrolled, { once: true, passive: true });
+    window.addEventListener('touchstart', markUserScrolled, { once: true, passive: true });
+    window.addEventListener('keydown', markUserScrolled, { once: true });
+
+    const scrollToHash = () => {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
+    };
+
+    // 主路径：DOM 就绪后立即跳（模块脚本执行时 CSS 已是渲染阻塞资源，样式必已生效；
+    // 双 rAF 等一帧样式应用）
+    const jumpWhenReady = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(scrollToHash);
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', jumpWhenReady, { once: true });
+    } else {
+      jumpWhenReady();
+    }
+
+    // 兜底：load 后若位置漂移且用户尚未操作，再校准一次
+    window.addEventListener(
+      'load',
+      () => {
+        if (userScrolled) {
+          return;
+        }
+        const target = document.querySelector(window.location.hash);
+        if (target && Math.abs(target.getBoundingClientRect().top) > 2) {
+          scrollToHash();
+        }
+      },
+      { once: true },
+    );
+  }
+
+  // 滚动入场动画：reveal 元素进入视口后加 .in-view（CSS 侧延迟错峰）
+  const revealed = document.querySelectorAll<HTMLElement>('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            revealObserver.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    revealed.forEach(el => revealObserver.observe(el));
+  } else {
+    revealed.forEach(el => el.classList.add('in-view'));
+  }
+</script>

@@ -41,24 +41,32 @@
     position: relative;
   }
 
+  /* 颜色取自 .navigation 的状态变量（--nav-*）：
+     顶部悬浮在视频上时白字，滚动落地后自动跟随主题前景色 */
   .theme-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--nav-pill-border);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--nav-pill-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     cursor: pointer;
     transition: all 0.3s ease;
-    color: white;
+    color: var(--nav-fg);
   }
 
   .theme-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--nav-hover);
+    color: var(--nav-hover);
+  }
+
+  .theme-toggle-btn:focus-visible {
+    outline: 2px solid var(--nav-hover);
+    outline-offset: 2px;
   }
 
   .sun-icon {
@@ -75,7 +83,7 @@
     transition: all 0.3s ease;
   }
 
-  /* Dark mode styles */
+  /* Dark mode styles：切换图标显示 */
   :global(.dark) .sun-icon {
     opacity: 0;
     transform: rotate(90deg) scale(0);
@@ -84,17 +92,6 @@
   :global(.dark) .moon-icon {
     opacity: 1;
     transform: rotate(0deg) scale(1);
-  }
-
-  :global(.dark) .theme-toggle-btn {
-    color: #1f2937;
-    background: rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :global(.dark) .theme-toggle-btn:hover {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(0, 0, 0, 0.3);
   }
 </style>
 
@@ -132,13 +129,10 @@
     }
   }
 
-  // Initialize on page load
+  // Initialize on page load（只注册一次，避免点击被切换两次）
   if (typeof window !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', initThemeToggle);
-
-    // Also run immediately in case DOM is already loaded
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initThemeToggle);
+      document.addEventListener('DOMContentLoaded', initThemeToggle, { once: true });
     } else {
       initThemeToggle();
     }

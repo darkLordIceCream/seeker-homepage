@@ -1,0 +1,245 @@
+---
+// 首页第2层「画廊」：35mm 胶片带——上下齿孔 + 帧线 + 自动匀速轮播（hover 暂停）
+// 真实作品就位后逐帧替换背景（feat-016 画廊数据源可复用此结构）
+const PLACEHOLDER_HREF = '/under-construction';
+
+const frames = [
+  { no: '01', exif: '35mm · f/1.8 · 1/500 · ISO100', g: 'radial-gradient(circle at 28% 30%, rgba(45,212,191,0.20), transparent 52%), radial-gradient(circle at 78% 72%, rgba(129,140,248,0.15), transparent 55%), linear-gradient(160deg, #171a26, #0b0d14)' },
+  { no: '02', exif: '85mm · f/2.0 · 1/250 · ISO400', g: 'radial-gradient(circle at 72% 28%, rgba(244,114,182,0.16), transparent 55%), radial-gradient(circle at 20% 80%, rgba(251,191,36,0.10), transparent 45%), linear-gradient(160deg, #1a1420, #0e0a12)' },
+  { no: '03', exif: '24mm · f/8 · 1/125 · ISO200', g: 'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.16), transparent 50%), linear-gradient(160deg, #101823, #0a0f16)' },
+  { no: '04', exif: '50mm · f/1.4 · 1/1000 · ISO64', g: 'radial-gradient(circle at 40% 70%, rgba(74,222,128,0.13), transparent 50%), linear-gradient(160deg, #121a16, #0a100d)' },
+  { no: '05', exif: '28mm · f/5.6 · 1/60 · ISO1600', g: 'radial-gradient(circle at 30% 65%, rgba(251,146,60,0.16), transparent 50%), linear-gradient(160deg, #1b1512, #100c0a)' },
+  { no: '06', exif: '135mm · f/4 · 1/320 · ISO800', g: 'radial-gradient(circle at 65% 35%, rgba(232,121,249,0.14), transparent 52%), linear-gradient(160deg, #171223, #0d0a14)' },
+  { no: '07', exif: '40mm · f/2.8 · 1/200 · ISO500', g: 'radial-gradient(circle at 25% 40%, rgba(94,234,212,0.15), transparent 50%), radial-gradient(circle at 80% 60%, rgba(252,165,165,0.10), transparent 48%), linear-gradient(160deg, #12171d, #0a0d11)' },
+] as const;
+
+// 渲染两份实现无缝循环轮播
+const loop = [...frames, ...frames];
+---
+
+<section aria-labelledby="works-title" class="section gallery-section" id="works">
+  <header class="gallery-head">
+    <h2 class="gallery-title" id="works-title">
+      画廊 <span class="gallery-en">Gallery</span>
+    </h2>
+    <a class="gallery-link" href={PLACEHOLDER_HREF}>查看全部 →</a>
+  </header>
+
+  <div class="film-strip">
+    <div class="film-track">
+      {loop.map((frame, index) => (
+        <a
+          aria-label={`画廊作品 No.${frame.no}（${frame.exif}），建设中`}
+          class="film-frame ph-tile"
+          href={PLACEHOLDER_HREF}
+          style={`background:${frame.g}`}
+        >
+          <span class="frame-no">No.{frame.no}{index >= frames.length ? '·R' : ''}</span>
+          <span class="frame-exif">{frame.exif}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <p class="gallery-note">胶片自动放映中 · 悬停暂停 · 点击画面进入画廊（建设中）</p>
+</section>
+
+<style>
+  .gallery-section {
+    background: var(--background);
+    padding-top: 88px;
+    padding-bottom: 44px;
+  }
+
+  .gallery-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    max-width: 1360px;
+    width: 100%;
+    margin: 0 auto 22px;
+  }
+
+  .gallery-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+    letter-spacing: 0.06em;
+  }
+
+  .gallery-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin-left: 6px;
+  }
+
+  .gallery-link {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .gallery-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .gallery-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 35mm 胶片带 —— */
+  .film-strip {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    min-height: 0;
+    background: #101218;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(76, 79, 105, 0.28);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 上下齿孔（透出页面底色的方孔） */
+  .film-strip::before,
+  .film-strip::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 12px;
+    z-index: 2;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--background) 0 12px,
+      transparent 12px 30px
+    );
+    animation: film-teeth 0.9s linear infinite;
+  }
+
+  .film-strip::before {
+    top: 8px;
+  }
+
+  .film-strip::after {
+    bottom: 8px;
+  }
+
+  /* 齿孔随胶片走带横向移动 */
+  @keyframes film-teeth {
+    to {
+      background-position: 30px 0;
+    }
+  }
+
+  .film-track {
+    display: flex;
+    width: max-content;
+    animation: film-play 42s linear infinite;
+  }
+
+  /* 无缝循环：内容渲染两份，位移一份宽度 */
+  @keyframes film-play {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* 悬停暂停放映，方便看帧 */
+  .film-strip:hover .film-track,
+  .film-strip:focus-within .film-track {
+    animation-play-state: paused;
+  }
+
+  .film-frame {
+    position: relative;
+    display: block;
+    width: 340px;
+    height: min(52vh, 430px);
+    flex-shrink: 0;
+    margin-right: 10px;
+    border-radius: 4px;
+    transition: filter 0.3s ease;
+  }
+
+  .film-frame:hover {
+    filter: brightness(1.18);
+  }
+
+  .film-frame:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: -4px;
+  }
+
+  .frame-no {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .frame-exif {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.75);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .film-frame:hover .frame-exif,
+  .film-frame:focus-visible .frame-exif {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .gallery-note {
+    max-width: 1360px;
+    width: 100%;
+    margin: 14px auto 0;
+    font-size: 12px;
+    color: var(--muted-foreground);
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .film-track {
+      animation: none;
+    }
+
+    .film-strip {
+      overflow-x: auto;
+    }
+
+    .film-strip::before,
+    .film-strip::after {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .film-frame {
+      width: 240px;
+      height: 300px;
+    }
+  }
+</style>

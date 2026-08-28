@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -43,71 +44,105 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  /* —— Catppuccin Latte（浅色主题基准）—— */
+  --background: #eff1f5; /* Base */
+  --foreground: #4c4f69; /* Text */
+  --card: #ffffff;
+  --card-foreground: #4c4f69;
+  --popover: #ffffff;
+  --popover-foreground: #4c4f69;
+  --primary: #179299; /* Teal */
+  --primary-foreground: #ffffff;
+  --secondary: #e6e9ef; /* Mantle */
+  --secondary-foreground: #4c4f69;
+  --muted: #e6e9ef; /* Mantle */
+  --muted-foreground: #6c6f85; /* Subtext0 */
+  --accent: #ccd0da; /* Surface0 */
+  --accent-foreground: #4c4f69;
+  --destructive: #d20f39; /* Red */
+  --destructive-foreground: #ffffff;
+  --border: #ccd0da; /* Surface0 */
+  --input: #bcc0cc; /* Surface1 */
+  --ring: #179299; /* Teal */
+  --chart-1: #1e66f5; /* Blue */
+  --chart-2: #179299; /* Teal */
+  --chart-3: #40a02b; /* Green */
+  --chart-4: #df8e1d; /* Yellow */
+  --chart-5: #8839ef; /* Mauve */
+  --sidebar: #e6e9ef;
+  --sidebar-foreground: #4c4f69;
+  --sidebar-primary: #179299;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ccd0da;
+  --sidebar-accent-foreground: #4c4f69;
+  --sidebar-border: #ccd0da;
+  --sidebar-ring: #179299;
+
+  /* —— 品牌与界面扩展令牌（浅色值）—— */
+  /* 品牌渐变：Latte Teal → Red（浅底上作大字 ≥3:1、作按钮底配白字 ≥4.5:1） */
+  --grad-a: #179299;
+  --grad-b: #d20f39;
+  --on-gradient: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(76, 79, 105, 0.14);
+  --glass-hover-border: rgba(23, 146, 153, 0.45);
+  --glass-shadow: 0 8px 30px rgba(76, 79, 105, 0.1);
+  --glass-hover-shadow: 0 12px 40px rgba(23, 146, 153, 0.16);
+  --divider: rgba(76, 79, 105, 0.16);
+  --glow-a: rgba(23, 146, 153, 0.09);
+  --glow-b: rgba(210, 15, 57, 0.05);
+  --icon-tile: rgba(23, 146, 153, 0.12);
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
+  /* —— Catppuccin Mocha（主题切换的配套深色）—— */
+  --background: #1e1e2e; /* Base */
+  --foreground: #cdd6f4; /* Text */
+  --card: #181825; /* Mantle */
+  --card-foreground: #cdd6f4;
+  --popover: #181825;
+  --popover-foreground: #cdd6f4;
+  --primary: #94e2d5; /* Teal */
+  --primary-foreground: #1e1e2e;
+  --secondary: #313244; /* Surface0 */
+  --secondary-foreground: #cdd6f4;
+  --muted: #313244;
+  --muted-foreground: #a6adc8; /* Subtext0 */
+  --accent: #45475a; /* Surface1 */
+  --accent-foreground: #cdd6f4;
+  --destructive: #f38ba8; /* Red */
+  --destructive-foreground: #1e1e2e;
+  --border: #313244;
+  --input: #45475a;
+  --ring: #94e2d5;
+  --chart-1: #89b4fa;
+  --chart-2: #94e2d5;
+  --chart-3: #a6e3a1;
+  --chart-4: #f9e2af;
+  --chart-5: #cba6f7;
+  --sidebar: #181825;
+  --sidebar-foreground: #cdd6f4;
+  --sidebar-primary: #94e2d5;
+  --sidebar-primary-foreground: #1e1e2e;
+  --sidebar-accent: #45475a;
+  --sidebar-accent-foreground: #cdd6f4;
+  --sidebar-border: #313244;
+  --sidebar-ring: #94e2d5;
+
+  /* —— 品牌与界面扩展令牌（深色值）—— */
+  --grad-a: #94e2d5;
+  --grad-b: #f38ba8;
+  --on-gradient: #1e1e2e;
+  --glass-bg: rgba(30, 30, 46, 0.55);
+  --glass-border: rgba(205, 214, 244, 0.12);
+  --glass-hover-border: rgba(148, 226, 213, 0.45);
+  --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --glass-hover-shadow: 0 12px 40px rgba(148, 226, 213, 0.12);
+  --divider: rgba(205, 214, 244, 0.15);
+  --glow-a: rgba(148, 226, 213, 0.07);
+  --glow-b: rgba(243, 139, 168, 0.06);
+  --icon-tile: rgba(148, 226, 213, 0.12);
 }
 
 @layer base {
@@ -116,5 +151,189 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================================
+   HOMEPAGE FULLPAGE SCROLL SYSTEM
+   整屏滚动（CSS scroll-snap）+ 展示区块公共样式
+   仅当页面存在 .snap-scroll 容器（首页）时启用吸附，
+   其他页面（/team 等）保持正常滚动。
+   ============================================================ */
+
+html:has(.snap-scroll) {
+  scroll-snap-type: y mandatory;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.font-display {
+  font-family:
+    'Archivo',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+/* —— 区块骨架：每屏一整屏，顶部 padding 避开固定导航 —— */
+.section {
+  position: relative;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  padding: 96px 24px 64px;
+  overflow: hidden;
+}
+
+/* 区块之间的品牌渐变分隔线 */
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--divider), transparent);
+}
+
+.section-inner {
+  width: 100%;
+  max-width: 1080px;
+  margin: auto;
+}
+
+/* 页脚也是吸附点（mandatory 模式下没有吸附点就无法停留在该区域）。
+   Footer 在 .snap-scroll 容器之外，用 :has 与 snap-type 同口径限定首页 */
+html:has(.snap-scroll) .footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.section-kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grad-a);
+  margin: 0 0 12px;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.section-lead {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  max-width: 620px;
+  margin: 0 0 40px;
+}
+
+/* 品牌渐变文字（无 text-shadow，避免渐变字发虚） */
+.grad-text {
+  background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* —— 玻璃卡片：与导航下拉菜单同一配方 —— */
+.glass-card {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--glass-hover-border);
+  box-shadow: var(--glass-hover-shadow);
+}
+
+/* 章节末尾的小 CTA（滚动叙事模式：每章一收束） */
+.mini-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 36px;
+  color: var(--grad-a);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.mini-cta:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.mini-cta:focus-visible {
+  outline: 2px solid var(--grad-a);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* —— 底片风占位图块：暗房渐变底 + 胶片颗粒（真实照片就位后逐块替换）—— */
+.ph-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+.ph-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* —— 滚动入场动画：仅在有 JS 时启用（无 JS 内容直接可见） —— */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+html.js .reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
