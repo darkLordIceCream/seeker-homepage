@@ -29,6 +29,8 @@
         </li>
       </ul>
 
+      <a class="team-link" href="/team">认识主理人团队 →</a>
+
       <div class="branch-chips" id="branches">
         <span class="chip">广佛分部</span>
         <span class="chip">金陵分部</span>
@@ -68,11 +70,31 @@
 
   .feature-list {
     list-style: none;
-    margin: 0 0 22px;
+    margin: 0 0 18px;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .team-link {
+    display: inline-flex;
+    margin-bottom: 22px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .team-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .team-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   .feature-list li {
