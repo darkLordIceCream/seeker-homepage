@@ -38,10 +38,11 @@ const events = [
   </header>
 
   <div class="photo-stack">
-    {events.map(event => (
+    {events.map((event, index) => (
       <a
         aria-label={`${event.name}：${event.desc}（活动页建设中）`}
-        class="stack-card"
+        class:list={['stack-card', { active: index === 1 }]}
+        data-stack-card
         href="/under-construction"
         style={`--rot:${event.rot};--dy:${event.dy}`}
       >
@@ -56,6 +57,22 @@ const events = [
     ))}
   </div>
 </section>
+
+<script>
+  // 突出状态跟随鼠标/焦点：放到哪张哪张突出，移开后保持，直到放到其他卡片
+  const cards = document.querySelectorAll<HTMLElement>('[data-stack-card]');
+
+  if (cards.length > 0) {
+    const setActive = (card: HTMLElement) => {
+      cards.forEach(c => c.classList.toggle('active', c === card));
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => setActive(card));
+      card.addEventListener('focus', () => setActive(card));
+    });
+  }
+</script>
 
 <style>
   .acts-section {
@@ -146,8 +163,8 @@ const events = [
     margin-left: -5%;
   }
 
-  .stack-card:hover,
-  .stack-card:focus-visible {
+  /* 突出态由 .active 驱动（JS 跟随鼠标/焦点），移开后保持到下一张 */
+  .stack-card.active {
     transform: rotate(0deg) translateY(calc(var(--dy) - 22px)) scale(1.06);
     z-index: 10;
     box-shadow: 0 28px 60px rgba(76, 79, 105, 0.4);
