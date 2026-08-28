@@ -67,9 +67,13 @@
     chips 承接
   - 排障提醒：验证前务必 rebuild + 重启 preview（4322），dev(4321) HMR 易假象
 
+- [x] feat-022 迭代四：scrollspy 首屏高亮修复（用户反馈第五轮）
+  - 现象：停在首屏时「作品展示」下划线不消失（离开区块时无清除逻辑）
+  - 修复：IntersectionObserver 回调维护各目标相交状态 Map，全部目标离开视口中线带时 setActive(null) 清除高亮与 aria-current
+
 ### What's In Progress
 
-- 无（迭代三已验证；分支已推送，等用户指令再建 PR）
+- 无（迭代四已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 
