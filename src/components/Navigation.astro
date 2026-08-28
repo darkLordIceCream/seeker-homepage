@@ -395,7 +395,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 );
 
   if (spyTargets.length > 0 && 'IntersectionObserver' in window) {
-    const setActive = (id: string) => {
+    const setActive = (id: string | null) => {
       linkById.forEach((link, linkId) => {
         const isActive = linkId === id;
         link.classList.toggle('active', isActive);
@@ -407,16 +407,19 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
       });
     };
 
+    // 记录每个目标是否处于视口中线带；都不在（如停在首屏）时清除全部高亮
+    const visible = new Map<string, boolean>();
+
     const spy = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
+          visible.set(entry.target.id, entry.isIntersecting);
         }
+        const current = [...visible.entries()].find(([, isIntersecting]) => isIntersecting);
+        setActive(current ? current[0] : null);
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
-  );
+    );
 
     spyTargets.forEach(target => spy.observe(target));
   }
