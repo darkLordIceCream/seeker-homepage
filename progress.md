@@ -71,9 +71,14 @@
   - 现象：停在首屏时「作品展示」下划线不消失（离开区块时无清除逻辑）
   - 修复：IntersectionObserver 回调维护各目标相交状态 Map，全部目标离开视口中线带时 setActive(null) 清除高亮与 aria-current
 
+- [x] feat-022 迭代五：进度点水滴物理动效（用户反馈第六轮）
+  - 激活点 dot-drop 关键帧：10px→拉伸 31px→压扁回弹→24px 稳定
+  - 失活点 dot-pop 关键帧：24px→压扁 4px（水滴分离）→弹回 10px，渐变色同步淡出；animationend 后移除 pop-out 类
+  - JS 维护 currentId，切换时新旧两点分别触发落入/分离动画；prefers-reduced-motion 关闭动画
+
 ### What's In Progress
 
-- 无（迭代四已验证；分支已推送，等用户指令再建 PR）
+- 无（迭代五已验证；分支已推送，等用户指令再建 PR）
 
 ### What's Next
 
