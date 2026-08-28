@@ -1,0 +1,208 @@
+---
+// 首页第4层「介绍」：左文右图，浅色收尾（画册的文字页），含分部与加入入口
+---
+
+<section aria-labelledby="about-title" class="section about-section" id="about">
+  <div class="section-inner about-grid">
+    <div class="about-copy reveal">
+      <p class="section-kicker">About · 小组介绍</p>
+      <h2 class="section-title" id="about-title">
+        一群追光的<span class="grad-text">摄影爱好者</span>
+      </h2>
+      <p class="section-lead">
+        Seeker追光者是一个摄影爱好小组，相信「拍一张照片，交一个朋友」——
+        按下快门的瞬间，我们记录世界，也认识彼此。
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>定期外拍</strong> · 从城市街头到山野湖畔</span>
+        </li>
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>线上活动</strong> · 相隔千里也分享同一束光</span>
+        </li>
+        <li>
+          <span class="feature-dot"></span>
+          <span><strong>城市分部</strong> · 越来越多城市亮起追光的灯</span>
+        </li>
+      </ul>
+
+      <a class="team-link" href="/team">认识主理人团队 →</a>
+
+      <div class="branch-chips" id="branches">
+        <span class="chip">广佛分部</span>
+        <span class="chip">金陵分部</span>
+        <span class="chip chip--more">你的城市 · 期待点亮</span>
+      </div>
+
+      <div class="join-row" id="join">
+        <a class="join-btn" href="/under-construction">加入我们</a>
+        <span class="join-contact">微信：seeker-photo（占位）</span>
+      </div>
+    </div>
+
+    <div
+      class="ph-tile about-photo reveal"
+      style="--reveal-delay: 0.1s; background: radial-gradient(circle at 70% 25%, rgba(45,212,191,0.20), transparent 55%), radial-gradient(circle at 20% 80%, rgba(244,114,182,0.14), transparent 55%), linear-gradient(160deg, #171a26, #0b0d14)"
+    >
+      <span class="photo-label">外拍合影位 · 等一张你们的合照</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    background: var(--background);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .section-lead {
+    margin-bottom: 24px;
+  }
+
+  .feature-list {
+    list-style: none;
+    margin: 0 0 18px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .team-link {
+    display: inline-flex;
+    margin-bottom: 22px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .team-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .team-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 14.5px;
+    color: var(--muted-foreground);
+  }
+
+  .feature-list strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .feature-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+    transform: translateY(-1px);
+  }
+
+  .branch-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    font-size: 13px;
+    color: var(--foreground);
+  }
+
+  .chip--more {
+    border-style: dashed;
+    color: var(--muted-foreground);
+  }
+
+  .join-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .join-btn {
+    display: inline-flex;
+    padding: 11px 30px;
+    border-radius: 999px;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    color: var(--on-gradient);
+    font-size: 14.5px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .join-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glass-hover-shadow);
+  }
+
+  .join-btn:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+  }
+
+  .join-contact {
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  .about-photo {
+    display: flex;
+    align-items: flex-end;
+    padding: 18px;
+    aspect-ratio: 4 / 4.6;
+    max-height: 560px;
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .photo-label {
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .about-photo {
+      aspect-ratio: 16 / 9;
+      max-height: none;
+    }
+  }
+</style>

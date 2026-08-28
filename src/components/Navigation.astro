@@ -1,70 +1,32 @@
 ---
 // Navigation component for Seeker追光者 photography group
 import ThemeToggle from './ThemeToggle.astro';
+
+// 首页区块锚点：首页内用 #id 平滑滚动，其他页面跳回首页对应区块
+const isHome = Astro.url.pathname.replace(/\/+$/, '') === '';
+const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
-<nav aria-label="主导航" class="navigation">
+<nav aria-label="主导航" class:list={['navigation', { 'navigation--solid': !isHome }]}>
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
-        <a href="/">Seeker追光者</a>
+        <a href="/">Seeker<span class="logo-accent">追光者</span></a>
       </div>
 
       <div class="nav-menu" id="nav-menu">
         <ul class="nav-list">
           <li class="nav-item">
-            <a class="nav-link" href="/under-construction">作品展示</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="/under-construction">小组简介</a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-item">
-                <a class="dropdown-link" href="/under-construction">成员构成</a>
-                <ul class="sub-dropdown">
-                  <li><a href="/team">主理人</a></li>
-                  <li><a href="/under-construction">核心成员</a></li>
-                  <li><a href="/under-construction">小组成员</a></li>
-                  <li><a href="/under-construction">交流成员</a></li>
-                </ul>
-              </li>
-              <li class="dropdown-item">
-                <a class="dropdown-link" href="/under-construction">地区分部简介</a>
-                <ul class="sub-dropdown">
-                  <li><a href="/under-construction">广佛分部</a></li>
-                  <li><a href="/under-construction">金陵分部</a></li>
-                  <li><a href="/under-construction">更多分部...</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link" href="/under-construction">小组活动</a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-item">
-                <a class="dropdown-link" href="/under-construction">线上</a>
-                <ul class="sub-dropdown">
-                  <li><a href="/under-construction">时间的故事</a></li>
-                  <li><a href="/under-construction">一种关注</a></li>
-                  <li><a href="/under-construction">Young Blood</a></li>
-                  <li><a href="/under-construction">线上讲座</a></li>
-                  <li><a href="/under-construction">Seeker公益</a></li>
-                  <li><a href="/under-construction">年度大赛</a></li>
-                </ul>
-              </li>
-              <li class="dropdown-item">
-                <a class="dropdown-link" href="/under-construction">线下</a>
-                <ul class="sub-dropdown">
-                  <li><a href="/under-construction">周年庆</a></li>
-                  <li><a href="/under-construction">年会</a></li>
-                  <li><a href="/under-construction">兴趣小组</a></li>
-                  <li><a href="/under-construction">羽毛球社</a></li>
-                  <li><a href="/under-construction">动漫社</a></li>
-                </ul>
-              </li>
-            </ul>
+            <a class="nav-link" data-section="works" href={anchor('works')}>作品展示</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/under-construction">加入小组</a>
+            <a class="nav-link" data-section="activities" href={anchor('activities')}>小组活动</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-section="about" href={anchor('about')}>小组简介</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href={anchor('join')}>加入小组</a>
           </li>
         </ul>
       </div>
@@ -85,17 +47,53 @@ import ThemeToggle from './ThemeToggle.astro';
 <style>
   /* ============================================================
      LIQUID GLASS NAVIGATION
-     Apple-style glassmorphism for dark photography theme
+     Apple-style glassmorphism。导航顶部悬浮在深色视频上（浅色字），
+     滚动落地后切换为主题玻璃条（前景色随主题变量）。
      ============================================================ */
 
   .navigation {
+    /* 顶部悬浮态（深色视频上）：白字 + 亮青色 hover */
+    --nav-fg: #ffffff;
+    --nav-hover: #4ecdc4;
+    --nav-pill-bg: rgba(255, 255, 255, 0.12);
+    --nav-pill-border: rgba(255, 255, 255, 0.25);
+
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     background: transparent;
     z-index: 1002;
-    transition: all 0.3s ease;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* 滚过第一屏后：导航「落地」为玻璃条，与下拉菜单同一材质 */
+  .navigation.scrolled {
+    --nav-fg: var(--foreground);
+    --nav-hover: var(--grad-a);
+    --nav-pill-bg: var(--glass-bg);
+    --nav-pill-border: var(--glass-border);
+
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%);
+    border-bottom-color: var(--glass-border);
+  }
+
+  /* 非首页（无深色视频首屏）：导航常驻玻璃底，前景色始终可读 */
+  .navigation--solid {
+    --nav-fg: var(--foreground);
+    --nav-hover: var(--grad-a);
+    --nav-pill-bg: var(--glass-bg);
+    --nav-pill-border: var(--glass-border);
+
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    backdrop-filter: blur(20px) saturate(200%);
+    border-bottom-color: var(--glass-border);
   }
 
   .nav-container {
@@ -108,6 +106,11 @@ import ThemeToggle from './ThemeToggle.astro';
     align-items: center;
     height: 70px;
     gap: 48px;
+    transition: height 0.3s ease;
+  }
+
+  .navigation.scrolled .nav-container {
+    height: 58px;
   }
 
   .nav-left {
@@ -123,12 +126,21 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-logo a {
+    display: inline-flex;
+    align-items: center;
     font-size: 20px;
     font-weight: bold;
-    color: #fff;
+    color: var(--nav-fg);
     text-decoration: none;
     letter-spacing: -0.02em;
     transition: opacity 0.3s ease;
+  }
+
+  .logo-accent {
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .nav-logo a:hover {
@@ -153,7 +165,7 @@ import ThemeToggle from './ThemeToggle.astro';
   }
 
   .nav-link {
-    color: oklch(0.95 0 0);
+    color: var(--nav-fg);
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
@@ -161,208 +173,51 @@ import ThemeToggle from './ThemeToggle.astro';
     transition: color 0.3s ease;
     display: block;
     letter-spacing: 0.01em;
+    position: relative;
+  }
+
+  /* 渐变下划线：hover 滑入，scrollspy 当前区块常驻 */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after,
+  .nav-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .nav-link.active {
+    color: var(--nav-fg);
   }
 
   .nav-link:hover,
   .nav-link:focus-visible {
-    color: #4ecdc4;
+    color: var(--nav-hover);
+  }
+
+  .nav-link.active:hover,
+  .nav-link.active:focus-visible {
+    color: var(--nav-fg);
   }
 
   /* Focus ring for keyboard navigation */
   .nav-link:focus-visible {
-    outline: 2px solid #4ecdc4;
+    outline: 2px solid var(--nav-hover);
     outline-offset: 4px;
     border-radius: 4px;
   }
 
-  .dropdown {
-    position: relative;
-  }
-
-  /* ============================================================
-     DROPDOWN GLASS PANEL
-     ============================================================ */
-  .dropdown-menu {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: -8px;
-    min-width: 220px;
-    list-style: none;
-    margin: 0;
-    padding: 8px 0;
-    border-radius: 16px;
-
-    /* --- Visibility + animation --- */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px) scale(0.98);
-    transform-origin: top center;
-    transition:
-      opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-      visibility 0.25s;
-
-    /* --- Glass effect (unified transparency) --- */
-    -webkit-backdrop-filter: blur(20px) saturate(200%);
-    backdrop-filter: blur(20px) saturate(200%);
-    background: oklch(0.1 0.005 280 / 0.5);
-    background-image:
-      linear-gradient(
-        135deg,
-        oklch(1 0 0 / 0.07) 0%,
-        oklch(1 0 0 / 0.02) 50%,
-        transparent 100%
-      );
-
-    /* --- Glass edge + depth --- */
-    border: 1px solid oklch(1 0 0 / 0.12);
-    box-shadow:
-      0 0 0 0.5px oklch(0 0 0 / 0.4) inset,
-      0 8px 40px oklch(0 0 0 / 0.35),
-      0 2px 8px oklch(0 0 0 / 0.15);
-  }
-
-  /* Connect dropdown to trigger visually with a subtle gradient seam */
-  .dropdown-menu::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-    left: 20px;
-    right: 20px;
-    height: 8px;
-    background: transparent;
-  }
-
-  .dropdown:hover .dropdown-menu,
-  .dropdown:focus-within .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-  }
-
-  .dropdown-item {
-    position: relative;
-  }
-
-  .dropdown-link {
-    color: oklch(0.9 0 0);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 450;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 2px 6px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-  }
-
-  /* Arrow indicator for items with sub-dropdowns */
-  .dropdown-item > .dropdown-link::after {
-    content: "";
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    margin-left: auto;
-    border-right: 1.5px solid oklch(0.6 0 0);
-    border-top: 1.5px solid oklch(0.6 0 0);
-    transform: rotate(45deg);
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .dropdown-link:hover,
-  .dropdown-link:focus-visible {
-    background: oklch(0.3 0.04 185 / 0.3);
-    color: #4ecdc4;
-  }
-
-  .dropdown-link:hover::after,
-  .dropdown-link:focus-visible::after {
-    border-color: #4ecdc4;
-    transform: rotate(45deg) translateX(2px);
-  }
-
-  .dropdown-link:focus-visible {
-    outline: 2px solid #4ecdc4;
-    outline-offset: -2px;
-  }
-
-  /* ============================================================
-     SUB-DROPDOWN GLASS PANEL (flyout)
-     ============================================================ */
-  .sub-dropdown {
-    position: absolute;
-    left: calc(100% + 6px);
-    top: -6px;
-    min-width: 180px;
-    list-style: none;
-    margin: 0;
-    padding: 8px 0;
-    border-radius: 16px;
-
-    /* --- Visibility + animation --- */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-8px) scale(0.97);
-    transform-origin: left center;
-    transition:
-      opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-      visibility 0.2s;
-
-    /* --- Glass effect (compensate for nesting blur stacking) --- */
-    -webkit-backdrop-filter: blur(10px) saturate(150%);
-    backdrop-filter: blur(10px) saturate(150%);
-    background: oklch(0.1 0.005 280 / 0.65);
-    background-image:
-      linear-gradient(
-        135deg,
-        oklch(1 0 0 / 0.07) 0%,
-        oklch(1 0 0 / 0.02) 50%,
-        transparent 100%
-      );
-
-    /* --- Glass edge + depth --- */
-    border: 1px solid oklch(1 0 0 / 0.12);
-    box-shadow:
-      0 0 0 0.5px oklch(0 0 0 / 0.4) inset,
-      0 8px 40px oklch(0 0 0 / 0.35),
-      0 2px 8px oklch(0 0 0 / 0.15);
-  }
-
-  .dropdown-item:hover > .sub-dropdown,
-  .dropdown-item:focus-within > .sub-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0) scale(1);
-  }
-
-  .sub-dropdown li {
-    margin: 0;
-  }
-
-  .sub-dropdown a {
-    color: oklch(0.82 0 0);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 400;
-    padding: 8px 14px;
-    display: block;
-    margin: 2px 4px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-  }
-
-  .sub-dropdown a:hover,
-  .sub-dropdown a:focus-visible {
-    background: oklch(0.3 0.04 185 / 0.3);
-    color: #4ecdc4;
-  }
-
-  .sub-dropdown a:focus-visible {
-    outline: 2px solid #4ecdc4;
-    outline-offset: -2px;
   }
 
   /* ============================================================
@@ -375,18 +230,18 @@ import ThemeToggle from './ThemeToggle.astro';
     padding: 5px;
     background: none;
     border: none;
-    color: #fff;
+    color: var(--nav-fg);
   }
 
   .nav-toggle:focus-visible {
-    outline: 2px solid #4ecdc4;
+    outline: 2px solid var(--nav-hover);
     outline-offset: 2px;
   }
 
   .bar {
     width: 25px;
     height: 2px;
-    background: oklch(0.95 0 0);
+    background: var(--nav-fg);
     margin: 4px 0;
     transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 2px;
@@ -420,7 +275,7 @@ import ThemeToggle from './ThemeToggle.astro';
       /* Mobile glass panel */
       -webkit-backdrop-filter: blur(32px) saturate(180%);
       backdrop-filter: blur(32px) saturate(180%);
-      background: oklch(0.06 0.005 280 / 0.65);
+      background: var(--glass-bg);
       background-image:
         linear-gradient(
           180deg,
@@ -428,7 +283,7 @@ import ThemeToggle from './ThemeToggle.astro';
           transparent 30%
         );
 
-      border: 1px solid oklch(1 0 0 / 0.08);
+      border: 1px solid var(--glass-border);
       border-radius: 14px;
       margin: 0 8px;
 
@@ -457,51 +312,23 @@ import ThemeToggle from './ThemeToggle.astro';
       text-align: center;
     }
 
+    /* 移动端菜单面板自带浅色底，链接固定用主题前景色 */
     .nav-link {
       padding: 16px 20px;
-      border-bottom: 1px solid oklch(1 0 0 / 0.06);
+      border-bottom: 1px solid var(--glass-border);
+      color: var(--foreground);
     }
 
-    /* Mobile dropdown: inline expand */
-    .dropdown-menu {
-      position: static;
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      background: oklch(0.08 0.005 280 / 0.35);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      margin: 0;
-      padding: 0;
+    /* 移动端已有分隔线，下划线改为颜色高亮 */
+    .nav-link::after {
+      display: none;
     }
 
-    .dropdown:hover .dropdown-menu,
-    .dropdown:focus-within .dropdown-menu {
-      transform: none;
+    .nav-link.active,
+    .nav-link:hover {
+      color: var(--grad-a);
     }
 
-    .sub-dropdown {
-      position: static;
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      background: oklch(0.06 0.005 280 / 0.3);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .dropdown-item:hover > .sub-dropdown,
-    .dropdown-item:focus-within > .sub-dropdown {
-      transform: none;
-    }
 
     .nav-toggle {
       display: flex;
@@ -546,4 +373,54 @@ import ThemeToggle from './ThemeToggle.astro';
       });
     }
   });
+
+  // 滚过第一屏 60% 后，导航切换为玻璃实底
+  const navigation = document.querySelector('.navigation');
+  const onScroll = () => {
+    navigation?.classList.toggle('scrolled', window.scrollY > window.innerHeight * 0.6);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scrollspy：当前区块对应的导航项常驻高亮
+  const spyLinks = document.querySelectorAll<HTMLElement>('.nav-link[data-section]');
+  const linkById = new Map<string, HTMLElement>();
+  spyLinks.forEach(link => {
+    const id = link.dataset.section;
+    if (id) {linkById.set(id, link);}
+  });
+
+  const spyTargets = Array.from(document.querySelectorAll<HTMLElement>('section[id]')).filter(
+    section => linkById.has(section.id),
+);
+
+  if (spyTargets.length > 0 && 'IntersectionObserver' in window) {
+    const setActive = (id: string | null) => {
+      linkById.forEach((link, linkId) => {
+        const isActive = linkId === id;
+        link.classList.toggle('active', isActive);
+        if (isActive) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    // 记录每个目标是否处于视口中线带；都不在（如停在首屏）时清除全部高亮
+    const visible = new Map<string, boolean>();
+
+    const spy = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          visible.set(entry.target.id, entry.isIntersecting);
+        }
+        const current = [...visible.entries()].find(([, isIntersecting]) => isIntersecting);
+        setActive(current ? current[0] : null);
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+    );
+
+    spyTargets.forEach(target => spy.observe(target));
+  }
 </script>
