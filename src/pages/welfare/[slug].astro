@@ -206,11 +206,11 @@ const upcoming = [
     padding: 64px var(--edge) 0;
   }
 
-  /* 版心 + 右侧延伸阅读栏（Aperture 的 You May Also Like 结构） */
+  /* 版心 + 右侧留白区：延伸阅读模块在留白区内居中，只占一小块 */
   .article-layout {
     display: grid;
-    grid-template-columns: minmax(0, 760px) minmax(0, 272px);
-    column-gap: 72px;
+    grid-template-columns: minmax(0, 760px) 1fr;
+    column-gap: 80px;
     align-items: start;
   }
 
@@ -345,10 +345,10 @@ const upcoming = [
     margin-top: -0.5em;
   }
 
-  /* —— 延伸阅读侧栏 —— */
+  /* —— 延伸阅读侧栏：右侧留白区内居中的一小块，不跟随滚动 —— */
   .side-col {
-    position: sticky;
-    top: 96px;
+    width: min(300px, 100%);
+    margin-inline: auto;
     padding-top: 8px;
   }
 
@@ -356,7 +356,7 @@ const upcoming = [
     margin: 0;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--divider);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--foreground);
@@ -378,40 +378,47 @@ const upcoming = [
     list-style: none;
   }
 
+  /* 横排小卡：小缩略图 + 右侧文字（Aperture 的 You May Also Like 卡式） */
   .side-card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 18px 0;
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    column-gap: 14px;
+    align-items: center;
+    padding: 14px 0;
     border-bottom: 1px solid var(--divider);
   }
 
   .side-thumb {
     display: block;
-    width: 100%;
-    aspect-ratio: 16 / 10;
+    width: 74px;
+    aspect-ratio: 5 / 6;
     border-radius: 2px;
   }
 
   .side-card-title {
+    grid-column: 2;
     font-family: var(--font-serif-song);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.03em;
+    line-height: 1.5;
     color: var(--foreground);
   }
 
   .side-card-status {
+    grid-column: 2;
+    display: block;
+    margin-top: 5px;
     font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     letter-spacing: 0.08em;
     color: var(--muted-foreground);
   }
 
   .side-back {
     display: inline-block;
-    margin-top: 22px;
-    font-size: 13px;
+    margin-top: 18px;
+    font-size: 12.5px;
     font-weight: 600;
     color: var(--grad-a);
     text-decoration: none;
@@ -461,9 +468,8 @@ const upcoming = [
     }
 
     .side-col {
-      position: static;
-      max-width: 560px;
-      margin-top: 56px;
+      width: min(560px, 100%);
+      margin: 56px 0 0;
     }
 
     .side-list {
