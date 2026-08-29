@@ -44,6 +44,8 @@ const welfare = defineCollection({
     author: z.string().default('Seeker追光者'),
     /** 列表排序，越小越靠前 */
     order: z.number().default(0),
+    /** 文章模板：editorial = 画册/编辑部风格（默认），hasselblad = 哈苏式图集 */
+    layout: z.enum(['editorial', 'hasselblad']).default('editorial'),
   }),
 });
 
