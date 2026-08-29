@@ -277,3 +277,16 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 验证：type-check/lint/build 全过；preview 实测 38 张图全部从 R2 加载成功
 - 顺带：按 developers.cloudflare.com/agent-setup/prompt.md 安装 Cloudflare
   Skills 到全局 ~/.agents/skills/（MCP 需用户在 ZCode 客户端配置，未做）
+
+### R2 目录重组为「项目/文章」两层（用户要求，同日）
+
+- 用户澄清：「带上她的眼睛」是项目名（会有多篇文章），每篇文章图片需独立目录
+- R2 重组：`welfare/bring-her-eyes/`（38 张散图）→
+  `welfare/bring-her-eyes/in-a-faraway-place/`
+  （第一篇文章，slug 取自副题「在遥远的地方」）；旧 key 全部删除（404 已验证）
+- 站内文章 URL `/welfare/bring-her-eyes/` 保持不变，仅 md/组件里的 R2
+  URL 前缀更新
+- 约定（已写入 AGENTS.md）：R2 路径 =
+  `welfare/<项目slug>/<文章slug>/n.jpg`，新文章 = 项目目录下新建子目录；未来若有新公益项目，`welfare/`
+  下新建项目目录
+- 验证：38 个新 URL 全 200；build 通过；preview 实测图片正常加载（懒加载 37/38 视口外）
