@@ -21,6 +21,10 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   month: 'long',
   day: 'numeric',
 }).format(article.data.pubDate);
+
+/** 延伸阅读方向：按 order（文章顺序）判断指向上一篇还是下一篇 */
+const relLabel = (from: Props['article'], to: Props['article']) =>
+  to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
 ---
 
 <Layout
@@ -69,16 +73,14 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
 
       {others.length > 0 && (
         <section aria-label="延伸阅读" class="more-stories">
-          <p class="side-kicker">
-            延伸阅读 <span class="side-en">NEXT STORY</span>
-          </p>
           {others.map(other => (
             <a class="next-card" href={`/welfare/${other.id}/`}>
               <span aria-hidden="true" class="next-media">
                 <img alt="" height="720" loading="lazy" src={other.data.cover} width="1080" />
               </span>
               <span class="next-text">
-                <span class="next-title">{other.data.title}</span>
+                <span class="side-kicker">{relLabel(article, other)}</span>
+                <span class="next-title">{other.data.cardTitle ?? other.data.title}</span>
                 {other.data.subtitle && <span class="next-sub">{other.data.subtitle}</span>}
                 <span class="next-cta">
                   阅读全文 <span aria-hidden="true" class="cta-arrow">→</span>
@@ -379,9 +381,8 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   }
 
   .side-kicker {
-    margin: 0 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--divider);
+    display: block;
+    margin: 0 0 16px;
     font-family: 'Archivo', sans-serif;
     font-size: 10.5px;
     font-weight: 600;

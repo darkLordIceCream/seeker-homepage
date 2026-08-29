@@ -10,6 +10,8 @@ quoteAuthor: 马同学 9岁
 pubDate: 2026-08-29
 author: 寄意寒星
 order: 1
+cardTitle: 在遥远的地方，我看到了什么
+layout: editorial
 ---
 
 > “惟有门前镜湖水，春风不改旧时波” ——贺知章《回乡偶书》

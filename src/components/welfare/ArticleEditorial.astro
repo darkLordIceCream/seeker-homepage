@@ -21,6 +21,10 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   month: 'long',
   day: 'numeric',
 }).format(article.data.pubDate);
+
+/** 延伸阅读方向：按 order（文章顺序）判断指向上一篇还是下一篇 */
+const relLabel = (from: Props['article'], to: Props['article']) =>
+  to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
 ---
 
 <Layout
@@ -72,13 +76,13 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
         </div>
 
         <aside aria-label="延伸阅读" class="side-col">
-          <p class="side-kicker">
-            下篇故事 <span class="side-en">NEXT STORY</span>
-          </p>
           <ul class="side-list">
             {others.map(other => (
               <li class="side-card">
                 <a class="side-card-link" href={`/welfare/${other.id}/`}>
+                  <span class="side-kicker">
+                    {relLabel(article, other)}
+                  </span>
                   <span aria-hidden="true" class="side-thumb">
                     <img
                       alt=""
@@ -88,7 +92,7 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
                       width="1080"
                     />
                   </span>
-                  <span class="side-card-title">{other.data.title}</span>
+                  <span class="side-card-title">{other.data.cardTitle ?? other.data.title}</span>
                   {other.data.subtitle && (
                     <span class="side-card-status">{other.data.subtitle}</span>
                   )}
@@ -376,9 +380,8 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
 
   /* —— 延伸阅读：纵向编辑卡（kicker + 大图 + 衬线标题 + 箭头） —— */
   .side-kicker {
-    margin: 0 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--divider);
+    display: block;
+    margin: 0 0 14px;
     font-family: 'Archivo', sans-serif;
     font-size: 10.5px;
     font-weight: 600;
