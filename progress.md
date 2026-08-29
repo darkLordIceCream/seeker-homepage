@@ -264,3 +264,16 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   cover，底部对齐（18 仅轻微裁切）
 - 35/36 从软换行并排拆回上下两段（同宽破格 108%，左右对齐）；36 实为 1080×218 手写便条长条图
 - 其余双图组实测组内比例一致（1.33 组、0.75 竖图组），无需处理
+
+### R2 迁移完成（2026-08-29）
+
+- 根因回顾：先前 wrangler OAuth 过期 + refresh 失效；重新登录后发现登的是
+  1712313289@qq.com 账号（无 Pages 项目、未启用 R2），bucket 属于
+  Djhannyuan@gmail.com 账号；用户切换账号重新 login 后打通
+- 迁移执行：38 张图全部上传 R2 `welfare/bring-her-eyes/`（逐一 curl 验证 200），
+  `bring-her-eyes.md`（39 处）与 `ActsSection.astro`（1 处）路径替换为
+  `https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/`，删除
+  `public/images/welfare/`（仓库瘦身 5.1MB）
+- 验证：type-check/lint/build 全过；preview 实测 38 张图全部从 R2 加载成功
+- 顺带：按 developers.cloudflare.com/agent-setup/prompt.md 安装 Cloudflare
+  Skills 到全局 ~/.agents/skills/（MCP 需用户在 ZCode 客户端配置，未做）
