@@ -339,3 +339,13 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - hasselblad：文末三列小卡 → 左图右文横幅卡（3:2 图 + 宽字距大标题 + 副题 +
   CTA，hover 标题变品牌色 + 箭头位移）；顺序调整为延伸阅读在返回链接之前
 - 移动端：横幅卡上下堆叠
+
+### 延伸阅读语义修正（用户反馈，2026-08-30）
+
+- 卡片标题：第一篇 title 为项目名「带上她的眼睛」，卡片改用新字段 cardTitle（「在遥远的地方，我看到了什么」）；schema 加 cardTitle 可选字段
+- 方向标签：用户按「从后往前」制作，指向《带上她的眼睛》应称「上一篇」——
+  kicker 不再写死 NEXT STORY，按 order 动态计算（other.order
+  < 当前 →「上一篇 PREVIOUS STORY」，否则「下一篇 NEXT
+  STORY」），kicker 移入卡片内部
+- 实测：过春天页 →「上一篇 PREVIOUS STORY
+  | 在遥远的地方，我看到了什么」；带上她的眼睛页 →「下一篇 NEXT STORY | 过春天」

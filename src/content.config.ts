@@ -46,6 +46,8 @@ const welfare = defineCollection({
     order: z.number().default(0),
     /** 文章模板：editorial = 画册/编辑部风格（默认），hasselblad = 哈苏式图集 */
     layout: z.enum(['editorial', 'hasselblad']).default('editorial'),
+    /** 延伸阅读卡标题；不设则用 title（当 title 与项目名相同时应设置此项） */
+    cardTitle: z.string().optional(),
   }),
 });
 
