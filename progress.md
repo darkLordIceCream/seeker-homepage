@@ -290,3 +290,27 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   `welfare/<项目slug>/<文章slug>/n.jpg`，新文章 = 项目目录下新建子目录；未来若有新公益项目，`welfare/`
   下新建项目目录
 - 验证：38 个新 URL 全 200；build 通过；preview 实测图片正常加载（懒加载 37/38 视口外）
+
+---
+
+## 会话记录（第二篇文章《过春天》+ 哈苏模板，2026-08-29）
+
+### 交付（分支 feat/welfare-second-article）
+
+- **第二篇文章**
+  `src/content/welfare/passing-spring.md`：《带上她的眼睛 | 过春天》（公众号 2026-06-04 发布），41 图全部入 R2
+  `welfare/bring-her-eyes/passing-spring/`；三章节：找春天 / 山人 / 实在舍不得；尾部新增「支教的老师们」名单章节
+- **列表时间排序**：`/welfare/`
+  改按 pubDate 升序（项目叙事时间线：6月《过春天》→ 8月《带上她的眼睛》）
+- **文章页哈苏化**（参考 hasselblad.com/inspiration/masters/2026 图文排版，配色保持 Catppuccin 令牌；两篇文章共用模板）：居中头版（kicker/标题/副题/meta 宽字距居中）+ 全宽封面；章节标题居中 +
+  0.3em 宽字距（md 去「01
+  ·」编号）；组图统一 1:1 等高裁切（竖图组 JS 检测切 3:4）、10px 窄间距；正文改无衬线居中窄列；金句/引文/图注全部居中；去 drop
+  cap 与破格
+- **修复**：02.png（腊肉图）在 R2 为 0 字节（此前迁移脚本 git
+  show 路径错误产生空文件）→ 从 git 历史重新导出上传（704KB），R2 即时生效，线上破图同步修复
+
+### Evidence
+
+- type-check / lint / build（6 页）全过；preview 实测两篇文章桌面 + 390px 移动端
+- R2：passing-spring/ 41 张（01.jpg 曾失败重传成功）；in-a-faraway-place/
+  38 张（02.png 修复为 704KB）
