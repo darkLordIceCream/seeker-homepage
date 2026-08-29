@@ -349,3 +349,13 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   STORY」），kicker 移入卡片内部
 - 实测：过春天页 →「上一篇 PREVIOUS STORY
   | 在遥远的地方，我看到了什么」；带上她的眼睛页 →「下一篇 NEXT STORY | 过春天」
+
+### 细节修正（用户反馈，2026-08-30 第二轮）
+
+- 第一篇 title 改为文章名「在遥远的地方，我看到了什么」（subtitle 改「山村中的摄影课」，cardTitle 字段移除）；页面 h1
+  / 列表卡 / 互链卡 / SEO 标题全部一致更新
+- 画册头版标题错位换行：title 含中文逗号时首个逗号后断行、第二行缩进 2em（.title-line
+  nth-child(2)，字号上限降到 2.7rem 保证两行不折）
+- /welfare/ 列表排序改 order 升序（在遥远的地方在前，过春天=下一篇在后）
+- 过春天正文删除与 hero 封面重复的引子图（01.jpg，同图重复）；开头 Kawa 歌词被 prettier 合并成单行 → 改 HTML
+  blockquote + <br> 恢复分行
