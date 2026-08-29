@@ -238,3 +238,12 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 微调：图片印刷质感直角（radius
   0）、金句 1.22→1.32rem、图注间距 -0.8em→-0.5em、尾部返回居中
 - 顺手：**pycache** 误入仓库 → git rm --cached + .gitignore
+
+### 延伸阅读侧栏 + 左基线再调（用户反馈，同日）
+
+- 参照 Aperture「You May Also Like」：文章页右侧新增「延伸阅读 MORE
+  STORIES」sticky 侧栏（272px，top
+  96px），三张真实感占位卡（标题派生自项目素材：第一台相机的旅程 / 每人一本摄影集 / 明信片的另一端，渐变缩略图 + 「即将上线 · 素材整理中」状态行）+「了解 Seeker公益 →」回项目页；文章就位后把占位卡替换为 getCollection 链接即可
+- 布局：article-layout 双栏 grid（760px 版心 + 72px 栏距 +
+  272px 侧栏）；左基线 6vw→9vw（用户反馈往中间挪）；破格图 122%→108%（伸入栏距不压侧栏）
+- 响应式：<1280px 侧栏移到正文下方三卡横排；<900px 退回单列
