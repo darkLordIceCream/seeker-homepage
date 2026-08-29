@@ -8,7 +8,7 @@ excerpt: 四月，由川入滇，赶在支教的最后一段时光里，到被�
 quote: “只有最贴近山野的孩子们，才看得见山风吹走乌云朵，叫醒野花满山坡。”
 pubDate: 2026-06-04
 author: 寄意寒星
-order: 2
+order: 1
 layout: hasselblad
 ---
 
