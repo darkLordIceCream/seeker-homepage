@@ -93,8 +93,8 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     background: var(--background);
     padding-top: 70px;
     color: var(--foreground);
-    /* 与视口右缘出血的头部 + 与左侧内容列对齐的正文，共用同一左边距 */
-    --edge: max(24px, calc((100vw - 1280px) / 2 + 24px));
+    /* 头版与正文共用的左基线：小屏 6vw，超宽屏容器居中（Aperture 的左边界约 7-8vw） */
+    --edge: max(6vw, calc((100vw - 1440px) / 2 + 48px));
     --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
@@ -173,7 +173,7 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   }
 
   .prose-col {
-    max-width: 720px;
+    max-width: 760px;
   }
 
   /* 金句：左对齐大字 + 渐变竖线 */
@@ -197,14 +197,16 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   .pull-quote blockquote {
     margin: 0;
     font-family: var(--font-serif-song);
-    font-size: 1.22rem;
+    font-size: 1.32rem;
     line-height: 1.9;
     color: var(--foreground);
   }
 
   .pull-quote figcaption {
-    margin-top: 10px;
-    font-size: 13px;
+    margin-top: 12px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
     color: var(--muted-foreground);
   }
 
@@ -212,7 +214,7 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   .welfare-prose {
     font-family: var(--font-serif-song);
     font-size: 16.5px;
-    line-height: 1.95;
+    line-height: 1.92;
     color: var(--foreground);
   }
 
@@ -220,9 +222,19 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     margin: 0 0 1.6em;
   }
 
+  /* 首段首字下沉：画册专题的开篇仪式感 */
+  .welfare-prose :global(h2:first-of-type + p::first-letter) {
+    float: left;
+    margin: 6px 12px 0 0;
+    font-size: 3.2em;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
   /* 章节标题：左对齐衬线大字，编号自带在文字里 */
   .welfare-prose :global(h2) {
-    margin: 2.8em 0 1.4em;
+    margin: 3em 0 1.5em;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -233,11 +245,11 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   .welfare-prose :global(h2)::after {
     content: '';
     display: block;
-    width: 44px;
+    width: 32px;
     height: 2px;
-    margin-top: 16px;
+    margin-top: 14px;
     background: var(--foreground);
-    opacity: 0.75;
+    opacity: 0.8;
   }
 
   /* 引文（诗句 / 章节副题）：左对齐淡色衬线 */
@@ -250,7 +262,7 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     color: var(--muted-foreground);
   }
 
-  /* 照片：全列宽大图 */
+  /* 照片：全列宽大图（印刷质感直角） */
   .welfare-prose :global(p:has(> img:only-child)) {
     margin: 2.2em 0;
   }
@@ -259,19 +271,24 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 2px;
+    border-radius: 0;
   }
 
   /* 成组作品：软换行落在同一段的图片并排展示（顶对齐，不裁剪构图） */
   .welfare-prose :global(p:has(img + img)) {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
+    gap: 16px;
   }
 
   .welfare-prose :global(p:has(img + img) img) {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  /* 无图注的氛围大图向右破格（超出版心），制造画册的宽窄节奏 */
+  .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
+    width: 122%;
   }
 
   /* 图注：紧跟照片的斜体行，左对齐小字 */
@@ -283,14 +300,15 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     letter-spacing: 0.05em;
     line-height: 1.8;
     color: var(--muted-foreground);
-    margin-top: -0.8em;
+    margin-top: -0.5em;
   }
 
   /* —— 尾部 —— */
   .article-foot {
-    margin-top: 72px;
-    padding: 28px 0 72px;
+    margin-top: 88px;
+    padding: 36px 0 88px;
     border-top: 1px solid var(--divider);
+    text-align: center;
   }
 
   .back-link {
@@ -334,7 +352,11 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
       padding: 48px 24px 0;
     }
 
-    /* 手机上组图退回单列，保证可读 */
+    /* 手机上取消破格，组图退回单列，保证可读 */
+    .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
+      width: 100%;
+    }
+
     .welfare-prose :global(p:has(img + img)) {
       flex-direction: column;
       gap: 18px;
