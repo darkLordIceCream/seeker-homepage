@@ -182,7 +182,7 @@
       "description": "welfare Content Collection + 二级页 /welfare（项目介绍 + 图文手记拍立得堆叠卡片）+ 文章页 /welfare/[slug]（公众号风格排版：品牌语头、金句、居中章节标题、全宽照片、居中图注、鸣谢）；首页活动卡「一种关注」替换为「Seeker公益 · 带上她的眼睛」并直连 /welfare/；首篇文章为公众号原文《带上她的眼睛 | 在遥远的地方，我看到了什么》全文 38 图",
       "dependencies": ["feat-008", "feat-021", "feat-022"],
       "status": "done",
-      "evidence": "type-check 0 错误 / lint 0 错误 / build 5 页通过；浏览器截图验证二级页与文章页排版、首页卡片封面与点击跳转；图片暂存 public/images/welfare/bring-her-eyes/（38 张），R2 OAuth 过期待重新授权后迁移（迁移步骤见 progress.md）"
+      "evidence": "type-check 0 错误 / lint 0 错误 / build 5 页通过；浏览器截图验证二级页与文章页排版、首页卡片封面与点击跳转；图片暂存 public/images/welfare/bring-her-eyes/（38 张），R2 OAuth 过期待重新授权后迁移（迁移步骤见 progress.md）；排版经用户四轮反馈打磨（画册式编辑部排版→细节→侧栏→组图对齐），已随 PR 12 合入 main"
     }
   ]
 }
