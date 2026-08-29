@@ -23,6 +23,22 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   month: 'long',
   day: 'numeric',
 }).format(article.data.pubDate);
+
+/** 延伸阅读占位卡：标题派生自项目真实素材，文章就位后替换为 getCollection 链接 */
+const upcoming = [
+  {
+    title: '第一台相机的旅程',
+    g: 'radial-gradient(circle at 70% 25%, rgba(45,212,191,0.5), transparent 55%), linear-gradient(120deg, #22303a 0%, #101a20 100%)',
+  },
+  {
+    title: '每人一本摄影集',
+    g: 'radial-gradient(circle at 25% 30%, rgba(251,191,36,0.4), transparent 55%), linear-gradient(120deg, #2b2418 0%, #171208 100%)',
+  },
+  {
+    title: '明信片的另一端',
+    g: 'radial-gradient(circle at 75% 70%, rgba(244,114,182,0.4), transparent 55%), linear-gradient(120deg, #2b1f2a 0%, #150f14 100%)',
+  },
+];
 ---
 
 <Layout
@@ -55,21 +71,39 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     </header>
 
     <div class="article-body">
-      <div class="prose-col">
-        {article.data.quote && (
-          <figure class="pull-quote">
-            <blockquote>{article.data.quote}</blockquote>
-            {article.data.quoteAuthor && <figcaption>——{article.data.quoteAuthor}</figcaption>}
-          </figure>
-        )}
+      <div class="article-layout">
+        <div class="prose-col">
+          {article.data.quote && (
+            <figure class="pull-quote">
+              <blockquote>{article.data.quote}</blockquote>
+              {article.data.quoteAuthor && <figcaption>——{article.data.quoteAuthor}</figcaption>}
+            </figure>
+          )}
 
-        <div class="welfare-prose">
-          <Content />
+          <div class="welfare-prose">
+            <Content />
+          </div>
+
+          <footer class="article-foot">
+            <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
+          </footer>
         </div>
 
-        <footer class="article-foot">
-          <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
-        </footer>
+        <aside aria-label="延伸阅读" class="side-col">
+          <p class="side-title">
+            延伸阅读 <span class="side-en">MORE STORIES</span>
+          </p>
+          <ul class="side-list">
+            {upcoming.map(item => (
+              <li class="side-card">
+                <span aria-hidden="true" class="side-thumb ph-tile" style={`background:${item.g}`} />
+                <span class="side-card-title">{item.title}</span>
+                <span class="side-card-status">即将上线 · 素材整理中</span>
+              </li>
+            ))}
+          </ul>
+          <a class="side-back" href="/welfare/">了解 Seeker公益 →</a>
+        </aside>
       </div>
     </div>
   </main>
@@ -93,8 +127,8 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     background: var(--background);
     padding-top: 70px;
     color: var(--foreground);
-    /* 头版与正文共用的左基线：小屏 6vw，超宽屏容器居中（Aperture 的左边界约 7-8vw） */
-    --edge: max(6vw, calc((100vw - 1440px) / 2 + 48px));
+    /* 头版与正文共用的左基线：小屏 9vw（往版心收），超宽屏容器居中 */
+    --edge: max(9vw, calc((100vw - 1360px) / 2 + 56px));
     --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
@@ -170,6 +204,14 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   /* —— 正文 —— */
   .article-body {
     padding: 64px var(--edge) 0;
+  }
+
+  /* 版心 + 右侧延伸阅读栏（Aperture 的 You May Also Like 结构） */
+  .article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) minmax(0, 272px);
+    column-gap: 72px;
+    align-items: start;
   }
 
   .prose-col {
@@ -286,9 +328,9 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     min-width: 0;
   }
 
-  /* 无图注的氛围大图向右破格（超出版心），制造画册的宽窄节奏 */
+  /* 无图注的氛围大图向右轻微破格（伸入栏间距，不触碰侧栏），保留宽窄节奏 */
   .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
-    width: 122%;
+    width: 108%;
   }
 
   /* 图注：紧跟照片的斜体行，左对齐小字 */
@@ -301,6 +343,89 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     line-height: 1.8;
     color: var(--muted-foreground);
     margin-top: -0.5em;
+  }
+
+  /* —— 延伸阅读侧栏 —— */
+  .side-col {
+    position: sticky;
+    top: 96px;
+    padding-top: 8px;
+  }
+
+  .side-title {
+    margin: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--divider);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .side-en {
+    margin-left: 4px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .side-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .side-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .side-thumb {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 2px;
+  }
+
+  .side-card-title {
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--foreground);
+  }
+
+  .side-card-status {
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+  }
+
+  .side-back {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .side-back:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .side-back:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   /* —— 尾部 —— */
@@ -327,6 +452,30 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     outline: 2px solid var(--grad-a);
     outline-offset: 4px;
     border-radius: 4px;
+  }
+
+  @media (max-width: 1279px) {
+    /* 窄屏放不下双栏：侧栏移到正文下方 */
+    .article-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .side-col {
+      position: static;
+      max-width: 560px;
+      margin-top: 56px;
+    }
+
+    .side-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .side-card {
+      padding: 12px 0 0;
+      border-bottom: none;
+    }
   }
 
   @media (max-width: 900px) {
@@ -360,6 +509,10 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     .welfare-prose :global(p:has(img + img)) {
       flex-direction: column;
       gap: 18px;
+    }
+
+    .side-list {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>
