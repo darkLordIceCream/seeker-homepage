@@ -314,3 +314,19 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - type-check / lint / build（6 页）全过；preview 实测两篇文章桌面 + 390px 移动端
 - R2：passing-spring/ 41 张（01.jpg 曾失败重传成功）；in-a-faraway-place/
   38 张（02.png 修复为 704KB）
+
+### 模板分离：两篇文章各自使用独立模板（用户要求，同日）
+
+- 用户反馈第一篇不该跟随哈苏模板 → 模板拆分为组件 + layout 字段分发：
+  - `content.config.ts` welfare schema 加
+    `layout: enum('editorial'|'hasselblad')`，默认 editorial
+  - `src/pages/welfare/[slug].astro` → 薄分发器（getStaticPaths +
+    others 互链数据）
+  - `src/components/welfare/ArticleEditorial.astro`
+    = 画册版（从 main 恢复：不对称头版、衬线 drop
+    cap、破格、右侧延伸阅读侧栏）；侧栏占位卡替换为真实互链卡（others）
+  - `src/components/welfare/ArticleHasselblad.astro`
+    = 哈苏版（居中头版、等高不裁切图组、文末延伸阅读互链）
+- 《带上她的眼睛》无 layout 字段 → editorial（原样恢复）；《过春天》layout:
+  hasselblad
+- 互链双向生效：两篇文末/侧栏均指向对方
