@@ -164,3 +164,103 @@ Feature:** 无 —— 首页画册式改版（feat-020~022）已完成并合并
 - 限制：Pages 单文件 25 MiB；R2 免费额度 10 GB + 1000 万读取/月
 
 </details>
+
+---
+
+## 会话记录（feat-023 公益项目板块，2026-08-29）
+
+### 交付内容（分支 feat/public-welfare，基于 main 7290f0f）
+
+- **welfare Content Collection**：`src/content.config.ts` 新增 welfare
+  schema（title/subtitle/kicker/coverLine/cover/excerpt/quote/quoteAuthor/pubDate/author/order）
+- **首篇文章**：`src/content/welfare/bring-her-eyes.md`
+  —— 公众号《带上她的眼睛 | 在遥远的地方，我看到了什么》全文重排（2026-08-29 原文，作者寄意寒星），38 张学生摄影作品全部收录，图注用斜体行约定（`p:has(img) + p em`
+  渲染为居中灰字）
+- **二级页 `/welfare/`**：项目介绍 hero（渐变 glow + kicker「SEEKER 公益 ·
+  WELFARE」）
+  - 图文手记拍立得堆叠卡片（与首页活动卡同一语言，hover/focus 突出跟随）
+- **文章页 `/welfare/[slug]/`**：公众号风格排版——品牌语头部（SEEKER
+  · 繁星闪烁之时）、居中大标题/副题/meta、金句引用（署名右对齐）、居中章节标题（01/02/03 写在标题文字里，渐变短下划线）、全宽圆角照片、居中图注、诗句 blockquote、鸣谢名单
+- **首页**：活动卡「一种关注」→「Seeker公益 · 带上她的眼睛」（真实封面图 +
+  `/welfare/` 直达），stack-tag 改深色玻璃底（浅色照片上白字可读）
+
+### ⚠️ R2 迁移待办（用户授权后执行）
+
+Cloudflare OAuth
+token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 上传报
+`CLOUDFLARE_API_TOKEN` 错误，本次图片暂存仓库：
+`public/images/welfare/bring-her-eyes/01.jpg…38.jpg（含 02.png，共 5.1MB）`。授权恢复后迁移步骤：
+
+1. `wrangler login`（或设 `CLOUDFLARE_API_TOKEN`）
+2. 循环
+   `wrangler r2 object put seeker-homepage-assets/welfare/bring-her-eyes/$n.$ext --file public/images/welfare/bring-her-eyes/$n.$ext --remote`
+3. `grep -rl '/images/welfare/bring-her-eyes/' src/ | xargs sed -i '' 's|/images/welfare/bring-her-eyes/|https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/|g'`
+4. 删除 `public/images/welfare/` 并验证构建
+
+### Evidence
+
+- `pnpm run type-check`：0 errors / 0 warnings
+- `pnpm run lint`：0 problems
+- `pnpm run build`：5 页（含 /welfare/、/welfare/bring-her-eyes/）
+- 浏览器截图验证：二级页 hero/卡片、文章页头部/章节/图注/38 图、首页公益卡（封面铺满 +
+  tag 可读 + href=/welfare/）
+
+### Notes for Next Session
+
+- 当前分支 `feat/public-welfare`，已提交待用户确认后推送/建 PR
+- 新增公益文章：在 `src/content/welfare/`
+  加 md（frontmatter 参照现有文章，order 递增），/welfare 列表自动出现
+- 后续可加：文章页上一篇/下一篇、welfare 导航入口（目前从首页活动卡进入）
+
+### 排版重排（用户反馈，同日）
+
+- 用户反馈：公众号式排版偏手机阅读，要求参考 Aperture
+  editorial（马格南系画册风）重排
+- 参考要点（实站测量）：不对称头版（左衬线大标题+lede
+  / 右满高图出血）、正文单栏 ~741px 衬线 17px 行高 1.76 左对齐、全列宽大图 +
+  12px 左对齐图注、成组作品双图/三图并排
+- 重排实现：`.article-hero`
+  左右 46/54 分栏（--edge 左边距对齐正文列）、正文衬线体（Songti SC / Noto Serif
+  SC / SimSun
+  fallback）16.5px 行高 1.95、金句改左对齐渐变竖线、章节标题左对齐衬线 + 短规则线、图注左对齐 12px
+  sans、组图约定「md 软换行落同段 → p:has(img+img)
+  flex 并排（顶对齐不裁剪）」、手机端头版堆叠 + 组图退回单列
+- md 中 7 处成组作品改为软换行并排（10+11、17+18+19、22+23、25+26、27+28、29+30、35+36）
+
+### 排版细节打磨（用户反馈「看着怪」，用 ui-ux-pro-max skill 审查，同日）
+
+- skill 结论：editorial-grid-magazine 检查表中缺 drop cap；line
+  length 应限 65-75 字符
+- 修复「怪」感根源：内容列贴屏幕左缘（原 --edge 24px）→
+  6vw 左基线（Aperture 约 7-8vw 比例）
+- 新增：正文首段首字下沉、无图注氛围大图向右破格 122%（画册宽窄节奏）、版心 720→760px
+- 去重：hero 封面与正文引子图同图（01.jpg）重复展示 → 删正文引子图
+- 微调：图片印刷质感直角（radius
+  0）、金句 1.22→1.32rem、图注间距 -0.8em→-0.5em、尾部返回居中
+- 顺手：**pycache** 误入仓库 → git rm --cached + .gitignore
+
+### 延伸阅读侧栏 + 左基线再调（用户反馈，同日）
+
+- 参照 Aperture「You May Also Like」：文章页右侧新增「延伸阅读 MORE
+  STORIES」sticky 侧栏（272px，top
+  96px），三张真实感占位卡（标题派生自项目素材：第一台相机的旅程 / 每人一本摄影集 / 明信片的另一端，渐变缩略图 + 「即将上线 · 素材整理中」状态行）+「了解 Seeker公益 →」回项目页；文章就位后把占位卡替换为 getCollection 链接即可
+- 布局：article-layout 双栏 grid（760px 版心 + 72px 栏距 +
+  272px 侧栏）；左基线 6vw→9vw（用户反馈往中间挪）；破格图 122%→108%（伸入栏距不压侧栏）
+- 响应式：<1280px 侧栏移到正文下方三卡横排；<900px 退回单列
+
+### 侧栏收敛 + 竖图并排（用户反馈，同日）
+
+- 用户反馈侧栏「太放肆」：实测 Aperture 侧栏参数（模块宽 365px、小图 78×89 横排卡、非 sticky）
+- 侧栏重做：grid 列改 1fr，模块 width
+  min(300px) 在右侧留白区内居中（非全局居中）；去掉 sticky（停文档位置）；大缩略图竖卡 →
+  74×89 横排小卡（图左 + 标题/状态右）
+- 正文：07 马杏 +
+  08 吕秋然两张竖图改并排（md 软换行），图注合并，与上方 06 陈鹏横图左右对齐
+
+### 三连图对齐 + 35/36 改上下布置（用户反馈，同日）
+
+- 吕欣怡三联原图比例 1.50/1.33/1.50 → JS 给三图段打 .img-trio（CSS
+  :has 数不出子元素），统一 aspect-ratio 3/2 + object-fit
+  cover，底部对齐（18 仅轻微裁切）
+- 35/36 从软换行并排拆回上下两段（同宽破格 108%，左右对齐）；36 实为 1080×218 手写便条长条图
+- 其余双图组实测组内比例一致（1.33 组、0.75 竖图组），无需处理

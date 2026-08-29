@@ -141,12 +141,14 @@ seeker-homepage/
 │   │   ├── MemberCard.astro # Member card
 │   │   └── MemberSocial.astro # Social links
 │   ├── content/           # Content Collections
-│   │   └── members/       # Member markdown files
+│   │   ├── members/       # Member markdown files
+│   │   └── welfare/       # Charity project articles (Markdown)
 │   ├── layouts/           # Page layouts
 │   │   └── Layout.astro   # Root layout
 │   ├── pages/             # Page files
 │   │   ├── index.astro    # Homepage (fullpage scroll: Hero→Gallery→Acts→About)
 │   │   ├── team.astro     # Team page
+│   │   ├── welfare/       # Charity section: project page + editorial articles
 │   │   └── under-construction.astro # Under construction placeholder
 │   ├── styles/            # Style files
 │   │   └── global.css     # Global styles + shadcn theme (Catppuccin Latte/Mocha)
