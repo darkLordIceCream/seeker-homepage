@@ -1,32 +1,48 @@
 ---
 // 首页第3层「活动」：拍立得照片堆——白框厚底照片卡错位叠放
-// hover 抽出转正；feat-018 落地前指向占位页
-const events = [
+// hover 抽出转正；未落地的活动指向占位页，公益项目直达 /welfare/
+type Act = {
+  name: string;
+  desc: string;
+  tag: string;
+  href: string;
+  rot: string;
+  dy: string;
+  /** 渐变占位（无真实配图时用） */
+  g?: string;
+  /** 真实封面图 */
+  img?: string;
+};
+
+const events: Act[] = [
   {
     name: '时间的故事',
     desc: '长期摄影企划',
     tag: '长期企划',
+    href: '/under-construction',
     rot: '-4deg',
     dy: '12px',
     g: 'radial-gradient(circle at 75% 20%, rgba(45,212,191,0.45), transparent 55%), radial-gradient(circle at 15% 85%, rgba(129,140,248,0.35), transparent 55%), linear-gradient(100deg, #2a3040 0%, #141826 100%)',
   },
   {
-    name: '一种关注',
-    desc: '每周主题征集与点评',
-    tag: '每周征集',
+    name: 'Seeker公益 · 带上她的眼睛',
+    desc: '山村中的摄影课',
+    tag: '公益项目',
+    href: '/welfare/',
     rot: '2.2deg',
     dy: '-8px',
-    g: 'radial-gradient(circle at 20% 25%, rgba(244,114,182,0.40), transparent 55%), radial-gradient(circle at 80% 75%, rgba(251,191,36,0.28), transparent 50%), linear-gradient(100deg, #2b2230 0%, #171019 100%)',
+    img: '/images/welfare/bring-her-eyes/01.jpg',
   },
   {
     name: 'Young Blood · 年度大赛',
     desc: '新人专场与年度摄影比拼',
     tag: '赛事',
+    href: '/under-construction',
     rot: '-1.4deg',
     dy: '18px',
     g: 'radial-gradient(circle at 80% 30%, rgba(251,146,60,0.40), transparent 55%), radial-gradient(circle at 15% 75%, rgba(56,189,248,0.32), transparent 52%), linear-gradient(100deg, #242028 0%, #120f16 100%)',
   },
-] as const;
+];
 ---
 
 <section aria-labelledby="acts-title" class="section acts-section" id="activities">
@@ -40,13 +56,16 @@ const events = [
   <div class="photo-stack">
     {events.map((event, index) => (
       <a
-        aria-label={`${event.name}：${event.desc}（活动页建设中）`}
+        aria-label={`${event.name}：${event.desc}`}
         class:list={['stack-card', { active: index === 1 }]}
         data-stack-card
-        href="/under-construction"
+        href={event.href}
         style={`--rot:${event.rot};--dy:${event.dy}`}
       >
-        <span class="stack-img ph-tile" style={`background:${event.g}`}>
+        <span
+          class:list={['stack-img', { 'ph-tile': !event.img }]}
+          style={event.img ? `background-image:url('${event.img}')` : `background:${event.g}`}
+        >
           <span class="stack-tag">{event.tag}</span>
         </span>
         <span class="stack-meta">
@@ -182,12 +201,19 @@ const events = [
     border-radius: 3px;
   }
 
+  /* 真实封面图铺满拍立得相框 */
+  .stack-img[style*='background-image'] {
+    background-size: cover;
+    background-position: center;
+  }
+
   .stack-tag {
     align-self: flex-start;
     margin: 10px;
     padding: 3px 10px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
+    /* 深色玻璃底：浅色照片上白字也可读 */
+    background: rgba(30, 34, 46, 0.42);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     font-family: 'Archivo', sans-serif;

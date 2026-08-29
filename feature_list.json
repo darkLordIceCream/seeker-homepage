@@ -175,6 +175,14 @@
       "dependencies": ["feat-020", "feat-021"],
       "status": "done",
       "evidence": "./init.sh 0 错误 0 警告；浏览器逐屏截图验证（作品墙/照片堆含 hover 抽出/介绍页）；scrollspy 与进度点 4 点联动正常，已随 PR #10 合入 main"
+    },
+    {
+      "id": "feat-023",
+      "name": "公益项目板块「带上她的眼睛」",
+      "description": "welfare Content Collection + 二级页 /welfare（项目介绍 + 图文手记拍立得堆叠卡片）+ 文章页 /welfare/[slug]（公众号风格排版：品牌语头、金句、居中章节标题、全宽照片、居中图注、鸣谢）；首页活动卡「一种关注」替换为「Seeker公益 · 带上她的眼睛」并直连 /welfare/；首篇文章为公众号原文《带上她的眼睛 | 在遥远的地方，我看到了什么》全文 38 图",
+      "dependencies": ["feat-008", "feat-021", "feat-022"],
+      "status": "done",
+      "evidence": "type-check 0 错误 / lint 0 错误 / build 5 页通过；浏览器截图验证二级页与文章页排版、首页卡片封面与点击跳转；图片暂存 public/images/welfare/bring-her-eyes/（38 张），R2 OAuth 过期待重新授权后迁移（迁移步骤见 progress.md）"
     }
   ]
 }

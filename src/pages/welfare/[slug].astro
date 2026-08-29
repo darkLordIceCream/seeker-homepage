@@ -1,0 +1,251 @@
+---
+// 公益项目文章页：公众号风格排版
+// 头部品牌语 → 金句 → 章节（居中标题）→ 全宽照片 + 居中图注 → 鸣谢
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('welfare');
+  return articles.map(article => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+
+const fmtDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(article.data.pubDate);
+---
+
+<Layout
+  description={article.data.excerpt}
+  image={article.data.cover}
+  title={`${article.data.title} | Seeker公益`}
+>
+  <Navigation />
+
+  <main class="article-page" id="main-content">
+    <article class="article-container">
+      <header class="article-head">
+        <p class="article-kicker">SEEKER · {article.data.kicker}</p>
+        <h1 class="article-title">{article.data.title}</h1>
+        {article.data.subtitle && <p class="article-subtitle">{article.data.subtitle}</p>}
+        <p class="article-meta">
+          <span>{fmtDate}</span>
+          <span aria-hidden="true" class="meta-dot">·</span>
+          <span>{article.data.author}</span>
+          <span aria-hidden="true" class="meta-dot">·</span>
+          <span>Seeker公益</span>
+        </p>
+      </header>
+
+      {article.data.quote && (
+        <figure class="pull-quote">
+          <blockquote>{article.data.quote}</blockquote>
+          {article.data.quoteAuthor && <figcaption>——{article.data.quoteAuthor}</figcaption>}
+        </figure>
+      )}
+
+      <div class="welfare-prose">
+        <Content />
+      </div>
+
+      <footer class="article-foot">
+        <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
+      </footer>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .article-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+  }
+
+  .article-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  /* —— 头部品牌语区 —— */
+  .article-head {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  .article-kicker {
+    margin: 0 0 22px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .article-title {
+    margin: 0 0 14px;
+    font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    color: var(--foreground);
+  }
+
+  .article-subtitle {
+    margin: 0 0 22px;
+    font-size: 1.05rem;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em;
+    color: var(--muted-foreground);
+  }
+
+  .article-meta {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--muted-foreground);
+  }
+
+  .meta-dot {
+    opacity: 0.6;
+  }
+
+  /* —— 金句 —— */
+  .pull-quote {
+    margin: 0 0 48px;
+    text-align: center;
+  }
+
+  .pull-quote blockquote {
+    margin: 0;
+    font-size: 1.12rem;
+    line-height: 2;
+    color: var(--foreground);
+  }
+
+  .pull-quote figcaption {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: right;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 正文：公众号风格 —— */
+  .welfare-prose {
+    font-size: 15.5px;
+    line-height: 2.05;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(p) {
+    margin: 0 0 1.5em;
+  }
+
+  /* 章节标题：居中，编号自带在文字里 */
+  .welfare-prose :global(h2) {
+    margin: 3.2em 0 2em;
+    text-align: center;
+    font-size: 1.28rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(h2)::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    margin: 14px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+  }
+
+  /* 引用块（诗句 / 章节副题）：居中淡色 */
+  .welfare-prose :global(blockquote) {
+    margin: 2.4em auto;
+    padding: 0;
+    border: none;
+    text-align: center;
+    font-size: 14.5px;
+    line-height: 2;
+    color: var(--muted-foreground);
+  }
+
+  /* 照片：全宽、圆角、居中 */
+  .welfare-prose :global(p:has(> img:only-child)) {
+    margin: 2em 0;
+  }
+
+  .welfare-prose :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(76, 79, 105, 0.14);
+  }
+
+  /* 图注：紧跟照片的斜体行，居中灰字 */
+  .welfare-prose :global(p:has(> img:only-child) + p em) {
+    display: block;
+    text-align: center;
+    font-style: normal;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+    margin-top: -0.6em;
+  }
+
+  /* 鸣谢名单：小字居中 */
+  .welfare-prose :global(h2:last-of-type) {
+    margin-bottom: 1.2em;
+  }
+
+  /* —— 尾部 —— */
+  .article-foot {
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .article-container {
+      padding: 40px 20px 64px;
+    }
+  }
+</style>

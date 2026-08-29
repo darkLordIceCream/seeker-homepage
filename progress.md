@@ -164,3 +164,50 @@ Feature:** 无 —— 首页画册式改版（feat-020~022）已完成并合并
 - 限制：Pages 单文件 25 MiB；R2 免费额度 10 GB + 1000 万读取/月
 
 </details>
+
+---
+
+## 会话记录（feat-023 公益项目板块，2026-08-29）
+
+### 交付内容（分支 feat/public-welfare，基于 main 7290f0f）
+
+- **welfare Content Collection**：`src/content.config.ts` 新增 welfare
+  schema（title/subtitle/kicker/coverLine/cover/excerpt/quote/quoteAuthor/pubDate/author/order）
+- **首篇文章**：`src/content/welfare/bring-her-eyes.md`
+  —— 公众号《带上她的眼睛 | 在遥远的地方，我看到了什么》全文重排（2026-08-29 原文，作者寄意寒星），38 张学生摄影作品全部收录，图注用斜体行约定（`p:has(img) + p em`
+  渲染为居中灰字）
+- **二级页 `/welfare/`**：项目介绍 hero（渐变 glow + kicker「SEEKER 公益 ·
+  WELFARE」）
+  - 图文手记拍立得堆叠卡片（与首页活动卡同一语言，hover/focus 突出跟随）
+- **文章页 `/welfare/[slug]/`**：公众号风格排版——品牌语头部（SEEKER
+  · 繁星闪烁之时）、居中大标题/副题/meta、金句引用（署名右对齐）、居中章节标题（01/02/03 写在标题文字里，渐变短下划线）、全宽圆角照片、居中图注、诗句 blockquote、鸣谢名单
+- **首页**：活动卡「一种关注」→「Seeker公益 · 带上她的眼睛」（真实封面图 +
+  `/welfare/` 直达），stack-tag 改深色玻璃底（浅色照片上白字可读）
+
+### ⚠️ R2 迁移待办（用户授权后执行）
+
+Cloudflare OAuth
+token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 上传报
+`CLOUDFLARE_API_TOKEN` 错误，本次图片暂存仓库：
+`public/images/welfare/bring-her-eyes/01.jpg…38.jpg（含 02.png，共 5.1MB）`。授权恢复后迁移步骤：
+
+1. `wrangler login`（或设 `CLOUDFLARE_API_TOKEN`）
+2. 循环
+   `wrangler r2 object put seeker-homepage-assets/welfare/bring-her-eyes/$n.$ext --file public/images/welfare/bring-her-eyes/$n.$ext --remote`
+3. `grep -rl '/images/welfare/bring-her-eyes/' src/ | xargs sed -i '' 's|/images/welfare/bring-her-eyes/|https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/|g'`
+4. 删除 `public/images/welfare/` 并验证构建
+
+### Evidence
+
+- `pnpm run type-check`：0 errors / 0 warnings
+- `pnpm run lint`：0 problems
+- `pnpm run build`：5 页（含 /welfare/、/welfare/bring-her-eyes/）
+- 浏览器截图验证：二级页 hero/卡片、文章页头部/章节/图注/38 图、首页公益卡（封面铺满 +
+  tag 可读 + href=/welfare/）
+
+### Notes for Next Session
+
+- 当前分支 `feat/public-welfare`，已提交待用户确认后推送/建 PR
+- 新增公益文章：在 `src/content/welfare/`
+  加 md（frontmatter 参照现有文章，order 递增），/welfare 列表自动出现
+- 后续可加：文章页上一篇/下一篇、welfare 导航入口（目前从首页活动卡进入）
