@@ -1,6 +1,6 @@
 ---
-title: 带上她的眼睛
-subtitle: 在遥远的地方，我看到了什么
+title: 在遥远的地方，我看到了什么
+subtitle: 山村中的摄影课
 kicker: 繁星闪烁之时
 coverLine: 山村中的摄影课
 cover: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/in-a-faraway-place/01.jpg
@@ -10,7 +10,6 @@ quoteAuthor: 马同学 9岁
 pubDate: 2026-08-29
 author: 寄意寒星
 order: 1
-cardTitle: 在遥远的地方，我看到了什么
 layout: editorial
 ---
 
