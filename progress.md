@@ -330,3 +330,12 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 《带上她的眼睛》无 layout 字段 → editorial（原样恢复）；《过春天》layout:
   hasselblad
 - 互链双向生效：两篇文末/侧栏均指向对方
+
+### 延伸阅读重设计（用户反馈「没设计感」，skill 复查，2026-08-30）
+
+- skill 原则：hover 必须有视觉反馈；杂志感 = 衬线 + kicker 宽字距 + 箭头交互
+- editorial（画册版）侧栏：横排小卡 → 纵向编辑卡（「下篇故事 NEXT
+  STORY」品牌色 kicker + 封面原比例大图（hover 亮度变化）+ 衬线大标题 19px + 副题 +「阅读全文 →」箭头 hover 右移）
+- hasselblad：文末三列小卡 → 左图右文横幅卡（3:2 图 + 宽字距大标题 + 副题 +
+  CTA，hover 标题变品牌色 + 箭头位移）；顺序调整为延伸阅读在返回链接之前
+- 移动端：横幅卡上下堆叠

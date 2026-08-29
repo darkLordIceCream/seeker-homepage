@@ -67,32 +67,31 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
         <Content />
       </div>
 
+      {others.length > 0 && (
+        <section aria-label="延伸阅读" class="more-stories">
+          <p class="side-kicker">
+            延伸阅读 <span class="side-en">NEXT STORY</span>
+          </p>
+          {others.map(other => (
+            <a class="next-card" href={`/welfare/${other.id}/`}>
+              <span aria-hidden="true" class="next-media">
+                <img alt="" height="720" loading="lazy" src={other.data.cover} width="1080" />
+              </span>
+              <span class="next-text">
+                <span class="next-title">{other.data.title}</span>
+                {other.data.subtitle && <span class="next-sub">{other.data.subtitle}</span>}
+                <span class="next-cta">
+                  阅读全文 <span aria-hidden="true" class="cta-arrow">→</span>
+                </span>
+              </span>
+            </a>
+          ))}
+        </section>
+      )}
+
       <footer class="article-foot">
         <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
       </footer>
-
-      {others.length > 0 && (
-        <section aria-label="延伸阅读" class="more-stories">
-          <p class="side-title">
-            延伸阅读 <span class="side-en">MORE STORIES</span>
-          </p>
-          <ul class="side-list">
-            {others.map(other => (
-              <li class="side-card">
-                <a class="side-link" href={`/welfare/${other.id}/`}>
-                  <span
-                    aria-hidden="true"
-                    class="side-thumb"
-                    style={`background-image:url('${other.data.cover}')`}
-                  />
-                  <span class="side-card-title">{other.data.title}</span>
-                  <span class="side-card-sub">{other.data.subtitle ?? fmtDate}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
     </div>
   </main>
 
@@ -373,86 +372,102 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     color: var(--muted-foreground);
   }
 
-  /* —— 文末延伸阅读：三列卡 —— */
+  /* —— 文末延伸阅读：左图右文横幅卡 —— */
   .more-stories {
     max-width: 900px;
     margin: 24px auto 0;
   }
 
-  .side-title {
-    margin: 0;
-    padding-bottom: 14px;
+  .side-kicker {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--divider);
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--foreground);
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grad-a);
   }
 
   .side-en {
     margin-left: 4px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
     color: var(--muted-foreground);
   }
 
-  .side-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .next-card {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  .side-card {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .side-link {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 36px;
+    align-items: center;
     text-decoration: none;
   }
 
-  .side-link:hover .side-card-title {
-    color: var(--grad-a);
-  }
-
-  .side-link:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-
-  .side-thumb {
+  .next-media {
     display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
+    overflow: hidden;
     border-radius: 2px;
-    background-size: cover;
-    background-position: center;
     background-color: var(--secondary);
   }
 
-  .side-card-title {
-    font-size: 14.5px;
+  .next-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .next-card:hover .next-media img {
+    opacity: 0.88;
+  }
+
+  .next-title {
+    display: block;
+    font-size: 1.45rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
     color: var(--foreground);
     transition: color 0.2s ease;
   }
 
-  .side-card-sub {
-    font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.08em;
+  .next-sub {
+    display: block;
+    margin-top: 10px;
+    font-size: 13.5px;
+    letter-spacing: 0.14em;
     color: var(--muted-foreground);
+  }
+
+  .next-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 22px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--grad-a);
+  }
+
+  .cta-arrow {
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+
+  .next-card:hover .next-title {
+    color: var(--grad-a);
+  }
+
+  .next-card:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .next-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   /* —— 尾部 —— */
@@ -481,13 +496,6 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     border-radius: 4px;
   }
 
-  @media (max-width: 1100px) {
-    /* 窄屏：文末延伸阅读三列改两列 */
-    .side-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 900px) {
     .article-hero {
       padding: 48px 24px 36px;
@@ -508,8 +516,10 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
       width: 100% !important;
     }
 
-    .side-list {
+    /* 横幅卡改上下堆叠 */
+    .next-card {
       grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
     }
   }
 </style>

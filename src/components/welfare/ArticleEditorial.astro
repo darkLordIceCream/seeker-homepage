@@ -72,20 +72,29 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
         </div>
 
         <aside aria-label="延伸阅读" class="side-col">
-          <p class="side-title">
-            延伸阅读 <span class="side-en">MORE STORIES</span>
+          <p class="side-kicker">
+            下篇故事 <span class="side-en">NEXT STORY</span>
           </p>
           <ul class="side-list">
             {others.map(other => (
               <li class="side-card">
                 <a class="side-card-link" href={`/welfare/${other.id}/`}>
-                  <span
-                    aria-hidden="true"
-                    class="side-thumb"
-                    style={`background-image:url('${other.data.cover}')`}
-                  />
+                  <span aria-hidden="true" class="side-thumb">
+                    <img
+                      alt=""
+                      height="720"
+                      loading="lazy"
+                      src={other.data.cover}
+                      width="1080"
+                    />
+                  </span>
                   <span class="side-card-title">{other.data.title}</span>
-                  <span class="side-card-status">{other.data.subtitle ?? 'Seeker公益'}</span>
+                  {other.data.subtitle && (
+                    <span class="side-card-status">{other.data.subtitle}</span>
+                  )}
+                  <span class="side-cta">
+                    阅读全文 <span aria-hidden="true" class="cta-arrow">→</span>
+                  </span>
                 </a>
               </li>
             ))}
@@ -365,23 +374,21 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     padding-top: 8px;
   }
 
-  .side-title {
-    margin: 0;
-    padding-bottom: 14px;
+  /* —— 延伸阅读：纵向编辑卡（kicker + 大图 + 衬线标题 + 箭头） —— */
+  .side-kicker {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--divider);
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--foreground);
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grad-a);
   }
 
   .side-en {
     margin-left: 4px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
     color: var(--muted-foreground);
   }
 
@@ -391,37 +398,73 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     list-style: none;
   }
 
-  /* 横排小卡：小缩略图 + 右侧文字（Aperture 的 You May Also Like 卡式） */
-  .side-card {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--divider);
-  }
-
-  .side-thumb {
-    display: block;
-    width: 74px;
-    aspect-ratio: 5 / 6;
-    border-radius: 2px;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--secondary);
-  }
-
   .side-card-link {
-    display: grid;
-    grid-template-columns: 74px 1fr;
-    column-gap: 14px;
-    align-items: center;
+    display: block;
     text-decoration: none;
   }
 
+  /* 封面原比例展示，不裁切（保拍立得水印） */
   .side-thumb {
-    grid-column: 1;
-    grid-row: 1;
+    display: block;
+    overflow: hidden;
+    border-radius: 2px;
+    background-color: var(--secondary);
+  }
+
+  .side-thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .side-card-link:hover .side-thumb img {
+    opacity: 0.88;
+  }
+
+  .side-card-title {
+    display: block;
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+  }
+
+  .side-card-status {
+    display: block;
+    margin-top: 6px;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+  }
+
+  .side-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--grad-a);
+  }
+
+  .cta-arrow {
+    display: inline-block;
+    transition: transform 0.25s ease;
   }
 
   .side-card-link:hover .side-card-title {
     color: var(--grad-a);
+  }
+
+  .side-card-link:hover .cta-arrow {
+    transform: translateX(4px);
   }
 
   .side-card-link:focus-visible {
@@ -430,32 +473,12 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     border-radius: 4px;
   }
 
-  .side-card-title {
-    grid-column: 2;
-    grid-row: 1;
-    font-family: var(--font-serif-song);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    line-height: 1.5;
-    color: var(--foreground);
-    transition: color 0.2s ease;
-  }
-
-  .side-card-status {
-    grid-column: 2;
-    grid-row: 2;
-    display: block;
-    margin-top: 5px;
-    font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    color: var(--muted-foreground);
-  }
-
   .side-back {
     display: inline-block;
-    margin-top: 18px;
+    margin-top: 26px;
+    padding-top: 14px;
+    border-top: 1px solid var(--divider);
+    width: 100%;
     font-size: 12.5px;
     font-weight: 600;
     color: var(--grad-a);
@@ -508,17 +531,6 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
     .side-col {
       width: min(560px, 100%);
       margin: 56px 0 0;
-    }
-
-    .side-list {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .side-card {
-      padding: 12px 0 0;
-      border-bottom: none;
     }
   }
 
