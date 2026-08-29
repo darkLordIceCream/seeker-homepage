@@ -118,7 +118,7 @@ layout: hasselblad
 
 ![实在舍不得章节配图](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/passing-spring/35.jpg)
 
-尽管我不太愿意谈及这个问题，但这大概是田老师和同来支教的张老师在昭通的最后一个夏天。
+尽管我不太愿意谈及这个问题，<br>但这大概是田老师和同来支教的张老师在昭通的最后一个夏天。
 
 ![田老师和孩子们](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/passing-spring/36.png)
 
