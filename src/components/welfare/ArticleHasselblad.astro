@@ -153,6 +153,8 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
     color: var(--foreground);
     /* 头版、正文、图组共用左基线；超宽屏容器居中 */
     --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    /* 与画册模板一致的字体体系：标题/正文衬线，辅助行 Archivo 无衬线 */
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 居中头版 —— */
@@ -175,6 +177,7 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
 
   .hero-title {
     margin: 0 0 16px;
+    font-family: var(--font-serif-song);
     font-size: clamp(1.9rem, 4.4vw, 3rem);
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -424,6 +427,7 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
 
   .next-title {
     display: block;
+    font-family: var(--font-serif-song);
     font-size: 1.45rem;
     font-weight: 700;
     letter-spacing: 0.12em;

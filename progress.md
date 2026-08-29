@@ -375,3 +375,11 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   STORY」指向在遥远的地方；在遥远的地方（order 2）→「上一篇 PREVIOUS
   STORY」指向过春天
 - 第一篇 title 修正为文章名「在遥远的地方，我看到了什么」（subtitle 山村中的摄影课）
+
+### 字体体系统一（用户反馈 + skill 评估，2026-08-30）
+
+- skill 结论：杂志类站点经典搭配 = 衬线标题/正文 + 无衬线辅助行（Magazine Style
+  pairing）
+- 统一结果（两模板一致）：h1 大标题、章节标题、正文、延伸阅读卡标题 = 衬线（--font-serif-song：Songti
+  SC 栈）；kicker/meta/dek/图注/CTA = Archivo + 无衬线
+- 哈苏组件补齐 --font-serif-song 变量，hero-title 与 next-title 从黑体改衬线
