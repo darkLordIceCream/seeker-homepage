@@ -333,6 +333,16 @@ const upcoming = [
     width: 108%;
   }
 
+  /* 鸣谢名单（最后一个章节后的段落）：版心内每行居中，黑体小字与衬线正文区分 */
+  .welfare-prose :global(h2:last-of-type ~ p) {
+    font-family: 'Archivo', -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-size: 14px;
+    line-height: 2.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
   /* 图注：紧跟照片的斜体行，左对齐小字 */
   .welfare-prose :global(p:has(> img) + p em) {
     display: block;
