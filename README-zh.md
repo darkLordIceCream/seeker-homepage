@@ -141,12 +141,14 @@ seeker-homepage/
 │   │   ├── MemberCard.astro # 成员卡片
 │   │   └── MemberSocial.astro # 社交链接
 │   ├── content/           # Content Collections
-│   │   └── members/       # 成员 Markdown 文件
+│   │   ├── members/       # 成员 Markdown 文件
+│   │   └── welfare/       # 公益项目文章（Markdown）
 │   ├── layouts/           # 页面布局
 │   │   └── Layout.astro   # 根布局
 │   ├── pages/             # 页面文件
 │   │   ├── index.astro    # 首页（整屏滚动：Hero→画廊→活动→介绍）
 │   │   ├── team.astro     # 团队页面
+│   │   ├── welfare/       # 公益板块：项目页 + 画册式文章页
 │   │   └── under-construction.astro # 施工中占位页面
 │   ├── styles/            # 样式文件
 │   │   └── global.css     # 全局样式 + shadcn 主题（Catppuccin Latte/Mocha）
