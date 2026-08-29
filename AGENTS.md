@@ -7,8 +7,12 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
 ## Project Layout
 
 - `src/pages/` — routes (`index.astro`, `team.astro`,
-  `under-construction.astro`); keep pages thin. `index.astro` is a fullpage
-  scroll-snap layout: Hero video → Gallery → Activities → About
+  `under-construction.astro`, `welfare/index.astro`, `welfare/[slug].astro`);
+  keep pages thin. `index.astro` is a fullpage scroll-snap layout: Hero video →
+  Gallery → Activities → About. `/welfare` is the charity project section:
+  project intro + article cards, `/welfare/[slug]` renders articles in an
+  Aperture-style editorial layout (serif column, drop cap, image pairs/trios,
+  "More Stories" side module)
 - `src/components/` — reusable `.astro` components (Navigation with glass
   scrolled state + scrollspy, Banner, Footer, ThemeToggle, SEOHead, TeamHero,
   MemberCard, MemberSocial)
@@ -18,13 +22,18 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   icons); add via shadcn conventions, don't hand-roll equivalents
 - `src/layouts/Layout.astro` — root layout; every page must reuse it
 - `src/content/` + `src/content.config.ts` — Astro Content Collections
-  (currently `members`); site content lives here as Markdown, NOT hardcoded in
-  pages
+  (`members`, `welfare`); site content lives here as Markdown, NOT hardcoded in
+  pages. New welfare article = new `.md` in `src/content/welfare/` (see existing
+  frontmatter; bump `order`); article body uses
+  `![alt](/images/welfare/<slug>/n.jpg)` plus an italic caption line right after
+  an image; consecutive image lines (no blank line) render side-by-side
 - `src/styles/global.css` — Tailwind 4 CSS-first config + shadcn CSS variables
   (no `tailwind.config.js`); theme = Catppuccin Latte (light, default) / Mocha
   (dark via `.dark`), brand gradient tokens `--grad-a/--grad-b`
 - `src/assets/` — images processed by `astro:assets`
-- `public/` — static files served as-is
+- `public/` — static files served as-is; `public/images/welfare/` holds welfare
+  article photos (pending migration to R2 `welfare/<slug>/` once wrangler auth
+  is renewed — steps in `progress.md`)
 
 ## Startup Workflow
 
