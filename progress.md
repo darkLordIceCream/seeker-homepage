@@ -226,3 +226,15 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   sans、组图约定「md 软换行落同段 → p:has(img+img)
   flex 并排（顶对齐不裁剪）」、手机端头版堆叠 + 组图退回单列
 - md 中 7 处成组作品改为软换行并排（10+11、17+18+19、22+23、25+26、27+28、29+30、35+36）
+
+### 排版细节打磨（用户反馈「看着怪」，用 ui-ux-pro-max skill 审查，同日）
+
+- skill 结论：editorial-grid-magazine 检查表中缺 drop cap；line
+  length 应限 65-75 字符
+- 修复「怪」感根源：内容列贴屏幕左缘（原 --edge 24px）→
+  6vw 左基线（Aperture 约 7-8vw 比例）
+- 新增：正文首段首字下沉、无图注氛围大图向右破格 122%（画册宽窄节奏）、版心 720→760px
+- 去重：hero 封面与正文引子图同图（01.jpg）重复展示 → 删正文引子图
+- 微调：图片印刷质感直角（radius
+  0）、金句 1.22→1.32rem、图注间距 -0.8em→-0.5em、尾部返回居中
+- 顺手：**pycache** 误入仓库 → git rm --cached + .gitignore
