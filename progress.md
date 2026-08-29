@@ -383,3 +383,9 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 统一结果（两模板一致）：h1 大标题、章节标题、正文、延伸阅读卡标题 = 衬线（--font-serif-song：Songti
   SC 栈）；kicker/meta/dek/图注/CTA = Archivo + 无衬线
 - 哈苏组件补齐 --font-serif-song 变量，hero-title 与 next-title 从黑体改衬线
+
+### 小组介绍合影位照片（2026-08-30）
+
+- 用户提供成员照片墙拼贴图（1500x2500 PNG，5MB）上传 R2 `about/team-photo.png`
+- AboutSection 右侧「外拍合影位」占位替换为照片墙（background
+  cover，label 改「成员照片墙 · 每一张都是我们」）
