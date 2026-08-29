@@ -1,6 +1,7 @@
 ---
-// 公益项目文章页：画册/编辑部风格排版（参考 Aperture editorial）
-// 不对称头版（左标题右满高图）→ 金句 → 衬线正文单栏 → 全宽大图 / 成组作品并排 + 左对齐图注
+// 公益项目文章页：哈苏（Hasselblad）式图集排版
+// 居中头版 → 全宽封面 → 居中宽字距章节标题 → 统一比例等高图组 → 居中窄列文字
+// 配色沿用站点 Catppuccin 令牌；右侧保留「延伸阅读」小模块
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
@@ -49,26 +50,29 @@ const upcoming = [
   <Navigation />
 
   <main class="article-page" id="main-content">
-    <!-- 头版：左标题 / 右满高封面 -->
     <header class="article-hero">
-      <div class="hero-text">
-        <p class="hero-kicker">SEEKER · {article.data.kicker}</p>
-        <h1 class="hero-title">{article.data.title}</h1>
-        {article.data.subtitle && <p class="hero-dek">{article.data.subtitle}</p>}
-        <div class="hero-meta">
-          <span>{fmtDate}</span>
-          <span aria-hidden="true" class="meta-dot">·</span>
-          <span>{article.data.author}</span>
-          <span aria-hidden="true" class="meta-dot">·</span>
-          <span>Seeker公益</span>
-        </div>
+      <p class="hero-kicker">SEEKER · {article.data.kicker}</p>
+      <h1 class="hero-title">{article.data.title}</h1>
+      {article.data.subtitle && <p class="hero-dek">{article.data.subtitle}</p>}
+      <div class="hero-meta">
+        <span>{fmtDate}</span>
+        <span aria-hidden="true" class="meta-dot">·</span>
+        <span>{article.data.author}</span>
+        <span aria-hidden="true" class="meta-dot">·</span>
+        <span>Seeker公益</span>
       </div>
-      <figure class="hero-media">
-        <Image
-          alt={`${article.data.title}——${article.data.coverLine ?? '项目封面'}`}           fetchpriority="high"           height={720}           loading="eager"           src={article.data.cover}           width={1080}
-        />
-      </figure>
     </header>
+
+    <figure class="hero-media">
+      <Image
+        alt={`${article.data.title}——${article.data.coverLine ?? '项目封面'}`}
+        fetchpriority="high"
+        height={720}
+        loading="eager"
+        src={article.data.cover}
+        width={1080}
+      />
+    </figure>
 
     <div class="article-body">
       <div class="article-layout">
@@ -120,12 +124,21 @@ const upcoming = [
       img.decoding = 'async';
     });
 
-  // 三图组统一裁切比例（md 无法标记；CSS :has 数不出子元素数量）
+  // 图组等高比例：首张图加载后判断组方向——竖图组 3:4，横图组 1:1
   document
     .querySelectorAll<HTMLElement>('.welfare-prose p:has(img + img)')
-    .forEach(p => {
-      if (p.querySelectorAll('img').length === 3) {
-        p.classList.add('img-trio');
+    .forEach(row => {
+      const first = row.querySelector('img');
+      if (!first) {return;}
+      const classify = () => {
+        if (first.naturalWidth > 0 && first.naturalWidth < first.naturalHeight) {
+          row.classList.add('img-row-pt');
+        }
+      };
+      if (first.complete) {
+        classify();
+      } else {
+        first.addEventListener('load', classify, { once: true });
       }
     });
 </script>
@@ -136,27 +149,20 @@ const upcoming = [
     background: var(--background);
     padding-top: 70px;
     color: var(--foreground);
-    /* 头版与正文共用的左基线：小屏 9vw（往版心收），超宽屏容器居中 */
-    --edge: max(9vw, calc((100vw - 1360px) / 2 + 56px));
-    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+    /* 头版、正文、图组共用左基线；超宽屏容器居中 */
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
   }
 
-  /* —— 头版 —— */
+  /* —— 居中头版 —— */
   .article-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
-    min-height: min(76vh, 700px);
-  }
-
-  .hero-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 72px 56px 56px var(--edge);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 72px 24px 44px;
+    text-align: center;
   }
 
   .hero-kicker {
-    margin: 0 0 26px;
+    margin: 0 0 24px;
     font-family: 'Archivo', sans-serif;
     font-size: 11.5px;
     font-weight: 600;
@@ -166,29 +172,31 @@ const upcoming = [
   }
 
   .hero-title {
-    margin: 0 0 18px;
-    font-family: var(--font-serif-song);
-    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 4.4vw, 3rem);
     font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-indent: 0.14em;
+    line-height: 1.35;
     color: var(--foreground);
   }
 
   .hero-dek {
-    margin: 0 0 34px;
-    font-size: clamp(1rem, 1.6vw, 1.15rem);
-    letter-spacing: 0.14em;
+    margin: 0 0 30px;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
     color: var(--muted-foreground);
   }
 
   .hero-meta {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    font-family: 'Archivo', sans-serif;
+    font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 12.5px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     color: var(--muted-foreground);
   }
 
@@ -196,26 +204,23 @@ const upcoming = [
     opacity: 0.6;
   }
 
+  /* —— 全宽封面 —— */
   .hero-media {
-    position: relative;
-    margin: 0;
-    overflow: hidden;
+    margin: 0 var(--edge);
   }
 
   .hero-media :global(img) {
-    position: absolute;
-    inset: 0;
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    border-radius: 0;
   }
 
   /* —— 正文 —— */
   .article-body {
-    padding: 64px var(--edge) 0;
+    padding: 72px var(--edge) 0;
   }
 
-  /* 版心 + 右侧留白区：延伸阅读模块在留白区内居中，只占一小块 */
   .article-layout {
     display: grid;
     grid-template-columns: minmax(0, 760px) 1fr;
@@ -227,29 +232,17 @@ const upcoming = [
     max-width: 760px;
   }
 
-  /* 金句：左对齐大字 + 渐变竖线 */
+  /* 金句：居中大字（哈苏无装饰，留白即层次） */
   .pull-quote {
     margin: 0 0 56px;
-    padding-left: 22px;
-    position: relative;
-  }
-
-  .pull-quote::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 6px;
-    bottom: 6px;
-    width: 3px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, var(--grad-a), var(--grad-b));
+    text-align: center;
   }
 
   .pull-quote blockquote {
     margin: 0;
-    font-family: var(--font-serif-song);
-    font-size: 1.32rem;
-    line-height: 1.9;
+    font-size: 1.18rem;
+    line-height: 2;
+    letter-spacing: 0.06em;
     color: var(--foreground);
   }
 
@@ -257,65 +250,49 @@ const upcoming = [
     margin-top: 12px;
     font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 12.5px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     color: var(--muted-foreground);
   }
 
-  /* —— 公众号原文重排为画册正文：衬线、左对齐、大留白 —— */
+  /* —— 正文：居中窄列、无衬线（哈苏式） —— */
   .welfare-prose {
-    font-family: var(--font-serif-song);
-    font-size: 16.5px;
-    line-height: 1.92;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    line-height: 2.1;
     color: var(--foreground);
   }
 
   .welfare-prose :global(p) {
-    margin: 0 0 1.6em;
+    margin: 0 0 1.9em;
+    text-align: center;
   }
 
-  /* 首段首字下沉：画册专题的开篇仪式感 */
-  .welfare-prose :global(h2:first-of-type + p::first-letter) {
-    float: left;
-    margin: 6px 12px 0 0;
-    font-size: 3.2em;
-    line-height: 1;
-    font-weight: 700;
-    color: var(--foreground);
-  }
-
-  /* 章节标题：左对齐衬线大字，编号自带在文字里 */
+  /* 章节标题：居中 + 宽字距（哈苏章节名） */
   .welfare-prose :global(h2) {
-    margin: 3em 0 1.5em;
-    font-size: 1.5rem;
+    margin: 3.4em 0 2em;
+    text-align: center;
+    font-size: 1.35rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
     color: var(--foreground);
   }
 
-  .welfare-prose :global(h2)::after {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 2px;
-    margin-top: 14px;
-    background: var(--foreground);
-    opacity: 0.8;
-  }
-
-  /* 引文（诗句 / 章节副题）：左对齐淡色衬线 */
+  /* 引文（歌词 / 诗句 / 章节引言）：居中淡色 */
   .welfare-prose :global(blockquote) {
-    margin: 2.2em 0;
+    margin: 2.4em auto;
     padding: 0;
     border: none;
-    font-size: 15px;
-    line-height: 2;
+    max-width: 560px;
+    text-align: center;
+    font-size: 14.5px;
+    line-height: 2.2;
     color: var(--muted-foreground);
   }
 
-  /* 照片：全列宽大图（印刷质感直角） */
+  /* 照片：全列宽大图，直角 */
   .welfare-prose :global(p:has(> img:only-child)) {
-    margin: 2.2em 0;
+    margin: 2.4em 0;
   }
 
   .welfare-prose :global(img) {
@@ -325,49 +302,43 @@ const upcoming = [
     border-radius: 0;
   }
 
-  /* 成组作品：软换行落在同一段的图片并排展示（顶对齐，不裁剪构图） */
+  /* 成组作品：统一 1:1 等高裁切（竖图组由 JS 切 3:4），窄间距 */
   .welfare-prose :global(p:has(img + img)) {
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: stretch;
+    gap: 10px;
+    margin: 2.4em 0;
   }
 
   .welfare-prose :global(p:has(img + img) img) {
     flex: 1 1 0;
     min-width: 0;
-  }
-
-  /* 三图组：统一 3:2 轻微居中裁切，底部对齐（吕欣怡三联原图 1.5/1.33/1.5） */
-  .welfare-prose :global(.img-trio img) {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 1;
     object-fit: cover;
   }
 
-  /* 无图注的氛围大图向右轻微破格（伸入栏间距，不触碰侧栏），保留宽窄节奏 */
-  .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
-    width: 108%;
+  .welfare-prose :global(p.img-row-pt img) {
+    aspect-ratio: 3 / 4;
   }
 
-  /* 鸣谢名单（最后一个章节后的段落）：版心内每行居中，黑体小字与衬线正文区分 */
-  .welfare-prose :global(h2:last-of-type ~ p) {
-    font-family: 'Archivo', -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-    font-size: 14px;
-    line-height: 2.1;
-    letter-spacing: 0.02em;
-    text-align: center;
-    color: var(--muted-foreground);
-  }
-
-  /* 图注：紧跟照片的斜体行，左对齐小字 */
+  /* 图注：紧跟照片的斜体行，居中小字 */
   .welfare-prose :global(p:has(> img) + p em) {
     display: block;
     font-style: normal;
     font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 12px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     line-height: 1.8;
+    text-align: center;
     color: var(--muted-foreground);
-    margin-top: -0.5em;
+    margin-top: -0.9em;
+  }
+
+  /* 鸣谢 / 名单（最后一个章节后的段落）：小一号、更淡 */
+  .welfare-prose :global(h2:last-of-type ~ p) {
+    font-size: 13.5px;
+    line-height: 2.1;
+    color: var(--muted-foreground);
   }
 
   /* —— 延伸阅读侧栏：右侧留白区内居中的一小块，不跟随滚动 —— */
@@ -403,7 +374,7 @@ const upcoming = [
     list-style: none;
   }
 
-  /* 横排小卡：小缩略图 + 右侧文字（Aperture 的 You May Also Like 卡式） */
+  /* 横排小卡：小缩略图 + 右侧文字 */
   .side-card {
     display: grid;
     grid-template-columns: 74px 1fr;
@@ -422,7 +393,6 @@ const upcoming = [
 
   .side-card-title {
     grid-column: 2;
-    font-family: var(--font-serif-song);
     font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -511,35 +481,22 @@ const upcoming = [
 
   @media (max-width: 900px) {
     .article-hero {
-      grid-template-columns: 1fr;
-      min-height: 0;
-    }
-
-    .hero-text {
-      padding: 48px 24px 40px;
-    }
-
-    .hero-media {
-      height: 52vw;
-      max-height: 420px;
-    }
-
-    .hero-media :global(img) {
-      position: static;
+      padding: 48px 24px 36px;
     }
 
     .article-body {
       padding: 48px 24px 0;
     }
 
-    /* 手机上取消破格，组图退回单列，保证可读 */
-    .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
-      width: 100%;
-    }
-
+    /* 手机上组图退回单列，恢复原比例 */
     .welfare-prose :global(p:has(img + img)) {
       flex-direction: column;
       gap: 18px;
+    }
+
+    .welfare-prose :global(p:has(img + img) img),
+    .welfare-prose :global(p.img-row-pt img) {
+      aspect-ratio: auto;
     }
 
     .side-list {
