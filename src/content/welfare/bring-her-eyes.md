@@ -1,6 +1,6 @@
 ---
-title: 带上她的眼睛
-subtitle: 在遥远的地方，我看到了什么
+title: 在遥远的地方，我看到了什么
+subtitle: 山村中的摄影课
 kicker: 繁星闪烁之时
 coverLine: 山村中的摄影课
 cover: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/in-a-faraway-place/01.jpg
@@ -9,12 +9,13 @@ quote: “我想拍星星，夜晚的时候，星星会陪着我。”
 quoteAuthor: 马同学 9岁
 pubDate: 2026-08-29
 author: 寄意寒星
-order: 1
+order: 2
+layout: editorial
 ---
 
 > “惟有门前镜湖水，春风不改旧时波” ——贺知章《回乡偶书》
 
-## 01 · 走出大山，还是留在大山？
+## 走出大山，还是留在大山？
 
 离开管坝村的最后一天，因为要赶车，我只去了学校附近的几户学生家，跟他们告别。在最后一个学生家，我给她留下了一台相机，她送了我一块腊肉，我就提着这块腊肉踏上了 2000km 回家的路。
 
@@ -40,7 +41,7 @@ _罗琴 11岁摄_
 
 _张媛媛 12岁摄_
 
-## 02 · 用影像，与世界对话
+## 用影像，与世界对话
 
 过去两年里我所做的一切，都在尝试回应这个问题。
 
@@ -156,7 +157,7 @@ _田新宇 25岁摄_
 ![寄给帮助过我们的人的明信片](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/in-a-faraway-place/29.jpg)
 ![寄给帮助过我们的人的明信片](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/in-a-faraway-place/30.jpg)
 
-## 03 · 山海寻梦，不觉其远
+## 山海寻梦，不觉其远
 
 > 寄意寒星，雪泥飞鸿
 

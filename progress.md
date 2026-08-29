@@ -290,3 +290,88 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   `welfare/<项目slug>/<文章slug>/n.jpg`，新文章 = 项目目录下新建子目录；未来若有新公益项目，`welfare/`
   下新建项目目录
 - 验证：38 个新 URL 全 200；build 通过；preview 实测图片正常加载（懒加载 37/38 视口外）
+
+---
+
+## 会话记录（第二篇文章《过春天》+ 哈苏模板，2026-08-29）
+
+### 交付（分支 feat/welfare-second-article）
+
+- **第二篇文章**
+  `src/content/welfare/passing-spring.md`：《带上她的眼睛 | 过春天》（公众号 2026-06-04 发布），41 图全部入 R2
+  `welfare/bring-her-eyes/passing-spring/`；三章节：找春天 / 山人 / 实在舍不得；尾部新增「支教的老师们」名单章节
+- **列表时间排序**：`/welfare/`
+  改按 pubDate 升序（项目叙事时间线：6月《过春天》→ 8月《带上她的眼睛》）
+- **文章页哈苏化**（参考 hasselblad.com/inspiration/masters/2026 图文排版，配色保持 Catppuccin 令牌；两篇文章共用模板）：居中头版（kicker/标题/副题/meta 宽字距居中）+ 全宽封面；章节标题居中 +
+  0.3em 宽字距（md 去「01
+  ·」编号）；组图统一 1:1 等高裁切（竖图组 JS 检测切 3:4）、10px 窄间距；正文改无衬线居中窄列；金句/引文/图注全部居中；去 drop
+  cap 与破格
+- **修复**：02.png（腊肉图）在 R2 为 0 字节（此前迁移脚本 git
+  show 路径错误产生空文件）→ 从 git 历史重新导出上传（704KB），R2 即时生效，线上破图同步修复
+
+### Evidence
+
+- type-check / lint / build（6 页）全过；preview 实测两篇文章桌面 + 390px 移动端
+- R2：passing-spring/ 41 张（01.jpg 曾失败重传成功）；in-a-faraway-place/
+  38 张（02.png 修复为 704KB）
+
+### 模板分离：两篇文章各自使用独立模板（用户要求，同日）
+
+- 用户反馈第一篇不该跟随哈苏模板 → 模板拆分为组件 + layout 字段分发：
+  - `content.config.ts` welfare schema 加
+    `layout: enum('editorial'|'hasselblad')`，默认 editorial
+  - `src/pages/welfare/[slug].astro` → 薄分发器（getStaticPaths +
+    others 互链数据）
+  - `src/components/welfare/ArticleEditorial.astro`
+    = 画册版（从 main 恢复：不对称头版、衬线 drop
+    cap、破格、右侧延伸阅读侧栏）；侧栏占位卡替换为真实互链卡（others）
+  - `src/components/welfare/ArticleHasselblad.astro`
+    = 哈苏版（居中头版、等高不裁切图组、文末延伸阅读互链）
+- 《带上她的眼睛》无 layout 字段 → editorial（原样恢复）；《过春天》layout:
+  hasselblad
+- 互链双向生效：两篇文末/侧栏均指向对方
+
+### 延伸阅读重设计（用户反馈「没设计感」，skill 复查，2026-08-30）
+
+- skill 原则：hover 必须有视觉反馈；杂志感 = 衬线 + kicker 宽字距 + 箭头交互
+- editorial（画册版）侧栏：横排小卡 → 纵向编辑卡（「下篇故事 NEXT
+  STORY」品牌色 kicker + 封面原比例大图（hover 亮度变化）+ 衬线大标题 19px + 副题 +「阅读全文 →」箭头 hover 右移）
+- hasselblad：文末三列小卡 → 左图右文横幅卡（3:2 图 + 宽字距大标题 + 副题 +
+  CTA，hover 标题变品牌色 + 箭头位移）；顺序调整为延伸阅读在返回链接之前
+- 移动端：横幅卡上下堆叠
+
+### 延伸阅读语义修正（用户反馈，2026-08-30）
+
+- 卡片标题：第一篇 title 为项目名「带上她的眼睛」，卡片改用新字段 cardTitle（「在遥远的地方，我看到了什么」）；schema 加 cardTitle 可选字段
+- 方向标签：用户按「从后往前」制作，指向《带上她的眼睛》应称「上一篇」——
+  kicker 不再写死 NEXT STORY，按 order 动态计算（other.order
+  < 当前 →「上一篇 PREVIOUS STORY」，否则「下一篇 NEXT
+  STORY」），kicker 移入卡片内部
+- 实测：过春天页 →「上一篇 PREVIOUS STORY
+  | 在遥远的地方，我看到了什么」；带上她的眼睛页 →「下一篇 NEXT STORY | 过春天」
+
+### 细节修正（用户反馈，2026-08-30 第二轮）
+
+- 第一篇 title 改为文章名「在遥远的地方，我看到了什么」（subtitle 改「山村中的摄影课」，cardTitle 字段移除）；页面 h1
+  / 列表卡 / 互链卡 / SEO 标题全部一致更新
+- 画册头版标题错位换行：title 含中文逗号时首个逗号后断行、第二行缩进 2em（.title-line
+  nth-child(2)，字号上限降到 2.7rem 保证两行不折）
+- /welfare/ 列表排序改 order 升序（在遥远的地方在前，过春天=下一篇在后）
+- 过春天正文删除与 hero 封面重复的引子图（01.jpg，同图重复）；开头 Kawa 歌词被 prettier 合并成单行 → 改 HTML
+  blockquote + <br> 恢复分行
+
+### 文章顺序最终修正（用户确认，2026-08-30）
+
+- 用户确认手记顺序：《过春天》在前（order 1），《在遥远的地方》在后（order
+  2，它的下一篇）
+- 对调两篇 order；延伸阅读方向标签随之正确：过春天页显示「下一篇 NEXT
+  STORY」（指向在遥远的地方），在遥远的地方页显示「上一篇 PREVIOUS
+  STORY」（指向过春天）
+
+### 收尾（feat/welfare-second-article 合并前）
+
+- feat-023 evidence 更新：双模板 + 两篇文章 + R2 全量 + 多轮排版验收
+- 延伸阅读语义终版：过春天在前（order 1）→「下一篇 NEXT
+  STORY」指向在遥远的地方；在遥远的地方（order 2）→「上一篇 PREVIOUS
+  STORY」指向过春天
+- 第一篇 title 修正为文章名「在遥远的地方，我看到了什么」（subtitle 山村中的摄影课）
