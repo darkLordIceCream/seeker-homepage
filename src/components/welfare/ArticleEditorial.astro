@@ -1,0 +1,595 @@
+---
+// 公益文章模板 A：画册/编辑部风格排版（参考 Aperture editorial）
+// 不对称头版（左标题右满高图）→ 金句 → 衬线正文单栏 → 全宽大图 / 成组作品并排 + 左对齐图注
+// 由 /welfare/[slug].astro 按 frontmatter layout 字段分发（默认 editorial）
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../Navigation.astro';
+import Footer from '../Footer.astro';
+
+interface Props {
+  article: import('astro:content').CollectionEntry<'welfare'>;
+  others: import('astro:content').CollectionEntry<'welfare'>[];
+}
+
+const { article, others } = Astro.props;
+const { Content } = await render(article);
+
+const fmtDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(article.data.pubDate);
+
+/** 延伸阅读方向：按 order（文章顺序）判断指向上一篇还是下一篇 */
+const relLabel = (from: Props['article'], to: Props['article']) =>
+  to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
+
+/** 标题错位换行：含中文逗号时在首个逗号后断行，第二行缩进两字 */
+const commaIndex = article.data.title.indexOf('，');
+const titleLines =
+  commaIndex > -1
+    ? [article.data.title.slice(0, commaIndex + 1), article.data.title.slice(commaIndex + 1)]
+    : [article.data.title];
+---
+
+<Layout
+  description={article.data.excerpt}
+  image={article.data.cover}
+  title={`${article.data.title} | Seeker公益`}
+>
+  <Navigation />
+
+  <main class="article-page" id="main-content">
+    <!-- 头版：左标题 / 右满高封面 -->
+    <header class="article-hero">
+      <div class="hero-text">
+        <p class="hero-kicker">SEEKER · {article.data.kicker}</p>
+        <h1 class="hero-title">
+          {titleLines.map(line => (
+            <span class="title-line">{line}</span>
+          ))}
+        </h1>
+        {article.data.subtitle && <p class="hero-dek">{article.data.subtitle}</p>}
+        <div class="hero-meta">
+          <span>{fmtDate}</span>
+          <span aria-hidden="true" class="meta-dot">·</span>
+          <span>{article.data.author}</span>
+          <span aria-hidden="true" class="meta-dot">·</span>
+          <span>Seeker公益</span>
+        </div>
+      </div>
+      <figure class="hero-media">
+        <Image
+          alt={`${article.data.title}——${article.data.coverLine ?? '项目封面'}`}           fetchpriority="high"           height={720}           loading="eager"           src={article.data.cover}           width={1080}
+        />
+      </figure>
+    </header>
+
+    <div class="article-body">
+      <div class="article-layout">
+        <div class="prose-col">
+          {article.data.quote && (
+            <figure class="pull-quote">
+              <blockquote>{article.data.quote}</blockquote>
+              {article.data.quoteAuthor && <figcaption>——{article.data.quoteAuthor}</figcaption>}
+            </figure>
+          )}
+
+          <div class="welfare-prose">
+            <Content />
+          </div>
+
+          <footer class="article-foot">
+            <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
+          </footer>
+        </div>
+
+        <aside aria-label="延伸阅读" class="side-col">
+          <ul class="side-list">
+            {others.map(other => (
+              <li class="side-card">
+                <a class="side-card-link" href={`/welfare/${other.id}/`}>
+                  <span class="side-kicker">
+                    {relLabel(article, other)}
+                  </span>
+                  <span aria-hidden="true" class="side-thumb">
+                    <img
+                      alt=""
+                      height="720"
+                      loading="lazy"
+                      src={other.data.cover}
+                      width="1080"
+                    />
+                  </span>
+                  <span class="side-card-title">{other.data.cardTitle ?? other.data.title}</span>
+                  {other.data.subtitle && (
+                    <span class="side-card-status">{other.data.subtitle}</span>
+                  )}
+                  <span class="side-cta">
+                    阅读全文 <span aria-hidden="true" class="cta-arrow">→</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a class="side-back" href="/welfare/">了解 Seeker公益 →</a>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // 正文图片统一懒加载（md 渲染产物，构建期无法注入属性）
+  document
+    .querySelectorAll<HTMLImageElement>('.welfare-prose img')
+    .forEach(img => {
+      img.loading = 'lazy';
+      img.decoding = 'async';
+    });
+
+  // 三图组统一裁切比例（md 无法标记；CSS :has 数不出子元素数量）
+  document
+    .querySelectorAll<HTMLElement>('.welfare-prose p:has(img + img)')
+    .forEach(p => {
+      if (p.querySelectorAll('img').length === 3) {
+        p.classList.add('img-trio');
+      }
+    });
+</script>
+
+<style>
+  .article-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+    color: var(--foreground);
+    /* 头版与正文共用的左基线：小屏 9vw（往版心收），超宽屏容器居中 */
+    --edge: max(9vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+  }
+
+  /* —— 头版 —— */
+  .article-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    min-height: min(76vh, 700px);
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 72px 56px 56px var(--edge);
+  }
+
+  .hero-kicker {
+    margin: 0 0 26px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .hero-title {
+    margin: 0 0 18px;
+    font-family: var(--font-serif-song);
+    /* 上限照顾「在遥远的地方，+ 缩进两字 + 我看到了什么」两行排版不折行 */
+    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    color: var(--foreground);
+  }
+
+  /* 标题错位换行：第二行缩进两字 */
+  .title-line {
+    display: block;
+  }
+  .title-line:nth-child(2) {
+    padding-left: 2em;
+  }
+
+  .hero-dek {
+    margin: 0 0 34px;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    letter-spacing: 0.14em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  .meta-dot {
+    opacity: 0.6;
+  }
+
+  .hero-media {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .hero-media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* —— 正文 —— */
+  .article-body {
+    padding: 64px var(--edge) 0;
+  }
+
+  /* 版心 + 右侧留白区：延伸阅读模块在留白区内居中，只占一小块 */
+  .article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) 1fr;
+    column-gap: 80px;
+    align-items: start;
+  }
+
+  .prose-col {
+    max-width: 760px;
+  }
+
+  /* 金句：左对齐大字 + 渐变竖线 */
+  .pull-quote {
+    margin: 0 0 56px;
+    padding-left: 22px;
+    position: relative;
+  }
+
+  .pull-quote::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--grad-a), var(--grad-b));
+  }
+
+  .pull-quote blockquote {
+    margin: 0;
+    font-family: var(--font-serif-song);
+    font-size: 1.32rem;
+    line-height: 1.9;
+    color: var(--foreground);
+  }
+
+  .pull-quote figcaption {
+    margin-top: 12px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 公众号原文重排为画册正文：衬线、左对齐、大留白 —— */
+  .welfare-prose {
+    font-family: var(--font-serif-song);
+    font-size: 16.5px;
+    line-height: 1.92;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(p) {
+    margin: 0 0 1.6em;
+  }
+
+  /* 首段首字下沉：画册专题的开篇仪式感 */
+  .welfare-prose :global(h2:first-of-type + p::first-letter) {
+    float: left;
+    margin: 6px 12px 0 0;
+    font-size: 3.2em;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  /* 章节标题：左对齐衬线大字，编号自带在文字里 */
+  .welfare-prose :global(h2) {
+    margin: 3em 0 1.5em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(h2)::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 2px;
+    margin-top: 14px;
+    background: var(--foreground);
+    opacity: 0.8;
+  }
+
+  /* 引文（诗句 / 章节副题）：左对齐淡色衬线 */
+  .welfare-prose :global(blockquote) {
+    margin: 2.2em 0;
+    padding: 0;
+    border: none;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--muted-foreground);
+  }
+
+  /* 照片：全列宽大图（印刷质感直角） */
+  .welfare-prose :global(p:has(> img:only-child)) {
+    margin: 2.2em 0;
+  }
+
+  .welfare-prose :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+
+  /* 成组作品：软换行落在同一段的图片并排展示（顶对齐，不裁剪构图） */
+  .welfare-prose :global(p:has(img + img)) {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .welfare-prose :global(p:has(img + img) img) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /* 三图组：统一 3:2 轻微居中裁切，底部对齐（吕欣怡三联原图 1.5/1.33/1.5） */
+  .welfare-prose :global(.img-trio img) {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  /* 无图注的氛围大图向右轻微破格（伸入栏间距，不触碰侧栏），保留宽窄节奏 */
+  .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
+    width: 108%;
+  }
+
+  /* 鸣谢名单（最后一个章节后的段落）：版心内每行居中，黑体小字与衬线正文区分 */
+  .welfare-prose :global(h2:last-of-type ~ p) {
+    font-size: 13.5px;
+    line-height: 2.1;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
+  /* 图注：紧跟照片的斜体行，左对齐小字 */
+  .welfare-prose :global(p:has(> img) + p em) {
+    display: block;
+    font-style: normal;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    color: var(--muted-foreground);
+    margin-top: -0.5em;
+  }
+
+  /* —— 延伸阅读侧栏：右侧留白区内居中的一小块，不跟随滚动 —— */
+  .side-col {
+    width: min(300px, 100%);
+    margin-inline: auto;
+    padding-top: 8px;
+  }
+
+  /* —— 延伸阅读：纵向编辑卡（kicker + 大图 + 衬线标题 + 箭头） —— */
+  .side-kicker {
+    display: block;
+    margin: 0 0 14px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .side-en {
+    margin-left: 4px;
+    color: var(--muted-foreground);
+  }
+
+  .side-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .side-card-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  /* 封面原比例展示，不裁切（保拍立得水印） */
+  .side-thumb {
+    display: block;
+    overflow: hidden;
+    border-radius: 2px;
+    background-color: var(--secondary);
+  }
+
+  .side-thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .side-card-link:hover .side-thumb img {
+    opacity: 0.88;
+  }
+
+  .side-card-title {
+    display: block;
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+  }
+
+  .side-card-status {
+    display: block;
+    margin-top: 6px;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+  }
+
+  .side-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--grad-a);
+  }
+
+  .cta-arrow {
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+
+  .side-card-link:hover .side-card-title {
+    color: var(--grad-a);
+  }
+
+  .side-card-link:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .side-card-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .side-back {
+    display: inline-block;
+    margin-top: 26px;
+    padding-top: 14px;
+    border-top: 1px solid var(--divider);
+    width: 100%;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .side-back:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .side-back:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 尾部 —— */
+  .article-foot {
+    margin-top: 88px;
+    padding: 36px 0 88px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 1279px) {
+    /* 窄屏放不下双栏：侧栏移到正文下方 */
+    .article-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .side-col {
+      width: min(560px, 100%);
+      margin: 56px 0 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .article-hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .hero-text {
+      padding: 48px 24px 40px;
+    }
+
+    .hero-media {
+      height: 52vw;
+      max-height: 420px;
+    }
+
+    .hero-media :global(img) {
+      position: static;
+    }
+
+    .article-body {
+      padding: 48px 24px 0;
+    }
+
+    /* 手机上取消破格，组图退回单列，保证可读 */
+    .welfare-prose :global(p:has(> img:only-child):not(:has(+ p em))) {
+      width: 100%;
+    }
+
+    .welfare-prose :global(p:has(img + img)) {
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .side-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
