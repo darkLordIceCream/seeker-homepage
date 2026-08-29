@@ -119,6 +119,15 @@ const upcoming = [
       img.loading = 'lazy';
       img.decoding = 'async';
     });
+
+  // 三图组统一裁切比例（md 无法标记；CSS :has 数不出子元素数量）
+  document
+    .querySelectorAll<HTMLElement>('.welfare-prose p:has(img + img)')
+    .forEach(p => {
+      if (p.querySelectorAll('img').length === 3) {
+        p.classList.add('img-trio');
+      }
+    });
 </script>
 
 <style>
@@ -326,6 +335,12 @@ const upcoming = [
   .welfare-prose :global(p:has(img + img) img) {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  /* 三图组：统一 3:2 轻微居中裁切，底部对齐（吕欣怡三联原图 1.5/1.33/1.5） */
+  .welfare-prose :global(.img-trio img) {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
   }
 
   /* 无图注的氛围大图向右轻微破格（伸入栏间距，不触碰侧栏），保留宽窄节奏 */
