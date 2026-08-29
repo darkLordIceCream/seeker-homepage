@@ -367,3 +367,11 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 对调两篇 order；延伸阅读方向标签随之正确：过春天页显示「下一篇 NEXT
   STORY」（指向在遥远的地方），在遥远的地方页显示「上一篇 PREVIOUS
   STORY」（指向过春天）
+
+### 收尾（feat/welfare-second-article 合并前）
+
+- feat-023 evidence 更新：双模板 + 两篇文章 + R2 全量 + 多轮排版验收
+- 延伸阅读语义终版：过春天在前（order 1）→「下一篇 NEXT
+  STORY」指向在遥远的地方；在遥远的地方（order 2）→「上一篇 PREVIOUS
+  STORY」指向过春天
+- 第一篇 title 修正为文章名「在遥远的地方，我看到了什么」（subtitle 山村中的摄影课）
