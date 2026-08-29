@@ -31,9 +31,8 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   (no `tailwind.config.js`); theme = Catppuccin Latte (light, default) / Mocha
   (dark via `.dark`), brand gradient tokens `--grad-a/--grad-b`
 - `src/assets/` — images processed by `astro:assets`
-- `public/` — static files served as-is; `public/images/welfare/` holds welfare
-  article photos (pending migration to R2 `welfare/<slug>/` once wrangler auth
-  is renewed — steps in `progress.md`)
+- `public/` — static files served as-is (welfare article photos live in R2
+  `welfare/<slug>/`, referenced by absolute URL)
 
 ## Startup Workflow
 
