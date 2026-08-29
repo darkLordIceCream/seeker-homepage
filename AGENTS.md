@@ -31,8 +31,9 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   (no `tailwind.config.js`); theme = Catppuccin Latte (light, default) / Mocha
   (dark via `.dark`), brand gradient tokens `--grad-a/--grad-b`
 - `src/assets/` — images processed by `astro:assets`
-- `public/` — static files served as-is (welfare article photos live in R2
-  `welfare/<slug>/`, referenced by absolute URL)
+- `public/` — static files served as-is. Welfare photos live in R2 as
+  `welfare/<project-slug>/<article-slug>/n.jpg` (project「带上她的眼睛」=
+  `bring-her-eyes`), referenced by absolute URL — one folder per article
 
 ## Startup Workflow
 
