@@ -182,7 +182,7 @@
       "description": "welfare Content Collection + 二级页 /welfare（项目介绍 + 图文手记拍立得堆叠卡片）+ 文章页 /welfare/[slug]（公众号风格排版：品牌语头、金句、居中章节标题、全宽照片、居中图注、鸣谢）；首页活动卡「一种关注」替换为「Seeker公益 · 带上她的眼睛」并直连 /welfare/；首篇文章为公众号原文《带上她的眼睛 | 在遥远的地方，我看到了什么》全文 38 图；第二篇文章《过春天》（哈苏式图集模板）；模板按 layout 字段分离（editorial 画册版 / hasselblad 图集版）",
       "dependencies": ["feat-008", "feat-021", "feat-022"],
       "status": "done",
-      "evidence": "type-check / lint / build（6 页）全过；两篇文章均完成并互链：《在遥远的地方，我看到了什么》（画册模板）与《过春天》（哈苏模板，layout 字段分发）；41+38 张图片全部入 R2 welfare/bring-her-eyes/<article>/（含 02.png 空文件修复）；/welfare/ 列表按 order（文章顺序）排列；排版经用户多轮验收（延伸阅读编辑卡/横幅卡、标题错位换行、不裁切图组、鸣谢衬线居中）；已随 PR 16 合入 main"
+      "evidence": "三篇文章全部上线：《在遥远的地方，我看到了什么》(editorial)、《过春天》(hasselblad)、《带上她的眼睛 | 第三季》(magnum)，order 1/2/3 按发布时间，延伸阅读三模板互链（紧邻一篇）；三套模板组件 + schema layout 枚举；图片全部 R2 welfare/bring-her-eyes/<slug>/；type-check / lint / build（7 页）全过；已随 PR 17 合入 main"
     }
   ]
 }
