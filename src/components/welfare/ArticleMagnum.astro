@@ -96,24 +96,42 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
     });
 
   // 图组等高排版：不裁切（拍立得水印），按组内比例计算统一高度。
-  // 双联目标 360px，三联及以上 250px（Magnum 的小瓦片节奏）。
-  const GAP = 10;
+  // 瓦片行突破正文列宽（1080px 上限），不拘泥与文字左右对齐；
+  // 双联目标 430px，三联及以上 320px。
+  const GAP = 12;
+  const ROW_MAX = 1080;
   const rows = [...document.querySelectorAll<HTMLElement>('.welfare-prose p:has(img + img)')];
 
   const layoutRow = (row: HTMLElement) => {
+    const cap = row.nextElementSibling;
     if (window.innerWidth <= 700) {
       row.querySelectorAll('img').forEach(i => {
         i.style.height = '';
         i.style.width = '';
       });
+      row.style.width = '';
+      row.style.marginLeft = '';
+      if (cap?.matches('p')) {
+        cap.style.width = '';
+        cap.style.marginLeft = '';
+      }
       return;
     }
     const imgs = [...row.querySelectorAll('img')];
     const ratios = imgs.map(i => (i.naturalWidth > 0 ? i.naturalWidth / i.naturalHeight : 0));
     if (ratios.some(r => r === 0)) {return;}
-    const target = imgs.length === 2 ? 360 : 250;
+    // 先定行宽（突破版心、居中），再按剩余宽度分配等高
+    const rowW = Math.min(ROW_MAX, window.innerWidth - 48);
+    row.style.width = `${rowW}px`;
+    row.style.marginLeft = `calc((100% - ${rowW}px) / 2)`;
+    // 图注与瓦片行左缘对齐
+    if (cap?.matches('p')) {
+      cap.style.width = `${rowW}px`;
+      cap.style.marginLeft = `calc((100% - ${rowW}px) / 2)`;
+    }
+    const target = imgs.length === 2 ? 430 : 320;
     const sum = ratios.reduce((s, r) => s + r, 0);
-    const h = Math.min(target, (row.clientWidth - GAP * (imgs.length - 1)) / sum);
+    const h = Math.min(target, (rowW - GAP * (imgs.length - 1)) / sum);
     imgs.forEach(i => {
       i.style.height = `${Math.floor(h)}px`;
       i.style.width = 'auto';
@@ -275,8 +293,9 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 10px;
-    max-width: 740px;
+    gap: 12px;
+    /* JS 会设置突破宽度（1080px 上限、居中）；此处为无 JS 回退 */
+    max-width: none;
     margin: 2.2em auto;
   }
 
