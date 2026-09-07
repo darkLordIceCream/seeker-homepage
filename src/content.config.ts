@@ -51,4 +51,69 @@ const welfare = defineCollection({
   }),
 });
 
-export const collections = { members, welfare };
+const activities = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
+  schema: z.object({
+    /** 活动名，如「时间的故事」 */
+    title: z.string(),
+    /** 本期主题句，如「夕光沉远岸，秋意漫画框」 */
+    subtitle: z.string(),
+    /** 期数名，如「八月篇」 */
+    issue: z.string(),
+    /** 期数时间标注，如「AUGUST 2026」 */
+    period: z.string(),
+    /** 活动卡片 / 页面封面 */
+    cover: z.string(),
+    /** 摘要（SEO / 列表展示用） */
+    excerpt: z.string(),
+    /** 开篇金句 */
+    quote: z.string().optional(),
+    /** 本月组长 / 编辑 */
+    team: z
+      .object({
+        lead: z.string(),
+        editor: z.string(),
+      })
+      .optional(),
+    pubDate: z.coerce.date(),
+    /** 期数排序，越小越早 */
+    order: z.number().default(0),
+    /** 页面模板（当前仅 gallery-story 画廊型） */
+    layout: z.enum(['gallery-story']).default('gallery-story'),
+    /**
+     * 画廊条目：一天多投共用一个日期章节（日期相同即同章）
+     */
+    entries: z.array(
+      z.object({
+        /** 展示日期，如「7月28日」 */
+        date: z.string(),
+        /** 作品名称（不含书名号） */
+        title: z.string(),
+        /** 作者的一句话说明 */
+        caption: z.string(),
+        /** 作者署名（不含 @） */
+        author: z.string(),
+        /** 图片绝对 URL（R2） */
+        image: z.string(),
+        /** 像素尺寸（宽高比预留，防 CLS） */
+        width: z.number().default(1080),
+        height: z.number(),
+      })
+    ),
+    /** 结尾诗（多行） */
+    poem: z.string().optional(),
+    /** 往期篇目（站外，仅展示） */
+    pastIssues: z.array(z.object({ name: z.string(), line: z.string() })).optional(),
+    /** 组委会收尾品牌图 */
+    committeeImage: z.string().optional(),
+    /** 组委会署名 */
+    committee: z
+      .object({
+        name: z.string(),
+        team: z.string(),
+      })
+      .optional(),
+  }),
+});
+
+export const collections = { members, welfare, activities };

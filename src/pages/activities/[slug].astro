@@ -1,0 +1,28 @@
+---
+// 小组活动路由：按 frontmatter layout 字段分发到对应模板
+// - gallery-story（默认）：画廊型月刊页（时间的故事：日期章节 + 一图一故事墙标签）
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import GalleryStory from '../../components/activities/GalleryStory.astro';
+
+export async function getStaticPaths() {
+  const activities = await getCollection('activities');
+  return activities.map(activity => ({
+    params: { slug: activity.id },
+    props: {
+      activity,
+      others: activities.filter(a => a.id !== activity.id),
+    },
+  }));
+}
+
+const { activity, others } = Astro.props;
+---
+
+<Layout
+  description={activity.data.excerpt}
+  image={activity.data.cover}
+  title={`${activity.data.title} · ${activity.data.issue} | Seeker追光者`}
+>
+  <GalleryStory article={activity} others={others} />
+</Layout>
