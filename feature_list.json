@@ -141,8 +141,8 @@
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
-      "status": "not-started",
-      "evidence": ""
+      "status": "in-progress",
+      "evidence": "《时间的故事》八月篇已上线（分支 feat/story-of-time）：activities collection + /activities/[slug] 按 layout 分发 + GalleryStory 画廊模板（居中细列头版/日期章节/一图一故事墙标签/阅读进度条/reduced-motion 降级）；19 条目 + 封面 + 组委会图入 R2 activities/story-of-time/2026-08/（21 文件字节级校验通过）；首页活动卡「时间的故事」换真实封面并直连新页；judge 三轮视觉验收 overall pass；./init.sh 0 错误 0 警告；剩余：活动聚合页、一种关注/线下活动条目"
     },
     {
       "id": "feat-019",

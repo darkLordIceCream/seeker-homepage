@@ -429,3 +429,53 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 
 - 延伸阅读语义两轮修正（cardTitle、上一篇/下一篇方向）；「10坤岁摄」玩梗图注保留（正文一字不改规则同样适用于图注）
 - ⚠️ 流程违规一次：字体统一小改动误直推 main（c0e9e6c），后续已恢复分支-PR 流程
+
+## 会话记录（《时间的故事》八月篇 · 画廊模板设计，2026-09-08）
+
+### 状态：设计阶段（分支 feat/story-of-time，基线 ./init.sh 全绿）
+
+- 目标功能：feat-018 小组活动 ·《时间的故事》八月篇（微信推文 → 网站画廊页）
+- 用户要求：与 welfare 同一 layout 家族，但形态是「带一点文字说明的画廊」；layout 方案用 ui-ux-pro-max 技能设计
+- 设计规格已产出：/tmp/layout-specs/story-of-time.md（待用户确认后实施）
+  - Pattern：Scroll-Triggered Storytelling（日期章节 + 阅读进度条 +
+    reduced-motion 降级）
+  - 新增 activities collection + /activities/[slug].astro 按 layout 分发 +
+    GalleryStory.astro 模板
+  - 画廊条目 = 照片 ≤960px 原比例 + 居中墙标签（作品名宋体 / 说明 sans muted
+    / 署名 grad-a）
+- ⚠️ 阻塞项：微信页正文图片为 blob: URL 无法抓取，需用户提供 19 张作品图 +
+  1 张封面原图 → R2 activities/story-of-time/2026-08/
+
+## 会话记录（《时间的故事》八月篇交付，2026-09-08 续）
+
+### 交付（分支 feat/story-of-time）
+
+- **图片自抓成功**：设计阶段的「blob: 阻塞」已解除——微信页 HTML 的 data-src 含真实 mmbiz
+  CDN URL；curl（MicroMessenger
+  UA）直接下载 21 张（封面 1080×459 + 正文 19 张 1080 宽 + 组委会品牌图），抽查图文对位正确
+- **日期映射**：原文「日期仅在变化时显示」（19 条目仅 11 个日期头，8 个缺失位以「——StoryofTime」装饰行出现）；以 raw
+  HTML 中日期串与 jpeg
+  data-src 的位置先后对齐，全部条目落到确切日期（康布的黄昏=8月1日、暗处符号=8月7日、星轨/寄愿=8月13日、中元=8月25日 等）
+- **R2**：`activities/story-of-time/2026-08/`（cover.jpg + 01-19.jpg +
+  committee.jpg），21 文件公开 URL Content-Length 逐一比对通过
+- **代码**：content.config.ts 增 activities collection（entries[] 结构化条目 +
+  poem/pastIssues/committee 字段，宽高入库防 CLS）；src/content/activities/story-of-time-2026-08.md；GalleryStory.astro（画廊模板：居中细列头版/edge 封面/初心段/日期章节/墙标签条目/诗/往期 chips/组委会/相邻期卡/2px 渐变进度条/IO 入场一次性定格 +
+  reduced-motion 与 html.js 降级）；pages/activities/[slug].astro 按 layout 分发；ActsSection「时间的故事」卡换真实封面并直连 /activities/story-of-time-2026-08/
+- **正文忠实**：19 条说明文字一字未改（保留「没想道」等原文拼写）；多段说明（Ring
+  of Fire、线·影·人·潮）以 \n 保留段落
+- **验证**：./init.sh 全绿（astro check + tsc 0 错误、eslint
+  0 错 0 警、8 页构建）；judge 三轮视觉验收 overall
+  pass（桌面 8 区 + 移动 4 区 + 深色 2 张 + 首页活动卡）
+
+### 验收中发现并修复 / 排除
+
+- 修复：375px 头版 meta 行折行出现行首孤立「·」→ 间隔点改挂各项末尾 +
+  ≤700px 竖排隐藏间隔点
+- 排除（截图侧误报）：懒加载未完成即截图导致「图片塌陷/黑条」误报两轮 → 协议改为全量 eager +
+  complete 轮询 + 静置；「霞染渔湾」白边框为作者三联拼图原片自带
+
+### 经验沉淀（待写入 skill）
+
+- 微信图片抓取：网页转换器常给 blob:（懒加载），应直接抓原始 HTML 提取 data-src（mmbiz
+  CDN 可匿名下载）；日期类装饰行缺失字段需用位置对齐还原
+- 截图验收协议：长画廊页必须等视口内图片 complete（最好 eager 化全量等待）再截，否则必然产生布局塌陷误报

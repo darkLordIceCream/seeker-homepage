@@ -1,0 +1,699 @@
+---
+// 小组活动模板：时间的故事 · 画廊型月刊页
+// 居中细列头版 → 宽幅封面 → 初心正文列 → 日期章节画廊（照片为主 + 墙标签）→ 诗/往期/组委会
+// 与 welfare 三模板同一版式家族（Catppuccin 令牌 + Archivo 元信息 + 宋体标题）
+// 由 /activities/[slug].astro 按 frontmatter layout 分发
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../Navigation.astro';
+import Footer from '../Footer.astro';
+
+interface Props {
+  article: import('astro:content').CollectionEntry<'activities'>;
+  others: import('astro:content').CollectionEntry<'activities'>[];
+}
+
+const { article, others } = Astro.props;
+const { data } = article;
+const { Content } = await render(article);
+
+const fmtDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(data.pubDate);
+
+/** 「7月28日」→「JULY 28」（日期章节英文标注） */
+const MONTHS = [
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+] as const;
+
+const enDate = (d: string) => {
+  const m = d.match(/^(\d{1,2})月(\d{1,2})日$/);
+  if (!m) {return d;}
+  const month = MONTHS[Number(m[1]) - 1];
+  return month ? `${month} ${m[2]}` : d;
+};
+
+/** 连续同日条目归入同一日期章节（原文设计：日期仅在变化时显示） */
+type Entry = Props['article']['data']['entries'][number];
+const groups: { date: string; dateEn: string; items: Entry[] }[] = [];
+for (const entry of data.entries) {
+  const last = groups.at(-1);
+  if (last && last.date === entry.date) {
+    last.items.push(entry);
+  } else {
+    groups.push({ date: entry.date, dateEn: enDate(entry.date), items: [entry] });
+  }
+}
+
+/** 相邻期数：优先下一期，无则取上一期（仅一期时不渲染） */
+const adjacent =
+  others.filter(o => o.data.order > data.order).sort((a, b) => a.data.order - b.data.order)[0] ??
+  others.filter(o => o.data.order < data.order).sort((a, b) => b.data.order - a.data.order)[0];
+const adjacentLabel =
+  adjacent && adjacent.data.order < data.order ? '下一期 NEXT ISSUE' : '往期 PREVIOUS ISSUE';
+
+/** meta 行：间隔点挂在各项末尾，折行时行首不会出现孤立「·」 */
+const metaItems = [
+  data.period,
+  ...(data.team ? [`本月组长 ${data.team.lead}`, `本月编辑 ${data.team.editor}`] : []),
+  fmtDate,
+];
+---
+
+<Layout
+  description={data.excerpt}
+  image={data.cover}
+  title={`${data.title} · ${data.issue} | Seeker追光者`}
+>
+  <Navigation />
+
+  <main class="story-page" id="main-content">
+    <div aria-hidden="true" class="story-progress"></div>
+
+    <header class="story-hero">
+      <p class="hero-kicker">SEEKER · STORY OF TIME</p>
+      <h1 class="hero-title">{data.title} <span class="hero-issue">· {data.issue}</span></h1>
+      <p class="hero-dek">{data.subtitle}</p>
+      <div class="hero-meta">
+        {metaItems.map((text, i) => (
+          <span class="meta-item">
+            {text}
+            {i < metaItems.length - 1 && (
+              <span aria-hidden="true" class="meta-dot">·</span>
+            )}
+          </span>
+        ))}
+      </div>
+      {data.quote && <p class="hero-quote">「{data.quote}」</p>}
+    </header>
+
+    <figure class="story-cover">
+      <Image
+        alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
+        fetchpriority="high"
+        height={459}
+        loading="eager"
+        src={data.cover}
+        width={1080}
+      />
+    </figure>
+
+    <div class="story-intro">
+      <div class="story-prose">
+        <Content />
+      </div>
+    </div>
+
+    <section aria-label="本期作品" class="story-gallery">
+      {groups.map(group => (
+        <div class="date-chapter">
+          <h2 class="chapter-divider">
+            <span class="chapter-zh">{group.date}</span>
+            <span class="chapter-en">{group.dateEn}</span>
+          </h2>
+          {group.items.map(entry => (
+            <figure class="story-item">
+              <span class="item-media">
+                <Image
+                  alt={`《${entry.title}》——${entry.author}作品`}
+                  height={entry.height}
+                  loading="lazy"
+                  src={entry.image}
+                  width={entry.width}
+                />
+              </span>
+              <figcaption class="item-label">
+                <span class="item-title">«{entry.title}»</span>
+                <p class="item-caption">{entry.caption}</p>
+                <span class="item-author">@{entry.author}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      ))}
+    </section>
+
+    <section aria-label="尾声" class="story-coda">
+      {data.poem && <blockquote class="story-poem">{data.poem}</blockquote>}
+
+      {data.pastIssues && data.pastIssues.length > 0 && (
+        <div class="past-issues">
+          <p class="coda-kicker">往期回顾 · PAST ISSUES</p>
+          <ul class="past-list">
+            {data.pastIssues.map(issue => (
+              <li class="past-chip">
+                <b>{issue.name}</b>
+                <span>{issue.line}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {data.committeeImage && (
+        <figure class="committee-figure">
+          <Image
+            alt="Seeker追光者——成员作品照片墙"
+            height={579}
+            loading="lazy"
+            src={data.committeeImage}
+            width={1080}
+          />
+        </figure>
+      )}
+
+      {data.committee && (
+        <footer class="committee-credit">
+          <p class="credit-name">{data.committee.name}</p>
+          <p class="credit-team">策划团队 {data.committee.team}</p>
+        </footer>
+      )}
+
+      {adjacent && (
+        <a class="adjacent-card" href={`/activities/${adjacent.id}/`}>
+          <span class="adjacent-kicker">{adjacentLabel}</span>
+          <span class="adjacent-title">
+            {adjacent.data.title} · {adjacent.data.issue}
+          </span>
+          <span class="adjacent-sub">{adjacent.data.subtitle}</span>
+        </a>
+      )}
+    </section>
+
+    <footer class="story-foot">
+      <a class="back-link" href="/#activities">← 返回小组活动</a>
+    </footer>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // 阅读进度条：scroll 驱动 scaleX（长画廊页的进度指示）
+  const bar = document.querySelector<HTMLElement>('.story-progress');
+  const onScroll = () => {
+    if (!bar) {return;}
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty('--p', String(max > 0 ? window.scrollY / max : 0));
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // 条目入场：进入视口一次后定格为最终态（无 IO 或 reduced-motion 时直接可见）
+  const items = document.querySelectorAll('.story-item');
+  if ('IntersectionObserver' in window) {
+    const reveal = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            reveal.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    items.forEach(item => reveal.observe(item));
+  } else {
+    items.forEach(item => item.classList.add('is-visible'));
+  }
+</script>
+
+<style>
+  .story-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+    color: var(--foreground);
+    /* 头版/题注居中细列 740px；宽幅媒体用 edge 出血 */
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+  }
+
+  /* —— 阅读进度条 —— */
+  .story-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 1003;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+    transform: scaleX(var(--p, 0));
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  /* —— 居中细列头版 —— */
+  .story-hero {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 44px;
+    text-align: center;
+  }
+
+  .hero-kicker {
+    margin: 0 0 26px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .hero-title {
+    margin: 0 0 18px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(2rem, 4.4vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+
+  .hero-issue {
+    font-size: 0.62em;
+    letter-spacing: 0.12em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-dek {
+    margin: 0 0 26px;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+    row-gap: 6px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .meta-dot {
+    margin-left: 8px;
+    opacity: 0.6;
+  }
+
+  .hero-quote {
+    margin: 34px 0 0;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 2;
+    letter-spacing: 0.12em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 宽幅封面 —— */
+  .story-cover {
+    margin: 0 var(--edge);
+  }
+
+  .story-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* —— 初心段：740px 左对齐衬线列 —— */
+  .story-intro {
+    padding: 72px var(--edge) 0;
+  }
+
+  .story-prose {
+    max-width: 740px;
+    margin: 0 auto;
+    font-family: var(--font-serif-song);
+    font-size: 16px;
+    line-height: 1.95;
+    color: var(--foreground);
+  }
+
+  .story-prose :global(p) {
+    margin: 0 0 1.8em;
+  }
+
+  /* —— 画廊：日期章节 + 作品条目 —— */
+  .story-gallery {
+    padding: 24px var(--edge) 0;
+  }
+
+  /* 日期章节分隔：细线夹日期，英文标注在下 */
+  .chapter-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 4.5em 0 2.5em;
+    font-weight: 700;
+  }
+
+  .chapter-zh {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-family: var(--font-serif-song);
+    font-size: 1.25rem;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--foreground);
+  }
+
+  .chapter-zh::before,
+  .chapter-zh::after {
+    content: '';
+    width: min(120px, 18vw);
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .chapter-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* 作品条目：照片为主，墙标签居中 */
+  .story-item {
+    margin: 0 0 4em;
+  }
+
+  .date-chapter .story-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .item-media {
+    display: flex;
+    justify-content: center;
+  }
+
+  .item-media :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(100%, 960px);
+    max-height: 72vh;
+  }
+
+  .item-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 560px;
+    margin: 20px auto 0;
+    text-align: center;
+  }
+
+  .item-title {
+    font-family: var(--font-serif-song);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  .item-caption {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.9;
+    white-space: pre-line;
+    color: var(--muted-foreground);
+  }
+
+  .item-author {
+    margin-top: 12px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--grad-a);
+  }
+
+  /* —— 尾声 —— */
+  .story-coda {
+    padding: 40px var(--edge) 0;
+  }
+
+  .story-poem {
+    max-width: 640px;
+    margin: 2.4em auto;
+    padding: 0;
+    border: none;
+    text-align: center;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 2.3;
+    white-space: pre-line;
+    word-spacing: 0.2em;
+    color: var(--muted-foreground);
+  }
+
+  .coda-kicker {
+    margin: 3em 0 18px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--grad-a);
+  }
+
+  .past-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .past-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 16px;
+    border: 1px solid var(--divider);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  .past-chip b {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .committee-figure {
+    max-width: 720px;
+    margin: 3.5em auto 0;
+  }
+
+  .committee-figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .committee-credit {
+    margin: 28px 0 0;
+    text-align: center;
+  }
+
+  .credit-name {
+    margin: 0 0 0.4em;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .credit-team {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    line-height: 2;
+    color: var(--muted-foreground);
+  }
+
+  /* 相邻期数：左竖线卡（沿用 magnum 语义） */
+  .adjacent-card {
+    display: block;
+    max-width: 740px;
+    margin: 3.5em auto 0;
+    padding: 6px 0 22px 24px;
+    border-left: 2px solid var(--divider);
+    text-decoration: none;
+  }
+
+  .adjacent-kicker {
+    display: block;
+    margin-bottom: 12px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .adjacent-title {
+    display: block;
+    font-family: var(--font-serif-song);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+  }
+
+  .adjacent-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+  }
+
+  .adjacent-card:hover .adjacent-title {
+    color: var(--grad-a);
+  }
+
+  .adjacent-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 尾部 —— */
+  .story-foot {
+    max-width: 740px;
+    margin: 24px auto 0;
+    padding: 30px 24px 80px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 条目入场（Scroll-Triggered Storytelling）—— */
+  /* 仅 JS 可用时隐藏初始态；入场一次后定格，不回退 */
+  html.js .story-item {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  html.js .story-item.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .story-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .story-progress {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .story-hero {
+      padding: 48px 24px 36px;
+    }
+
+    .story-intro {
+      padding: 48px 24px 0;
+    }
+
+    .story-gallery,
+    .story-coda {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .chapter-zh::before,
+    .chapter-zh::after {
+      width: 48px;
+    }
+
+    .chapter-divider {
+      margin: 3.5em 0 2em;
+    }
+
+    .story-item {
+      margin-bottom: 3em;
+    }
+
+    .item-label {
+      padding: 0 8px;
+    }
+
+    /* 移动端 meta 改竖排、去间隔点，避免折行孤点 */
+    .hero-meta {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-dot {
+      display: none;
+    }
+  }
+</style>
