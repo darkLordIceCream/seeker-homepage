@@ -410,3 +410,22 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 ### 经验沉淀（待写入 skill）
 
 - 微信长链带 poc_token 会触发环境验证 → 优先让用户提供短链（/s/xxx 格式）或本机另存 HTML；skill 应补「抓取受阻降级路径」一节
+
+## 会话记录（skill 测试：《第三季》发布 + magnum 模板 + 双技能，2026-08-30）
+
+### 交付（分支 feat/welfare-article，随 PR 17 合入 main）
+
+- **第三篇文章《带上她的眼睛 | 第三季》**：2026-03-05，58 图入 R2
+  welfare/bring-her-eyes/season-three/；五章节 + 沁园春开头 + 抒情诗 + 合作教师 6 位；layout:
+  magnum
+- **magnum 模板**（layout-analyzer 首次实战）：居中细列头版、大图 720/瓦片行交替（突破版心 1080px、等高原比例不裁切）、正文与图注左对齐、Next
+  Story 左竖线互链卡
+- **延伸阅读收敛**：三模板统一只显示紧邻一篇（优先下一篇，末篇回退上一篇）
+- **小组介绍合影位**：成员照片墙（R2 about/team-photo.png）
+- **双技能沉淀**：.agents/skills/welfare-article/（发布流程）+
+  .agents/skills/layout-analyzer/（排版规格提取）；本次实战反馈待补：①微信长链 poc_token 拦截 → 降级短链/本地 HTML；②R2 分批上传防中断
+
+### 流程记录
+
+- 延伸阅读语义两轮修正（cardTitle、上一篇/下一篇方向）；「10坤岁摄」玩梗图注保留（正文一字不改规则同样适用于图注）
+- ⚠️ 流程违规一次：字体统一小改动误直推 main（c0e9e6c），后续已恢复分支-PR 流程
