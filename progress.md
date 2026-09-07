@@ -389,3 +389,24 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 用户提供成员照片墙拼贴图（1500x2500 PNG，5MB）上传 R2 `about/team-photo.png`
 - AboutSection 右侧「外拍合影位」占位替换为照片墙（background
   cover，label 改「成员照片墙 · 每一张都是我们」）
+
+## 会话记录（skill 测试：《第三季》发布 + magnum 新模板，2026-08-30）
+
+### skill 测试实战（welfare-article + layout-analyzer 首次联动）
+
+- 输入：微信长链（被环境验证拦截，降级用用户提供的短链 /s/4E-6-wWJny1UquVsmPGVmA）
+  - Magnum 排版参考（用户确认新建模板）
+- layout-analyzer 首跑：agent-browser 实测 Magnum signature-drop 页（hero
+  740px 居中、细字重 300、图 720/480/291 三档节奏、图注左对齐灰字、Next
+  Story 左竖线卡、EXPLORE
+  MORE 带侧线标题），规格 /tmp/layout-specs/magnum.md 经用户确认后实施
+- 新模板 ArticleMagnum.astro：居中细列头版 + 宽幅封面 +
+  740px 左对齐衬线正文 + 衬线居中章节（字距 0.12em）+ 金句词距拉开 + 大图 720px/瓦片行等高原比例 + 左对齐图注（本模板特征）+
+  Next Story 左竖线互链卡；schema 枚举加 magnum
+- 《带上她的眼睛 | 第三季》：2026-03-05，58 图入 R2
+  welfare/bring-her-eyes/season-three/（45-58 首轮上传遇网络中断，重试成功；字节数逐一比对通过）；报名表单二维码（原图 58.png）按规则丢弃并告知；图注错字「10坤岁摄」修正为「10岁摄」
+- order 重排：第三季=1（最早）、过春天=2、在遥远的地方=3
+
+### 经验沉淀（待写入 skill）
+
+- 微信长链带 poc_token 会触发环境验证 → 优先让用户提供短链（/s/xxx 格式）或本机另存 HTML；skill 应补「抓取受阻降级路径」一节

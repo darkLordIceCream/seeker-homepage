@@ -26,6 +26,11 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
 const relLabel = (from: Props['article'], to: Props['article']) =>
   to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
 
+/** 延伸阅读：优先紧邻的下一篇（order 更大中最小者），无下一篇则取上一篇 */
+const adjacent =
+  others.filter(o => o.data.order > article.data.order).sort((a, b) => a.data.order - b.data.order)[0] ??
+  others.filter(o => o.data.order < article.data.order).sort((a, b) => b.data.order - a.data.order)[0];
+
 /** 标题错位换行：含中文逗号时在首个逗号后断行，第二行缩进两字 */
 const commaIndex = article.data.title.indexOf('，');
 const titleLines =
@@ -88,31 +93,33 @@ const titleLines =
 
         <aside aria-label="延伸阅读" class="side-col">
           <ul class="side-list">
-            {others.map(other => (
+            {adjacent && (
               <li class="side-card">
-                <a class="side-card-link" href={`/welfare/${other.id}/`}>
+                <a class="side-card-link" href={`/welfare/${adjacent.id}/`}>
                   <span class="side-kicker">
-                    {relLabel(article, other)}
+                    {relLabel(article, adjacent)}
                   </span>
                   <span aria-hidden="true" class="side-thumb">
                     <img
                       alt=""
                       height="720"
                       loading="lazy"
-                      src={other.data.cover}
+                      src={adjacent.data.cover}
                       width="1080"
                     />
                   </span>
-                  <span class="side-card-title">{other.data.cardTitle ?? other.data.title}</span>
-                  {other.data.subtitle && (
-                    <span class="side-card-status">{other.data.subtitle}</span>
+                  <span class="side-card-title">
+                    {adjacent.data.cardTitle ?? adjacent.data.title}
+                  </span>
+                  {adjacent.data.subtitle && (
+                    <span class="side-card-status">{adjacent.data.subtitle}</span>
                   )}
                   <span class="side-cta">
                     阅读全文 <span aria-hidden="true" class="cta-arrow">→</span>
                   </span>
                 </a>
               </li>
-            ))}
+            )}
           </ul>
           <a class="side-back" href="/welfare/">了解 Seeker公益 →</a>
         </aside>

@@ -2,10 +2,12 @@
 // 公益文章路由：按 frontmatter layout 字段分发到对应模板
 // - editorial（默认）：画册/编辑部风格（不对称头版 + 衬线正文 + drop cap）
 // - hasselblad：哈苏式图集排版（居中头版 + 宽字距章节 + 等高图组 + 居中正文）
+// - magnum：Magnum 式画册排版（居中细列头版 + 大图/瓦片行节奏 + 左对齐正文 + Next Story 卡）
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ArticleEditorial from '../../components/welfare/ArticleEditorial.astro';
 import ArticleHasselblad from '../../components/welfare/ArticleHasselblad.astro';
+import ArticleMagnum from '../../components/welfare/ArticleMagnum.astro';
 
 export async function getStaticPaths() {
   const articles = await getCollection('welfare');
@@ -27,5 +29,9 @@ const title = `${article.data.title} | Seeker公益`;
 ---
 
 <Layout description={description} image={ogImage} title={title}>
-  {article.data.layout === 'hasselblad' ? <ArticleHasselblad article={article} others={others} /> : <ArticleEditorial article={article} others={others} />}
+  {article.data.layout === 'hasselblad' && <ArticleHasselblad article={article} others={others} />}
+  {article.data.layout === 'magnum' && <ArticleMagnum article={article} others={others} />}
+  {article.data.layout !== 'hasselblad' && article.data.layout !== 'magnum' && (
+    <ArticleEditorial article={article} others={others} />
+  )}
 </Layout>
