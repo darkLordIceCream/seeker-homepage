@@ -9,7 +9,7 @@ quote: “我想拍星星，夜晚的时候，星星会陪着我。”
 quoteAuthor: 马同学 9岁
 pubDate: 2026-08-29
 author: 寄意寒星
-order: 2
+order: 3
 layout: editorial
 ---
 

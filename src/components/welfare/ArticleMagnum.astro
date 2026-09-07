@@ -1,0 +1,437 @@
+---
+// 公益文章模板 C：Magnum Photos 式画册排版（signature-drop 参考）
+// 居中细列头版 → 宽幅封面 → 衬线居中章节 → 大图/瓦片行节奏（原比例不裁切）→ 左对齐正文
+// 配色沿用站点 Catppuccin 令牌；文末 Next Story 互链卡
+// 由 /welfare/[slug].astro 按 frontmatter layout: 'magnum' 分发
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../Navigation.astro';
+import Footer from '../Footer.astro';
+
+interface Props {
+  article: import('astro:content').CollectionEntry<'welfare'>;
+  others: import('astro:content').CollectionEntry<'welfare'>[];
+}
+
+const { article, others } = Astro.props;
+const { Content } = await render(article);
+
+const fmtDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(article.data.pubDate);
+
+/** 延伸阅读方向：按 order（文章顺序）判断指向上一篇还是下一篇 */
+const relLabel = (from: Props['article'], to: Props['article']) =>
+  to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
+---
+
+<Layout
+  description={article.data.excerpt}
+  image={article.data.cover}
+  title={`${article.data.title} | Seeker公益`}
+>
+  <Navigation />
+
+  <main class="article-page" id="main-content">
+    <header class="article-hero">
+      <p class="hero-kicker">SEEKER · {article.data.kicker}</p>
+      <h1 class="hero-title">{article.data.title}</h1>
+      {article.data.subtitle && <p class="hero-dek">{article.data.subtitle}</p>}
+      <div class="hero-meta">
+        <span>{fmtDate}</span>
+        <span aria-hidden="true" class="meta-dot">·</span>
+        <span>{article.data.author}</span>
+        <span aria-hidden="true" class="meta-dot">·</span>
+        <span>Seeker公益</span>
+      </div>
+    </header>
+
+    <figure class="hero-media">
+      <Image
+        alt={`${article.data.title}——${article.data.coverLine ?? '项目封面'}`}
+        fetchpriority="high"
+        height={720}
+        loading="eager"
+        src={article.data.cover}
+        width={1080}
+      />
+    </figure>
+
+    <div class="article-body">
+      <div class="welfare-prose">
+        <Content />
+      </div>
+
+      {others.length > 0 && (
+        <section aria-label="延伸阅读" class="more-stories">
+          {others.map(other => (
+            <a class="next-card" href={`/welfare/${other.id}/`}>
+              <span class="next-kicker">{relLabel(article, other)}</span>
+              <span class="next-title">{other.data.cardTitle ?? other.data.title}</span>
+              {other.data.subtitle && <span class="next-sub">{other.data.subtitle}</span>}
+            </a>
+          ))}
+        </section>
+      )}
+
+      <footer class="article-foot">
+        <a class="back-link" href="/welfare/">← 返回「带上她的眼睛」</a>
+      </footer>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // 正文图片统一懒加载（md 渲染产物，构建期无法注入属性）
+  document
+    .querySelectorAll<HTMLImageElement>('.welfare-prose img')
+    .forEach(img => {
+      img.loading = 'lazy';
+      img.decoding = 'async';
+    });
+
+  // 图组等高排版：不裁切（拍立得水印），按组内比例计算统一高度。
+  // 双联目标 360px，三联及以上 250px（Magnum 的小瓦片节奏）。
+  const GAP = 10;
+  const rows = [...document.querySelectorAll<HTMLElement>('.welfare-prose p:has(img + img)')];
+
+  const layoutRow = (row: HTMLElement) => {
+    if (window.innerWidth <= 700) {
+      row.querySelectorAll('img').forEach(i => {
+        i.style.height = '';
+        i.style.width = '';
+      });
+      return;
+    }
+    const imgs = [...row.querySelectorAll('img')];
+    const ratios = imgs.map(i => (i.naturalWidth > 0 ? i.naturalWidth / i.naturalHeight : 0));
+    if (ratios.some(r => r === 0)) {return;}
+    const target = imgs.length === 2 ? 360 : 250;
+    const sum = ratios.reduce((s, r) => s + r, 0);
+    const h = Math.min(target, (row.clientWidth - GAP * (imgs.length - 1)) / sum);
+    imgs.forEach(i => {
+      i.style.height = `${Math.floor(h)}px`;
+      i.style.width = 'auto';
+    });
+  };
+
+  const layoutAll = () => rows.forEach(layoutRow);
+
+  rows.forEach(row => {
+    row.querySelectorAll('img').forEach(img => {
+      img.addEventListener('load', () => layoutRow(row), { once: true });
+    });
+  });
+  window.addEventListener('resize', layoutAll);
+  layoutAll();
+</script>
+
+<style>
+  .article-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+    color: var(--foreground);
+    /* 头版居中细列 740px；宽幅媒体用 edge；正文列随大 media 出血共用左基线 */
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+  }
+
+  /* —— 居中细列头版 —— */
+  .article-hero {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 44px;
+    text-align: center;
+  }
+
+  .hero-kicker {
+    margin: 0 0 26px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .hero-title {
+    margin: 0 0 18px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(2rem, 4.4vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+
+  .hero-dek {
+    margin: 0 0 26px;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .meta-dot {
+    opacity: 0.6;
+  }
+
+  /* —— 宽幅封面（Magnum 的 content-outer） —— */
+  .hero-media {
+    margin: 0 var(--edge);
+  }
+
+  .hero-media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* —— 正文：740px 左对齐衬线列 —— */
+  .article-body {
+    padding: 72px var(--edge) 0;
+  }
+
+  .welfare-prose {
+    max-width: 740px;
+    margin: 0 auto;
+    font-family: var(--font-serif-song);
+    font-size: 16px;
+    line-height: 1.95;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(p) {
+    margin: 0 0 1.8em;
+  }
+
+  /* 章节标题：衬线居中、宽字距（Garamond 角色映射） */
+  .welfare-prose :global(h2) {
+    margin: 3em 0 1.8em;
+    text-align: center;
+    font-family: var(--font-serif-song);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-indent: 0.12em;
+    color: var(--foreground);
+  }
+
+  /* 引用：居中衬线、词距拉开（Magnum 金句） */
+  .welfare-prose :global(blockquote) {
+    margin: 2.4em auto;
+    padding: 0;
+    border: none;
+    max-width: 640px;
+    text-align: center;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 2.3;
+    word-spacing: 0.35em;
+    color: var(--muted-foreground);
+  }
+
+  .welfare-prose :global(blockquote p) {
+    margin: 0;
+  }
+
+  /* 照片：单图 720px 居中直角，原比例不裁切 */
+  .welfare-prose :global(p:has(> img)) {
+    max-width: none;
+    margin: 2.2em 0;
+  }
+
+  .welfare-prose :global(p:has(> img:only-child) img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(100%, 720px);
+    max-height: 72vh;
+    margin-inline: auto;
+  }
+
+  /* 图组瓦片行：等高原比例不裁切，整组居中（高度由 JS 计算） */
+  .welfare-prose :global(p:has(img + img)) {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 740px;
+    margin: 2.2em auto;
+  }
+
+  .welfare-prose :global(p:has(img + img) img) {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: auto;
+    max-width: 100%;
+  }
+
+  /* 图注：图下左对齐小字（Magnum 特征，区别于其他模板的居中） */
+  .welfare-prose :global(p:has(> img) + p em) {
+    display: block;
+    font-style: normal;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    text-align: left;
+    color: var(--muted-foreground);
+    margin-top: -1.2em;
+  }
+
+  /* 合作教师名单 */
+  .welfare-prose :global(.teachers) {
+    max-width: 640px;
+    margin: 2.4em auto;
+    text-align: center;
+  }
+
+  .welfare-prose :global(.teachers .t-name) {
+    max-width: none;
+    margin: 0 0 0.3em;
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .welfare-prose :global(.teachers .t-school) {
+    max-width: none;
+    margin: 0 0 1.7em;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--muted-foreground);
+  }
+
+  /* 鸣谢：小一号更淡 */
+  .welfare-prose :global(h2:last-of-type ~ p) {
+    font-size: 13.5px;
+    line-height: 2.1;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 文末 Next Story：左竖线卡（Magnum 特征） —— */
+  .more-stories {
+    max-width: 740px;
+    margin: 24px auto 0;
+  }
+
+  .next-card {
+    display: block;
+    padding: 6px 0 22px 24px;
+    border-left: 2px solid var(--divider);
+    text-decoration: none;
+  }
+
+  .next-kicker {
+    display: block;
+    margin-bottom: 12px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .next-title {
+    display: block;
+    font-family: var(--font-serif-song);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+  }
+
+  .next-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+  }
+
+  .next-card:hover .next-title {
+    color: var(--grad-a);
+  }
+
+  .next-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 尾部 —— */
+  .article-foot {
+    max-width: 740px;
+    margin: 24px auto 0;
+    padding: 30px 0 80px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .article-hero {
+      padding: 48px 24px 36px;
+    }
+
+    .article-body {
+      padding: 48px 24px 0;
+    }
+  }
+
+  @media (max-width: 700px) {
+    /* 手机上瓦片行改两列网格，恢复原比例（JS 已清内联尺寸） */
+    .welfare-prose :global(p:has(img + img)) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .welfare-prose :global(p:has(img + img) img) {
+      width: 100%;
+      height: auto !important;
+      object-fit: cover;
+    }
+  }
+</style>
