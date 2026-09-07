@@ -26,6 +26,11 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
 /** 延伸阅读方向：按 order（文章顺序）判断指向上一篇还是下一篇 */
 const relLabel = (from: Props['article'], to: Props['article']) =>
   to.data.order < from.data.order ? '上一篇 PREVIOUS STORY' : '下一篇 NEXT STORY';
+
+/** 延伸阅读：优先紧邻的下一篇（order 更大中最小者），无下一篇则取上一篇 */
+const adjacent =
+  others.filter(o => o.data.order > article.data.order).sort((a, b) => a.data.order - b.data.order)[0] ??
+  others.filter(o => o.data.order < article.data.order).sort((a, b) => b.data.order - a.data.order)[0];
 ---
 
 <Layout
@@ -65,15 +70,15 @@ const relLabel = (from: Props['article'], to: Props['article']) =>
         <Content />
       </div>
 
-      {others.length > 0 && (
+      {adjacent && (
         <section aria-label="延伸阅读" class="more-stories">
-          {others.map(other => (
-            <a class="next-card" href={`/welfare/${other.id}/`}>
-              <span class="next-kicker">{relLabel(article, other)}</span>
-              <span class="next-title">{other.data.cardTitle ?? other.data.title}</span>
-              {other.data.subtitle && <span class="next-sub">{other.data.subtitle}</span>}
+          {adjacent && (
+            <a class="next-card" href={`/welfare/${adjacent.id}/`}>
+              <span class="next-kicker">{relLabel(article, adjacent)}</span>
+              <span class="next-title">{adjacent.data.cardTitle ?? adjacent.data.title}</span>
+              {adjacent.data.subtitle && <span class="next-sub">{adjacent.data.subtitle}</span>}
             </a>
-          ))}
+          )}
         </section>
       )}
 
