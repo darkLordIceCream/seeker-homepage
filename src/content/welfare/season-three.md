@@ -166,7 +166,7 @@ _李伦媛 10岁摄 / 张铭 10岁摄_
 ![山村孩子](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/season-three/36.jpg)
 ![山村孩子](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/season-three/37.jpg)
 
-_田新宇 10岁摄 / 幸智韩 12岁摄_
+_田新宇 10坤岁摄 / 幸智韩 12岁摄_
 
 ![山村孩子](https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/season-three/38.jpg)
 
