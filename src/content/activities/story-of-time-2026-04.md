@@ -1,0 +1,255 @@
+---
+title: 时间的故事
+subtitle: '落樱随风起，春声入景深'
+issue: 四月篇
+period: APRIL 2026
+cover: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/cover.jpg
+excerpt:
+  '《时间的故事》四月篇：落樱随风起，春声入景深。23
+  幅作品，留住春天的樱花与景深。'
+quote: '每个人的故事，汇成了时间的故事。'
+team:
+  lead: 'guozhennn'
+  editor: '是田田吖'
+pubDate: 2026-04-30
+order: 4
+layout: gallery-story
+entries:
+  - date: '3月29日'
+    title: '寻找春天的答案'
+    author: 'BingChen'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/01.jpg
+        width: 1080
+        height: 550
+    caption: '三月的最后一周，虽然月相不太好，但天气还不错，初十的月亮还会留下大概一个小时左右的时间来拍摄银河拱桥。我选择从沈阳出发驱车300km来到辽宁为数不多的3级光污染地区，来到本溪桓仁我发现光污染情况要比想象中的理想，于是拍摄了这张春季银拱。带着春天的足迹，寻找星空的答案。'
+  - date: '3月29日'
+    title: '渡光'
+    author: '立青'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/02.jpg
+        width: 1080
+        height: 719
+    caption: '落日余晖将冰面镀上一层金色，飞过的蛎鹬和静立着的白鹭相映成趣。'
+  - date: '4月3日'
+    title: '春日序章'
+    author: '宠物摄影师狗哥'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/03.jpg
+        width: 1080
+        height: 901
+    caption:
+      '拟人化的狗狗永远是那么好玩
+      这次我采用了一只狗咬住毯子，好像俩狗真的在裹住毯子得效果。配合蓝天白云，春日的感觉不就来了吗？'
+  - date: '4月3日'
+    title: '地坛的海'
+    author: '日行性猫猫'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/04.jpg
+        width: 1080
+        height: 812
+    caption: '每次都是匆匆路过北京，这是第一次在这里悠闲地漫步。第一个发现斑驳的墙面反光像大海的人一定很浪漫，这个步履匆匆的城市，仍为我们留有休憩的一角。'
+  - date: '4月3日'
+    title: '金辉下的澳门港'
+    author: 'X_ming'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/05.jpg
+        width: 1080
+        height: 1620
+    caption: '清晨的金辉铺满海面，澳门港的桥梁与建筑在柔光中静静舒展。在东望洋山的步道上，远处的风车、海洋、西式建筑构成了一幅和谐的画面。'
+  - date: '4月3日'
+    title: '城市精灵漫游'
+    author: '柯达拍什么'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/06.jpg
+        width: 1080
+        height: 1440
+    caption: '时隔多年，带着属于我的全新的视角重返重庆，做一场超现实浪漫的造梦者。'
+  - date: '4月4日'
+    title: '二七长江大桥'
+    author: 'Tommic'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/07.jpg
+        width: 1080
+        height: 1612
+    caption:
+      '这张照片的拍摄一波三折，首先用景深合成拍摄了底片，原底片是没有雾气的，画面非常单调，于是我后期首先使用某滤镜的雾气功能增加雾气，但怎么看怎么假，此图就此搁置。后来4月底的时候好友偶然提到深度蒙版对修雾可能有帮助，这给了我灵感。于是我从原理出发推导了雾气效果方程，利用Depth
+      Pro开源单目深度估计算法，将雾气方程计算结果融合进深度蒙版中，成功创建出雾气深度蒙版，于是这张照片成为第一张应用雾气深度蒙版的照片。不过由于风吹的原因，花出现了位移，景深合成不完美，导致深度计算时出现了些问题——就这样吧，下次换一个更好的环境再优化看效果。（后期加雾仅作计算摄影实践~）'
+  - date: '4月5日'
+    title: '从“头”开始'
+    author: '屋顶数星星'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/08.jpg
+        width: 1080
+        height: 1083
+    caption: '清明节去了越南旅行，在街上闲逛的过程时偶然发现了一家在街角的理发店，老板坐在摊子前等待客人，镜子中他仿佛和墙上人物肖像一样定格在框中。'
+  - date: '4月9日'
+    title: 'Blue Tears'
+    author: '阿羊今天不拍照'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/09.jpg
+        width: 1080
+        height: 1620
+    caption: '又到一年蓝眼泪季，今年运气还算不错出摊一次就碰到不错的亮度。'
+  - date: '4月12日'
+    title: '采茶'
+    author: '一把彩虹伞'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/10.jpg
+        width: 1080
+        height: 810
+    caption: '第一次近距离观察采茶人的劳作，都知道杭州的龙井茶最为出名，但鲜有人知背后采茶的故事，每年的三四月份，采茶女会在6点左右开始采茶这个月份经常会有下雨天。采茶女不得不穿着适配的雨衣戴着斗笠在茶田中穿梭。'
+  - date: '4月12日'
+    title: '怪奇夜行'
+    author: 'Leslin'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/11.png
+        width: 1080
+        height: 1322
+    caption: '最近在追怪奇物语，在外出扫街到达地铁站的时候，地铁里的灯光和列车行驶闪烁的灯光让我想起剧情的片段，所以我使用了三重曝光将地铁的人流、灯光和主体记录在一张相纸上。'
+  - date: '4月16日'
+    title: '格聂双拱'
+    author: '尧'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/12.jpg
+        width: 1080
+        height: 3644
+    caption:
+      '在则巴秘境负重四十斤徒步两小时找机位，中途的一场大雪把山染成白色。入夜之后，云散星出，远处格聂七峰一字排开，头顶是顶级低光污染带来的震撼星空，明亮的黄道光与彩色的气辉交织，这一刻美的令人失语.冬季银拱拍摄于
+      21:30左右，夏季银拱拍摄于次日 3:20 左右。'
+  - date: '4月16日'
+    title: '星坦魔方'
+    author: '两萬里'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/13.jpg
+        width: 1080
+        height: 720
+    caption: '星空季即将到来，我们也是突发奇想，趁着4月中旬的观星窗口期来到了甘肃敦煌，在4月这个季节，全国都是阴雨天的情况下，只有甘肃得以有罕见的晴天，于是我们从敦煌出发，连夜开车到200公里外的＂宇宙魔方＂2级光污染区拍摄星空，从银河凌晨1:40升起一直拍到5:00天亮，经过一整晚的奋战，终于拍到了我们梦寐以求的人生大片。'
+  - date: '4月17日'
+    title: '日照神峰与北斗晨星'
+    author: '陳某人'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/14.jpg
+        width: 1080
+        height: 1620
+    caption: '在则巴村畔的云雾彼端，晨曦为格聂镀上暖芒，北斗七星仍悬于未明夜空，与神山遥望。这是我们远涉川西秘境，收获的最难得景象。'
+  - date: '4月17日'
+    title: '大漠寻光'
+    author: '阿帆'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/15.jpg
+        width: 1080
+        height: 711
+    caption: '四月我与小伙伴一同前往大西北，奔赴一场璀璨银河之约。为远离城市光污染，我们自驾深入戈壁无人区，从凌晨零点坚守至清晨六点，静静等待银河升起。大漠夜风凛冽、旷野寒意刺骨，却始终抵挡不住我们对浩瀚苍穹的热爱与向往。'
+  - date: '4月17日'
+    title: '赴一场萤光之约'
+    author: '某喵'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/16.jpg
+        width: 1080
+        height: 608
+    caption: '为了拍这张照片，在草丛喂了几个小时蚊子，从黄昏等到暮色四合。当第一只萤火虫从桥洞下飞出来时，瞬间觉得所有蚊虫叮咬和等待都值得了。按下快门的瞬间，像是把森林里流动的星光都收进了镜头里。'
+  - date: '4月19日'
+    title: '雾中星空'
+    author: '在九乡河混吃等死'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/17.jpg
+        width: 1080
+        height: 811
+    caption: '难得的窗口期，驱车五个多小时直奔皖南，经历了开错路、导航出错、甚至遇到蛇之后，终于拍到了华东低光害下的梦幻星空。'
+  - date: '4月19日'
+    title: '永恒'
+    author: 'CONST.'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/18.jpg
+        width: 1080
+        height: 602
+    caption:
+      '因机票便宜临时起意至加勒比南端荷属ABC群岛跳岛
+      买下机票才开始查询岛上究竟有何物 意外发现每个岛南端皆是二级区
+      顺势决定昼夜颠倒 然而计划很完美 现实除Bonaire
+      其他各岛都充斥不知从何而来的光污染 Bonaire南端则是一马平川的盐湖
+      几乎空无一物 在快要放弃之时 车灯在前方照出一座废弃多时的建筑
+      而银心此时亦刚好升至屋顶 两个象征久远的事物突然就交织在了一起
+      其实偏好探索原创机位大抵也是这个原因 有趣的并非仅是完美的产出
+      而是接纳随机的结果。'
+  - date: '4月19日'
+    title: '辰光'
+    author: 'jiajian'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/19.jpg
+        width: 1080
+        height: 637
+    caption: '在周末天气不错情况下，我们决定跑一趟八界山，据说因为彗星的原因山上挤满了很多人，我们一路寻找不同的机位方向，终于我们找到了另一个几乎只有我们一辆车的山头。但是由于底下的光污染变强，这可能就是广东的特产了吧。我选择凌晨2点等待银河上升一定的高度再进行拍摄！即便被人间人造光干扰，依旧抵挡不住星星的闪烁。'
+  - date: '4月20日'
+    title: '孤独赶路人'
+    author: 'Carlson'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/20.jpg
+        width: 1080
+        height: 1731
+    caption: |-
+      镜头右侧，是国贸冰冷的蓝色。玻璃幕墙折射着这个时代的绝对理性，高耸入云，却与人无关。
+      镜头左侧，是路灯温存的暖黄。它在坚硬的城市骨架间，为赶路人撑开了一处微小的避难所。
+      这种不对称的尺度感，正是城市最残酷的缩影：
+      宏大的天际线是一种不可逾越的背景，而那个孤独下班的身影，才是生活的真实注脚。
+      身为“上班牛马”，我们被困在写字楼的格间，被淹没在通勤的洪流。我们在深夜的冷暖交界处孤独跋涉，用仅存的体温，去对抗一整座世界的凉意。
+      哪怕身后的巨塔再冷，前方的路灯依然照亮生存的尊严。
+  - date: '4月23日'
+    title: '富士山下'
+    author: '叶秋'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/21.jpg
+        width: 1080
+        height: 810
+    caption:
+      '很早的时候就在网上看到了这张照片，非常震撼，心想有朝一日自己也要拍到这张照片，终于历经种种困难来到富士山，凌晨3:00
+      蹬了二十分钟自行车，终于在蓝调时刻赶到了富士山下的罗森，拍下了这张与富士山的合影。按下快门的瞬间，所有早起的疲惫都被治愈了。这是和富士山的一次，只属于蓝调时刻的浪漫约定。'
+  - date: '4月24日'
+    title: '春天的巴洛克'
+    author: 'Kenza'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/22.jpg
+        width: 1080
+        height: 719
+    caption: '今年的春天格外的暖和，很多植物也穿上了绿色的衣服。在校园里散步的时候，看见了图中的这个场景：红墙，绿藤和白花三个层次分明的东西印在了一张照片上。'
+  - date: '4月25日'
+    title: '无题'
+    author: '黑暗之王'
+    images:
+      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/23.jpg
+        width: 1080
+        height: 1080
+    caption: '飘飘何所似？天地一沙鸥'
+poem: |
+  四月是春日的信章，
+  我们用它盛满繁花、清风与晴朗。
+  奔赴每一片葳蕤草木与盛放花海，
+  你会发现，
+  温柔正在肆意生长。
+  它只是以明媚的模样，
+  漾在我们的眼眸里，
+  因为花期会落幕，
+  但是心动不会。
+  留住春光的方式，
+  是与人间浪漫撞个满怀。
+pastIssues:
+  - name: '三月篇'
+    line: '繁花迎晓日，轻香入晚风'
+  - name: '二月篇'
+    line: '新岁启华章，浅暖赴春光'
+  - name: '一月篇'
+    line: '梅破春妍，新岁开篇'
+  - name: '十二月篇'
+    line: '旧卷显影毕  新框待景深'
+  - name: '十一月篇'
+    line: '露沾草，风落木，岁方秋'
+committeeImage: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-04/committee.jpg
+committee:
+  name: '2026年时间的故事组委会'
+  team: 'Ted、guozhenn、三月大的猫、BingChen、是田田吖、滴歪、周云水'
+---
+
+《时间的故事》初心如故，以镜头定格探索的足迹、冒险的悸动，珍藏个人与集体的岁月芳华。从初春的莺啼到凛冬的雪落，日月更迭，星河辗转，我们始终期盼你执笔时光的坚持，以影像为笺，写尽朝暮。待365个晨昏悄然落幕，蓦然回首，才知岁月已绘就满目山河与人间烟火。
+
+2026年《时间的故事》仍在续写，此刻，就让我们一同轻启2026年4月的时光扉页，聆听岁月的絮语！

@@ -81,7 +81,8 @@ const activities = defineCollection({
     /** 页面模板（当前仅 gallery-story 画廊型） */
     layout: z.enum(['gallery-story']).default('gallery-story'),
     /**
-     * 画廊条目：一天多投共用一个日期章节（日期相同即同章）
+     * 画廊条目：一天多投共用一个日期章节（日期相同即同章）；
+     * images 支持一稿多图（同一作品标题下多张照片）
      */
     entries: z.array(
       z.object({
@@ -93,11 +94,16 @@ const activities = defineCollection({
         caption: z.string(),
         /** 作者署名（不含 @） */
         author: z.string(),
-        /** 图片绝对 URL（R2） */
-        image: z.string(),
-        /** 像素尺寸（宽高比预留，防 CLS） */
-        width: z.number().default(1080),
-        height: z.number(),
+        /** 图片（R2 绝对 URL + 像素尺寸，宽高比预留防 CLS） */
+        images: z
+          .array(
+            z.object({
+              url: z.string(),
+              width: z.number(),
+              height: z.number(),
+            })
+          )
+          .min(1),
       })
     ),
     /** 结尾诗（多行） */
