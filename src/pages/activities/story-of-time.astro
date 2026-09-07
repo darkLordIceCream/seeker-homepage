@@ -1,0 +1,293 @@
+---
+// 活动二级页：《时间的故事》活动介绍 + 往期各期入口
+// 各期卡片点击进入具体画廊页 /activities/[slug]
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+
+// 各期按 order（月份序）倒序排列：最新一期在前
+const editions = (await getCollection('activities')).sort(
+  (a, b) => b.data.order - a.data.order || b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout
+  description="Seeker追光者「时间的故事」——每个月的故事由每个人书写，以影像为笺，写尽朝暮"
+  title="时间的故事 | Seeker追光者"
+>
+  <Navigation />
+
+  <main class="story-hub" id="main-content">
+    <header class="hub-hero">
+      <p class="hero-kicker">SEEKER · STORY OF TIME</p>
+      <h1 class="hero-title">时间<span class="hero-accent">的故事</span></h1>
+      <p class="hero-line">每个人的故事，汇成了时间的故事</p>
+      <p class="hero-desc">
+        《时间的故事》初心如故，以镜头定格探索的足迹、冒险的悸动，珍藏个人与集体的岁月芳华。
+        从初春的莺啼到凛冬的雪落，日月更迭，星河辗转，我们始终期盼你执笔时光的坚持，以影像为笺，写尽朝暮。
+        待365个晨昏悄然落幕，蓦然回首，才知岁月已绘就满目山河与人间烟火。
+      </p>
+    </header>
+
+    <section aria-labelledby="editions-title" class="editions-section">
+      <header class="editions-head">
+        <h2 class="editions-title" id="editions-title">
+          往期回顾 <span class="editions-en">Editions</span>
+        </h2>
+        <span class="editions-count">{editions.length} 期</span>
+      </header>
+
+      <div class="edition-grid">
+        {editions.map(edition => (
+          <a
+            aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
+            class="edition-card"
+            href={`/activities/${edition.id}/`}
+          >
+            <span class="edition-media">
+              <span
+                class="edition-img"
+                style={`background-image:url('${edition.data.cover}')`}
+              >
+                <span class="edition-tag">{edition.data.issue}</span>
+              </span>
+            </span>
+            <span class="edition-meta">
+              <strong>{edition.data.subtitle}</strong>
+              <span class="edition-period">
+                {edition.data.period} · {edition.data.entries.length} 幅作品
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <footer class="hub-foot">
+        <p>2026年时间的故事组委会 · 策划团队 Ted、BingChen、是田田吖、滴歪、周云水、Leslin</p>
+      </footer>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .story-hub {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+  }
+
+  /* —— 活动介绍 —— */
+  .hub-hero {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 24px 48px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hub-hero::before {
+    content: '';
+    position: absolute;
+    inset: -40% -20%;
+    background:
+      radial-gradient(circle at 25% 30%, var(--glow-a) 0%, transparent 45%),
+      radial-gradient(circle at 75% 70%, var(--glow-b) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  .hero-kicker {
+    position: relative;
+    margin: 0 0 18px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .hero-title {
+    position: relative;
+    margin: 0 0 14px;
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .hero-accent {
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-line {
+    position: relative;
+    margin: 0 0 26px;
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-desc {
+    position: relative;
+    margin: 0 auto;
+    max-width: 560px;
+    font-size: 14.5px;
+    line-height: 2;
+    color: var(--muted-foreground);
+    text-align: justify;
+  }
+
+  /* —— 往期各期 —— */
+  .editions-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 96px;
+  }
+
+  .editions-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .editions-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--foreground);
+  }
+
+  .editions-en {
+    margin-left: 6px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .editions-count {
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  .edition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 32px 28px;
+  }
+
+  /* 白框相片卡：与首页拍立得同一语言，静态网格排布 */
+  .edition-card {
+    display: block;
+    background: #fff;
+    padding: 10px 10px 16px;
+    border-radius: 6px;
+    box-shadow: 0 10px 28px rgba(76, 79, 105, 0.22);
+    text-decoration: none;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+  }
+
+  .edition-card:hover,
+  .edition-card:focus-visible {
+    transform: translateY(-6px) rotate(-0.6deg);
+    box-shadow: 0 22px 48px rgba(76, 79, 105, 0.32);
+  }
+
+  .edition-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  .edition-media {
+    display: block;
+  }
+
+  .edition-img {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
+    border-radius: 3px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--secondary);
+  }
+
+  .edition-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    /* 深色玻璃底：浅色照片上白字也可读 */
+    background: rgba(30, 34, 46, 0.42);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #fff;
+  }
+
+  .edition-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 4px 0;
+  }
+
+  .edition-meta strong {
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #3a3f55;
+  }
+
+  .edition-period {
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #9093a8;
+  }
+
+  .hub-foot {
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  .hub-foot p {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: var(--muted-foreground);
+  }
+
+  @media (max-width: 768px) {
+    .hub-hero {
+      padding: 48px 20px 36px;
+    }
+
+    .editions-section {
+      padding: 16px 20px 72px;
+    }
+
+    .edition-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px 16px;
+    }
+  }
+</style>
