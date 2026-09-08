@@ -611,17 +611,17 @@ const jsonLd = JSON.stringify({
     color: var(--grad-a);
   }
 
-  /* —— side 型：竖幅/方幅——照片贴版心左缘，题注位于屏幕约四分之三处（不做对称） —— */
+  /* —— side 型：竖幅/方幅——照片保持居中位不动，题注单独位于屏幕约四分之三处 —— */
   .story-item--side {
     display: grid;
-    /* 题注列起点 ≈ 版心左缘 + 76% 内容宽 ≈ 屏宽 3/4 */
-    grid-template-columns: minmax(0, 76%) minmax(0, 1fr);
+    /* 照片列内居中（位置与整组居中版一致），题注列起点 ≈ 屏宽 3/4 */
+    grid-template-columns: minmax(0, 75%) minmax(0, 1fr);
     gap: clamp(24px, 2.5vw, 36px);
     align-items: start;
   }
 
   .story-item--side .item-media {
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .story-item--side .item-media :global(img) {
