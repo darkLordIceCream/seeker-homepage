@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·一月篇 | 白雪阳春，虎归兔临'
-issue: '【Seeker 时间的故事】·一月篇 | 白雪阳春，虎归兔临'
+subtitle: '白雪阳春，虎归兔临'
+issue: '一月篇'
 period: 'JANUARY 2023'
 cover: ../../assets/activities/story-of-time-2023-01/cover.jpg
 excerpt: '《时间的故事》一月篇：。29 幅作品，收录组员们的时光片段。'

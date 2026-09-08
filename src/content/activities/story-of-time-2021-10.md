@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·十月篇 | 霜寒露凝，树树秋声'
-issue: '【Seeker 时间的故事】·十月篇 | 霜寒露凝，树树秋声'
+subtitle: '霜寒露凝，树树秋声'
+issue: '十月篇'
 period: 'OCTOBER 2021'
 cover: ../../assets/activities/story-of-time-2021-10/cover.jpg
 excerpt: '《时间的故事》十月篇：。29 幅作品，收录组员们的时光片段。'

@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·一月篇 | 新年伊始，虎虎生风（嗷呜~）'
-issue: '【Seeker 时间的故事】·一月篇 | 新年伊始，虎虎生风（嗷呜~）'
+subtitle: '新年伊始，虎虎生风（嗷呜~）'
+issue: '一月篇'
 period: 'JANUARY 2022'
 cover: ../../assets/activities/story-of-time-2022-01/cover.jpg
 excerpt: '《时间的故事》一月篇：。29 幅作品，收录组员们的时光片段。'

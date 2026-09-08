@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·六月篇 | 云蒸霞蔚，伴一声惊雷入夏'
-issue: '【Seeker 时间的故事】·六月篇 | 云蒸霞蔚，伴一声惊雷入夏'
+subtitle: '云蒸霞蔚，伴一声惊雷入夏'
+issue: '六月篇'
 period: 'JUNE 2022'
 cover: ../../assets/activities/story-of-time-2022-06/cover.jpg
 excerpt: '《时间的故事》六月篇：。32 幅作品，收录组员们的时光片段。'

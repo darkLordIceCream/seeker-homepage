@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·九月篇 | 暮色之下，秋月将圆'
-issue: '【Seeker 时间的故事】·九月篇 | 暮色之下，秋月将圆'
+subtitle: '暮色之下，秋月将圆'
+issue: '九月篇'
 period: 'SEPTEMBER 2022'
 cover: ../../assets/activities/story-of-time-2022-09/cover.jpg
 excerpt: '《时间的故事》九月篇：。28 幅作品，收录组员们的时光片段。'

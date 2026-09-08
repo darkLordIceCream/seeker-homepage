@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】· 十二月篇 | “在时间的长河中，奏响2021的终章曲”'
-issue: '【Seeker 时间的故事】· 十二月篇 | “在时间的长河中，奏响2021的终章曲”'
+subtitle: '“在时间的长河中，奏响2021的终章曲”'
+issue: '十二月篇'
 period: 'DECEMBER 2021'
 cover: ../../assets/activities/story-of-time-2021-12/cover.png
 excerpt: '《时间的故事》十二月篇：。38 幅作品，收录组员们的时光片段。'

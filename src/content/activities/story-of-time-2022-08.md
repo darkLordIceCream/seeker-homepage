@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·八月篇 | 天际夏日落，入秋月无边'
-issue: '【Seeker 时间的故事】·八月篇 | 天际夏日落，入秋月无边'
+subtitle: '天际夏日落，入秋月无边'
+issue: '八月篇'
 period: 'AUGUST 2022'
 cover: ../../assets/activities/story-of-time-2022-08/cover.jpg
 excerpt: '《时间的故事》八月篇：。26 幅作品，收录组员们的时光片段。'

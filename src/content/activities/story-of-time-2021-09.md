@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·九月篇 | #秋风月明，人间九月'
-issue: '【Seeker 时间的故事】·九月篇 | #秋风月明，人间九月'
+subtitle: '#秋风月明，人间九月'
+issue: '九月篇'
 period: 'SEPTEMBER 2021'
 cover: ../../assets/activities/story-of-time-2021-09/cover.jpg
 excerpt: '《时间的故事》九月篇：。29 幅作品，收录组员们的时光片段。'

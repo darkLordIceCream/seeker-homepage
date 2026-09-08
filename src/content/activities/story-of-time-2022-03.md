@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·叁月篇 | 春花浪漫，星汉灿烂'
-issue: '【Seeker 时间的故事】·叁月篇 | 春花浪漫，星汉灿烂'
+subtitle: '春花浪漫，星汉灿烂'
+issue: '叁月篇'
 period: 'MARCH 2022'
 cover: ../../assets/activities/story-of-time-2022-03/cover.jpg
 excerpt: '《时间的故事》叁月篇：。29 幅作品，收录组员们的时光片段。'

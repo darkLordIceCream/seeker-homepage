@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·五月篇 | 一程山水一程歌'
-issue: '【Seeker 时间的故事】·五月篇 | 一程山水一程歌'
+subtitle: '一程山水一程歌'
+issue: '五月篇'
 period: 'MAY 2022'
 cover: ../../assets/activities/story-of-time-2022-05/cover.jpg
 excerpt: '《时间的故事》五月篇：。29 幅作品，收录组员们的时光片段。'
