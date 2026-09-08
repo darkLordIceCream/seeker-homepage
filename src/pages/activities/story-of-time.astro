@@ -11,6 +11,19 @@ import Footer from '../../components/Footer.astro';
 const editions = (await getCollection('activities')).sort(
   (a, b) => b.data.order - a.data.order || b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+/** 按年份分组（取各期 pubDate 年份），年份倒序——每年一个独立区域 */
+const years: { year: number; items: typeof editions }[] = [];
+for (const edition of editions) {
+  const year = edition.data.pubDate.getFullYear();
+  const group = years.find(x => x.year === year);
+  if (group) {
+    group.items.push(edition);
+  } else {
+    years.push({ year, items: [edition] });
+  }
+}
+const latestId = editions[0]?.id;
 ---
 
 <Layout
@@ -36,39 +49,48 @@ const editions = (await getCollection('activities')).sort(
         <h2 class="editions-title" id="editions-title">
           往期回顾 <span class="editions-en">Editions</span>
         </h2>
-        <span class="editions-count">{editions.length} 期</span>
+        <span class="editions-count">共 {editions.length} 期</span>
       </header>
 
-      <div class="edition-grid">
-        {editions.map((edition, index) => (
-          <a
-            aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
-            class="edition-card"
-            href={`/activities/${edition.id}/`}
-          >
-            <span class="edition-media">
-              <span class="edition-img">
-                <Image
-                  alt=""
-                  height={459}
-                  layout="constrained"
-                  loading="lazy"
-                  src={edition.data.cover}
-                  widths={[320, 480, 640]}
-                />
-                <span class="edition-tag">{edition.data.issue}</span>
-                {index === 0 && <span class="edition-latest">最新</span>}
-              </span>
-            </span>
-            <span class="edition-meta">
-              <strong>{edition.data.subtitle}</strong>
-              <span class="edition-period">
-                {edition.data.period} · {edition.data.entries.length} 幅作品
-              </span>
-            </span>
-          </a>
-        ))}
-      </div>
+      {years.map(({ year, items }) => (
+        <div class="year-group">
+          <div class="year-head">
+            <h3 class="year-title">{year}<span class="year-unit">年</span></h3>
+            <span class="year-line" aria-hidden="true"></span>
+            <span class="year-count">{items.length} 期</span>
+          </div>
+          <div class="edition-grid">
+            {items.map(edition => (
+              <a
+                aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
+                class="edition-card"
+                href={`/activities/${edition.id}/`}
+              >
+                <span class="edition-media">
+                  <span class="edition-img">
+                    <Image
+                      alt=""
+                      height={459}
+                      layout="constrained"
+                      loading="lazy"
+                      src={edition.data.cover}
+                      widths={[320, 480, 640]}
+                    />
+                    <span class="edition-tag">{edition.data.issue}</span>
+                    {edition.id === latestId && <span class="edition-latest">最新</span>}
+                  </span>
+                </span>
+                <span class="edition-meta">
+                  <strong>{edition.data.subtitle}</strong>
+                  <span class="edition-period">
+                    {edition.data.period} · {edition.data.entries.length} 幅作品
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
 
       <footer class="hub-foot">
         <p>2026年时间的故事组委会 · 策划团队 Ted、BingChen、是田田吖、滴歪、周云水、Leslin</p>
@@ -186,6 +208,47 @@ const editions = (await getCollection('activities')).sort(
 
   .editions-count {
     font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 年份区域：每年一组，年份倒序 —— */
+  .year-group + .year-group {
+    margin-top: 48px;
+  }
+
+  .year-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .year-title {
+    margin: 0;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .year-unit {
+    margin-left: 2px;
+    font-family: var(--font-serif-song);
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--muted-foreground);
+  }
+
+  .year-line {
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .year-count {
+    font-size: 12px;
     color: var(--muted-foreground);
   }
 
