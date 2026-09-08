@@ -543,4 +543,45 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - ./init.sh 全绿（0 错 0 警，16 页）；lightbox/分页/左对齐/2-up/回顶全部程序化断言通过
 - judge 第 8 轮：lightbox
   pass；其余 fail 项经查全部为 r2.dev 边缘事故期的截图取证问题（破图=404 缓存），非页面缺陷——分页卡/side 左对齐已有渲染完好截图（shots6/s9-*.png）
-- judge 视觉复验待 r2.dev 稳定窗口后补拍 s14/s15 系列（2-up 实景/hub webp 封面）
+
+## 会话记录（架构定稿：展示图迁入仓库同源分发 + R2 绑自定义域，2026-09-08 续四）
+
+### 用户决策：保留 R2 + 绑定域名
+
+- 用户明确「不弃用对象存储，绑定域名」→
+  `wrangler r2 bucket domain add seeker-homepage-assets --domain r2.xn--seeker-ng2jm403afb4a.club --zone-id 1efd52ca...`（zone 经 wrangler
+  OAuth token 调 CF API 查得）
+- 全仓 363 个 r2.dev URL 替换为
+  `https://r2.xn--seeker-ng2jm403afb4a.club/...`（8 期 md + 3 篇 welfare md +
+  ActsSection/Banner/AboutSection）
+
+### 展示图迁入仓库（astro:assets 同源分发）
+
+- 221 张原图入 `src/assets/activities/<slug>/`；activities
+  schema 改 image()（cover/committeeImage/entries.images）——image() 元数据自带宽高，md 中的手工 width/height 全部删除
+- GalleryStory：layout="full-width"（封面）/
+  "constrained"（条目/组委会），astro:assets 自动 WebP 多档 srcset +
+  CLS 预留；手工 WebP 管线/版本参数/onerror 回退脚本全部移除（被本地管线取代）
+- hub 卡片封面改
+  <Image>（原 background-image 无法回退懒加载）；ActsSection 封面走 import 资产；astro.config 加
+  `site: https://seeker-homepage.pages.dev`（og:image 绝对 URL）
+- gen_md.py 同步改相对路径输出（未来期数一致）
+- 效果：页面 0 个跨域图片引用，srcset
+  4 档（640/750/828/1080w），构建期一次性优化 16.8s（有缓存）
+
+### 最终验证
+
+- judge 第 9 轮（最终）：10 张截图 overall pass /
+  must_fix 空——「连续三轮的图片时好时坏问题在本轮 10 张中零复现」
+- ./init.sh 全绿（0 错 0 警，16 页）；8 期逐页滚动断言渐进懒加载正常
+- R2 分工定稿：原图备份 +
+  welfare 图床（自定义域）+ 大文件（视频）；页面小图走仓库同源
+
+### 经验沉淀（待写入 skill）
+
+- wrangler 4.x 已支持 `r2 bucket domain add/list`（--domain --zone-id
+  -y）；zone-id 可用 wrangler OAuth token 调 CF API GET
+  /zones 查得（但该 token 无 zone
+  settings 权限，http3 开关这类设置要在 dashboard 做）
+- R2 自定义域绑定后需等 DNS/证书传播（分钟级），期间偶发 404
+- r2.dev 公开域慎用于生产页面图片：边缘多节点独立缓存 + 限流，上传完成前的请求会把 404 毒化进边缘缓存且按 TTL 迟迟不散

@@ -1,6 +1,8 @@
 ---
 // 首页第3层「活动」：拍立得照片堆——白框厚底照片卡错位叠放
 // hover 抽出转正；未落地的活动指向占位页，公益项目直达 /welfare/
+import storyCover from '../../assets/activities/2026-08/cover.jpg';
+
 type Act = {
   name: string;
   desc: string;
@@ -22,7 +24,7 @@ const events: Act[] = [
     href: '/activities/story-of-time/',
     rot: '-4deg',
     dy: '12px',
-    img: 'https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-08/cover_640.webp?v20260908a',
+    img: storyCover.src,
   },
   {
     name: 'Seeker公益 · 带上她的眼睛',
@@ -31,7 +33,7 @@ const events: Act[] = [
     href: '/welfare/',
     rot: '2.2deg',
     dy: '-8px',
-    img: 'https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
+    img: 'https://r2.xn--seeker-ng2jm403afb4a.club/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
   },
   {
     name: 'Young Blood · 年度大赛',

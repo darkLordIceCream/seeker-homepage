@@ -2,6 +2,7 @@
 // 活动二级页：《时间的故事》活动介绍 + 往期各期入口
 // 各期卡片点击进入具体画廊页 /activities/[slug]
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import Footer from '../../components/Footer.astro';
@@ -10,10 +11,6 @@ import Footer from '../../components/Footer.astro';
 const editions = (await getCollection('activities')).sort(
   (a, b) => b.data.order - a.data.order || b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
-/** R2 约定：同名 WebP 副本（_640），卡片封面用小档；版本参数做 cache-busting */
-const IMG_V = 'v20260908a';
-const coverSmall = (url: string) => url.replace(/(\.\w+)$/, `_640.webp?${IMG_V}`);
 ---
 
 <Layout
@@ -50,10 +47,15 @@ const coverSmall = (url: string) => url.replace(/(\.\w+)$/, `_640.webp?${IMG_V}`
             href={`/activities/${edition.id}/`}
           >
             <span class="edition-media">
-              <span
-                class="edition-img"
-                style={`background-image:url('${coverSmall(edition.data.cover)}')`}
-              >
+              <span class="edition-img">
+                <Image
+                  alt=""
+                  height={459}
+                  layout="constrained"
+                  loading="lazy"
+                  src={edition.data.cover}
+                  widths={[320, 480, 640]}
+                />
                 <span class="edition-tag">{edition.data.issue}</span>
                 {index === 0 && <span class="edition-latest">最新</span>}
               </span>
@@ -226,9 +228,14 @@ const coverSmall = (url: string) => url.replace(/(\.\w+)$/, `_640.webp?${IMG_V}`
     display: block;
     aspect-ratio: 3 / 2;
     border-radius: 3px;
-    background-size: cover;
-    background-position: center;
+    overflow: hidden;
     background-color: var(--secondary);
+  }
+
+  .edition-img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .edition-tag {

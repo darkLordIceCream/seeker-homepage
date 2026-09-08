@@ -75,26 +75,13 @@ const isSide = (entry: Entry) => {
   return first.height * 5 >= first.width * 6;
 };
 
-/**
- * R2 约定：同名 WebP 双档（_640 / _1080），由 URL 推导。
- * 版本查询参数用于 cache-busting：图片更新重传后旧边缘缓存的 404/旧图不会污染新 URL
- */
-const IMG_V = 'v20260908a';
-const webp = (url: string, w: 640 | 1080) => url.replace(/(\.\w+)$/, `_${w}.webp?${IMG_V}`);
-
-/** srcset sizes：side 竖图约 640px 显示宽，stack 通栏约 1080px，多图 2-up 每张约 640px */
-const sizesFor = (entry: Entry) => {
-  if (isSide(entry) || entry.images.length > 1) {return '(max-width: 900px) 100vw, 640px';}
-  return '(max-width: 900px) 100vw, 1080px';
-};
-
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'ImageGallery',
   name: `${data.title} · ${data.issue}`,
   description: data.excerpt,
   datePublished: data.pubDate.toISOString(),
-  image: data.cover,
+  image: data.cover.src,
   numberOfItems: data.entries.length,
   author: { '@type': 'Organization', name: 'Seeker追光者' },
   publisher: { '@type': 'Organization', name: 'Seeker追光者' },
@@ -103,7 +90,7 @@ const jsonLd = JSON.stringify({
 
 <Layout
   description={data.excerpt}
-  image={data.cover}
+  image={new URL(data.cover.src, Astro.site).toString()}
   title={`${data.title} · ${data.issue} | Seeker追光者`}
 >
   <Navigation />
@@ -131,22 +118,13 @@ const jsonLd = JSON.stringify({
     </header>
 
     <figure class="story-cover">
-      <picture>
-        <source
-          sizes="(max-width: 900px) 100vw, 90vw"
-          srcset={`${webp(data.cover, 640)} 640w, ${webp(data.cover, 1080)} 1080w`}
-          type="image/webp"
-        />
-        <Image
-          alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
-          data-fallback={data.cover}
-          fetchpriority="high"
-          height={459}
-          loading="eager"
-          src={data.cover}
-          width={1080}
-        />
-      </picture>
+      <Image
+        alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
+        fetchpriority="high"
+        layout="full-width"
+        loading="eager"
+        src={data.cover}
+      />
     </figure>
 
     <div class="story-intro">
@@ -170,27 +148,18 @@ const jsonLd = JSON.stringify({
                     aria-label={`查看大图：《${entry.title}》`}
                     class="item-shutter"
                     data-author={entry.author}
-                    data-full={img.url}
+                    data-full={img.src}
                     data-title={entry.title}
                     type="button"
                   >
-                    <picture>
-                      <source
-                        sizes={sizesFor(entry)}
-                        srcset={`${webp(img.url, 640)} 640w, ${webp(img.url, 1080)} 1080w`}
-                        type="image/webp"
-                      />
-                      <Image
-                        alt={entry.images.length > 1
-                          ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
-                          : `《${entry.title}》——${entry.author}作品`}
-                        data-fallback={img.url}
-                        height={img.height}
-                        loading="lazy"
-                        src={img.url}
-                        width={img.width}
-                      />
-                    </picture>
+                    <Image
+                      alt={entry.images.length > 1
+                        ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
+                        : `《${entry.title}》——${entry.author}作品`}
+                      layout="constrained"
+                      loading="lazy"
+                      src={img}
+                    />
                   </button>
                 ))}
               </span>
@@ -210,21 +179,12 @@ const jsonLd = JSON.stringify({
 
       {data.committeeImage && (
         <figure class="committee-figure">
-          <picture>
-            <source
-              sizes="(max-width: 900px) 100vw, 720px"
-              srcset={`${webp(data.committeeImage, 640)} 640w, ${webp(data.committeeImage, 1080)} 1080w`}
-              type="image/webp"
-            />
-            <Image
-              alt="Seeker追光者——成员作品照片墙"
-              data-fallback={data.committeeImage}
-              height={579}
-              loading="lazy"
-              src={data.committeeImage}
-              width={1080}
-            />
-          </picture>
+          <Image
+            alt="Seeker追光者——成员作品照片墙"
+            layout="constrained"
+            loading="lazy"
+            src={data.committeeImage}
+          />
         </figure>
       )}
 
@@ -326,17 +286,6 @@ const jsonLd = JSON.stringify({
   } else {
     items.forEach(item => item.classList.add('is-visible'));
   }
-
-  // WebP 变体加载失败（r2.dev 偶发 404）时回退到 JPEG 原图
-  document.querySelectorAll<HTMLImageElement>('.story-page img[data-fallback]').forEach(img => {
-    img.addEventListener('error', () => {
-      if (img.dataset.fallback && img.currentSrc !== img.dataset.fallback) {
-        img.srcset = '';
-        img.sizes = '';
-        img.src = img.dataset.fallback;
-      }
-    });
-  });
 
   // 回到顶部
   const backTop = document.querySelector<HTMLButtonElement>('[data-back-top]');

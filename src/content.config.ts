@@ -53,71 +53,64 @@ const welfare = defineCollection({
 
 const activities = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
-  schema: z.object({
-    /** 活动名，如「时间的故事」 */
-    title: z.string(),
-    /** 本期主题句，如「夕光沉远岸，秋意漫画框」 */
-    subtitle: z.string(),
-    /** 期数名，如「八月篇」 */
-    issue: z.string(),
-    /** 期数时间标注，如「AUGUST 2026」 */
-    period: z.string(),
-    /** 活动卡片 / 页面封面 */
-    cover: z.string(),
-    /** 摘要（SEO / 列表展示用） */
-    excerpt: z.string(),
-    /** 开篇金句 */
-    quote: z.string().optional(),
-    /** 本月组长 / 编辑 */
-    team: z
-      .object({
-        lead: z.string(),
-        editor: z.string(),
-      })
-      .optional(),
-    pubDate: z.coerce.date(),
-    /** 期数排序，越小越早 */
-    order: z.number().default(0),
-    /** 页面模板（当前仅 gallery-story 画廊型） */
-    layout: z.enum(['gallery-story']).default('gallery-story'),
-    /**
-     * 画廊条目：一天多投共用一个日期章节（日期相同即同章）；
-     * images 支持一稿多图（同一作品标题下多张照片）
-     */
-    entries: z.array(
-      z.object({
-        /** 展示日期，如「7月28日」 */
-        date: z.string(),
-        /** 作品名称（不含书名号） */
-        title: z.string(),
-        /** 作者的一句话说明 */
-        caption: z.string(),
-        /** 作者署名（不含 @） */
-        author: z.string(),
-        /** 图片（R2 绝对 URL + 像素尺寸，宽高比预留防 CLS） */
-        images: z
-          .array(
-            z.object({
-              url: z.string(),
-              width: z.number(),
-              height: z.number(),
-            })
-          )
-          .min(1),
-      })
-    ),
-    /** 结尾诗（多行） */
-    poem: z.string().optional(),
-    /** 组委会收尾品牌图 */
-    committeeImage: z.string().optional(),
-    /** 组委会署名 */
-    committee: z
-      .object({
-        name: z.string(),
-        team: z.string(),
-      })
-      .optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      /** 活动名，如「时间的故事」 */
+      title: z.string(),
+      /** 本期主题句，如「夕光沉远岸，秋意漫画框」 */
+      subtitle: z.string(),
+      /** 期数名，如「八月篇」 */
+      issue: z.string(),
+      /** 期数时间标注，如「AUGUST 2026」 */
+      period: z.string(),
+      /** 活动卡片 / 页面封面（本地资产，astro:assets 构建期优化） */
+      cover: image(),
+      /** 摘要（SEO / 列表展示用） */
+      excerpt: z.string(),
+      /** 开篇金句 */
+      quote: z.string().optional(),
+      /** 本月组长 / 编辑 */
+      team: z
+        .object({
+          lead: z.string(),
+          editor: z.string(),
+        })
+        .optional(),
+      pubDate: z.coerce.date(),
+      /** 期数排序，越小越早 */
+      order: z.number().default(0),
+      /** 页面模板（当前仅 gallery-story 画廊型） */
+      layout: z.enum(['gallery-story']).default('gallery-story'),
+      /**
+       * 画廊条目：一天多投共用一个日期章节（日期相同即同章）；
+       * images 支持一稿多图（同一作品标题下多张照片）
+       */
+      entries: z.array(
+        z.object({
+          /** 展示日期，如「7月28日」 */
+          date: z.string(),
+          /** 作品名称（不含书名号） */
+          title: z.string(),
+          /** 作者的一句话说明 */
+          caption: z.string(),
+          /** 作者署名（不含 @） */
+          author: z.string(),
+          /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
+          images: z.array(image()).min(1),
+        })
+      ),
+      /** 结尾诗（多行） */
+      poem: z.string().optional(),
+      /** 组委会收尾品牌图 */
+      committeeImage: image().optional(),
+      /** 组委会署名 */
+      committee: z
+        .object({
+          name: z.string(),
+          team: z.string(),
+        })
+        .optional(),
+    }),
 });
 
 export const collections = { members, welfare, activities };
