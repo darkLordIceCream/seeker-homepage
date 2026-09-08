@@ -10,6 +10,10 @@ import Footer from '../../components/Footer.astro';
 const editions = (await getCollection('activities')).sort(
   (a, b) => b.data.order - a.data.order || b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+/** R2 约定：同名 WebP 副本（_640），卡片封面用小档；版本参数做 cache-busting */
+const IMG_V = 'v20260908a';
+const coverSmall = (url: string) => url.replace(/(\.\w+)$/, `_640.webp?${IMG_V}`);
 ---
 
 <Layout
@@ -39,7 +43,7 @@ const editions = (await getCollection('activities')).sort(
       </header>
 
       <div class="edition-grid">
-        {editions.map(edition => (
+        {editions.map((edition, index) => (
           <a
             aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
             class="edition-card"
@@ -48,9 +52,10 @@ const editions = (await getCollection('activities')).sort(
             <span class="edition-media">
               <span
                 class="edition-img"
-                style={`background-image:url('${edition.data.cover}')`}
+                style={`background-image:url('${coverSmall(edition.data.cover)}')`}
               >
                 <span class="edition-tag">{edition.data.issue}</span>
+                {index === 0 && <span class="edition-latest">最新</span>}
               </span>
             </span>
             <span class="edition-meta">
@@ -236,6 +241,20 @@ const editions = (await getCollection('activities')).sort(
     background: rgba(30, 34, 46, 0.42);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #fff;
+  }
+
+  .edition-latest {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
     font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 11px;
     font-weight: 600;
