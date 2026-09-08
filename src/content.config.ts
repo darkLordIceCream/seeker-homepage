@@ -51,6 +51,20 @@ const welfare = defineCollection({
   }),
 });
 
+/** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片） */
+const activityEntry = z.object({
+  /** 展示日期，如「7月28日」 */
+  date: z.string(),
+  /** 作品名称（不含书名号） */
+  title: z.string(),
+  /** 作者的一句话说明 */
+  caption: z.string(),
+  /** 作者署名（不含 @） */
+  author: z.string(),
+  /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
+  images: z.array(image()).min(1),
+});
+
 const activities = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
   schema: ({ image }) =>
@@ -81,24 +95,7 @@ const activities = defineCollection({
       order: z.number().default(0),
       /** 页面模板（当前仅 gallery-story 画廊型） */
       layout: z.enum(['gallery-story']).default('gallery-story'),
-      /**
-       * 画廊条目：一天多投共用一个日期章节（日期相同即同章）；
-       * images 支持一稿多图（同一作品标题下多张照片）
-       */
-      entries: z.array(
-        z.object({
-          /** 展示日期，如「7月28日」 */
-          date: z.string(),
-          /** 作品名称（不含书名号） */
-          title: z.string(),
-          /** 作者的一句话说明 */
-          caption: z.string(),
-          /** 作者署名（不含 @） */
-          author: z.string(),
-          /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
-          images: z.array(image()).min(1),
-        })
-      ),
+      entries: z.array(activityEntry),
       /** 结尾诗（多行） */
       poem: z.string().optional(),
       /** 组委会收尾品牌图 */
