@@ -188,10 +188,10 @@ const fmtDate = (date: Date) =>
     position: relative;
     width: min(86%, 360px);
     aspect-ratio: 4 / 3.9;
-    background: #fff;
+    background: var(--paper-face);
     padding: 10px 10px 56px;
     border-radius: 6px;
-    box-shadow: 0 14px 38px rgba(76, 79, 105, 0.28);
+    box-shadow: var(--paper-shadow);
     transform: rotate(var(--rot)) translateY(var(--dy));
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -206,7 +206,7 @@ const fmtDate = (date: Date) =>
   .stack-card.active {
     transform: rotate(0deg) translateY(calc(var(--dy) - 18px)) scale(1.05);
     z-index: 10;
-    box-shadow: 0 28px 60px rgba(76, 79, 105, 0.38);
+    box-shadow: var(--paper-shadow-lift);
   }
 
   .stack-card:focus-visible {
@@ -254,7 +254,7 @@ const fmtDate = (date: Date) =>
 
   .stack-meta strong {
     font-size: 15px;
-    color: #3a3f55;
+    color: var(--paper-ink);
     letter-spacing: 0.02em;
     white-space: nowrap;
     overflow: hidden;
@@ -263,7 +263,7 @@ const fmtDate = (date: Date) =>
 
   .stack-meta small {
     font-size: 11px;
-    color: #9093a8;
+    color: var(--paper-sub);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

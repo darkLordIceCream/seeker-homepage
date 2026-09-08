@@ -198,10 +198,10 @@ const editions = (await getCollection('activities')).sort(
   /* 白框相片卡：与首页拍立得同一语言，静态网格排布 */
   .edition-card {
     display: block;
-    background: #fff;
+    background: var(--paper-face);
     padding: 10px 10px 16px;
     border-radius: 6px;
-    box-shadow: 0 10px 28px rgba(76, 79, 105, 0.22);
+    box-shadow: var(--paper-shadow);
     text-decoration: none;
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -211,7 +211,7 @@ const editions = (await getCollection('activities')).sort(
   .edition-card:hover,
   .edition-card:focus-visible {
     transform: translateY(-6px) rotate(-0.6deg);
-    box-shadow: 0 22px 48px rgba(76, 79, 105, 0.32);
+    box-shadow: var(--paper-shadow-lift);
   }
 
   .edition-card:focus-visible {
@@ -280,14 +280,14 @@ const editions = (await getCollection('activities')).sort(
     font-size: 14.5px;
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: #3a3f55;
+    color: var(--paper-ink);
   }
 
   .edition-period {
     font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: #9093a8;
+    color: var(--paper-sub);
   }
 
   .hub-foot {
