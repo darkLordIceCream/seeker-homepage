@@ -594,3 +594,27 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 用户复核第三轮：side 型题注列定位于屏幕约四分之三（栅格 76%/1fr，实测 captionLeft=75vw）
 - 用户复核第四轮：side 照片位固定（列内居中，左缘 312px@1440
   ≈ 整组居中版参考位 300px），题注列起点 = 屏宽 74-75%
+
+## 会话记录（夜间模式拍立得卡片修复，2026-09-08）
+
+### 交付（分支 fix/dark-mode-polish）
+
+- 用户反馈：夜间模式下小组活动区的白色拍立得卡片太刺眼；配色要求继续遵循 Catppuccin 调色板（Latte/Mocha）
+- 根因：三处拍立得/白框相片卡硬编码浅色值（`#fff` 相纸、`#3a3f55`/`#9093a8`
+  文字、Latte 灰阴影），不随主题切换：
+  1. `ActsSection.astro` 首页活动照片堆
+  2. `welfare/index.astro` 图文手记堆叠卡
+  3. `activities/story-of-time.astro` 往期回顾相片卡
+- 修复：global.css 新增界面令牌（沿用 feat-021 令牌模式）——`--paper-face`
+  （相纸）、`--paper-ink/--paper-sub`（卡上文字）、`--paper-shadow(-lift)`（阴影）
+  - Latte（浅色默认）：白相纸 + 原字色 + 原灰阴影（浅色外观零变化）
+  - Mocha（深色）：相纸 Surface0 #313244、标题 Text #cdd6f4、副文字 Subtext0
+    #a6adc8、黑阶阴影（0 18px 44px / lift 0 30px 64px rgba(0,0,0,.5~.55)）
+- 三处组件硬编码值全部替换为令牌；lightbox 白色控件（GalleryStory
+  `.lb-btn`）为暗场 UI 两种主题下都正确，不动
+
+### Evidence
+
+- 浏览器实测（dev
+  4321，1280×800）：深色下首页活动堆/welfare 手记堆/时间的故事往期卡均为 Mocha 相纸，与背景协调、文字可读；切回浅色三处外观与改前一致
+- ./init.sh 全绿：astro check + tsc 0 错误、eslint 0 错 0 警、16 页构建
