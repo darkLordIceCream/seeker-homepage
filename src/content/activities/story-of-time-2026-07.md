@@ -12,7 +12,7 @@ team:
   lead: '嘿嘿嘿'
   editor: '是田田吖'
 pubDate: 2026-07-31
-order: 7
+order: 202607
 layout: gallery-story
 entries:
   - date: '6月28日'

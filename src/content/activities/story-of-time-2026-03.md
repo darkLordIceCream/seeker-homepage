@@ -12,7 +12,7 @@ team:
   lead: '滴歪'
   editor: '是田田吖'
 pubDate: 2026-04-01
-order: 3
+order: 202603
 layout: gallery-story
 entries:
   - date: '2月27日'

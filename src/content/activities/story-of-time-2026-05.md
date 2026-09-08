@@ -12,7 +12,7 @@ team:
   lead: 'BingChen'
   editor: '是田田吖'
 pubDate: 2026-06-01
-order: 5
+order: 202605
 layout: gallery-story
 entries:
   - date: '4月29日'
