@@ -1,8 +1,11 @@
 ---
 // 小组活动模板：时间的故事 · 画廊型月刊页
-// 居中细列头版 → 宽幅封面 → 初心正文列 → 日期章节画廊（照片为主 + 墙标签）→ 诗/往期/组委会
+// 居中细列头版 → 宽幅封面 → 初心正文列 → 日期章节画廊 → 尾声（诗/双跳转分页/组委会）
 // 与 welfare 三模板同一版式家族（Catppuccin 令牌 + Archivo 元信息 + 宋体标题）
 // 由 /activities/[slug].astro 按 frontmatter layout 分发
+//
+// 图片策略：R2 上有同名 WebP 双档（<name>_640.webp / <name>_1080.webp，q80 批量转码），
+// <picture> 提供 WebP srcset + JPEG 原图回退；lightbus 点击看原图（无依赖，渐进增强）
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
@@ -49,12 +52,9 @@ for (const entry of data.entries) {
   }
 }
 
-/** 相邻期数：优先下一期，无则取上一期（仅一期时不渲染） */
-const adjacent =
-  others.filter(o => o.data.order > data.order).sort((a, b) => a.data.order - b.data.order)[0] ??
-  others.filter(o => o.data.order < data.order).sort((a, b) => b.data.order - a.data.order)[0];
-const adjacentLabel =
-  adjacent && adjacent.data.order < data.order ? '下一期 NEXT ISSUE' : '往期 PREVIOUS ISSUE';
+/** 期数分页：左=下一期（order 更大，无则敬请期待），右=上一期（order 更小，无则已是最早一期） */
+const newer = others.filter(o => o.data.order > data.order).sort((a, b) => a.data.order - b.data.order)[0];
+const older = others.filter(o => o.data.order < data.order).sort((a, b) => b.data.order - a.data.order)[0];
 
 /** meta 行：间隔点挂在各项末尾，折行时行首不会出现孤立「·」 */
 const metaItems = [
@@ -65,7 +65,7 @@ const metaItems = [
 
 /**
  * 条目排版分型（参考哈苏大师赛/马格南画册的图文节奏）：
- * - side：竖幅/方幅（h ≥ 1.2w）——照片居左大幅（≤84vh），说明挂右侧 sticky 栏
+ * - side：竖幅/方幅（h ≥ 1.2w）——照片贴内容左缘大幅（≤84vh），说明挂右侧 sticky 栏
  * - stack：横幅——照片突破版心通栏居中，说明在下方居中（上下中心对称）
  * 一稿多图按首图画幅定型
  */
@@ -74,6 +74,31 @@ const isSide = (entry: Entry) => {
   if (!first) {return true;}
   return first.height * 5 >= first.width * 6;
 };
+
+/**
+ * R2 约定：同名 WebP 双档（_640 / _1080），由 URL 推导。
+ * 版本查询参数用于 cache-busting：图片更新重传后旧边缘缓存的 404/旧图不会污染新 URL
+ */
+const IMG_V = 'v20260908a';
+const webp = (url: string, w: 640 | 1080) => url.replace(/(\.\w+)$/, `_${w}.webp?${IMG_V}`);
+
+/** srcset sizes：side 竖图约 640px 显示宽，stack 通栏约 1080px，多图 2-up 每张约 640px */
+const sizesFor = (entry: Entry) => {
+  if (isSide(entry) || entry.images.length > 1) {return '(max-width: 900px) 100vw, 640px';}
+  return '(max-width: 900px) 100vw, 1080px';
+};
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: `${data.title} · ${data.issue}`,
+  description: data.excerpt,
+  datePublished: data.pubDate.toISOString(),
+  image: data.cover,
+  numberOfItems: data.entries.length,
+  author: { '@type': 'Organization', name: 'Seeker追光者' },
+  publisher: { '@type': 'Organization', name: 'Seeker追光者' },
+});
 ---
 
 <Layout
@@ -84,6 +109,8 @@ const isSide = (entry: Entry) => {
   <Navigation />
 
   <main class="story-page" id="main-content">
+    <!-- eslint-disable-next-line astro/no-set-html-directive -->
+    <script is:inline set:html={jsonLd} type="application/ld+json" />
     <div aria-hidden="true" class="story-progress"></div>
 
     <header class="story-hero">
@@ -104,14 +131,22 @@ const isSide = (entry: Entry) => {
     </header>
 
     <figure class="story-cover">
-      <Image
-        alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
-        fetchpriority="high"
-        height={459}
-        loading="eager"
-        src={data.cover}
-        width={1080}
-      />
+      <picture>
+        <source
+          sizes="(max-width: 900px) 100vw, 90vw"
+          srcset={`${webp(data.cover, 640)} 640w, ${webp(data.cover, 1080)} 1080w`}
+          type="image/webp"
+        />
+        <Image
+          alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
+          data-fallback={data.cover}
+          fetchpriority="high"
+          height={459}
+          loading="eager"
+          src={data.cover}
+          width={1080}
+        />
+      </picture>
     </figure>
 
     <div class="story-intro">
@@ -128,16 +163,35 @@ const isSide = (entry: Entry) => {
             <span class="chapter-en">{group.dateEn}</span>
           </h2>
           {group.items.map(entry => (
-            <figure class:list={['story-item', isSide(entry) ? 'story-item--side' : 'story-item--stack']}>
-              <span class="item-media">
-                {entry.images.map(img => (
-                  <Image
-                    alt={`《${entry.title}》——${entry.author}作品`}
-                    height={img.height}
-                    loading="lazy"
-                    src={img.url}
-                    width={img.width}
-                  />
+            <figure class:list={['story-item', { 'story-item--side': isSide(entry), 'story-item--stack': !isSide(entry), 'story-item--multi': entry.images.length > 1 }]}>
+              <span class="item-media" style={`--cols: ${entry.images.length}`}>
+                {entry.images.map((img, j) => (
+                  <button
+                    aria-label={`查看大图：《${entry.title}》`}
+                    class="item-shutter"
+                    data-author={entry.author}
+                    data-full={img.url}
+                    data-title={entry.title}
+                    type="button"
+                  >
+                    <picture>
+                      <source
+                        sizes={sizesFor(entry)}
+                        srcset={`${webp(img.url, 640)} 640w, ${webp(img.url, 1080)} 1080w`}
+                        type="image/webp"
+                      />
+                      <Image
+                        alt={entry.images.length > 1
+                          ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
+                          : `《${entry.title}》——${entry.author}作品`}
+                        data-fallback={img.url}
+                        height={img.height}
+                        loading="lazy"
+                        src={img.url}
+                        width={img.width}
+                      />
+                    </picture>
+                  </button>
                 ))}
               </span>
               <figcaption class="item-label">
@@ -154,29 +208,23 @@ const isSide = (entry: Entry) => {
     <section aria-label="尾声" class="story-coda">
       {data.poem && <blockquote class="story-poem">{data.poem}</blockquote>}
 
-      {data.pastIssues && data.pastIssues.length > 0 && (
-        <div class="past-issues">
-          <p class="coda-kicker">往期回顾 · PAST ISSUES</p>
-          <ul class="past-list">
-            {data.pastIssues.map(issue => (
-              <li class="past-chip">
-                <b>{issue.name}</b>
-                <span>{issue.line}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {data.committeeImage && (
         <figure class="committee-figure">
-          <Image
-            alt="Seeker追光者——成员作品照片墙"
-            height={579}
-            loading="lazy"
-            src={data.committeeImage}
-            width={1080}
-          />
+          <picture>
+            <source
+              sizes="(max-width: 900px) 100vw, 720px"
+              srcset={`${webp(data.committeeImage, 640)} 640w, ${webp(data.committeeImage, 1080)} 1080w`}
+              type="image/webp"
+            />
+            <Image
+              alt="Seeker追光者——成员作品照片墙"
+              data-fallback={data.committeeImage}
+              height={579}
+              loading="lazy"
+              src={data.committeeImage}
+              width={1080}
+            />
+          </picture>
         </figure>
       )}
 
@@ -187,21 +235,64 @@ const isSide = (entry: Entry) => {
         </footer>
       )}
 
-      {adjacent && (
-        <a class="adjacent-card" href={`/activities/${adjacent.id}/`}>
-          <span class="adjacent-kicker">{adjacentLabel}</span>
-          <span class="adjacent-title">
-            {adjacent.data.title} · {adjacent.data.issue}
-          </span>
-          <span class="adjacent-sub">{adjacent.data.subtitle}</span>
-        </a>
-      )}
+      <nav aria-label="期数跳转" class="edition-pager">
+        <div class="pager-slot">
+          {newer ? (
+            <a class="pager-card" href={`/activities/${newer.id}/`}>
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">{newer.data.title} · {newer.data.issue}</strong>
+              <span class="pager-sub">{newer.data.subtitle}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty">
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">敬请期待</strong>
+              <span class="pager-sub">新一期筹备中</span>
+            </div>
+          )}
+        </div>
+        <div class="pager-slot">
+          {older ? (
+            <a class="pager-card pager-right" href={`/activities/${older.id}/`}>
+              <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
+              <strong class="pager-title">{older.data.title} · {older.data.issue}</strong>
+              <span class="pager-sub">{older.data.subtitle}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty pager-right">
+              <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
+              <strong class="pager-title">已是最早一期</strong>
+            </div>
+          )}
+        </div>
+      </nav>
     </section>
 
     <footer class="story-foot">
-      <a class="back-link" href="/#activities">← 返回小组活动</a>
+      <a class="back-link" href="/activities/story-of-time/">← 返回「时间的故事」</a>
     </footer>
+
+    <button aria-label="回到顶部" class="back-top" data-back-top hidden>
+      <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></svg>
+    </button>
   </main>
+
+  <div aria-label="查看大图" aria-modal="true" class="lightbox" hidden role="dialog">
+    <button aria-label="关闭大图" class="lb-btn lb-close" type="button">
+      <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+    </button>
+    <button aria-label="下一张" class="lb-btn lb-next" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+    <figure class="lb-stage">
+      <img alt="" class="lb-img" decoding="async" />
+      <figcaption class="lb-cap"></figcaption>
+    </figure>
+    <button aria-label="上一张" class="lb-btn lb-prev" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <p aria-live="polite" class="lb-count"></p>
+  </div>
 
   <Footer />
 </Layout>
@@ -235,6 +326,95 @@ const isSide = (entry: Entry) => {
   } else {
     items.forEach(item => item.classList.add('is-visible'));
   }
+
+  // WebP 变体加载失败（r2.dev 偶发 404）时回退到 JPEG 原图
+  document.querySelectorAll<HTMLImageElement>('.story-page img[data-fallback]').forEach(img => {
+    img.addEventListener('error', () => {
+      if (img.dataset.fallback && img.currentSrc !== img.dataset.fallback) {
+        img.srcset = '';
+        img.sizes = '';
+        img.src = img.dataset.fallback;
+      }
+    });
+  });
+
+  // 回到顶部
+  const backTop = document.querySelector<HTMLButtonElement>('[data-back-top]');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const onScrollTop = () => {
+    if (!backTop) {return;}
+    backTop.hidden = window.scrollY <= window.innerHeight * 1.5;
+  };
+  window.addEventListener('scroll', onScrollTop, { passive: true });
+  onScrollTop();
+  backTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  });
+
+  // Lightbox 看大图：点击照片全屏浏览，Esc 关闭、←→ 切换（渐进增强，无依赖）
+  const lightbox = document.querySelector<HTMLElement>('.lightbox');
+  const shutters = [...document.querySelectorAll<HTMLButtonElement>('.item-shutter')];
+  const slides = shutters.map(btn => ({
+    full: btn.dataset.full ?? '',
+    title: btn.dataset.title ?? '',
+    author: btn.dataset.author ?? '',
+  }));
+  let current = -1;
+  let lastFocus: HTMLElement | null = null;
+
+  const renderSlide = () => {
+    const img = lightbox?.querySelector<HTMLImageElement>('.lb-img');
+    const cap = lightbox?.querySelector<HTMLElement>('.lb-cap');
+    const count = lightbox?.querySelector<HTMLElement>('.lb-count');
+    const slide = slides[current];
+    if (!img || !cap || !count || !slide) {return;}
+    img.src = slide.full;
+    img.alt = `《${slide.title}》——${slide.author}作品`;
+    cap.textContent = `«${slide.title}» @${slide.author}`;
+    count.textContent = `${current + 1} / ${slides.length}`;
+  };
+
+  const openLightbox = (index: number) => {
+    if (!lightbox) {return;}
+    current = index;
+    renderSlide();
+    lastFocus = document.activeElement as HTMLElement | null;
+    // 锁定 html 滚动（overflow 方案天然保留滚动位置，body fixed 会与全局 smooth 滚动互扰）
+    document.documentElement.style.overflow = 'hidden';
+    lightbox.hidden = false;
+    lightbox.querySelector<HTMLElement>('.lb-close')?.focus();
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) {return;}
+    lightbox.hidden = true;
+    document.documentElement.style.overflow = '';
+    lastFocus?.focus();
+    current = -1;
+  };
+
+  const step = (delta: number) => {
+    if (current < 0 || slides.length === 0) {return;}
+    current = (current + delta + slides.length) % slides.length;
+    renderSlide();
+  };
+
+  shutters.forEach((btn, i) => {
+    btn.addEventListener('click', () => openLightbox(i));
+  });
+  lightbox?.querySelector('.lb-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.lb-prev')?.addEventListener('click', () => step(-1));
+  lightbox?.querySelector('.lb-next')?.addEventListener('click', () => step(1));
+  // 点背景关闭（点在 stage 图片/按钮上不关）
+  lightbox?.addEventListener('click', e => {
+    if (e.target === lightbox) {closeLightbox();}
+  });
+  document.addEventListener('keydown', e => {
+    if (current < 0) {return;}
+    if (e.key === 'Escape') {closeLightbox();}
+    else if (e.key === 'ArrowRight') {step(1);}
+    else if (e.key === 'ArrowLeft') {step(-1);}
+  });
 </script>
 
 <style>
@@ -405,7 +585,7 @@ const isSide = (entry: Entry) => {
 
   .chapter-en {
     font-family: 'Archivo', sans-serif;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.3em;
     text-indent: 0.3em;
@@ -432,10 +612,25 @@ const isSide = (entry: Entry) => {
 
   .item-media :global(img) {
     display: block;
-    flex: 0 1 auto;
-    min-width: 0;
     width: auto;
     height: auto;
+  }
+
+  /* 照片快门：覆盖图片的键盘可达按钮 */
+  .item-shutter {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    min-width: 0;
+    line-height: 0;
+  }
+
+  .item-shutter:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   .item-title {
@@ -464,12 +659,16 @@ const isSide = (entry: Entry) => {
     color: var(--grad-a);
   }
 
-  /* —— side 型：竖幅/方幅——照片居左大幅，说明挂右侧 sticky 栏（哈苏大师赛式侧标签） —— */
+  /* —— side 型：竖幅/方幅——照片贴内容左缘大幅，说明挂右侧 sticky 栏 —— */
   .story-item--side {
     display: grid;
     grid-template-columns: minmax(0, 1fr) clamp(230px, 22vw, 300px);
     gap: clamp(24px, 3.5vw, 48px);
     align-items: start;
+  }
+
+  .story-item--side .item-media {
+    justify-content: flex-start;
   }
 
   .story-item--side .item-media :global(img) {
@@ -501,6 +700,18 @@ const isSide = (entry: Entry) => {
     margin: 20px auto 0;
   }
 
+  /* —— 一稿多图：按张数等宽并排（2 图即 2-up） —— */
+  .story-item--multi .item-media {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .story-item--multi .item-media :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
   /* 说明标签：默认（side 型）左对齐 */
   .item-label {
     display: flex;
@@ -525,46 +736,6 @@ const isSide = (entry: Entry) => {
     white-space: pre-line;
     word-spacing: 0.2em;
     color: var(--muted-foreground);
-  }
-
-  .coda-kicker {
-    margin: 3em 0 18px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-indent: 0.28em;
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--grad-a);
-  }
-
-  .past-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0;
-    list-style: none;
-  }
-
-  .past-chip {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 7px 16px;
-    border: 1px solid var(--divider);
-    border-radius: 999px;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: var(--muted-foreground);
-  }
-
-  .past-chip b {
-    font-weight: 700;
-    color: var(--foreground);
   }
 
   .committee-figure {
@@ -600,54 +771,71 @@ const isSide = (entry: Entry) => {
     color: var(--muted-foreground);
   }
 
-  /* 相邻期数：左竖线卡（沿用 magnum 语义） */
-  .adjacent-card {
-    display: block;
-    max-width: 740px;
-    margin: 3.5em auto 0;
-    padding: 6px 0 22px 24px;
-    border-left: 2px solid var(--divider);
-    text-decoration: none;
+  /* —— 期数分页：左=下一期，右=上一期 —— */
+  .edition-pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 980px;
+    margin: 4em auto 0;
   }
 
-  .adjacent-kicker {
-    display: block;
-    margin-bottom: 12px;
+  .pager-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 20px 16px;
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  a.pager-card:hover {
+    border-color: var(--grad-a);
+  }
+
+  a.pager-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+
+  .pager-card.is-empty {
+    opacity: 0.65;
+  }
+
+  .pager-right {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .pager-kicker {
     font-family: 'Archivo', sans-serif;
     font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--grad-a);
   }
 
-  .adjacent-title {
-    display: block;
+  .pager-title {
     font-family: var(--font-serif-song);
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     line-height: 1.5;
     color: var(--foreground);
-    transition: color 0.2s ease;
   }
 
-  .adjacent-sub {
-    display: block;
-    margin-top: 8px;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    color: var(--muted-foreground);
-  }
-
-  .adjacent-card:hover .adjacent-title {
+  a.pager-card:hover .pager-title {
     color: var(--grad-a);
   }
 
-  .adjacent-card:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: 4px;
-    border-radius: 4px;
+  .pager-sub {
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
   }
 
   /* —— 尾部 —— */
@@ -675,6 +863,171 @@ const isSide = (entry: Entry) => {
     outline: 2px solid var(--grad-a);
     outline-offset: 4px;
     border-radius: 4px;
+  }
+
+  /* —— 回到顶部 —— */
+  .back-top {
+    position: fixed;
+    right: 22px;
+    bottom: 26px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    /* 玻璃底：浅色照片上也可读 */
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .back-top:hover {
+    color: var(--grad-a);
+  }
+
+  .back-top:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  /* —— Lightbox —— */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 沉浸式深底：与主题无关，看图优先 */
+    background: rgba(12, 12, 18, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    animation: lb-fade 0.25s ease-out;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .lb-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 64px;
+    max-width: 100%;
+  }
+
+  .lb-img {
+    display: block;
+    max-width: min(92vw, 1400px);
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  .lb-cap {
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.82);
+    text-align: center;
+  }
+
+  .lb-count {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lb-btn {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .lb-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .lb-btn:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  .lb-close {
+    top: 18px;
+    right: 18px;
+  }
+
+  .lb-prev {
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-next {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .lb-prev,
+    .lb-next {
+      top: auto;
+      bottom: 18px;
+      transform: none;
+    }
+
+    .lb-stage {
+      margin: 0 12px;
+    }
+
+    .lb-count {
+      top: 26px;
+    }
   }
 
   /* —— 条目入场（Scroll-Triggered Storytelling）—— */
@@ -764,6 +1117,21 @@ const isSide = (entry: Entry) => {
 
     .meta-dot {
       display: none;
+    }
+
+    .edition-pager {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    /* 移动端多图改单列，避免 2-up 过窄 */
+    .story-item--multi .item-media {
+      grid-template-columns: 1fr;
+    }
+
+    .pager-right {
+      text-align: left;
+      align-items: flex-start;
     }
   }
 </style>

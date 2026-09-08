@@ -108,8 +108,6 @@ const activities = defineCollection({
     ),
     /** 结尾诗（多行） */
     poem: z.string().optional(),
-    /** 往期篇目（站外，仅展示） */
-    pastIssues: z.array(z.object({ name: z.string(), line: z.string() })).optional(),
     /** 组委会收尾品牌图 */
     committeeImage: z.string().optional(),
     /** 组委会署名 */
