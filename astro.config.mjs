@@ -7,6 +7,9 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  // og:image 等需要绝对 URL 的场合使用
+  site: 'https://seeker-homepage.pages.dev',
+
   server: {
     host: '0.0.0.0',
     port: 4321,

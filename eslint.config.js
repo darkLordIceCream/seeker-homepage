@@ -223,4 +223,12 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
+
+  // 《时间的故事》画廊模板：set:html 仅用于输出构建期常量（JSON-LD 结构化数据，非用户输入）
+  {
+    files: ['src/components/activities/GalleryStory.astro'],
+    rules: {
+      'astro/no-set-html-directive': 'off',
+    },
+  },
 ];
