@@ -12,10 +12,10 @@ const editions = (await getCollection('activities')).sort(
   (a, b) => b.data.order - a.data.order || b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-/** 按年份分组（取各期 pubDate 年份），年份倒序——每年一个独立区域 */
+/** 按年份分组：年份取 order（全局时序 = 覆盖年×100+月，如 2021 十二月篇发布于 2022-01 也归 2021），年份倒序 */
 const years: { year: number; items: typeof editions }[] = [];
 for (const edition of editions) {
-  const year = edition.data.pubDate.getFullYear();
+  const year = Math.floor(edition.data.order / 100);
   const group = years.find(x => x.year === year);
   if (group) {
     group.items.push(edition);

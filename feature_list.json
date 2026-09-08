@@ -142,7 +142,7 @@
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
       "status": "in-progress",
-      "evidence": "《时间的故事》2026 年 1-8 月全部上线（分支 feat/story-of-time）：/activities/story-of-time/ 活动主页（介绍 + 8 期入口卡片 + 最新角标）+ activities collection（image() 本地资产 schema）+ /activities/[slug] 按 layout 分发 + GalleryStory 画廊模板（side/stack 画幅分型、竖图贴左缘+右侧 sticky 说明栏、横幅通栏、日期章节、lightbox 看大图、期数双跳转分页、阅读进度条、reduced-motion）；221 张展示图入仓 src/assets 经 astro:assets 构建期优化（WebP 4 档 srcset + CLS 预留，同源分发免疫 r2.dev 抖动），单页图重 7MB→2-5MB；R2 保留原图备份/大文件/welfare，并已绑定自定义域 r2.seeker追光者.club（welfare 等 363 个 URL 已切换）；204 条目逐页断言一致；judge 九轮最终 overall pass；./init.sh 0 错 0 警（16 页）；剩余：一种关注/线下活动等其余活动条目"
+      "evidence": "《时间的故事》2021-2026 全部 64 期上线（分支 feat/story-of-time-2025）：/activities/story-of-time/ 活动主页（介绍 + 按年份分组入口卡：2026=8/2025=11/2024=10/2023=12/2022=12/2021=11）+ activities collection（image() 本地资产 schema，date/title 可选）+ GalleryStory 画廊模板（side/stack 分型、跨年期数分页、lightbox、进度条、reduced-motion）；1719+221 张展示图入 src/assets 同源 astro:assets 优化；62 期逐页断言条目数与原文一致、0 坏图；R2 绑定自定义域 r2.seeker追光者.club（welfare 等 363 个 URL 已切换）；init.sh 0 错 0 警（72 页）；分支内提交未合并（等用户晨起复核）；剩余：一种关注/线下活动等其余活动条目"
     },
     {
       "id": "feat-019",
