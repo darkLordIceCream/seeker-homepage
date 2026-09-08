@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·十二月篇 | 澹然冬日影，此处极可人'
-issue: '【Seeker 时间的故事】·十二月篇 | 澹然冬日影，此处极可人'
+subtitle: '澹然冬日影，此处极可人'
+issue: '十二月篇'
 period: 'DECEMBER 2022'
 cover: ../../assets/activities/story-of-time-2022-12/cover.jpg
 excerpt: '《时间的故事》十二月篇：。29 幅作品，收录组员们的时光片段。'

@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·二月篇 | 爆竹除旧岁，瑞雪变青竹'
-issue: '【Seeker 时间的故事】·二月篇 | 爆竹除旧岁，瑞雪变青竹'
+subtitle: '爆竹除旧岁，瑞雪变青竹'
+issue: '二月篇'
 period: 'FEBRUARY 2023'
 cover: ../../assets/activities/story-of-time-2023-02/cover.jpg
 excerpt: '《时间的故事》二月篇：。30 幅作品，收录组员们的时光片段。'

@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】· 十一月篇 | “北方风与雪，南方云和月，你我共赏”'
-issue: '【Seeker 时间的故事】· 十一月篇 | “北方风与雪，南方云和月，你我共赏”'
+subtitle: '“北方风与雪，南方云和月，你我共赏”'
+issue: '十一月篇'
 period: 'NOVEMBER 2021'
 cover: ../../assets/activities/story-of-time-2021-11/cover.jpg
 excerpt: '《时间的故事》十一月篇：。29 幅作品，收录组员们的时光片段。'

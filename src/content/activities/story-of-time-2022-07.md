@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·七月篇 | 大风起，听星河'
-issue: '【Seeker 时间的故事】·七月篇 | 大风起，听星河'
+subtitle: '大风起，听星河'
+issue: '七月篇'
 period: 'JULY 2022'
 cover: ../../assets/activities/story-of-time-2022-07/cover.jpg
 excerpt: '《时间的故事》七月篇：。30 幅作品，收录组员们的时光片段。'

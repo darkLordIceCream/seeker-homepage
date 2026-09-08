@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·三月篇 | 流霞山明，春风唱行'
-issue: '【Seeker 时间的故事】·三月篇 | 流霞山明，春风唱行'
+subtitle: '流霞山明，春风唱行'
+issue: '三月篇'
 period: 'MARCH 2023'
 cover: ../../assets/activities/story-of-time-2023-03/cover.jpg
 excerpt: '《时间的故事》三月篇：。29 幅作品，收录组员们的时光片段。'

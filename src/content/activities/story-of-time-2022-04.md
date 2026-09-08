@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·四月篇 | 真实高于月亮'
-issue: '【Seeker 时间的故事】·四月篇 | 真实高于月亮'
+subtitle: '真实高于月亮'
+issue: '四月篇'
 period: 'APRIL 2022'
 cover: ../../assets/activities/story-of-time-2022-04/cover.jpg
 excerpt: '《时间的故事》四月篇：。29 幅作品，收录组员们的时光片段。'

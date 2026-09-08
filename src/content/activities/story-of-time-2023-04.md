@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·四月篇 | 春风夏雨，日月同天'
-issue: '【Seeker 时间的故事】·四月篇 | 春风夏雨，日月同天'
+subtitle: '春风夏雨，日月同天'
+issue: '四月篇'
 period: 'APRIL 2023'
 cover: ../../assets/activities/story-of-time-2023-04/cover.jpg
 excerpt: '《时间的故事》四月篇：。30 幅作品，收录组员们的时光片段。'

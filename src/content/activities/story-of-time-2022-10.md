@@ -1,7 +1,7 @@
 ---
 title: 时间的故事
-subtitle: '【Seeker 时间的故事】·十月篇 | 时光纹理，漫漫旅途'
-issue: '【Seeker 时间的故事】·十月篇 | 时光纹理，漫漫旅途'
+subtitle: '时光纹理，漫漫旅途'
+issue: '十月篇'
 period: 'OCTOBER 2022'
 cover: ../../assets/activities/story-of-time-2022-10/cover.jpg
 excerpt: '《时间的故事》十月篇：。30 幅作品，收录组员们的时光片段。'
