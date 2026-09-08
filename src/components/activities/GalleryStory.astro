@@ -1,0 +1,1116 @@
+---
+// 小组活动模板：时间的故事 · 画廊型月刊页
+// 居中细列头版 → 宽幅封面 → 初心正文列 → 日期章节画廊 → 尾声（诗/双跳转分页/组委会）
+// 与 welfare 三模板同一版式家族（Catppuccin 令牌 + Archivo 元信息 + 宋体标题）
+// 由 /activities/[slug].astro 按 frontmatter layout 分发
+//
+// 图片策略：R2 上有同名 WebP 双档（<name>_640.webp / <name>_1080.webp，q80 批量转码），
+// <picture> 提供 WebP srcset + JPEG 原图回退；lightbus 点击看原图（无依赖，渐进增强）
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../Navigation.astro';
+import Footer from '../Footer.astro';
+
+interface Props {
+  article: import('astro:content').CollectionEntry<'activities'>;
+  others: import('astro:content').CollectionEntry<'activities'>[];
+}
+
+const { article, others } = Astro.props;
+const { data } = article;
+const { Content } = await render(article);
+
+const fmtDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(data.pubDate);
+
+/** 「7月28日」→「JULY 28」（日期章节英文标注） */
+const MONTHS = [
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+] as const;
+
+const enDate = (d: string) => {
+  const m = d.match(/^(\d{1,2})月(\d{1,2})日$/);
+  if (!m) {return d;}
+  const month = MONTHS[Number(m[1]) - 1];
+  return month ? `${month} ${m[2]}` : d;
+};
+
+/** 连续同日条目归入同一日期章节（原文设计：日期仅在变化时显示） */
+type Entry = Props['article']['data']['entries'][number];
+const groups: { date: string; dateEn: string; items: Entry[] }[] = [];
+for (const entry of data.entries) {
+  const last = groups.at(-1);
+  if (last && last.date === entry.date) {
+    last.items.push(entry);
+  } else {
+    groups.push({ date: entry.date, dateEn: enDate(entry.date), items: [entry] });
+  }
+}
+
+/** 期数分页：左=下一期（order 更大，无则敬请期待），右=上一期（order 更小，无则已是最早一期） */
+const newer = others.filter(o => o.data.order > data.order).sort((a, b) => a.data.order - b.data.order)[0];
+const older = others.filter(o => o.data.order < data.order).sort((a, b) => b.data.order - a.data.order)[0];
+
+/** meta 行：间隔点挂在各项末尾，折行时行首不会出现孤立「·」 */
+const metaItems = [
+  data.period,
+  ...(data.team ? [`本月组长 ${data.team.lead}`, `本月编辑 ${data.team.editor}`] : []),
+  fmtDate,
+];
+
+/**
+ * 条目排版分型（参考哈苏大师赛/马格南画册的图文节奏）：
+ * - side：竖幅/方幅（h ≥ 1.2w）——照片贴内容左缘大幅（≤84vh），说明挂右侧 sticky 栏
+ * - stack：横幅——照片突破版心通栏居中，说明在下方居中（上下中心对称）
+ * 一稿多图按首图画幅定型
+ */
+const isSide = (entry: Entry) => {
+  const first = entry.images.at(0);
+  if (!first) {return true;}
+  return first.height * 5 >= first.width * 6;
+};
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: `${data.title} · ${data.issue}`,
+  description: data.excerpt,
+  datePublished: data.pubDate.toISOString(),
+  image: data.cover.src,
+  numberOfItems: data.entries.length,
+  author: { '@type': 'Organization', name: 'Seeker追光者' },
+  publisher: { '@type': 'Organization', name: 'Seeker追光者' },
+});
+---
+
+<Layout
+  description={data.excerpt}
+  image={new URL(data.cover.src, Astro.site).toString()}
+  title={`${data.title} · ${data.issue} | Seeker追光者`}
+>
+  <Navigation />
+
+  <main class="story-page" id="main-content">
+    <!-- eslint-disable-next-line astro/no-set-html-directive -->
+    <script is:inline set:html={jsonLd} type="application/ld+json" />
+    <div aria-hidden="true" class="story-progress"></div>
+
+    <header class="story-hero">
+      <p class="hero-kicker">SEEKER · STORY OF TIME</p>
+      <h1 class="hero-title">{data.title} <span class="hero-issue">· {data.issue}</span></h1>
+      <p class="hero-dek">{data.subtitle}</p>
+      <div class="hero-meta">
+        {metaItems.map((text, i) => (
+          <span class="meta-item">
+            {text}
+            {i < metaItems.length - 1 && (
+              <span aria-hidden="true" class="meta-dot">·</span>
+            )}
+          </span>
+        ))}
+      </div>
+      {data.quote && <p class="hero-quote">「{data.quote}」</p>}
+    </header>
+
+    <figure class="story-cover">
+      <Image
+        alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
+        fetchpriority="high"
+        layout="full-width"
+        loading="eager"
+        src={data.cover}
+      />
+    </figure>
+
+    <div class="story-intro">
+      <div class="story-prose">
+        <Content />
+      </div>
+    </div>
+
+    <section aria-label="本期作品" class="story-gallery">
+      {groups.map(group => (
+        <div class="date-chapter">
+          <h2 class="chapter-divider">
+            <span class="chapter-zh">{group.date}</span>
+            <span class="chapter-en">{group.dateEn}</span>
+          </h2>
+          {group.items.map(entry => (
+            <figure class:list={['story-item', { 'story-item--side': isSide(entry), 'story-item--stack': !isSide(entry), 'story-item--multi': entry.images.length > 1 }]}>
+              <span class="item-media" style={`--cols: ${entry.images.length}`}>
+                {entry.images.map((img, j) => (
+                  <button
+                    aria-label={`查看大图：《${entry.title}》`}
+                    class="item-shutter"
+                    data-author={entry.author}
+                    data-full={img.src}
+                    data-title={entry.title}
+                    type="button"
+                  >
+                    <Image
+                      alt={entry.images.length > 1
+                        ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
+                        : `《${entry.title}》——${entry.author}作品`}
+                      layout="constrained"
+                      loading="lazy"
+                      src={img}
+                    />
+                  </button>
+                ))}
+              </span>
+              <figcaption class="item-label">
+                <span class="item-title">«{entry.title}»</span>
+                <p class="item-caption">{entry.caption}</p>
+                <span class="item-author">@{entry.author}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      ))}
+    </section>
+
+    <section aria-label="尾声" class="story-coda">
+      <div aria-hidden="true" class="coda-divider">
+        <span class="coda-diamond"></span>
+      </div>
+      {data.poem && <blockquote class="story-poem">{data.poem}</blockquote>}
+
+      {data.committeeImage && (
+        <figure class="committee-figure">
+          <Image
+            alt="Seeker追光者——成员作品照片墙"
+            layout="constrained"
+            loading="lazy"
+            src={data.committeeImage}
+          />
+        </figure>
+      )}
+
+      {data.committee && (
+        <footer class="committee-credit">
+          <p class="credit-name">{data.committee.name}</p>
+          <p class="credit-team">策划团队 {data.committee.team}</p>
+        </footer>
+      )}
+
+      <nav aria-label="期数跳转" class="edition-pager">
+        <div class="pager-slot">
+          {older ? (
+            <a class="pager-card" href={`/activities/${older.id}/`}>
+              <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
+              <strong class="pager-title">{older.data.title} · {older.data.issue}</strong>
+              <span class="pager-sub">{older.data.subtitle}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty">
+              <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
+              <strong class="pager-title">已是最早一期</strong>
+            </div>
+          )}
+        </div>
+        <div class="pager-slot">
+          {newer ? (
+            <a class="pager-card pager-right" href={`/activities/${newer.id}/`}>
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">{newer.data.title} · {newer.data.issue}</strong>
+              <span class="pager-sub">{newer.data.subtitle}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty pager-right">
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">敬请期待</strong>
+              <span class="pager-sub">新一期筹备中</span>
+            </div>
+          )}
+        </div>
+      </nav>
+    </section>
+
+    <footer class="story-foot">
+      <a class="back-link" href="/activities/story-of-time/">← 返回「时间的故事」</a>
+    </footer>
+
+    <button aria-label="回到顶部" class="back-top" data-back-top hidden>
+      <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></svg>
+    </button>
+  </main>
+
+  <div aria-label="查看大图" aria-modal="true" class="lightbox" hidden role="dialog">
+    <button aria-label="关闭大图" class="lb-btn lb-close" type="button">
+      <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+    </button>
+    <button aria-label="下一张" class="lb-btn lb-next" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+    <figure class="lb-stage">
+      <img alt="" class="lb-img" decoding="async" />
+      <figcaption class="lb-cap"></figcaption>
+    </figure>
+    <button aria-label="上一张" class="lb-btn lb-prev" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <p aria-live="polite" class="lb-count"></p>
+  </div>
+
+  <Footer />
+</Layout>
+
+<script>
+  // 阅读进度条：scroll 驱动 scaleX（长画廊页的进度指示）
+  const bar = document.querySelector<HTMLElement>('.story-progress');
+  const onScroll = () => {
+    if (!bar) {return;}
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty('--p', String(max > 0 ? window.scrollY / max : 0));
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // 条目入场：进入视口一次后定格为最终态（无 IO 或 reduced-motion 时直接可见）
+  const items = document.querySelectorAll('.story-item');
+  if ('IntersectionObserver' in window) {
+    const reveal = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            reveal.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    items.forEach(item => reveal.observe(item));
+  } else {
+    items.forEach(item => item.classList.add('is-visible'));
+  }
+
+  // 回到顶部
+  const backTop = document.querySelector<HTMLButtonElement>('[data-back-top]');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const onScrollTop = () => {
+    if (!backTop) {return;}
+    backTop.hidden = window.scrollY <= window.innerHeight * 1.5;
+  };
+  window.addEventListener('scroll', onScrollTop, { passive: true });
+  onScrollTop();
+  backTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  });
+
+  // Lightbox 看大图：点击照片全屏浏览，Esc 关闭、←→ 切换（渐进增强，无依赖）
+  const lightbox = document.querySelector<HTMLElement>('.lightbox');
+  const shutters = [...document.querySelectorAll<HTMLButtonElement>('.item-shutter')];
+  const slides = shutters.map(btn => ({
+    full: btn.dataset.full ?? '',
+    title: btn.dataset.title ?? '',
+    author: btn.dataset.author ?? '',
+  }));
+  let current = -1;
+  let lastFocus: HTMLElement | null = null;
+
+  const renderSlide = () => {
+    const img = lightbox?.querySelector<HTMLImageElement>('.lb-img');
+    const cap = lightbox?.querySelector<HTMLElement>('.lb-cap');
+    const count = lightbox?.querySelector<HTMLElement>('.lb-count');
+    const slide = slides[current];
+    if (!img || !cap || !count || !slide) {return;}
+    img.src = slide.full;
+    img.alt = `《${slide.title}》——${slide.author}作品`;
+    cap.textContent = `«${slide.title}» @${slide.author}`;
+    count.textContent = `${current + 1} / ${slides.length}`;
+  };
+
+  const openLightbox = (index: number) => {
+    if (!lightbox) {return;}
+    current = index;
+    renderSlide();
+    lastFocus = document.activeElement as HTMLElement | null;
+    // 锁定 html 滚动（overflow 方案天然保留滚动位置，body fixed 会与全局 smooth 滚动互扰）
+    document.documentElement.style.overflow = 'hidden';
+    lightbox.hidden = false;
+    lightbox.querySelector<HTMLElement>('.lb-close')?.focus();
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) {return;}
+    lightbox.hidden = true;
+    document.documentElement.style.overflow = '';
+    lastFocus?.focus();
+    current = -1;
+  };
+
+  const step = (delta: number) => {
+    if (current < 0 || slides.length === 0) {return;}
+    current = (current + delta + slides.length) % slides.length;
+    renderSlide();
+  };
+
+  shutters.forEach((btn, i) => {
+    btn.addEventListener('click', () => openLightbox(i));
+  });
+  lightbox?.querySelector('.lb-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.lb-prev')?.addEventListener('click', () => step(-1));
+  lightbox?.querySelector('.lb-next')?.addEventListener('click', () => step(1));
+  // 点背景关闭（点在 stage 图片/按钮上不关）
+  lightbox?.addEventListener('click', e => {
+    if (e.target === lightbox) {closeLightbox();}
+  });
+  document.addEventListener('keydown', e => {
+    if (current < 0) {return;}
+    if (e.key === 'Escape') {closeLightbox();}
+    else if (e.key === 'ArrowRight') {step(1);}
+    else if (e.key === 'ArrowLeft') {step(-1);}
+  });
+</script>
+
+<style>
+  .story-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-top: 70px;
+    color: var(--foreground);
+    /* 头版/题注居中细列 740px；宽幅媒体用 edge 出血 */
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+  }
+
+  /* —— 阅读进度条 —— */
+  .story-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 1003;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+    transform: scaleX(var(--p, 0));
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  /* —— 居中细列头版 —— */
+  .story-hero {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 44px;
+    text-align: center;
+  }
+
+  .hero-kicker {
+    margin: 0 0 26px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .hero-title {
+    margin: 0 0 18px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(2rem, 4.4vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+
+  .hero-issue {
+    font-size: 0.62em;
+    letter-spacing: 0.12em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-dek {
+    margin: 0 0 26px;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+    row-gap: 6px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .meta-dot {
+    margin-left: 8px;
+    opacity: 0.6;
+  }
+
+  .hero-quote {
+    margin: 34px 0 0;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 2;
+    letter-spacing: 0.12em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 宽幅封面 —— */
+  .story-cover {
+    margin: 0 var(--edge);
+  }
+
+  .story-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* —— 初心段：740px 左对齐衬线列 —— */
+  .story-intro {
+    padding: 72px var(--edge) 0;
+  }
+
+  .story-prose {
+    max-width: 740px;
+    margin: 0 auto;
+    font-family: var(--font-serif-song);
+    font-size: 16px;
+    line-height: 1.95;
+    color: var(--foreground);
+  }
+
+  .story-prose :global(p) {
+    margin: 0 0 1.8em;
+  }
+
+  /* —— 画廊：日期章节 + 作品条目 —— */
+  .story-gallery {
+    padding: 24px var(--edge) 0;
+  }
+
+  /* 日期章节分隔：细线夹日期，英文标注在下 */
+  .chapter-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 4.5em 0 2.5em;
+    font-weight: 700;
+  }
+
+  .chapter-zh {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-family: var(--font-serif-song);
+    font-size: 1.25rem;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--foreground);
+  }
+
+  .chapter-zh::before,
+  .chapter-zh::after {
+    content: '';
+    width: min(120px, 18vw);
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .chapter-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* 作品条目：按画幅分型——side 竖幅侧排 / stack 横幅通栏 */
+  .story-item {
+    margin: 0 0 5em;
+  }
+
+  .date-chapter .story-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .item-media {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .item-media :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+  }
+
+  /* 照片快门：覆盖图片的键盘可达按钮 */
+  .item-shutter {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    min-width: 0;
+    line-height: 0;
+  }
+
+  .item-shutter:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .item-title {
+    font-family: var(--font-serif-song);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  .item-caption {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.9;
+    white-space: pre-line;
+    color: var(--muted-foreground);
+  }
+
+  .item-author {
+    margin-top: 12px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--grad-a);
+  }
+
+  /* —— side 型：竖幅/方幅——照片保持居中位不动，题注单独位于屏幕约四分之三处 —— */
+  .story-item--side {
+    display: grid;
+    /* 照片列内居中（位置与整组居中版一致），题注列起点 ≈ 屏宽 3/4 */
+    grid-template-columns: minmax(0, 75%) minmax(0, 1fr);
+    gap: clamp(24px, 2.5vw, 36px);
+    align-items: start;
+  }
+
+  .story-item--side .item-media {
+    justify-content: center;
+  }
+
+  .story-item--side .item-media :global(img) {
+    max-width: 100%;
+    max-height: min(84vh, 1000px);
+  }
+
+  .story-item--side .item-label {
+    position: sticky;
+    top: 96px;
+    padding-top: 6px;
+  }
+
+  /* —— stack 型：横幅——突破版心通栏居中，说明在下方（上下中心对称） —— */
+  .story-item--stack .item-media {
+    /* 抵消画廊版心 padding，通栏与封面同宽（上限 1360px） */
+    margin-inline: calc(-1 * var(--edge));
+  }
+
+  .story-item--stack .item-media :global(img) {
+    max-width: 100%;
+    max-height: 80vh;
+  }
+
+  .story-item--stack .item-label {
+    align-items: center;
+    text-align: center;
+    max-width: 740px;
+    margin: 20px auto 0;
+  }
+
+  /* —— 一稿多图：按张数等宽并排（2 图即 2-up） —— */
+  .story-item--multi .item-media {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .story-item--multi .item-media :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  /* 说明标签：默认（side 型）左对齐 */
+  .item-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* —— 尾声 —— */
+  .story-coda {
+    padding: 40px var(--edge) 0;
+  }
+
+  /* 画廊与尾声之间的分隔：细线夹菱形，与日期章节同一语言 */
+  .coda-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    max-width: 740px;
+    margin: 3.5em auto 0;
+  }
+
+  .coda-divider::before,
+  .coda-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .coda-diamond {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    transform: rotate(45deg);
+  }
+
+  .story-poem {
+    max-width: 640px;
+    margin: 2.4em auto;
+    padding: 0;
+    border: none;
+    text-align: center;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 2.3;
+    white-space: pre-line;
+    word-spacing: 0.2em;
+    color: var(--muted-foreground);
+  }
+
+  .committee-figure {
+    max-width: 720px;
+    margin: 3.5em auto 0;
+  }
+
+  .committee-figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .committee-credit {
+    margin: 28px 0 0;
+    text-align: center;
+  }
+
+  .credit-name {
+    margin: 0 0 0.4em;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .credit-team {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    line-height: 2;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 期数分页：左=下一期，右=上一期 —— */
+  .edition-pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 980px;
+    margin: 4em auto 0;
+  }
+
+  .pager-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 20px 16px;
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  a.pager-card:hover {
+    border-color: var(--grad-a);
+  }
+
+  a.pager-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+
+  .pager-card.is-empty {
+    opacity: 0.65;
+  }
+
+  .pager-right {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .pager-kicker {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .pager-title {
+    font-family: var(--font-serif-song);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  a.pager-card:hover .pager-title {
+    color: var(--grad-a);
+  }
+
+  .pager-sub {
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 尾部 —— */
+  .story-foot {
+    max-width: 740px;
+    margin: 24px auto 0;
+    padding: 30px 24px 80px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 回到顶部 —— */
+  .back-top {
+    position: fixed;
+    right: 22px;
+    bottom: 26px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    /* 玻璃底：浅色照片上也可读 */
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .back-top:hover {
+    color: var(--grad-a);
+  }
+
+  .back-top:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  /* —— Lightbox —— */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 沉浸式深底：与主题无关，看图优先 */
+    background: rgba(12, 12, 18, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    animation: lb-fade 0.25s ease-out;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .lb-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 64px;
+    max-width: 100%;
+  }
+
+  .lb-img {
+    display: block;
+    max-width: min(92vw, 1400px);
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  .lb-cap {
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.82);
+    text-align: center;
+  }
+
+  .lb-count {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lb-btn {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .lb-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .lb-btn:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  .lb-close {
+    top: 18px;
+    right: 18px;
+  }
+
+  .lb-prev {
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-next {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .lb-prev,
+    .lb-next {
+      top: auto;
+      bottom: 18px;
+      transform: none;
+    }
+
+    .lb-stage {
+      margin: 0 12px;
+    }
+
+    .lb-count {
+      top: 26px;
+    }
+  }
+
+  /* —— 条目入场（Scroll-Triggered Storytelling）—— */
+  /* 仅 JS 可用时隐藏初始态；入场一次后定格，不回退 */
+  html.js .story-item {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  html.js .story-item.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .story-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .story-progress {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .story-hero {
+      padding: 48px 24px 36px;
+    }
+
+    .story-intro {
+      padding: 48px 24px 0;
+    }
+
+    .story-gallery,
+    .story-coda {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* 窄屏统一改为上下排版：说明随图下方，右栏与通栏差异取消 */
+    .story-item--side {
+      display: block;
+    }
+
+    .story-item--side .item-label {
+      position: static;
+      margin-top: 20px;
+    }
+
+    .story-item--side .item-media :global(img) {
+      max-height: 76vh;
+    }
+
+    .story-item--stack .item-media {
+      margin-inline: 0;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .chapter-zh::before,
+    .chapter-zh::after {
+      width: 48px;
+    }
+
+    .chapter-divider {
+      margin: 3.5em 0 2em;
+    }
+
+    .story-item {
+      margin-bottom: 3em;
+    }
+
+    .item-label {
+      padding: 0 8px;
+    }
+
+    /* 移动端 meta 改竖排、去间隔点，避免折行孤点 */
+    .hero-meta {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-dot {
+      display: none;
+    }
+
+    .edition-pager {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    /* 移动端多图改单列，避免 2-up 过窄 */
+    .story-item--multi .item-media {
+      grid-template-columns: 1fr;
+    }
+
+    .pager-right {
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+</style>

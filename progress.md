@@ -429,3 +429,168 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 
 - 延伸阅读语义两轮修正（cardTitle、上一篇/下一篇方向）；「10坤岁摄」玩梗图注保留（正文一字不改规则同样适用于图注）
 - ⚠️ 流程违规一次：字体统一小改动误直推 main（c0e9e6c），后续已恢复分支-PR 流程
+
+## 会话记录（《时间的故事》八月篇 · 画廊模板设计，2026-09-08）
+
+### 状态：设计阶段（分支 feat/story-of-time，基线 ./init.sh 全绿）
+
+- 目标功能：feat-018 小组活动 ·《时间的故事》八月篇（微信推文 → 网站画廊页）
+- 用户要求：与 welfare 同一 layout 家族，但形态是「带一点文字说明的画廊」；layout 方案用 ui-ux-pro-max 技能设计
+- 设计规格已产出：/tmp/layout-specs/story-of-time.md（待用户确认后实施）
+  - Pattern：Scroll-Triggered Storytelling（日期章节 + 阅读进度条 +
+    reduced-motion 降级）
+  - 新增 activities collection + /activities/[slug].astro 按 layout 分发 +
+    GalleryStory.astro 模板
+  - 画廊条目 = 照片 ≤960px 原比例 + 居中墙标签（作品名宋体 / 说明 sans muted
+    / 署名 grad-a）
+- ⚠️ 阻塞项：微信页正文图片为 blob: URL 无法抓取，需用户提供 19 张作品图 +
+  1 张封面原图 → R2 activities/story-of-time/2026-08/
+
+## 会话记录（《时间的故事》八月篇交付，2026-09-08 续）
+
+### 交付（分支 feat/story-of-time）
+
+- **图片自抓成功**：设计阶段的「blob: 阻塞」已解除——微信页 HTML 的 data-src 含真实 mmbiz
+  CDN URL；curl（MicroMessenger
+  UA）直接下载 21 张（封面 1080×459 + 正文 19 张 1080 宽 + 组委会品牌图），抽查图文对位正确
+- **日期映射**：原文「日期仅在变化时显示」（19 条目仅 11 个日期头，8 个缺失位以「——StoryofTime」装饰行出现）；以 raw
+  HTML 中日期串与 jpeg
+  data-src 的位置先后对齐，全部条目落到确切日期（康布的黄昏=8月1日、暗处符号=8月7日、星轨/寄愿=8月13日、中元=8月25日 等）
+- **R2**：`activities/story-of-time/2026-08/`（cover.jpg + 01-19.jpg +
+  committee.jpg），21 文件公开 URL Content-Length 逐一比对通过
+- **代码**：content.config.ts 增 activities collection（entries[] 结构化条目 +
+  poem/pastIssues/committee 字段，宽高入库防 CLS）；src/content/activities/story-of-time-2026-08.md；GalleryStory.astro（画廊模板：居中细列头版/edge 封面/初心段/日期章节/墙标签条目/诗/往期 chips/组委会/相邻期卡/2px 渐变进度条/IO 入场一次性定格 +
+  reduced-motion 与 html.js 降级）；pages/activities/[slug].astro 按 layout 分发；ActsSection「时间的故事」卡换真实封面并直连 /activities/story-of-time-2026-08/
+- **正文忠实**：19 条说明文字一字未改（保留「没想道」等原文拼写）；多段说明（Ring
+  of Fire、线·影·人·潮）以 \n 保留段落
+- **验证**：./init.sh 全绿（astro check + tsc 0 错误、eslint
+  0 错 0 警、8 页构建）；judge 三轮视觉验收 overall
+  pass（桌面 8 区 + 移动 4 区 + 深色 2 张 + 首页活动卡）
+
+### 验收中发现并修复 / 排除
+
+- 修复：375px 头版 meta 行折行出现行首孤立「·」→ 间隔点改挂各项末尾 +
+  ≤700px 竖排隐藏间隔点
+- 排除（截图侧误报）：懒加载未完成即截图导致「图片塌陷/黑条」误报两轮 → 协议改为全量 eager +
+  complete 轮询 + 静置；「霞染渔湾」白边框为作者三联拼图原片自带
+
+### 经验沉淀（待写入 skill）
+
+- 微信图片抓取：网页转换器常给 blob:（懒加载），应直接抓原始 HTML 提取 data-src（mmbiz
+  CDN 可匿名下载）；日期类装饰行缺失字段需用位置对齐还原
+- 截图验收协议：长画廊页必须等视口内图片 complete（最好 eager 化全量等待）再截，否则必然产生布局塌陷误报
+
+## 会话记录（《时间的故事》活动主页 + 版式重构 + 1-7 月补齐，2026-09-08 续二）
+
+### 用户反馈驱动的三项改动
+
+- **活动主页**
+  `/activities/story-of-time/`：介绍区（kicker/金句/初心）+「往期回顾 Editions」白框相片卡网格（期数角标/副题/期数·作品数），对齐 welfare 二级页模式；首页「时间的故事」卡改指主页，不再直达八月
+- **版式重构**（用户点名参考哈苏大师赛/马格南）：条目按画幅分型——side（竖/方幅 h≥1.2w）照片居左大幅（≤84vh）+ 说明右侧 sticky 栏左对齐；stack（横幅）照片突破版心通栏居中（≤1360px/80vh）+ 说明下方居中；≤900px 统一上下排版；横幅从 960px 上限放大到通栏，竖图从 648px 高放大到 84vh
+- **1-7 月补齐**：v3 抓取管道（/tmp/story-of-time/pipeline.py）一次跑通 7 期——处理了：日期仅在变化时显示（位置对齐还原）、一稿双图（三月 2 条，schema 改 images[]）、png 正文图（一月「金穹巡舟」）、标题 «»/「」两种形态、每月不同的组长/编辑/组委会名单、尾部品牌图 committee（svg 装饰排除；一月无品牌图）
+
+### 数据规模
+
+- 8 期共 204 个条目 / 206 张作品图（三月 2 条 × 2 图）+ 各期封面/品牌图全部入 R2
+  activities/story-of-time/<2026-MM>/，逐字节校验通过（首轮 ~60 张因会话中断失败，自动补传循环一轮清零）
+- md 由 gen_md.py 从 draft.json 生成（单行标量一律 JSON 双引号防原文引号/冒号歧义；多行说明用块标量；宽高入库防 CLS）
+- 8 期条目数逐页断言：08=19、07=22、06=33、05=26、04=23、03=28、02=25、01=28，0 坏图
+
+### 验证
+
+- judge 第 4/5 轮：side/stack 版式 + 活动主页 overall
+  pass（「爱意」褪色误报经 img.decode() 全量等待 + opacity 断言排除）
+- judge 第 6 轮：主页 + 七期新月抽查（hub 网格/三月多图/六月首末/二月诗/移动端）
+- ./init.sh 全绿（astro check + tsc 0 错误、eslint 0 错 0 警、16 页构建）
+
+### 经验沉淀（待写入 skill）
+
+- 微信编辑器陷阱集：日期条可省略（需位置对齐）；一稿多图（连续图片共用标题块）；正文图可能是 png；标题书名号有 «»/「」两种；组委会名单每月不同；尾部品牌图可能缺失（svg 分隔线不可当图片）
+- gen_md 类生成器必须把所有单行标量 JSON 引号化——原文说明里的英文直引号会让裸 YAML 标量断裂
+
+## 会话记录（画廊优化 P0-P2 + 期数分页，2026-09-08 续三）
+
+### 用户审计反馈 → 全部落地
+
+- **P0 图片优化**：442 张 WebP（640/1080 双档，cwebp q80）入 R2 + <picture>
+  srcset（sizes 按分型：side 640px/stack 1080px）+ JPEG 原图回退 +
+  **onerror 回退**（webp
+  404 时 img 自动切 jpg 原图）；单页图重 7MB→5MB（桌面 1080 档）/
+  2.1MB（移动 640 档）
+- **P1 lightbox**：点击照片全屏浏览（计数/左右切换/Esc/点背景关/焦点管理/html
+  overflow 锁滚动保滚动位/reduced-motion 无动画）；JPEG 原图直出
+- **P1 期数分页**（用户需求）：移除「往期回顾 chips + 相邻期卡」，文末双卡——左=下一期（无则「敬请期待·新一期筹备中」），右=上一期（无则「已是最早一期」）；八月/七月/一月三组断言全对
+- **P1 side 左对齐**：竖图贴内容左缘（img 左缘=版心左缘 96px@1440）
+- **P2**：多图 2-up（--cols 显式列数，移动端单列）；chapter-en
+  11px；多图 alt（1/2）；回到顶部玻璃圆钮；hub「最新」渐变角标 + 卡片封面 webp；JSON-LD
+  ImageGallery（eslint 按文件豁免 no-set-html-directive）
+- 图片 URL 全部加版本查询参数 `?v20260908a`（cache-busting）
+
+### ⚠️ r2.dev 边缘事故（重要经验）
+
+- 现象：同一 URL 的 200/404 按分钟级翻转；curl 常通而浏览器请求停滞/404
+- 根因链：①webp 上传完成前，早期测试会话已请求这些 URL
+  → 边缘缓存 404；②r2.dev 公开域多缓存节点独立 TTL
+  → 部分节点毒化部分干净 → 请求轮询导致时好时坏；③本机网络对 r2.dev 的浏览器路径（疑 HTTP/3）劣化，curl 正常
+- 佐证：金丝雀对象 8 分钟 5 次探测全 200（对象没被删）；严格校验两遍 GET
+  200+字节一致全过（442/442）
+- 缓解：版本查询参数（新缓存键必然回源）+ img
+  onerror 回退 JPEG + 真实访客首发缓存干净
+- **建议用户**：给 R2 桶绑定自定义域名（r2.dev 是无 SLA 的 dev 域），生产稳定性与缓存行为都可控
+
+### 验证
+
+- ./init.sh 全绿（0 错 0 警，16 页）；lightbox/分页/左对齐/2-up/回顶全部程序化断言通过
+- judge 第 8 轮：lightbox
+  pass；其余 fail 项经查全部为 r2.dev 边缘事故期的截图取证问题（破图=404 缓存），非页面缺陷——分页卡/side 左对齐已有渲染完好截图（shots6/s9-*.png）
+
+## 会话记录（架构定稿：展示图迁入仓库同源分发 + R2 绑自定义域，2026-09-08 续四）
+
+### 用户决策：保留 R2 + 绑定域名
+
+- 用户明确「不弃用对象存储，绑定域名」→
+  `wrangler r2 bucket domain add seeker-homepage-assets --domain r2.xn--seeker-ng2jm403afb4a.club --zone-id 1efd52ca...`（zone 经 wrangler
+  OAuth token 调 CF API 查得）
+- 全仓 363 个 r2.dev URL 替换为
+  `https://r2.xn--seeker-ng2jm403afb4a.club/...`（8 期 md + 3 篇 welfare md +
+  ActsSection/Banner/AboutSection）
+
+### 展示图迁入仓库（astro:assets 同源分发）
+
+- 221 张原图入 `src/assets/activities/<slug>/`；activities
+  schema 改 image()（cover/committeeImage/entries.images）——image() 元数据自带宽高，md 中的手工 width/height 全部删除
+- GalleryStory：layout="full-width"（封面）/
+  "constrained"（条目/组委会），astro:assets 自动 WebP 多档 srcset +
+  CLS 预留；手工 WebP 管线/版本参数/onerror 回退脚本全部移除（被本地管线取代）
+- hub 卡片封面改
+  <Image>（原 background-image 无法回退懒加载）；ActsSection 封面走 import 资产；astro.config 加
+  `site: https://seeker-homepage.pages.dev`（og:image 绝对 URL）
+- gen_md.py 同步改相对路径输出（未来期数一致）
+- 效果：页面 0 个跨域图片引用，srcset
+  4 档（640/750/828/1080w），构建期一次性优化 16.8s（有缓存）
+
+### 最终验证
+
+- judge 第 9 轮（最终）：10 张截图 overall pass /
+  must_fix 空——「连续三轮的图片时好时坏问题在本轮 10 张中零复现」
+- ./init.sh 全绿（0 错 0 警，16 页）；8 期逐页滚动断言渐进懒加载正常
+- R2 分工定稿：原图备份 +
+  welfare 图床（自定义域）+ 大文件（视频）；页面小图走仓库同源
+
+### 经验沉淀（待写入 skill）
+
+- wrangler 4.x 已支持 `r2 bucket domain add/list`（--domain --zone-id
+  -y）；zone-id 可用 wrangler OAuth token 调 CF API GET
+  /zones 查得（但该 token 无 zone
+  settings 权限，http3 开关这类设置要在 dashboard 做）
+- R2 自定义域绑定后需等 DNS/证书传播（分钟级），期间偶发 404
+- r2.dev 公开域慎用于生产页面图片：边缘多节点独立缓存 + 限流，上传完成前的请求会把 404 毒化进边缘缓存且按 TTL 迟迟不散
+
+### 用户复核反馈（2026-09-08 收尾）
+
+- 期数分页对调：左=上一期、右=下一期（八月右位「敬请期待」不变）；断言八月/七月两页全对
+- side 型题注空隙：照片列 1fr→auto（列宽随图），题注紧贴照片右缘（实测 36px，改前宽屏约 400px）
+- 用户复核第二轮：side 组合（照片+题注）在版心内居中（pairCenterOffset=0）；尾声前加分隔线（细线+渐变菱形，与日期章节同语言）
+- 用户复核第三轮：side 型题注列定位于屏幕约四分之三（栅格 76%/1fr，实测 captionLeft=75vw）
+- 用户复核第四轮：side 照片位固定（列内居中，左缘 312px@1440
+  ≈ 整组居中版参考位 300px），题注列起点 = 屏宽 74-75%
