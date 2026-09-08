@@ -51,24 +51,24 @@ const welfare = defineCollection({
   }),
 });
 
-/** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片） */
-const activityEntry = z.object({
-  /** 展示日期，如「7月28日」 */
-  date: z.string(),
-  /** 作品名称（不含书名号） */
-  title: z.string(),
-  /** 作者的一句话说明 */
-  caption: z.string(),
-  /** 作者署名（不含 @） */
-  author: z.string(),
-  /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
-  images: z.array(image()).min(1),
-});
-
 const activities = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
-  schema: ({ image }) =>
-    z.object({
+  schema: ({ image }) => {
+    /** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片） */
+    const activityEntry = z.object({
+      /** 展示日期，如「7月28日」 */
+      date: z.string(),
+      /** 作品名称（不含书名号） */
+      title: z.string(),
+      /** 作者的一句话说明 */
+      caption: z.string(),
+      /** 作者署名（不含 @） */
+      author: z.string(),
+      /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
+      images: z.array(image()).min(1),
+    });
+
+    return z.object({
       /** 活动名，如「时间的故事」 */
       title: z.string(),
       /** 本期主题句，如「夕光沉远岸，秋意漫画框」 */
@@ -107,7 +107,8 @@ const activities = defineCollection({
           team: z.string(),
         })
         .optional(),
-    }),
+    });
+  },
 });
 
 export const collections = { members, welfare, activities };
