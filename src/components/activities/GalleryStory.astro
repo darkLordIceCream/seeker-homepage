@@ -175,6 +175,9 @@ const jsonLd = JSON.stringify({
     </section>
 
     <section aria-label="尾声" class="story-coda">
+      <div aria-hidden="true" class="coda-divider">
+        <span class="coda-diamond"></span>
+      </div>
       {data.poem && <blockquote class="story-poem">{data.poem}</blockquote>}
 
       {data.committeeImage && (
@@ -608,12 +611,12 @@ const jsonLd = JSON.stringify({
     color: var(--grad-a);
   }
 
-  /* —— side 型：竖幅/方幅——照片贴内容左缘大幅，说明紧贴照片右侧 sticky 栏 —— */
+  /* —— side 型：竖幅/方幅——照片+题注成组，整组在版心内居中 —— */
   .story-item--side {
     display: grid;
-    /* 照片列按内容宽度（auto），题注紧随其后，整组贴左缘，消除图文中部空白 */
+    /* 照片列按内容宽度（auto），题注紧随其后（36px 间距） */
     grid-template-columns: minmax(0, auto) clamp(220px, 24vw, 300px);
-    justify-content: flex-start;
+    justify-content: center;
     gap: clamp(24px, 2.5vw, 36px);
     align-items: start;
   }
@@ -675,6 +678,32 @@ const jsonLd = JSON.stringify({
   /* —— 尾声 —— */
   .story-coda {
     padding: 40px var(--edge) 0;
+  }
+
+  /* 画廊与尾声之间的分隔：细线夹菱形，与日期章节同一语言 */
+  .coda-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    max-width: 740px;
+    margin: 3.5em auto 0;
+  }
+
+  .coda-divider::before,
+  .coda-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .coda-diamond {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    transform: rotate(45deg);
   }
 
   .story-poem {
