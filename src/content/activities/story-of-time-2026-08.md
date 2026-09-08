@@ -12,7 +12,7 @@ team:
   lead: '阿帆'
   editor: '是田田吖'
 pubDate: 2026-08-31
-order: 8
+order: 202608
 layout: gallery-story
 entries:
   - date: '7月28日'

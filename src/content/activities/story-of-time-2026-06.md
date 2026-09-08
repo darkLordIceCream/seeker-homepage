@@ -12,7 +12,7 @@ team:
   lead: 'Leslin'
   editor: '是田田吖'
 pubDate: 2026-06-30
-order: 6
+order: 202606
 layout: gallery-story
 entries:
   - date: '5月30日'

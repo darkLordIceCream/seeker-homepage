@@ -11,7 +11,7 @@ team:
   lead: 'guozhennn'
   editor: '是田田吖'
 pubDate: 2026-01-31
-order: 1
+order: 202601
 layout: gallery-story
 entries:
   - date: '1月1日'

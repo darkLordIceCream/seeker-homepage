@@ -12,7 +12,7 @@ team:
   lead: 'guozhennn'
   editor: '是田田吖'
 pubDate: 2026-04-30
-order: 4
+order: 202604
 layout: gallery-story
 entries:
   - date: '3月29日'
