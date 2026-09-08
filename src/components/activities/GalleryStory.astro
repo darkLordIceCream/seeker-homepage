@@ -197,31 +197,31 @@ const jsonLd = JSON.stringify({
 
       <nav aria-label="期数跳转" class="edition-pager">
         <div class="pager-slot">
-          {newer ? (
-            <a class="pager-card" href={`/activities/${newer.id}/`}>
-              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
-              <strong class="pager-title">{newer.data.title} · {newer.data.issue}</strong>
-              <span class="pager-sub">{newer.data.subtitle}</span>
-            </a>
-          ) : (
-            <div aria-disabled="true" class="pager-card is-empty">
-              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
-              <strong class="pager-title">敬请期待</strong>
-              <span class="pager-sub">新一期筹备中</span>
-            </div>
-          )}
-        </div>
-        <div class="pager-slot">
           {older ? (
-            <a class="pager-card pager-right" href={`/activities/${older.id}/`}>
+            <a class="pager-card" href={`/activities/${older.id}/`}>
               <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
               <strong class="pager-title">{older.data.title} · {older.data.issue}</strong>
               <span class="pager-sub">{older.data.subtitle}</span>
             </a>
           ) : (
-            <div aria-disabled="true" class="pager-card is-empty pager-right">
+            <div aria-disabled="true" class="pager-card is-empty">
               <span class="pager-kicker">← 上一期 PREVIOUS ISSUE</span>
               <strong class="pager-title">已是最早一期</strong>
+            </div>
+          )}
+        </div>
+        <div class="pager-slot">
+          {newer ? (
+            <a class="pager-card pager-right" href={`/activities/${newer.id}/`}>
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">{newer.data.title} · {newer.data.issue}</strong>
+              <span class="pager-sub">{newer.data.subtitle}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty pager-right">
+              <span class="pager-kicker">下一期 NEXT ISSUE →</span>
+              <strong class="pager-title">敬请期待</strong>
+              <span class="pager-sub">新一期筹备中</span>
             </div>
           )}
         </div>
@@ -608,11 +608,13 @@ const jsonLd = JSON.stringify({
     color: var(--grad-a);
   }
 
-  /* —— side 型：竖幅/方幅——照片贴内容左缘大幅，说明挂右侧 sticky 栏 —— */
+  /* —— side 型：竖幅/方幅——照片贴内容左缘大幅，说明紧贴照片右侧 sticky 栏 —— */
   .story-item--side {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(230px, 22vw, 300px);
-    gap: clamp(24px, 3.5vw, 48px);
+    /* 照片列按内容宽度（auto），题注紧随其后，整组贴左缘，消除图文中部空白 */
+    grid-template-columns: minmax(0, auto) clamp(220px, 24vw, 300px);
+    justify-content: flex-start;
+    gap: clamp(24px, 2.5vw, 36px);
     align-items: start;
   }
 
@@ -629,6 +631,8 @@ const jsonLd = JSON.stringify({
     position: sticky;
     top: 96px;
     padding-top: 6px;
+    /* 窄屏下 auto 列收缩时保证题注可读宽度 */
+    min-width: 200px;
   }
 
   /* —— stack 型：横幅——突破版心通栏居中，说明在下方（上下中心对称） —— */
