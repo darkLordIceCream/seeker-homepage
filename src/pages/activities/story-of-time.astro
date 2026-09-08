@@ -59,7 +59,7 @@ const latestId = editions[0]?.id;
       </nav>
 
       {years.map(({ year, items }) => (
-        <div class="shelf" aria-label={`${year} 年书架，共 ${items.length} 期`} id={`shelf-${year}`}>
+        <div aria-label={`${year} 年书架，共 ${items.length} 期`} class="shelf" id={`shelf-${year}`}>
           <div class="shelf-head">
             <h3 class="shelf-year">{year}<span class="shelf-year-unit">年</span></h3>
             <span aria-hidden="true" class="shelf-line"></span>
@@ -67,7 +67,7 @@ const latestId = editions[0]?.id;
           </div>
           <div class="shelf-wrap">
             <button aria-label="向左滚动" class="shelf-arrow shelf-arrow--left" type="button">
-              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+              <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M15 18l-6-6 6-6" /></svg>
             </button>
             <div class="shelf-scroll" data-shelf-scroll>
               <ul class="books">
@@ -106,7 +106,7 @@ const latestId = editions[0]?.id;
               <span aria-hidden="true" class="shelf-fade"></span>
             </div>
             <button aria-label="向右滚动" class="shelf-arrow shelf-arrow--right" type="button">
-              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+              <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M9 18l6-6-6-6" /></svg>
             </button>
           </div>
         </div>
