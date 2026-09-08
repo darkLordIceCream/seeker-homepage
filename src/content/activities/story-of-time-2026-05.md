@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '风熏林渐静，日永夏初长'
 issue: 五月篇
 period: MAY 2026
-cover: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/cover.jpg
+cover: ../../assets/activities/2026-05/cover.jpg
 excerpt:
   '《时间的故事》五月篇：风熏林渐静，日永夏初长。26
   幅作品，收藏初夏林间的静与光。'
@@ -19,17 +19,13 @@ entries:
     title: '林中密城'
     author: '日行性猫猫'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/01.jpg
-        width: 1024
-        height: 1536
+      - ../../assets/activities/2026-05/01.jpg
     caption: '毕业实习恰逢暴雨,为了所谓大峡谷冒雨继续前进,结果在路途中发现隐藏在山林中一栋酷似城堡的建筑,在雾雨中更显神秘。'
   - date: '4月29日'
     title: '星海湾大桥'
     author: '蜜汁白'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/02.jpg
-        width: 1080
-        height: 1619
+      - ../../assets/activities/2026-05/02.jpg
     caption:
       '五一前去了一趟大连,趁着还没天亮,来黑石礁公园漫步,无意间发现了这样一个场景,
       长焦压缩下近处的礁石海岸恰好与远处的跨海大桥在同一平面内。蹲守一段时间后,我拍到了早起的路人从礁石上走过与远处日出金光下的跨海大桥同框的场景。'
@@ -37,9 +33,7 @@ entries:
     title: '一瞬与永恒'
     author: '柯达拍什么'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/03.jpg
-        width: 1080
-        height: 1080
+      - ../../assets/activities/2026-05/03.jpg
     caption:
       '在连绵的雨天,第一次尝试闪光灯微距。
       灯罩挡在麦秆菊的上方,恰好为这只采蜜的峰留下一寸无雨的空间。
@@ -49,9 +43,7 @@ entries:
     title: '凝望'
     author: 'V.Ter'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/04.jpg
-        width: 1080
-        height: 690
+      - ../../assets/activities/2026-05/04.jpg
     caption:
       '天主堂内,庄严肃穆的氛围下,使用黑白影调褪去色彩的干扰,十字架上耶稣受难的金属轮廓,与背景画作里圣母玛利亚温柔的凝望形成了无声对话。打破十字架横平竖直的样式,我以对角线构图让圣母玛利亚的双眼与十字架形成一条贯穿画面的无形轴线。光影斜切过十字架,把
       "INRI"铭牌的冷硬、金属肌理的光泽与画纸的柔
@@ -60,17 +52,13 @@ entries:
     title: '放飞自由'
     author: 'Wilson 最求其'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/05.jpg
-        width: 1080
-        height: 1441
+      - ../../assets/activities/2026-05/05.jpg
     caption: '本来是阴天,我们俩打算找个草坪躺一会就算了。到了草坪,她去放风筝,我在一边吃着西瓜,一边想着今天又是空军的一天。没想到在她放风筝的半小时内,云突然全部清空了,柔和的光线从西边洒了过来,仿佛是老天特意让我看到这一幕似的。'
   - date: '5月2日'
     title: '向阳而生'
     author: 'Kenza'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/06.jpg
-        width: 1080
-        height: 811
+      - ../../assets/activities/2026-05/06.jpg
     caption:
       '和好朋友在公园里散步的时候,突发奇想
       把全景相机放在花中间看一些可以拍到什么。回看的时候就发现,全景相机独特的视角可以获得一种全新的体验。试想一下,如果拍摄的是一段延迟,是否可以记录开花的过程。'
@@ -78,9 +66,7 @@ entries:
     title: '大小海龟'
     author: '倾斜的地平线'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/07.jpg
-        width: 1080
-        height: 1441
+      - ../../assets/activities/2026-05/07.jpg
     caption:
       '五一的菲律宾之旅,由于某渣男放鸽子
       +自己报名的时候潜水道心破碎,后来巴里卡萨的名额满了,只能选择帕米拉坎和Napaling。但幻想总是要有的:第一潜看到鲸鲨,第二潜看到杰克风暴,第三潜海狼风暴[闭嘴][闭嘴]现在发现这真的是幻想,哈哈哈。潜水一天鱼群风暴是看不到的,几个鱼苗倒是可以。Napaling的沙丁鱼也不用期待了,听说岸边开了个罐头厂,沙丁鱼罐头可是热卖单品,哈哈哈,心疼我的潜水费了。今天的行程最让我难忘的还是这两个大小海龟,
@@ -90,25 +76,19 @@ entries:
     title: '海边的袋鼠'
     author: '屋顶数星星'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/08.jpg
-        width: 1080
-        height: 1080
+      - ../../assets/activities/2026-05/08.jpg
     caption: '翻看冲洗好的胶片,就像打开了一卷时间胶囊,拿在手里的反转片把我带回了在澳洲阳光明媚的下午。我拿着胶片机和朋友在海边兴奋的看袋鼠们觅食,袋鼠妈妈在整理毛发时,小袋鼠胆怯的从袋子里探出小脑袋张望着。近一年突然喜欢上了胶片机"慢下来"的感觉,在工作中时间被按下了加速键。用胶片机的时候会不自觉的慢下来,体会当下,更加克制的按下快门。'
   - date: '5月4日'
     title: '旅人'
     author: '绿谷'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/09.jpg
-        width: 1080
-        height: 809
+      - ../../assets/activities/2026-05/09.jpg
     caption: '无人能停下这趟前行的列车,就像无人能停下前行的岁月,他是旅人,旅人也是我，他在窗里回望,我在窗外路过,我们都是时间的过客。平凡的旅途,每每按下快门,皆是我人生中最动人的时刻。'
   - date: '5月6日'
     title: '云绯漫染'
     author: 'Carlson'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/10.jpg
-        width: 1080
-        height: 720
+      - ../../assets/activities/2026-05/10.jpg
     caption:
       '日落时分,一场意外的晚霞像金色的流沙,拥抱了整座城市。在城市的钢铁森林里,原本冰冷的玻璃幕墙和生硬的建筑轮廓,正在这股宏大的、带有灼热感的流体中被逐一抹平。这种覆盖全城的温暖入侵,
       让那些象征着效率与秩序的楼体在瞬间产生了一种近乎柔软的错觉。我立于高处,目睹着太阳的余晖如何精准地填充进城市扩张留下的每一处空隙。在北京这座城市,这种极致的晚霞并非日常,而是一场慷慨的赠予。在那一刻,你不再是某个职位的执行者,
@@ -117,25 +97,19 @@ entries:
     title: '彭埠夜色'
     author: '阿帆'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/11.jpg
-        width: 1080
-        height: 608
+      - ../../assets/activities/2026-05/11.jpg
     caption: '一桥一江,接住整座城的夜。晚风掠过钱塘江面,前方是钱江新城灯火织就的星河。彭埠大桥的车轨流光、摩天楼的璀璨霓虹,都落在眼底,成了独属于此刻的浪漫。'
   - date: '5月8日'
     title: '通往远方的一号公路'
     author: 'BBBronny'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/12.jpg
-        width: 1080
-        height: 809
+      - ../../assets/activities/2026-05/12.jpg
     caption: '这是冰岛的一号公路。五月初的冰岛仍被雪与寒风包围,远处的山体沉默伫立,黑色公路笔直延伸向天地尽头。那一刻,孤独并不显得渺小,反而像是在提醒人:只要继续向前,远方终会抵达。'
   - date: '5月9日'
     title: '霓虹失焦时'
     author: 'Leslin'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/13.jpg
-        width: 1080
-        height: 660
+      - ../../assets/activities/2026-05/13.jpg
     caption:
       '暖黄的灯、旧楼的反光、地铁口吹出来的风, 会让人突然觉得,
       这座北方城市也有一点九龙的味道。
@@ -146,17 +120,13 @@ entries:
     title: '荷兰独有的水上社区'
     author: '早Eden'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/14.jpg
-        width: 1080
-        height: 662
+      - ../../assets/activities/2026-05/14.jpg
     caption: '环水成境,半岛栖居,秩序与自然共生。在格罗宁根城郊,意外撞见这片水上迷宫。无人机升空,镜头里的Meerwijck街区像被上帝打翻的绿色拼图--蜿蜒的水道切割出不规则的岛屿,别墅沿着曲线生长,屋顶与树冠交错成网。'
   - date: '5月11日'
     title: 'GREEN DAY.'
     author: '纯黑的林桑'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/15.jpg
-        width: 1080
-        height: 1921
+      - ../../assets/activities/2026-05/15.jpg
     caption:
       '"怪就怪天气,像曾哭过的旧电影。"
       黄宣的怪天气是这幅奇奇怪怪作品的灵感来源。气球用绿色,给人一种安静压抑的感觉,我也喜欢绿色。'
@@ -164,17 +134,13 @@ entries:
     title: '「荧海浮光」NOCTILUCENT SHIMMER'
     author: '阿羊今天不拍照'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/16.jpg
-        width: 1080
-        height: 1620
+      - ../../assets/activities/2026-05/16.jpg
     caption: '礁石被幽蓝荧光轻唤,黑暗被风电灯火刺穿。这是人类文明在荒芜星球上留下的信号塔。自然与工业交织,两种截然不同的光源,在这片海面上铺展出属于未来的异星海岸。'
   - date: '5月13日'
     title: '水上人生'
     author: 'CONST.'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/17.jpg
-        width: 1080
-        height: 719
+      - ../../assets/activities/2026-05/17.jpg
     caption:
       '达卡不是一个临海城市但却几乎与海平面持平
       常年潮湿燥热的空气中母亲河恒河穿城而过织出一片密集的水网，而河道中穿梭的船夫成为了城市正常运转不可或缺的一部分。'
@@ -182,17 +148,13 @@ entries:
     title: '安宁'
     author: '苏叶'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/18.jpg
-        width: 1080
-        height: 721
+      - ../../assets/activities/2026-05/18.jpg
     caption: '站在绿浪原野,风抚草梢,云影漫过山丘。当你把纷扰交给天地辽阔,心随光缓,你发现:原来渺小不是卑微,是心安的开始;困于自我,便失广阔安宁。'
   - date: '5月15日'
     title: '伦敦未必有青岛忧郁'
     author: '嘿嘿'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/19.jpg
-        width: 1080
-        height: 1617
+      - ../../assets/activities/2026-05/19.jpg
     caption:
       '趁着周末来到青岛,下了火车一股潮湿的气息扑面而来,看到远处高楼大厦隐藏在雾中,
       我就知道青岛注定是忧郁的一周,来到海边狂风吹拂,海天隐秘于雾中,我摁下快门拍下了这张照片,伦敦未必有青岛忧郁。'
@@ -200,17 +162,13 @@ entries:
     title: '鸣沙山日出'
     author: '猫吃鱼'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/20.jpg
-        width: 1080
-        height: 626
+      - ../../assets/activities/2026-05/20.jpg
     caption: '清晨早早出发,一步步辛苦爬上鸣沙山的沙丘顶端。等待许久,太阳缓缓升起,整片沙漠被暖金色的晨光慢慢铺满。连绵起伏的沙丘层层延伸向远方,雾气里的远山若隐若现。站在空旷辽阔的大漠里,吹着清晨的风,看着眼前震撼又安静的日出景色,一路攀爬的疲惫全都烟消云散,忍不住拿起相机,定格下这份来之不易的美好晨光。'
   - date: '5月17日'
     title: '建筑与车，都是城市的线条'
     author: '东仔·DZ'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/21.jpg
-        width: 1080
-        height: 1619
+      - ../../assets/activities/2026-05/21.jpg
     caption:
       '这组照片,是我和几个朋友策划了好久的拍车计划。于是5月17日的凌晨,赶在南昌东站人少的时候过去,就为了拍一组车和车站建筑的同框画面。深夜的车站很安静,只有路灯和建筑的轮廓灯亮着,拍出来的效果意外的有质感。
       这次拍摄也是特意从外地跑到南昌拍摄的,也是借这个拍摄契机跟几个好朋友见了面,大家从晚上九点一直拍摄到凌晨一两点,过程虽然很累,
@@ -219,33 +177,25 @@ entries:
     title: '童话镇'
     author: '至尊宝'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/22.jpg
-        width: 1080
-        height: 608
+      - ../../assets/activities/2026-05/22.jpg
     caption: '在新疆那拉提草原的夜晚,这晚上格外的安静,下午还是乌云密布,但到了晚上云散开了,运气好遇到光板天,为了捕捉银河最震撼的时刻,我与小伙伴们蹲了一个晚上,用长曝光定格那拉提草原与孤独的树的同框。'
   - date: '5月23日'
     title: '凤凰翎羽'
     author: '闰土'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/23.jpg
-        width: 1080
-        height: 2439
+      - ../../assets/activities/2026-05/23.jpg
     caption: '初次尝试结晶摄影,本来打算用相机仔细拍摄,到处翻找都找不到微距导轨,干脆拿手机直接拍,成片效果却超出预期,氨基酸结晶仿佛传说中凤凰的羽翼。'
   - date: '5月26日'
     title: '城市褶皱'
     author: '不打排位'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/24.jpg
-        width: 1080
-        height: 810
+      - ../../assets/activities/2026-05/24.jpg
     caption: '狭窄的巷道里,电线与晾衣绳织成密不透风的网,将天光切割成细碎的光斑;地面的污水倒映着破败的建筑轮廓,潮湿的空气里弥漫着经年不散的霉味。'
   - date: '5月26日'
     title: '暮色萤火'
     author: 'Rye Whiskey'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/25.jpg
-        width: 1080
-        height: 608
+      - ../../assets/activities/2026-05/25.jpg
     caption:
       '在河源客家文化公园后山未开发区域,一
       个多月的夜探,踩过湿滑的塘泥、淋过雨、喂过蚊、躲过蛇影。当粉紫晚霞漫过山林,漫天萤火亮起,所有狼狈都成了值得的浪漫!'
@@ -253,9 +203,7 @@ entries:
     title: '雷霆万象'
     author: '尧'
     images:
-      - url: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/26.jpg
-        width: 1080
-        height: 720
+      - ../../assets/activities/2026-05/26.jpg
     caption: '5.27傍晚的福州随着第一声惊雷,无数巨大的地闪接踵而至,我便迅速提着脚架和相机冲出宿舍,记录下一道道闪电的轨迹。'
 poem: |
   五月是盛夏的序曲，
@@ -278,7 +226,7 @@ pastIssues:
     line: '新岁启华章，浅暖赴春光'
   - name: '一月篇'
     line: '梅破春妍，新岁开篇'
-committeeImage: https://pub-4a7b0e2f651540e19220929f5d72b9b6.r2.dev/activities/story-of-time/2026-05/committee.jpg
+committeeImage: ../../assets/activities/2026-05/committee.jpg
 committee:
   name: '2026年时间的故事组委会'
   team: 'Ted、guozhenn、三月大的猫、BingChen、是田田吖、滴歪、周云水'
