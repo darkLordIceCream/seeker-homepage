@@ -52,51 +52,125 @@ const latestId = editions[0]?.id;
         <span class="editions-count">共 {editions.length} 期</span>
       </header>
 
+      <nav aria-label="按年份跳转" class="year-anchors">
+        {years.map(({ year }) => (
+          <a class="year-anchor" href={`#shelf-${year}`}>{year}</a>
+        ))}
+      </nav>
+
       {years.map(({ year, items }) => (
-        <div class="year-group">
-          <div class="year-head">
-            <h3 class="year-title">{year}<span class="year-unit">年</span></h3>
-            <span aria-hidden="true" class="year-line"></span>
-            <span class="year-count">{items.length} 期</span>
+        <div class="shelf" aria-label={`${year} 年书架，共 ${items.length} 期`} id={`shelf-${year}`}>
+          <div class="shelf-head">
+            <h3 class="shelf-year">{year}<span class="shelf-year-unit">年</span></h3>
+            <span aria-hidden="true" class="shelf-line"></span>
+            <span class="shelf-count">{items.length} 册</span>
           </div>
-          <div class="edition-grid">
-            {items.map(edition => (
-              <a
-                aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
-                class="edition-card"
-                href={`/activities/${edition.id}/`}
-              >
-                <span class="edition-media">
-                  <span class="edition-img">
-                    <Image
-                      alt=""
-                      height={459}
-                      layout="constrained"
-                      loading="lazy"
-                      src={edition.data.cover}
-                      widths={[320, 480, 640]}
-                    />
-                    <span class="edition-tag">{edition.data.issue}</span>
-                    {edition.id === latestId && <span class="edition-latest">最新</span>}
-                  </span>
-                </span>
-                <span class="edition-meta">
-                  <strong>{edition.data.subtitle}</strong>
-                  <span class="edition-period">
-                    {edition.data.period} · {edition.data.entries.length} 幅作品
-                  </span>
-                </span>
-              </a>
-            ))}
+          <div class="shelf-wrap">
+            <button aria-label="向左滚动" class="shelf-arrow shelf-arrow--left" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </button>
+            <div class="shelf-scroll" data-shelf-scroll>
+              <ul class="books">
+                {items.map(edition => (
+                  <li class="book">
+                    <a
+                      aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
+                      class="book-link"
+                      href={`/activities/${edition.id}/`}
+                    >
+                      <span class="book-cover">
+                        <Image
+                          alt=""
+                          height={459}
+                          layout="constrained"
+                          loading="lazy"
+                          quality={90}
+                          src={edition.data.cover}
+                          widths={[240, 360, 480]}
+                        />
+                        <span aria-hidden="true" class="book-spine"></span>
+                        <span class="book-tag">{edition.data.issue}</span>
+                        {edition.id === latestId && (
+                          <span class="book-ribbon">新</span>
+                        )}
+                        <span class="book-meta">
+                          <strong>{edition.data.subtitle}</strong>
+                          <span class="book-period">{edition.data.period} · {edition.data.entries.length} 幅</span>
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div aria-hidden="true" class="shelf-board"></div>
+              <span aria-hidden="true" class="shelf-fade"></span>
+            </div>
+            <button aria-label="向右滚动" class="shelf-arrow shelf-arrow--right" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+            </button>
           </div>
         </div>
       ))}
 
       <footer class="hub-foot">
-        <p>2026年时间的故事组委会 · 策划团队 Ted、BingChen、是田田吖、滴歪、周云水、Leslin</p>
+        <p>各期由当月组委会与策划团队共同编辑 · 《时间的故事》组委会</p>
       </footer>
     </section>
   </main>
+
+  <script>
+    // 书架横向浏览：箭头翻页 + 鼠标拖拽 + 右缘渐隐/箭头状态
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const behavior = (): ScrollBehavior => (reducedMotion ? 'auto' : 'smooth');
+    document.querySelectorAll<HTMLDivElement>('.shelf').forEach(shelf => {
+      const scroll = shelf.querySelector<HTMLElement>('.shelf-scroll');
+      if (!scroll) {return;}
+      const fade = shelf.querySelector<HTMLElement>('.shelf-fade');
+      const left = shelf.querySelector<HTMLButtonElement>('.shelf-arrow--left');
+      const right = shelf.querySelector<HTMLButtonElement>('.shelf-arrow--right');
+      const update = () => {
+        const max = scroll.scrollWidth - scroll.clientWidth;
+        if (fade) {fade.classList.toggle('is-hidden', scroll.scrollLeft >= max - 4);}
+        if (left) {left.disabled = scroll.scrollLeft <= 2;}
+        if (right) {right.disabled = scroll.scrollLeft >= max - 2;}
+      };
+      scroll.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+      const page = (): number => Math.max(scroll.clientWidth - 240, 260);
+      left?.addEventListener('click', () => scroll.scrollBy({ left: -page(), behavior: behavior() }));
+      right?.addEventListener('click', () => scroll.scrollBy({ left: page(), behavior: behavior() }));
+      // 鼠标拖拽滚动（触屏/滚动条走原生路径）
+      let down = false;
+      let startX = 0;
+      let startLeft = 0;
+      let moved = false;
+      scroll.addEventListener('pointerdown', e => {
+        if (e.pointerType !== 'mouse') {return;}
+        down = true;
+        moved = false;
+        startX = e.clientX;
+        startLeft = scroll.scrollLeft;
+      });
+      scroll.addEventListener('pointermove', e => {
+        if (!down) {return;}
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 4) {moved = true;}
+        if (moved) {scroll.scrollLeft = startLeft - dx;}
+      });
+      const endDrag = () => {down = false;};
+      scroll.addEventListener('pointerup', endDrag);
+      scroll.addEventListener('pointerleave', endDrag);
+      // 拖拽后拦截误触点击
+      scroll.addEventListener(
+        'click',
+        e => {
+          if (moved) {e.preventDefault(); e.stopPropagation(); moved = false;}
+        },
+        true,
+      );
+    });
+  </script>
 
   <Footer />
 </Layout>
@@ -106,6 +180,7 @@ const latestId = editions[0]?.id;
     min-height: 100vh;
     background: var(--background);
     padding-top: 70px;
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 活动介绍 —— */
@@ -211,19 +286,19 @@ const latestId = editions[0]?.id;
     color: var(--muted-foreground);
   }
 
-  /* —— 年份区域：每年一组，年份倒序 —— */
-  .year-group + .year-group {
-    margin-top: 48px;
+  /* —— 书架：每年一层书架，期数为一册册竖放的书 —— */
+  .shelf {
+    margin-bottom: 64px;
   }
 
-  .year-head {
+  .shelf-head {
     display: flex;
     align-items: baseline;
     gap: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
-  .year-title {
+  .shelf-year {
     margin: 0;
     font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 1.25rem;
@@ -232,7 +307,7 @@ const latestId = editions[0]?.id;
     color: var(--foreground);
   }
 
-  .year-unit {
+  .shelf-year-unit {
     margin-left: 2px;
     font-family: var(--font-serif-song);
     font-size: 0.78em;
@@ -241,116 +316,387 @@ const latestId = editions[0]?.id;
     color: var(--muted-foreground);
   }
 
-  .year-line {
+  .shelf-line {
     flex: 1;
     height: 1px;
     background: var(--divider);
   }
 
-  .year-count {
+  .shelf-count {
+    font-size: 12.5px;
+    color: var(--foreground);
+    opacity: 0.72;
+  }
+
+  /* —— 年份锚点 —— */
+  .year-anchors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+
+  .year-anchor {
+    padding: 5px 14px;
+    border: 1px solid var(--divider);
+    border-radius: 999px;
+    font-family: 'Archivo', -apple-system, sans-serif;
     font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     color: var(--muted-foreground);
-  }
-
-  .edition-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 32px 28px;
-  }
-
-  /* 白框相片卡：与首页拍立得同一语言，静态网格排布 */
-  .edition-card {
-    display: block;
-    background: var(--paper-face);
-    padding: 10px 10px 16px;
-    border-radius: 6px;
-    box-shadow: var(--paper-shadow);
     text-decoration: none;
     transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.35s ease;
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
-  .edition-card:hover,
-  .edition-card:focus-visible {
-    transform: translateY(-6px) rotate(-0.6deg);
-    box-shadow: var(--paper-shadow-lift);
+  .year-anchor:hover,
+  .year-anchor:focus-visible {
+    color: var(--grad-a);
+    border-color: var(--grad-a);
   }
 
-  .edition-card:focus-visible {
+  .year-anchor:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+  }
+
+  /* —— 书架滚动区：箭头/渐隐/拖拽 —— */
+  .shelf-wrap {
+    position: relative;
+  }
+
+  .shelf-fade {
+    position: absolute;
+    top: 0;
+    bottom: 14px;
+    right: 0;
+    width: 72px;
+    background: linear-gradient(90deg, transparent, var(--background) 88%);
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .shelf-fade.is-hidden {
+    opacity: 0;
+  }
+
+  .shelf-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--divider);
+    border-radius: 50%;
+    background: var(--background);
+    color: var(--foreground);
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(30, 30, 40, 0.25);
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .shelf:hover .shelf-arrow,
+  .shelf-arrow:focus-visible {
+    opacity: 1;
+  }
+
+  .shelf-arrow:hover {
+    color: var(--grad-a);
+  }
+
+  .shelf-arrow:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+  }
+
+  .shelf-arrow--left {
+    left: 10px;
+  }
+
+  .shelf-arrow--right {
+    right: 10px;
+  }
+
+  .shelf-arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* 书架横向滚动：书不换行，沿书架浏览 */
+  .shelf-scroll {
+    overflow-x: auto;
+    padding: 6px 6px 26px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--divider) transparent;
+  }
+
+  .books {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 22px;
+    width: max-content;
+    min-width: 100%;
+    padding: 10px 6px 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  /* 书架板：随书排横向滚动的横板（伪元素挂在 .books 上） */
+  .books::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -9px;
+    height: 9px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #dcc9a6 0%, #b79e77 60%, #937d5b 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -2px 0 rgba(74, 58, 38, 0.35),
+      0 10px 18px -8px rgba(50, 40, 25, 0.45);
+  }
+
+  :global(.dark) .books::after {
+    background: linear-gradient(180deg, #4a4340 0%, #35302c 60%, #211e1c 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+      0 10px 18px -8px rgba(0, 0, 0, 0.7);
+  }
+
+  /* 一册书：竖放的书封 + 书脊 + 下方书名 */
+  .book {
+    width: 172px;
+    /* 高度错落：像真实书架的书 */
+    --bh: 244px;
+  }
+
+  .book:nth-child(4n + 2) {
+    --bh: 258px;
+  }
+
+  .book:nth-child(4n + 3) {
+    --bh: 232px;
+  }
+
+  .book:nth-child(4n) {
+    --bh: 250px;
+  }
+
+  .book-link {
+    display: block;
+    text-decoration: none;
+    transform-origin: bottom left;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.3s ease;
+  }
+
+  /* 抽书：整册上提并轻微倾斜 */
+  .book-link:hover,
+  .book-link:focus-visible {
+    transform: translateY(-8px) rotate(-1.4deg);
+  }
+
+  .book-link:focus-visible {
     outline: 2px solid var(--grad-a);
     outline-offset: 4px;
+    border-radius: 4px;
   }
 
-  .edition-media {
-    display: block;
-  }
-
-  .edition-img {
+  .book-cover {
     position: relative;
     display: block;
-    aspect-ratio: 3 / 2;
-    border-radius: 3px;
+    height: var(--bh);
+    border-radius: 2px 5px 5px 2px;
     overflow: hidden;
     background-color: var(--secondary);
+    box-shadow:
+      0 2px 4px rgba(30, 30, 40, 0.22),
+      0 10px 16px -10px rgba(30, 30, 40, 0.4);
   }
 
-  .edition-img :global(img) {
+  .book-link:hover .book-cover,
+  .book-link:focus-visible .book-cover {
+    box-shadow:
+      0 6px 12px rgba(30, 30, 40, 0.26),
+      0 20px 32px -12px rgba(30, 30, 40, 0.45);
+  }
+
+  .book-cover :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
-  .edition-tag {
+  /* 书脊：左缘暗色渐变条，让平面封面有书的厚度 */
+  .book-spine {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    /* 深色玻璃底：浅色照片上白字也可读 */
-    background: rgba(30, 34, 46, 0.42);
+    inset: 0 auto 0 0;
+    width: 10px;
+    background: linear-gradient(
+      90deg,
+      rgba(10, 12, 18, 0.42) 0%,
+      rgba(10, 12, 18, 0.12) 55%,
+      transparent 100%
+    );
+  }
+
+  .book-cover::after {
+    /* 封面上缘高光：书页反光 */
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 14px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent);
+    pointer-events: none;
+  }
+
+  .book-tag {
+    position: absolute;
+    top: 10px;
+    left: 16px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(30, 34, 46, 0.5);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     color: #fff;
   }
 
-  .edition-latest {
+  /* 最新一期：书签带 */
+  .book-ribbon {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
-    font-family: 'Archivo', -apple-system, sans-serif;
+    top: 0;
+    right: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 5px;
+    width: 20px;
+    height: 30px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+    background: linear-gradient(180deg, var(--grad-b), var(--grad-a));
+    font-family: var(--font-serif-song);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-weight: 700;
     color: #fff;
   }
 
-  .edition-meta {
+  .book-meta {
+    position: absolute;
+    inset: auto 0 0 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 12px 4px 0;
+    gap: 2px;
+    padding: 26px 9px 7px;
+    background: linear-gradient(180deg, transparent, rgba(8, 10, 16, 0.68));
   }
 
-  .edition-meta strong {
-    font-size: 14.5px;
+  .book-meta strong {
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--paper-ink);
+    letter-spacing: 0.03em;
+    line-height: 1.45;
+    color: #fff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .edition-period {
+  .book-period {
     font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--paper-sub);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  /* —— 书架滚动箭头与右缘渐隐 —— */
+  .shelf-wrap {
+    position: relative;
+  }
+
+  .shelf-fade {
+    position: absolute;
+    top: 0;
+    bottom: 14px;
+    right: 0;
+    width: 72px;
+    background: linear-gradient(90deg, transparent, var(--background) 88%);
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .shelf-fade.is-hidden {
+    opacity: 0;
+  }
+
+  .shelf-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--divider);
+    border-radius: 50%;
+    background: var(--background);
+    color: var(--foreground);
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(30, 30, 40, 0.25);
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .shelf:hover .shelf-arrow,
+  .shelf-arrow:focus-visible {
+    opacity: 1;
+  }
+
+  .shelf-arrow:hover {
+    color: var(--grad-a);
+  }
+
+  .shelf-arrow:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 3px;
+  }
+
+  .shelf-arrow--left {
+    left: 10px;
+  }
+
+  .shelf-arrow--right {
+    right: 10px;
+  }
+
+  .shelf-arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .hub-foot {
@@ -374,9 +720,20 @@ const latestId = editions[0]?.id;
       padding: 16px 20px 72px;
     }
 
-    .edition-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 24px 16px;
+    .book {
+      width: 148px;
+    }
+
+    .shelf-arrow {
+      display: none;
+    }
+
+    .book:nth-child(4n + 2) {
+      --bh: 232px;
+    }
+
+    .book:nth-child(4n) {
+      --bh: 224px;
     }
   }
 </style>
