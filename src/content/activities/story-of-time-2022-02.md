@@ -4,7 +4,7 @@ subtitle: '灯与河川，二月人间'
 issue: '二月篇'
 period: 'FEBRUARY 2022'
 cover: ../../assets/activities/story-of-time-2022-02/cover.jpg
-excerpt: '《时间的故事》二月篇：31 幅作品，收录组员们的时光片段。'
+excerpt: '《时间的故事》二月篇：。31 幅作品，收录组员们的时光片段。'
 team:
   lead: '海鸥之声'
   editor: '包子小方同学'
