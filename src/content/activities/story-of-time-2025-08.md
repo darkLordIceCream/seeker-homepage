@@ -4,7 +4,9 @@ subtitle: '镜收长天色，影定仲夏心'
 issue: '八月篇'
 period: 'AUGUST 2025'
 cover: ../../assets/activities/story-of-time-2025-08/cover.jpg
-excerpt: '《时间的故事》八月篇：29 幅作品，收录组员们的时光片段。'
+excerpt:
+  '《时间的故事》八月篇：镜收长天色，影定仲夏心 61. 【Seeker
+  时间的故事】八月篇｜镜收长天色，影定仲夏心。29 幅作品，收录组员们的时光片段。'
 team:
   lead: '幻想家拾柒'
   editor: '是田田吖'
