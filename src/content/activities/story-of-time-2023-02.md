@@ -82,7 +82,7 @@ entries:
     images:
       - ../../assets/activities/story-of-time-2023-02/14.jpg
     caption: '二月初的东北还是白雪皑皑，松树成为了北国中唯一的绿色来源。在雪地中尤为亮眼。虽然原本想以6的形态拍摄这片树林，但是想了想还是以9的方式呈现吧，祝大家长长久久地久天长。'
-  - author: "\\Infty_{547}"
+  - author: "Sonder"
     images:
       - ../../assets/activities/story-of-time-2023-02/15.jpg
     caption: '随着夏季银河的到来，再次来到了云绕雅拉，而这次我选择的是更高视角更好的一个机位，在山口最顶上，慢慢爬上去，伴随着在耳边呼啸而过的冷风，和莫过脚踝的积雪，艰难的爬了上去，熬了一个晚上等待着银河的升起。'
