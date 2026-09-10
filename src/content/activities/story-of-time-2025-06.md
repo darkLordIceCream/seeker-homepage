@@ -27,9 +27,7 @@ entries:
   - author: 'Lucas_樞'
     images:
       - ../../assets/activities/story-of-time-2025-06/02.jpg
-    caption: |-
-      踏进拱门，披上清真寺门口可免费借用的长袍，仿佛穿越了时光。阳光洒落，影子随风轻摆，这一刻只属于沉静与敬意。
-      自然户外组
+    caption: '踏进拱门，披上清真寺门口可免费借用的长袍，仿佛穿越了时光。阳光洒落，影子随风轻摆，这一刻只属于沉静与敬意。'
   - author: 'iwanna我想'
     images:
       - ../../assets/activities/story-of-time-2025-06/03.jpg
@@ -51,9 +49,7 @@ entries:
   - author: '东仔·DZ'
     images:
       - ../../assets/activities/story-of-time-2025-06/07.jpg
-    caption:
-      '在婺源卧龙谷，被一场瀑布“淋”湿了灵魂。沿着青苔石阶向上，水声由远及近，直到轰鸣灌满双耳。一抬头，白练当空，飞珠溅玉，仿佛九天银河在此倾泻。
-      山风裹挟着沁凉水雾扑面而来，瞬间洗掉所有暑气与尘埃。'
+    caption: '在婺源卧龙谷，被一场瀑布“淋”湿了灵魂。沿着青苔石阶向上，水声由远及近，直到轰鸣灌满双耳。一抬头，白练当空，飞珠溅玉，仿佛九天银河在此倾泻。山风裹挟着沁凉水雾扑面而来，瞬间洗掉所有暑气与尘埃。'
   - author: '何子毅'
     images:
       - ../../assets/activities/story-of-time-2025-06/08.jpg
@@ -75,9 +71,7 @@ entries:
   - author: '源dream'
     images:
       - ../../assets/activities/story-of-time-2025-06/12.jpg
-    caption: |-
-      6月初在西藏第三大湖扎日南木错的南岸蹲守着星空银河，半夜的湖湾里受到山脊遮挡，风力变小，湖面的水也静了下来，如同镜面反射一样，倒影着繁星与五彩斑斓的气辉。
-      城市建筑组
+    caption: '6月初在西藏第三大湖扎日南木错的南岸蹲守着星空银河，半夜的湖湾里受到山脊遮挡，风力变小，湖面的水也静了下来，如同镜面反射一样，倒影着繁星与五彩斑斓的气辉。'
   - author: 'Carlson'
     images:
       - ../../assets/activities/story-of-time-2025-06/13.jpg
@@ -129,9 +123,7 @@ entries:
   - author: '之二'
     images:
       - ../../assets/activities/story-of-time-2025-06/23.jpg
-    caption: |-
-      那日在父母工作地方等待他们下班回家，趁着闲暇漫步公园，不曾想一脚迈进这异度空间。于是第二天就策划这次拍摄，以飞机在高处俯瞰，台阶是循环往复的命运阶梯，扶手化作分割维度的分界线，而那抹彩虹伞，恰似异度空间里唯一的“现实锚点”。
-      人文纪实组
+    caption: '那日在父母工作地方等待他们下班回家，趁着闲暇漫步公园，不曾想一脚迈进这异度空间。于是第二天就策划这次拍摄，以飞机在高处俯瞰，台阶是循环往复的命运阶梯，扶手化作分割维度的分界线，而那抹彩虹伞，恰似异度空间里唯一的“现实锚点”。'
   - author: 'Kenny.Wang'
     images:
       - ../../assets/activities/story-of-time-2025-06/24.jpg
@@ -153,9 +145,7 @@ entries:
   - author: '月某人'
     images:
       - ../../assets/activities/story-of-time-2025-06/28.jpg
-    caption: |-
-      水墨滩涂，舟行杆间，喧嚣被滤成这抹宁静。
-      人像肖像组
+    caption: '水墨滩涂，舟行杆间，喧嚣被滤成这抹宁静。'
   - author: '宠物摄影师狗哥'
     images:
       - ../../assets/activities/story-of-time-2025-06/29.jpg
@@ -174,6 +164,7 @@ entries:
       ——伊丽莎白·毕肖普
 poem: |
   骄阳流金的六月天里，白昼被无限拉长，时间仿佛熔成了琥珀。携一颗沉静的心漫游，当镜头追逐树海翻涌的绿浪时，别忘了让双耳浸透蝉鸣织就的网，让肌肤感受风穿过灼热空气的纹理。向万物借一束光吧，生命最蓬勃的诗行，正写在万物恣意生长的光芒里，写在你不经意间向世界敞开的、那被晒得微烫的胸膛上。
+
 pastIssues:
   - name: '五月篇'
     line: '暑信初传薰风起 绿荫深处见芳华'

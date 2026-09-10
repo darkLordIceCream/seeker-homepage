@@ -50,7 +50,7 @@ entries:
       - ../../assets/activities/story-of-time-2025-12/06.jpg
     caption: |-
       《梦开始的地方》
-      2025双子座流星雨之际，我来到川西的塔公草原——我的星空摄影开始的地方，再一次拍下这张 冬季银河与双子座流星雨的合影。
+      2025双子座流星雨之际，我来到川西的塔公草原——我的星空摄影开始的地方，再一次拍下这张冬季银河与双子座流星雨的合影。
   - author: 'Jrhing'
     images:
       - ../../assets/activities/story-of-time-2025-12/07.jpg
@@ -69,7 +69,6 @@ entries:
     caption: |-
       《千年古榕》
       一颗树长成了一片森林，充满了生命力和阳光感，千年古榕的树张力是照片描绘不出来的。
-      城市建筑组
   - author: 'Liiiin'
     images:
       - ../../assets/activities/story-of-time-2025-12/10.jpg
@@ -151,9 +150,7 @@ entries:
   - author: '辰雾DawnLens'
     images:
       - ../../assets/activities/story-of-time-2025-12/23.jpg
-    caption: |-
-      雨过天晴，正午的紫云观，钟楼金檐迎着烈阳，太极台的石纹显现出了天地刚柔。
-      人文纪实组
+    caption: '雨过天晴，正午的紫云观，钟楼金檐迎着烈阳，太极台的石纹显现出了天地刚柔。'
   - author: '摄影师何子毅'
     images:
       - ../../assets/activities/story-of-time-2025-12/24.jpg
@@ -194,7 +191,6 @@ entries:
     caption: |-
       《粉色星海落满场》
       当漫天粉屑裹着光屑坠落，整座场馆都浸在温柔的绯色里——他站在这片浪漫的中心，抬手的瞬间，像接住了全场的心跳。
-      人像肖像组
   - author: '绿谷'
     images:
       - ../../assets/activities/story-of-time-2025-12/31.jpg
@@ -216,7 +212,7 @@ entries:
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-12/34.jpg
-    caption: '“栀子比众木 人间诚未多”'
+    caption: '“栀子比众木人间诚未多”'
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-12/35.jpg
@@ -224,7 +220,6 @@ entries:
       《圣诞快乐》
       “圣诞节最好的礼物是什么“
       “是见你一面”。
-      商业创意组
   - author: '宠物摄影师Kaden'
     images:
       - ../../assets/activities/story-of-time-2025-12/36.jpg
@@ -240,6 +235,7 @@ poem: |
   十二月是岁末的信封，我们用它装载一年最后的晨昏、呼吸与温度。
   回看我们共同定格的瞬间，你会发现，时间从未真正逝去。它只是换了种方式，住在我们的镜头里，因为时间会流逝，但是故事不会。
   对抗遗忘的方式，是制造另一种形式的记忆。我们2026再见。
+
 pastIssues:
   - name: '十一月篇'
     line: '露沾草，风落木，岁方秋'

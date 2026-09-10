@@ -27,7 +27,6 @@ entries:
     caption: |-
       《雾枝缄言》
       枯枝缠雾，方巾覆容，修女孑立烟霭间，每缕白霭都裹着未启的幽寂。
-      自然户外组
   - author: 'Talon'
     images:
       - ../../assets/activities/story-of-time-2025-11/03.jpg
@@ -64,7 +63,6 @@ entries:
     caption: |-
       《峡·光·晓》
       十一月末来临，天气通透感拉满，凌晨5点起来追光，在阳山峡天下，收获这片喀斯特峰丛日出。
-      城市建筑组
   - author: '宠物摄影师Kaden'
     images:
       - ../../assets/activities/story-of-time-2025-11/09.jpg
@@ -128,9 +126,7 @@ entries:
   - author: 'Lanjixxx蓝极星'
     images:
       - ../../assets/activities/story-of-time-2025-11/19.jpg
-    caption: |-
-      《桥畔花语》林立的钢筋水泥之间，悄然藏着一隅绿地，供人喘息。其间，娇花静静地绽放，吐露着温柔的生机。
-      人文纪实组
+    caption: '《桥畔花语》林立的钢筋水泥之间，悄然藏着一隅绿地，供人喘息。其间，娇花静静地绽放，吐露着温柔的生机。'
   - author: '黑暗之王'
     images:
       - ../../assets/activities/story-of-time-2025-11/20.jpg
@@ -179,7 +175,6 @@ entries:
     caption: |-
       《灯火里的祈愿与温柔》
       暖黄灯火裹着竹编灯笼，“平安”“喜乐”的红墨在光里洇开，是生活最软的祈愿。身影浸在暖意里，与满墙的温柔对答，夜便有了温度。
-      人像肖像组
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-11/28.jpg
@@ -189,24 +184,22 @@ entries:
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-11/29.jpg
-    caption: '“栀子比众木 人间诚未多”'
+    caption: '“栀子比众木人间诚未多”'
   - author: '琦一'
     images:
       - ../../assets/activities/story-of-time-2025-11/30.jpg
     caption: |-
       《星星点灯》
       红围巾裹住冬叶的软，星星灯亮在掌心，是岁末的温柔序章。
-      商业创意组
   - author: '幻想家拾柒'
     images:
       - ../../assets/activities/story-of-time-2025-11/31.jpg
     caption: |-
       《月下》
       那天我和朋友同时刷到了这类照片，就想着拍一次一样的，没想到这次规划前前后后我们准备了两个多礼拜
-      。
-      商业创意组
 poem: |
   “铮然一叶，天下已知秋”，一年中最绚丽的时节已然到来。乌桕、梧桐、银杏你方唱罢我登场，共同谱写金色诗篇；海鸥离开寒冷的北方向南追寻温暖，而南半球的萤火虫正值旺季……“一年好景君须记，最是橙黄橘绿时”，2025走向尾声，秋日的故事也将讲完，期待冬天会带来不同的收获与感触。
+
 pastIssues:
   - name: '十月篇'
     line: '山明水净夜来霜，数树深红出浅黄'

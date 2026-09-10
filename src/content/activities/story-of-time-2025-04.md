@@ -22,9 +22,7 @@ entries:
   - author: '景'
     images:
       - ../../assets/activities/story-of-time-2025-04/02.jpg
-    caption: |-
-      “心是沉重的负担。”
-      自然户外组
+    caption: '“心是沉重的负担。”'
   - author: '源Dream'
     images:
       - ../../assets/activities/story-of-time-2025-04/03.jpg
@@ -57,9 +55,7 @@ entries:
   - author: '白纸'
     images:
       - ../../assets/activities/story-of-time-2025-04/09.jpg
-    caption: |-
-      一次普通的外出拍摄见证了深蓝与墨黑交织，白纹似星河碎落。
-      城市建筑组
+    caption: '一次普通的外出拍摄见证了深蓝与墨黑交织，白纹似星河碎落。'
   - author: 'Kkbbr'
     images:
       - ../../assets/activities/story-of-time-2025-04/10.jpg
@@ -105,21 +101,15 @@ entries:
   - author: 'Carlson'
     images:
       - ../../assets/activities/story-of-time-2025-04/18.jpg
-    caption:
-      '《旭芒穿古映今熙》天色渐亮，一抹柔和的橙光在天边晕染开来。没多久，太阳从永定塔方向缓缓升起，金色光芒穿透薄雾。
-      不远处，国贸CBD的建筑群在晨光中轮廓分明。古老的永定塔与现代的高楼并肩而立，这一刻，历史与现代相互交融。'
+    caption: '《旭芒穿古映今熙》天色渐亮，一抹柔和的橙光在天边晕染开来。没多久，太阳从永定塔方向缓缓升起，金色光芒穿透薄雾。不远处，国贸CBD的建筑群在晨光中轮廓分明。古老的永定塔与现代的高楼并肩而立，这一刻，历史与现代相互交融。'
   - author: 'DawnTideNN'
     images:
       - ../../assets/activities/story-of-time-2025-04/19.jpg
-    caption: |-
-      终于有机会在梅溪湖国际文化艺术中心大剧院进行拍摄创作，结束之前在舞台上留下一张人生照片。
-      人文纪实组
+    caption: '终于有机会在梅溪湖国际文化艺术中心大剧院进行拍摄创作，结束之前在舞台上留下一张人生照片。'
   - author: 'MateoLee'
     images:
       - ../../assets/activities/story-of-time-2025-04/20.jpg
-    caption: |-
-      开门
-      人像肖像组
+    caption: '开门'
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-04/21.jpg
@@ -131,15 +121,14 @@ entries:
   - author: '是田田吖'
     images:
       - ../../assets/activities/story-of-time-2025-04/23.jpg
-    caption: |-
-      银铃轻响处，牛首山回唱一首未被翻译的古老歌谣。
-      商业创意组
+    caption: '银铃轻响处，牛首山回唱一首未被翻译的古老歌谣。'
   - author: '宠物摄影师狗哥'
     images:
       - ../../assets/activities/story-of-time-2025-04/24.jpg
-    caption: '阳光明媚的春天来啦 让我们的汪汪队们来一场你追我赶的快乐追逐吧。'
+    caption: '阳光明媚的春天来啦让我们的汪汪队们来一场你追我赶的快乐追逐吧。'
 poem: |
   在草木初萌的四月天里，时间正与我们并肩生长。携一颗闲适的心漫游，把镜头对准抽芽的枝头时，别忘了让眼睛也饱蘸春光，让心田浸润自然的絮语——真正的春意，永远生长在驻足凝视的瞬间。
+
 pastIssues:
   - name: '三月篇'
     line: '春风无头绪，吹梦成花溪'
