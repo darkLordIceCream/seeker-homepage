@@ -17,13 +17,13 @@ layout: gallery-story
 entries:
   - date: '7月28日'
     title: '霞染申城'
-    author: '迅雷疾风'
+    author: "迅雷疾风"
     images:
       - ../../assets/activities/2026-08/01.jpg
     caption: '清晨的第一束霞光越过上海天际线，在云层间铺开炽烈的橙红。陆家嘴的高楼仍带着夜色的沉静，脚下老城街巷也尚未完全苏醒。新与旧、灯火与晨光在这一刻交汇，城市从深蓝色的夜缓慢走向新的一天。'
   - date: '7月31日'
     title: '飞跃城市之巅'
-    author: '万古VS长青'
+    author: "万古VS长青"
     images:
       - ../../assets/activities/2026-08/02.jpg
     caption:
@@ -31,19 +31,19 @@ entries:
       没想道在飞机来临之前天又放晴了。'
   - date: '8月1日'
     title: '当星星坠落成海'
-    author: '陈默'
+    author: "陈默"
     images:
       - ../../assets/activities/2026-08/03.jpg
     caption: '这次的辞职小长假因为一些不可抗力的因素最后选择了重庆作为旅行目的地，又因为一些不可抗力的因素导致白天都没法正常拍摄，只能趁着傍晚出去闲逛，路过珊瑚坝的时候意外注意到了这片区域在被日落余光照亮，最终拍下了这张照片。'
   - date: '8月1日'
     title: '康布的黄昏'
-    author: '钪钇'
+    author: "钪钇"
     images:
       - ../../assets/activities/2026-08/04.jpg
     caption: '康布雪峰地处青海玉树下拉秀镇，距离玉树市区约四十公里，属于唐古拉山东段余脉，这里尚未开发，没有景区设施，也无需门票。我和队友自驾到达山脚下，然后经历了一公里多的陡坡爬升之后找到拍摄位置，本来计划在山上露营和探索，但是队友突发高反，我只好一个人爬到这个机位，用无人机拍下自己和山的合影，拍完日落之后便紧急拔营摸黑下撤（危险！不要模仿）。'
   - date: '8月2日'
     title: '星际穿越'
-    author: '纯黑的林桑'
+    author: "纯黑的林桑"
     images:
       - ../../assets/activities/2026-08/05.jpg
     caption:
@@ -52,7 +52,7 @@ entries:
       （好的，吹头发的时候看到吹风机的背面有点意思，然后就联想到了这部电影。）'
   - date: '8月2日'
     title: '「霞染渔湾」DAWN AWAKENS'
-    author: '阿羊今天不拍照'
+    author: "阿羊今天不拍照"
     images:
       - ../../assets/activities/2026-08/06.jpg
     caption:
@@ -62,13 +62,13 @@ entries:
       本来，我们对这场火烧云并没抱超越六年前的期望，但如今回看，它已然胜过了六年前的那一场。'
   - date: '8月7日'
     title: '织金峡谷舟游'
-    author: '陳某人'
+    author: "陳某人"
     images:
       - ../../assets/activities/2026-08/07.jpg
     caption: '深洞幽影烛火浮,澄潭跃金漾轻舟,冥冥岩壑人初渡,静逐流光地下游。'
   - date: '8月7日'
     title: 'A市'
-    author: '月某人'
+    author: "月某人"
     images:
       - ../../assets/activities/2026-08/08.jpg
     caption:
@@ -76,7 +76,7 @@ entries:
       随着国内无人机管理越来越严，出国航拍也许是个不错的选择，简单的报备手续就可在吉隆坡市中心起飞。'
   - date: '8月7日'
     title: '暗处符号'
-    author: '一把彩虹伞'
+    author: "一把彩虹伞"
     images:
       - ../../assets/activities/2026-08/09.jpg
     caption:
@@ -84,19 +84,19 @@ entries:
       一座城市的格局，不只在于拔地而起的地标，更在于暗处那些看不见的细节，平等善待每一个人，便是最动人的人文关怀。'
   - date: '8月8日'
     title: '我想知道“我爱你”的含义'
-    author: '日行性猫猫'
+    author: "日行性猫猫"
     images:
       - ../../assets/activities/2026-08/10.jpg
     caption: '「明白“爱”的意义的那一天定会到来」 使用动漫背景与人物实拍合成。'
   - date: '8月8日'
     title: '暮光之城'
-    author: '宠物摄影师狗哥'
+    author: "宠物摄影师狗哥"
     images:
       - ../../assets/activities/2026-08/11.jpg
     caption: '黄昏峡谷，狗立悬崖眺望。蜿蜒公路上车灯闪耀，远处城镇灯火阑珊，画面苍茫静谧。'
   - date: '8月9日'
     title: '暮色将临'
-    author: 'V.ter'
+    author: "V.ter"
     images:
       - ../../assets/activities/2026-08/12.jpg
     caption:
@@ -104,7 +104,7 @@ entries:
       Light（又一道光）》专辑封面的色调，加入复古颗粒视觉风格。逆光环境下，以浓烈色调渲染氛围感，用剪影定格夏日海边烟火，留存滨海城市鲜活真实的人间片段。'
   - date: '8月12日'
     title: '「Ring of Fire」'
-    author: 'CONST.'
+    author: "CONST."
     images:
       - ../../assets/activities/2026-08/13.jpg
     caption: |-
@@ -114,19 +114,19 @@ entries:
       或许只有自然 才能真正让人类团结起来
   - date: '8月13日'
     title: '爱意'
-    author: 'Carlson'
+    author: "Carlson"
     images:
       - ../../assets/activities/2026-08/14.jpg
     caption: '有时候，我只是静静地坐在床边看着她，一种从未体验过的幸福感就会油然而生。在成为父亲之前，我从不知道生命的重量可以如此温柔。在女儿出生的第一个月，这是我最喜欢的一个瞬间，相信很多年以后她长大了，回头看看这些记录，就会知道，在她刚来到这个世界的时候，曾被怎样温柔的光芒和无条件地爱意深深包裹着。'
   - date: '8月13日'
     title: '我听到了星轨的回响'
-    author: '至尊宝'
+    author: "至尊宝"
     images:
       - ../../assets/activities/2026-08/15.jpg
     caption: '作品拍摄于内蒙古阿拉善腾格里沙漠的深夜。深入腾格里无人沙漠，这里没有光污染的影响，拥有极致纯净的暗夜环境。用堆栈手法，300张照片堆栈成一张星轨，把整片旋转的星空完整收纳进一个独立空间。'
   - date: '8月13日'
     title: '寄愿'
-    author: 'Chenjiajian'
+    author: "Chenjiajian"
     images:
       - ../../assets/activities/2026-08/16.jpg
     caption:
@@ -134,13 +134,13 @@ entries:
       希望以后都能保持100分的开心和热情!'
   - date: '8月15日'
     title: '叮叮车上的午后'
-    author: 'X_ming'
+    author: "X_ming"
     images:
       - ../../assets/activities/2026-08/17.jpg
     caption: '靠着座椅，靠着窗户，不需要精心设计的动作就能拍出具有电影感的生命力，香港不愧是电影里的城市。'
   - date: '8月25日'
     title: '线·影·人·潮'
-    author: 'Leslin'
+    author: "Leslin"
     images:
       - ../../assets/activities/2026-08/18.jpg
     caption: |-
@@ -150,7 +150,7 @@ entries:
       城市从不会因为一个人的情绪停下来。人潮依旧向前，灯光依旧亮着，只有那些短暂的沉默，被线条和影子留在了照片里。
   - date: '8月25日'
     title: '中元'
-    author: '树下的猫'
+    author: "树下的猫"
     images:
       - ../../assets/activities/2026-08/19.jpg
     caption: '贵州把中元节叫七月半，核心习俗就是烧袱包（烧包），和外地直接烧散纸钱不一样，讲究把冥钱封装成纸包，像寄信件一样送给祖先。'
