@@ -41,19 +41,22 @@ const enDate = (d: string) => {
 };
 
 /**
- * 连续同日条目归入同一日期章节（2026 版式：日期仅在变化时显示）；
- * 无日期条目（2021-2025 早期版式）归入无分隔的平铺组
+ * 连续同日且同栏目的条目归入同一章节：
+ * - 2026 版式按日期分章（日期仅在变化时显示）
+ * - 2022-2025 版式按栏目分章（城市/自然/人像肖像组…）
+ * - 早期版式两者皆无，归入无分隔的平铺组
  */
 type Entry = Props['article']['data']['entries'][number];
-const groups: { date?: string; dateEn?: string; items: Entry[] }[] = [];
+const groups: { date?: string; dateEn?: string; group?: string; items: Entry[] }[] = [];
 for (const entry of data.entries) {
   const last = groups.at(-1);
-  if (last && last.date === entry.date) {
+  if (last && last.date === entry.date && last.group === entry.group) {
     last.items.push(entry);
   } else {
     groups.push({
       date: entry.date,
       dateEn: entry.date ? enDate(entry.date) : undefined,
+      group: entry.group,
       items: [entry],
     });
   }
@@ -72,15 +75,24 @@ const metaItems = [
 
 /**
  * 条目排版分型（参考哈苏大师赛/马格南画册的图文节奏）：
+ * - strip：超长竖条拼接图（h ≥ 3w，如竖排串拍）——按胶片长卷全宽呈现
  * - side：竖幅/方幅（h ≥ 1.2w）——照片贴内容左缘大幅（≤84vh），说明挂右侧 sticky 栏
  * - stack：横幅——照片突破版心通栏居中，说明在下方居中（上下中心对称）
  * 一稿多图按首图画幅定型
  */
+const isStrip = (entry: Entry) => {
+  const first = entry.images.at(0);
+  return !!first && entry.images.length === 1 && first.height >= first.width * 3;
+};
+
 const isSide = (entry: Entry) => {
   const first = entry.images.at(0);
   if (!first) {return true;}
   return first.height * 5 >= first.width * 6;
 };
+
+const itemVariant = (entry: Entry) =>
+  isStrip(entry) ? 'story-item--strip' : isSide(entry) ? 'story-item--side' : 'story-item--stack';
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -143,14 +155,15 @@ const jsonLd = JSON.stringify({
     <section aria-label="本期作品" class="story-gallery">
       {groups.map(group => (
         <div class="date-chapter">
-          {group.date && (
+          {(group.date || group.group) && (
             <h2 class="chapter-divider">
-              <span class="chapter-zh">{group.date}</span>
-              <span class="chapter-en">{group.dateEn}</span>
+              {group.date && <span class="chapter-zh">{group.date}</span>}
+              {group.group && <span class="chapter-zh">{group.group}</span>}
+              {group.dateEn && <span class="chapter-en">{group.dateEn}</span>}
             </h2>
           )}
           {group.items.map(entry => (
-            <figure class:list={['story-item', { 'story-item--side': isSide(entry), 'story-item--stack': !isSide(entry), 'story-item--multi': entry.images.length > 1 }]}>
+            <figure class:list={['story-item', itemVariant(entry), { 'story-item--multi': entry.images.length > 1 }]}>
               <span class="item-media" style={`--cols: ${entry.images.length}`}>
                 {entry.images.map((img, j) => (
                   <button
@@ -662,6 +675,26 @@ const jsonLd = JSON.stringify({
   }
 
   .story-item--stack .item-label {
+    align-items: center;
+    text-align: center;
+    max-width: 740px;
+    margin: 20px auto 0;
+  }
+
+  /* —— strip 型：超长竖条拼接图（竖排串拍）——按胶片长卷全宽呈现，随页滚动观看 —— */
+  .story-item--strip .item-media {
+    /* 抵消画廊版心 padding，通栏与封面同宽（上限 1080px 源宽） */
+    margin-inline: calc(-1 * var(--edge));
+    justify-content: center;
+  }
+
+  .story-item--strip .item-media :global(img) {
+    width: min(100%, 1080px);
+    height: auto;
+    max-height: none;
+  }
+
+  .story-item--strip .item-label {
     align-items: center;
     text-align: center;
     max-width: 740px;

@@ -16,44 +16,54 @@ order: 202408
 layout: gallery-story
 entries:
   - author: '快门3w次'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/01.jpg
     caption: '光影交错中，黑白的色调显得格外分明，简约而不失深邃。那飞扬的身姿，仿佛一只正在探索自由的鸟儿，带着梦想与希望，穿越现实与幻想的界限。'
   - author: '無婷'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/02.jpg
     caption: '她像落入深井的玉兰花瓣，无风亦如飘雪起舞。'
   - author: 'ChenGY35'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/03.jpg
     caption: '算是难得的休息日，跟朋友去打卡了厦门红点艺术馆，简约的色彩和线条给人一种舒服的“高级感”。毕业后才开始怀念学校生活，回头看，属于我的青春已经结束了！'
   - author: 'Just Fell Asleep'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/04.jpg
     caption: '8月，对于福州是一个阴雨主题的月份。没有震撼的强对流，也没有万里无云的晴天。“水泥”是这个月的色调。但好在天空总会给到我一些惊喜。一天傍晚，猝不及防的大雨过后，天边泛起了红色。虽然没有震撼的火烧云，但在夜幕降临之后，闪电便开始了他们的表演。'
   - author: 'Lucas_樞'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/05.jpg
     caption: '夜幕降临，重庆李子坝的轻轨飞驰而过，城市的喧嚣在瞬间被拉长。她伫立在光影交错的小径上，手中的伞轻掩着一丝温柔。仿佛整个世界都在这一刻静止，只剩下她与轻轨的相遇，像一首不朽的诗，定格在城市的脉动之中。'
   - author: 'DYwhere'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/06.jpg
     caption: '炎炎夏日，烈日高悬，我一不小心路过这座外表满是冰裂纹的城市地标。突然几名行人匆匆穿过那片墙面，在白色的几何背景下显得格外鲜明。我迅速举起手机，记录下了这一瞬间。'
   - author: '是梨某人啊'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/07.jpg
     caption: '通过捕捉一辆标志性的红白出租车在繁忙街道中的瞬间，我试图传递一种城市中的宁静与繁忙交错的感觉，让观者感受到这座城市中每一辆车、每一个人的故事。'
   - author: '张臭臭'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/08.jpg
     caption:
       '八月的某天和倪大科学家在南京顶着高温city
       walk，到了最后一站青奥双子塔之下上一秒还火辣的太阳下一秒就被乌云笼罩起来，等待了一会也没见太阳有要冒头的迹象，趁着还有一点点阳光，于是我们到负一层极速的按下快门记录下这张哈扎建筑之美—青奥双子塔，后期再对建筑磨皮、强化光影于是得到了这张照片！'
   - author: 'Nils'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/09.jpg
     caption: '澳门夜色，灯火阑珊，霓虹闪烁，如梦似幻。街灯与星光交相辉映，映照出独特的城市风貌。夜幕下的澳门，既有繁华的喧嚣，又有静谧的温柔，令人陶醉其中，流连忘返。'
   - author: 'Rewind'
+    group: '城市'
     images:
       - ../../assets/activities/story-of-time-2024-08/10.jpg
     caption: |-
@@ -68,56 +78,69 @@ entries:
       2024.8.3 26周岁收到了最珍贵礼物！
       人生难得拥有契合灵魂的挚友，正如你所说“幸得识卿桃花面，从此阡陌多暖春.”
   - author: 'RaN'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/11.jpg
     caption: '抓住夏天的尾巴去河边散步，那一刻，仿佛时间都慢了下来，只剩下自由与欢乐。'
   - author: '北初-'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/12.jpg
     caption: '《海之韵律：渔网与希望》身着橙色与蓝色工作服的渔民们，他们的身影在晨光中显得格外坚毅。安全帽下的脸庞，虽被岁月的风霜雕刻出痕迹，但眼中闪烁的是对生活的热爱与不屈。'
   - author: '绿谷'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/13.jpg
     caption: '三清山结束后和小伙伴们一起来婺源拍火壶表演，严格意义上这也是我第一次拍非遗。40度的高温下进行烈火之舞，短暂的表演时间背后是千百次的锤炼和忍耐。由于人群的拥挤和火花的变化也使拍摄更加困难，最后我选择用手机进行拍摄，等待许久终于抓取到了最喜欢的一张。火焰犹如漩涡蔓延表演者右手高举犹如起义的首领震震撼人心。'
   - author: '白纸'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/14.jpg
     caption: '一卷又一卷，映照光阴，是时间的故事'
   - author: '衣羊'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/15.jpg
     caption: '《努力活着》一树生长，万物盛夏。一个普通的午后，一条普通的街道，横幅上的字眼仿佛也在预示着自己，如今生存压力如此紧张的社会，只要我们双手还在劳动，何愁养不活自己。愿君共勉！！'
   - author: 'Kkbbr'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/16.jpg
     caption: '八月跟朋友相约去了香港，非常难受的是每次拿出相机准备拍，天上就开始下雨，我们也是在雨中打卡各个机位。在其中一个天桥机位，我偶然发现了一个不错的视角，桥上桥下正好被框进一个画面，如同平行世界。桥上是驻足打卡的游客，桥下是在雨中忙碌奔波的人。'
   - author: '江河漫读。'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/17.jpg
     caption: '8月初的南昌街头，作为旅客的我偶然路过一家锅具店，看到两个老大爷正在屋檐下悠闲地乘凉。面对这街角的一幕，我放下了疲于赶路的心情，拿起相机记录下了这充满烟火气的画面。'
   - author: '三月大的猫'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/18.jpg
     caption: '人类对火好像有种莫名的崇拜，所谓“火除邪祟，百家安宁”，它在原始社会就给足了人类安全感，同时又能烹美食，除百毒。我猜这也是许多的民俗活动都通过火焰来祈求美好的生活的原因吧'
   - author: '王梓轩'
+    group: '人文'
     images:
       - ../../assets/activities/story-of-time-2024-08/19.jpg
     caption:
       '在萨迦寺的随手拍，在回忆面前匆匆路过
       ：老人路过的时候仿佛看到了年轻时也在打阿嘎的自己。'
   - author: 'GenGen'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/20.jpg
     caption: '很荣幸可以和稀客儿们一起到江西的三清山拍摄��，当大家都在西海岸架好机位等待日落的时候，我和我的小伙伴们在道旁的一处栈道停下，仔细研究这个松树前景和背后的群山，最后用相机定格了这一画面。近处的松木和远处的群山辉映，若如一仙人眺望远方一般，让我感慨万分。'
   - author: '源Dream'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/21.jpg
     caption: '手机拍摄星空已经是我的常态，但尝试用手机接夏季银河的拱桥还没有过，在经历过几次对手机的了解后终于成功了，也是自己的一大步。'
   - author: '斌子'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/22.jpg
     caption: '8月中旬.第一次来到了意大利多洛米蒂.而在著名的三峰山我守了三天.每天都有不一样的风景.然而前两天一到傍晚的天气就不尽如人意.在我离开这里的最后一天终于在合适的方向出现了火烧云.我急忙用接片记录下这一刻.就在晚霞结束的之后半个小时.竟然狂风大作电闪雷鸣.被淋成了落汤鸡。'
   - author: '猫辰不是猫'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/23.jpg
     caption: |-
@@ -126,32 +149,39 @@ entries:
       图中仙本那的鹿角珊瑚已经出现大面积白化现象
       希望我们都只是参与者而不是破坏者一起保护自然。
   - author: '一只佩奇'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/24.jpg
     caption: '一场倾盆大雨过后，云雾还未散去，天空中飘着丝丝细雨。临近夕阳，太阳悄悄地投过云层，将金黄色的阳光撒在大地上，我迅速拿出无人机，不顾被雨淋坏的风险，拍下了这张原始的自然美。'
   - author: '酒馆的鲍勃'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/25.jpg
     caption: '7月28日，我与好友自宁夏回族自治区中卫市出发，一路向北经阿拉善左旗，驱车穿越腾格里沙漠。在即将抵达沙漠右侧的贺兰山边界时，我们决定徒步登上目视最高的一座沙丘取景。由于当时已接近日落，于是我将一台相机部署在沙丘底进行延时间隔拍摄。当晚上我们返回出发点取回相机时，意外发现了它记录下了我们登山的过程。在后期中我保留了沙漠徒步旅人的脚印，纪念人类面对大自然时不屈的意志'
   - author: '林宇先'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/26.jpg
     caption: '在那片广袤无垠的土地上，原先厚重的阴云如同被打翻的墨水瓶，遮蔽着天际，使得大地一片昏暗。就在我几乎要放弃，准备收起飞机的瞬间，奇迹发生了。云层中突然裂开了一道缝隙，万丈金光穿透而出，如神祇的画笔，将这片田园牧歌之地渲染成一幅流动的油画。光影交错间，金黄的麦田、碧绿的草原、远处的雪山，以及悠闲的牛羊，都被镀上了一层神圣的光辉，美得令人心醉。这一刻，我仿佛听到了大自然最动人的乐章，快门声成了这乐章中最为神圣的音符。'
   - author: 'Liiiin'
+    group: '自然'
     images:
       - ../../assets/activities/story-of-time-2024-08/27.jpg
     caption: '山西今年的天气一直变化无常，幸运的是在连天的大雨过后天空终于放晴，恰逢周末，我和女朋友再次前往芦芽山露营避暑，拍下了这张银河下的合影'
   - author: '张艾艾'
+    group: '人像'
     images:
       - ../../assets/activities/story-of-time-2024-08/28.jpg
     caption: '八月结束了十天的游玩，落脚到了成都，去见了我最要好的模特小伙伴，也和她约了一组片；拍摄时间很紧，但是拍摄出来效果依然一如既然的惊艳，下一次拍摄她不知道是何年何月了；希望这次帮她记录下她现在的样子，也记录下我们开心的日子。'
   - author: '日行性猫猫'
+    group: '人像'
     images:
       - ../../assets/activities/story-of-time-2024-08/29.jpg
     caption: |-
       “南荒有蝶奇异，无须之敏，无足之行，……或与无足鸟亲类。”
       被剥去最灵敏的感知器官后，只剩双眼能感知世界的无须无足之蝶，在构思出这个设定后十分欣喜，遂立刻约上朋友进行拍摄，再从正规渠道获得蝴蝶标本进行取材，通过合成创作出这一作品。
   - author: '景'
+    group: '创意'
     images:
       - ../../assets/activities/story-of-time-2024-08/30.jpg
     caption: |-
@@ -159,6 +189,7 @@ entries:
       此次合成首次接触了真实性较强的电影题材，首次尝试了心念已久的夜景水战，也首次使用软胶玩具进行拍摄。在同框III湖景合成与同框IV夜景合成的经验下，此次合成并没有出现什么技术上的阻碍，同时有着电影这样一个足够优秀的参考物作为审美指导，在画面构成上也并没有什么犹豫。
       诚然对水浪的还原、机身水滴水流的还原上还是有很多不足，但最终呈现的压迫感还是能够让我感到满意的！作为同框系列的第五弹，我自认已经合格了。
   - author: '纯黑的林桑'
+    group: '创意'
     images:
       - ../../assets/activities/story-of-time-2024-08/31.jpg
     caption: |-
