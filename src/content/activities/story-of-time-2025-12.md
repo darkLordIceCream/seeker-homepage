@@ -5,9 +5,9 @@ issue: '十二月篇'
 period: 'DECEMBER 2025'
 cover: ../../assets/activities/story-of-time-2025-12/cover.jpg
 excerpt:
-  '《时间的故事》十二月篇：旧卷显影毕 新框待景深 65. 【Seeker
-  时间的故事】十二月篇｜ 旧卷显影毕 新框待景深。36
+  '《时间的故事》十二月篇：旧卷显影毕  新框待景深。37
   幅作品，收录组员们的时光片段。'
+quote: '时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。——奥古斯丁(古希腊)'
 team:
   lead: 'iwanna我想'
   editor: '是田田吖'
@@ -15,199 +15,199 @@ pubDate: 2025-12-31
 order: 202512
 layout: gallery-story
 entries:
-  - author: '在九乡河混吃等死'
+  - author: '一只佩奇'
     images:
       - ../../assets/activities/story-of-time-2025-12/01.jpg
     caption: |-
       《塔公寺的第一缕阳光》
       天未亮，相机已经架好，只为等待着，这独属于塔公寺的第一缕阳光。
-  - author: 'Jayden_张彤'
+  - author: '在九乡河混吃等死'
     images:
       - ../../assets/activities/story-of-time-2025-12/02.jpg
     caption: |-
       《灵谷深秋》
       整个钟山风景区我最喜欢灵谷，相比于隔壁热闹的音乐台和中山陵，它显得更为静谧。仲夏的萤火虫，初秋的桂花，再到深秋的层林尽染，每个季节都有独属于灵谷的美。
-  - author: '卿'
+  - author: 'Jayden_张彤'
     images:
       - ../../assets/activities/story-of-time-2025-12/03.jpg
     caption: |-
       《阳产烟岚》
       晨雾漫过徽麓土楼，昏灯揉碎青砖黛瓦，千年烟火在山坳里缓缓醒转。
-  - author: '尧'
+  - author: '卿'
     images:
       - ../../assets/activities/story-of-time-2025-12/04.jpg
     caption: |-
       《断壁残阳》
       乌云压境的荒漠，断壁与孤塔对峙着时间，地平线的光撕开暗沉，为这片被遗忘的土地，刻下最后一道温柔的剪影。
-  - author: 'LEOphotograph'
+  - author: '尧'
     images:
       - ../../assets/activities/story-of-time-2025-12/05.jpg
     caption: |-
       《星落庭轩》
       遇到通透的好天气，恰逢2025双子座流星雨，我在零下的殿中拍了一个晚上，将冬季银河、流星与古建纳入取景器之中。
-  - author: 'Jrhing'
+  - author: 'LEOphotograph'
     images:
       - ../../assets/activities/story-of-time-2025-12/06.jpg
     caption: |-
       《梦开始的地方》
       2025双子座流星雨之际，我来到川西的塔公草原——我的星空摄影开始的地方，再一次拍下这张 冬季银河与双子座流星雨的合影。
-  - author: '范斯基在拍照'
+  - author: 'Jrhing'
     images:
       - ../../assets/activities/story-of-time-2025-12/07.jpg
     caption: |-
       《万箭齐发》
       荒漠浸在气辉漫染的夜幕里，青绿揉着橘黄晕开天际。星雨从银河的清辉里跃出来，光尾拽着穹顶的碎光，擦过旷野。这夜是揉碎的梦，正从霄汉漫向人间。
-  - author: '水花'
+  - author: '范斯基在拍照'
     images:
       - ../../assets/activities/story-of-time-2025-12/08.jpg
     caption: |-
       《纵一苇之所如，凌万顷之茫然》
       在一起飞就瞬间丢信号的宣城宁国落羽杉湿地公园，连着两天5点多起床，终于拍到了想要的画面。白露横江，水光接天，想起了苏轼笔下的纵一苇之所如，凌万顷之茫然。
-  - author: 'Liiiin'
+  - author: '水花'
     images:
       - ../../assets/activities/story-of-time-2025-12/09.jpg
     caption: |-
       《千年古榕》
       一颗树长成了一片森林，充满了生命力和阳光感，千年古榕的树张力是照片描绘不出来的。
       城市建筑组
-  - author: '脏了的布娃娃'
+  - author: 'Liiiin'
     images:
       - ../../assets/activities/story-of-time-2025-12/10.jpg
     caption: |-
       《西九龙圣诞灯火》
       又是一年圣诞，西九龙海滨的巨型圣诞树也如期赴约，万千灯火点亮维港，圣诞的氛围也愈加浓厚。
-  - author: 'May🍀'
+  - author: '脏了的布娃娃'
     images:
       - ../../assets/activities/story-of-time-2025-12/11.jpg
     caption: |-
       《窗揽秋枫》
       一年好景君须记，最是橙黄橘绿时。
-  - author: '陈默'
+  - author: 'May🍀'
     images:
       - ../../assets/activities/story-of-time-2025-12/12.jpg
     caption: |-
       《台前幕后》
       凌晨十二点的车管所依旧灯火通明，经过两个小时的等到，我终于拍下了自己满意的画面，但比画面更触动我的，是铁路工作者们日复一日的坚守。
-  - author: '心晓'
+  - author: '陈默'
     images:
       - ../../assets/activities/story-of-time-2025-12/13.jpg
     caption: |-
       《日落温度计》
       吃晚饭的路上偶然路过一座写字楼，工人正在清洗玻璃，利用路灯作前景好像在为他们打了一盏灯。
-  - author: 'Carlson'
+  - author: '心晓'
     images:
       - ../../assets/activities/story-of-time-2025-12/14.jpg
     caption: |-
       《路上的伙伴》
       久违的摄影师自拍群像合影。如同置身于钢铁巨兽的肚子里。成长路上除了摄影的收获，更开心的遇到志同道合的朋友一路同行。
-  - author: '封于修'
+  - author: 'Carlson'
     images:
       - ../../assets/activities/story-of-time-2025-12/15.jpg
     caption: |-
       《寒雪染紫禁》
       北京终于盼来久违的初雪，第二天一早便奔赴故宫。抬眼望去，红墙碧瓦全都被白雪轻裹，金水河凝起一层薄冰，汉白玉栏杆覆着皑皑白雪。伫立其间，仿佛能听见六百年前紫禁城里簌簌的风雪声。
-  - author: 'SEMIMINIMA EDUET'
+  - author: '封于修'
     images:
       - ../../assets/activities/story-of-time-2025-12/16.jpg
     caption: |-
       《仰望》
       出差苏州之行，循迹之下我找到一处天井，楼宇如巨擘般向天际收拢，拐角的线条带着强烈压迫感向上延伸，而渺小的我立于下方，抬头望向那被框住的光亮，光亮之中的飞机更像是挣脱束缚的象征，带着我如“井底之蛙”般的视野飞向远方！
-  - author: '白纸'
+  - author: 'SEMIMINIMA EDUET'
     images:
       - ../../assets/activities/story-of-time-2025-12/17.jpg
     caption: |-
       《七丘之城上的摆渡人》
       暮色笼罩七丘之城，圣彼得大教堂的穹顶在紫金色的余晖中肃穆伫立。台伯河水倒映着圣天使桥的灯火，一叶扁舟在粼粼波光中划破静谧。这位“摆渡人”如同穿梭于古老与现代缝隙间的信使，在千年的光影叙事里，载着整座城市的安详缓缓而行。
-  - author: 'DawnTideNN'
+  - author: '白纸'
     images:
       - ../../assets/activities/story-of-time-2025-12/18.jpg
     caption: |-
       《窗外的日迹》
       由于各种各样的拍摄任务以及比赛的训练，不觉已经很长一段时间没有拿起相机拍摄自己喜欢的照片，在我们训练场地的窗外，观察着太阳日复一日的东升西落，于是我在这个月的某天下午拍下了这张平平无奇的照片，可能照片背后的故事只有摄影师记得吧。
-  - author: '小马日记'
+  - author: 'DawnTideNN'
     images:
       - ../../assets/activities/story-of-time-2025-12/19.jpg
     caption: |-
       《勒是雾都》
       登上重庆渝中半岛海拔最高点的时候，“勒是雾都”具象化了。
-  - author: '移动城堡内的全麦'
+  - author: '小马日记'
     images:
       - ../../assets/activities/story-of-time-2025-12/20.jpg
     caption: |-
       《雁落湖晨光》
       金陵一叶天下知秋。
-  - author: 'Fearless丶'
+  - author: '移动城堡内的全麦'
     images:
       - ../../assets/activities/story-of-time-2025-12/21.jpg
     caption: |-
       《三界四洲悬塑绝唱》
       在临汾隰县小西天，我看到了漫天神佛里的极繁美学。
-  - author: '辰雾DawnLens'
+  - author: 'Fearless丶'
     images:
       - ../../assets/activities/story-of-time-2025-12/22.jpg
     caption: |-
       《蓝调河西》
       夜幕之下灯光亮起车流涌动。
-  - author: '摄影师何子毅'
+  - author: '辰雾DawnLens'
     images:
       - ../../assets/activities/story-of-time-2025-12/23.jpg
     caption: |-
       雨过天晴，正午的紫云观，钟楼金檐迎着烈阳，太极台的石纹显现出了天地刚柔。
       人文纪实组
-  - author: 'Mateolee'
+  - author: '摄影师何子毅'
     images:
       - ../../assets/activities/story-of-time-2025-12/24.jpg
     caption: |-
       《王船入星河》
       绘着狞厉纹饰的王船被烈焰裹卷，木骨迸溅金红碎光，烟火如星屑泼向墨色夜空。热浪裹着古俗的沉厚，这场送王祈福的仪式里，跃动的火光藏着乡土敬畏，也漾着对岁时的热望。
-  - author: '化鱼'
+  - author: 'Mateolee'
     images:
       - ../../assets/activities/story-of-time-2025-12/25.jpg
     caption: '《两个人》'
-  - author: '阿羊今天不拍照'
+  - author: '化鱼'
     images:
       - ../../assets/activities/story-of-time-2025-12/26.jpg
     caption: |-
       《香漫醮船》
       上次拍摄民俗还是今年一月，转眼间，一年就这么过去了，遗憾的是这一年里并没有拍到满意的画面，幸运的是在年底出现了这个机会，而且同样是民俗，这一年也算是有始有终了吧。
-  - author: '無婷'
+  - author: '阿羊今天不拍照'
     images:
       - ../../assets/activities/story-of-time-2025-12/27.jpg
     caption: |-
       「醮船巡境」PURIFICATION VESSEL
       “清醮”是民间祈福消灾的仪式，龙门村这一传统已延续数百年。在拍摄的时候还发现，龙门清醮节刚刚被评为“福建省非物质文化遗产”。烟火缭绕间，是龙门清醮民俗的鲜活传承；钟鼓喧阗中，见千年古韵在此刻再续华章。
-  - author: '倾斜的地平线'
+  - author: '無婷'
     images:
       - ../../assets/activities/story-of-time-2025-12/28.jpg
     caption: |-
       《你失约的海，我替你看了》
       汕尾突如其来的阴天打破了我的拍摄计划，随缘在海岛瞎走，却意外发现几个散落在海边的秋千，长焦拍过去秋千的顶架与海平线齐平，画面简单又有些淡淡的孤单。
-  - author: '快门3w次'
+  - author: '倾斜的地平线'
     images:
       - ../../assets/activities/story-of-time-2025-12/29.jpg
     caption: |-
       《缘分是一个圈》
       今年年初从福建的民俗开始，年末在厦门的民俗结束，年末又见到了年初的朋友；我们的第一次旅行之前错过的，在年末实现了。当它发生的时候觉得非常的梦幻，这就是缘分形成的一个圈吧！
-  - author: '绿谷'
+  - author: '快门3w次'
     images:
       - ../../assets/activities/story-of-time-2025-12/30.jpg
     caption: |-
       《粉色星海落满场》
       当漫天粉屑裹着光屑坠落，整座场馆都浸在温柔的绯色里——他站在这片浪漫的中心，抬手的瞬间，像接住了全场的心跳。
       人像肖像组
-  - author: '是田田吖'
+  - author: '绿谷'
     images:
       - ../../assets/activities/story-of-time-2025-12/31.jpg
     caption: |-
       《薄明记事》
       重庆冬日里冷冷霾霾的阳光。
-  - author: 'Kkbbr'
+  - author: '是田田吖'
     images:
       - ../../assets/activities/story-of-time-2025-12/32.jpg
     caption: |-
       《凝时》
       不是童话，是某个冬夜。她眼里的星光，让我的镜头忘记了时间。
-  - author: '张艾艾'
+  - author: 'Kkbbr'
     images:
       - ../../assets/activities/story-of-time-2025-12/33.jpg
     caption: |-
@@ -217,7 +217,7 @@ entries:
     images:
       - ../../assets/activities/story-of-time-2025-12/34.jpg
     caption: '“栀子比众木 人间诚未多”'
-  - author: '宠物摄影师Kaden'
+  - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-12/35.jpg
     caption: |-
@@ -225,16 +225,18 @@ entries:
       “圣诞节最好的礼物是什么“
       “是见你一面”。
       商业创意组
-  - author: '宠物摄影师狗哥'
+  - author: '宠物摄影师Kaden'
     images:
       - ../../assets/activities/story-of-time-2025-12/36.jpg
     caption: |-
       《城市精灵漫游》
       十二月，异木棉绽放。
       广州的冬，是倒放的春。。
+  - author: '宠物摄影师狗哥'
+    images:
+      - ../../assets/activities/story-of-time-2025-12/37.jpg
+    caption: '宁静的夜，只需要一只汪，就能撑起画面。带汪去看看祖国的大好河山吧。'
 poem: |
-  宁静的夜，只需要一只汪，就能撑起画面。带汪去看看祖国的大好河山吧。
-  “写在最后”
   十二月是岁末的信封，我们用它装载一年最后的晨昏、呼吸与温度。
   回看我们共同定格的瞬间，你会发现，时间从未真正逝去。它只是换了种方式，住在我们的镜头里，因为时间会流逝，但是故事不会。
   对抗遗忘的方式，是制造另一种形式的记忆。我们2026再见。
@@ -260,10 +262,15 @@ pastIssues:
 committeeImage: ../../assets/activities/story-of-time-2025-12/committee.jpg
 committee:
   name: '2025年时间的故事组委会'
-  team: '2025年时间的故事组委会'
+  team:
+    '倾斜的地平线  SteveZhang、Lucas_樞(城市） 潘潘猪（自然）
+    周云水（人文)  凌渡(创意） 张艾艾（人像）'
 ---
 
-“时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。”
-——奥古斯丁(古希腊)
+一天，每个人会发生的经历，便成了故事，所有人的故事汇集一起，就成了历史。
 
-“关于这个计划”一天，每个人会发生的经历，便成了故事，所有人的故事汇集一起，就成了历史。《时间的故事》初心未变：用照片记录探索的、冒险的、个人的、集体的历史。从初春到严寒，日月轮换而星辰斗转。我们想看到你坚持下的记录，365个日月轮回后，蓦然回首，我们经历了如此之多。2025年《时间的故事》仍在继续，下面，就让我们来看看2025年十二月的“时间的故事”吧！自然户外组@一只佩奇
+《时间的故事》初心未变：用照片记录探索的、冒险的、个人的、集体的历史。从初春到严寒，日月轮换而星辰斗转。我们想看到你坚持下的记录，365个日月轮回后，蓦然回首，我们经历了如此之多。
+
+2025年《时间的故事》仍在继续，下面，就让我们来看看2025年十二月的“时间的故事”吧！
+
+自然户外组

@@ -142,7 +142,7 @@
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
       "status": "in-progress",
-      "evidence": "《时间的故事》2021-2026 全部 64 期上线（分支 feat/story-of-time-2025）：/activities/story-of-time/ 活动主页（介绍 + 按年份分组入口卡：2026=8/2025=11/2024=10/2023=12/2022=12/2021=11）+ activities collection（image() 本地资产 schema，date/title 可选）+ GalleryStory 画廊模板（side/stack 分型、跨年期数分页、lightbox、进度条、reduced-motion）；1719+221 张展示图入 src/assets 同源 astro:assets 优化；62 期逐页断言条目数与原文一致、0 坏图；R2 绑定自定义域 r2.seeker追光者.club（welfare 等 363 个 URL 已切换）；init.sh 0 错 0 警（72 页）；分支内提交未合并（等用户晨起复核）；剩余：一种关注/线下活动等其余活动条目"
+      "evidence": "《时间的故事》2021-2026 全部 64 期上线（分支 feat/story-of-time-2025）：/activities/story-of-time/ 活动主页（介绍 + 按年份分组入口卡：2026=8/2025=11/2024=10/2023=12/2022=12/2021=11）+ activities collection（image() 本地资产 schema，date/title 可选）+ GalleryStory 画廊模板（side/stack 分型、跨年期数分页、lightbox、进度条、reduced-motion）；1719+221 张展示图入 src/assets 同源 astro:assets 优化；62 期逐页断言条目数与原文一致、0 坏图；R2 绑定自定义域 r2.seeker追光者.club（welfare 等 363 个 URL 已切换）；init.sh 0 错 0 警（72 页）；分支内提交未合并（等用户晨起复核）；2026-09-10 修复 2021-2025 全部 56 期作者-图片错位（旧解析器按 2026 版式配对），补下载每期漏掉的末位作者照片 58 张，剔除 2021-06 混入的七月篇图片与 2022-08 重复段，重建 poem/team/committee/excerpt/正文（poem 原含「如何加入」等可见垃圾文本）；56 期页面作者序列与文章真值 56/56 一致，build/type-check/lint 通过"
     },
     {
       "id": "feat-019",
