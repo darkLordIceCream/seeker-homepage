@@ -5,8 +5,9 @@ issue: '八月篇'
 period: 'AUGUST 2025'
 cover: ../../assets/activities/story-of-time-2025-08/cover.jpg
 excerpt:
-  '《时间的故事》八月篇：镜收长天色，影定仲夏心 61. 【Seeker
-  时间的故事】八月篇｜镜收长天色，影定仲夏心。29 幅作品，收录组员们的时光片段。'
+  '《时间的故事》八月篇：镜收长天色，影定仲夏心。30
+  幅作品，收录组员们的时光片段。'
+quote: '时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。——奥古斯丁(古希腊)'
 team:
   lead: '幻想家拾柒'
   editor: '是田田吖'
@@ -14,7 +15,7 @@ pubDate: 2025-09-01
 order: 202508
 layout: gallery-story
 entries:
-  - author: 'Luisx'
+  - author: 'Eric'
     images:
       - ../../assets/activities/story-of-time-2025-08/01.png
     caption: |-
@@ -23,7 +24,7 @@ entries:
       一到赶集日，小镇便醒得特别早，挑夫走卒，江湖郎中，好不热闹。起得最早的是一位理发匠，他的摊位在一棵茂盛的榕树下，支起一把椅子，打开那个老旧的木箱便开始营生。他不懂得设计发型，只问你要剪多短，然后拿出他那磨得锃亮的剪刀和手动推子忙活起来，推子偶尔会失灵，扯得头发生痛。我最喜欢是他的剃刀，闪着银光，在一条黑不溜秋的皮条上摩擦两下，再在发根处抹点水，剃刀划过，夏天的风适时吹起，树叶沙沙作响，浑身舒凉，那是儿时最幸福的时刻。
       再后来，理发匠不知什么时候消失了，和他一起渐渐消失的还有那些挑夫走卒，江湖郎中，人们开始在超市里做起了生意，理发匠变成了发廊，而如今，那个发廊都显得如此破旧，好像和整个世界格格不入。
       儿时的小镇街道仿佛很长很长，花上一天都走不完，现在好似被压缩了一般，一眼便可看到他的尽头和结局。我坐在这里，恍惚间，又有风吹过，走呀走，身后若隐若现的还是那个小镇孩童小小的影子。
-  - author: 'X_ming'
+  - author: 'Luisx'
     images:
       - ../../assets/activities/story-of-time-2025-08/02.png
     caption: |-
@@ -32,105 +33,105 @@ entries:
       上到悬崖边等到日落，这时整个港岛在暮色阳光的映照下显得金光闪闪，在这样的氛围里吹着海风俯瞰整个港岛的景色，瞬间觉得这所有艰辛都值了！
       但天黑后返程更为艰难，我借着头灯摸黑前行，一路上磕磕绊绊，所幸最后安全下山。到后来才听说，那晚走的线路常有野猪出没，现在想起那晚返程时路边的沙沙声，后背还阵阵发凉。
       自然户外组
-  - author: 'guozhennn'
+  - author: 'X_ming'
     images:
       - ../../assets/activities/story-of-time-2025-08/03.png
     caption: |-
       星悬茶垄入梦来
       十二茅坡是贵州安顺难得的小众之地，早早地看好了云图，我和友人一起蹲守在茶园中，静待云开雾散。夏夜茶园时的叠垄像是被虫鸣泡软的绸缎，随着晚风拌着星河，夹杂些许茶尖的清苦，坠入梦中。
-  - author: '📸范斯基在拍照'
+  - author: 'guozhennn'
     images:
       - ../../assets/activities/story-of-time-2025-08/04.png
     caption: '连续多天的阴雨天气，终于有两天的窗口期，去到一个新地方拍摄了几张星空，也是自己的短板题材，在朋友家的屏幕发现地景死黑，后来朋友说他的屏幕是p3色域……这趟行程真是充满了挑战。好在最后结果还是比较好的。'
-  - author: '钪钇'
+  - author: '📸范斯基在拍照'
     images:
       - ../../assets/activities/story-of-time-2025-08/05.png
     caption: '8月的西藏，前几分钟还是蓝天白云青草地，突然就电闪雷鸣了～在狂风骤雨中我用10分钟的延时记录下了这些闪电。'
-  - author: '源Dream'
+  - author: '钪钇'
     images:
       - ../../assets/activities/story-of-time-2025-08/06.png
     caption: '圣山晨曦，云绕格聂。'
-  - author: 'LEO'
+  - author: '源Dream'
     images:
       - ../../assets/activities/story-of-time-2025-08/07.png
     caption: '年复一年，一次又一次，但这次来到了伴我走过四季的海棠树下。我静静倚靠着它，与它共印夏季银河的合影。'
-  - author: '在九乡河混吃等死'
+  - author: 'LEO'
     images:
       - ../../assets/activities/story-of-time-2025-08/08.png
     caption: '在阿坝州沿着黄河上游行进，我们一路赶往晚上的星空拍摄机位，窗外的天空逐渐变成金黄色，远处的积雨云也孕育出一道彩虹。'
-  - author: 'Chen'
+  - author: '在九乡河混吃等死'
     images:
       - ../../assets/activities/story-of-time-2025-08/09.png
     caption: '飞流直下三千尺'
-  - author: '十比特的光'
+  - author: 'Chen'
     images:
       - ../../assets/activities/story-of-time-2025-08/10.png
     caption: '抽出时间和家人出游，一路却遭遇暴雨，车辆也接连出现故障。历经一番维修后，再次出发。雨过天晴时，一抬头，竟见七彩祥云挂在天边，所有疲惫和焦虑瞬间一扫而空。这才真正明白，“风雨过后见彩虹”不止是道理，更是那一刻的感动。'
-  - author: '3w'
+  - author: '十比特的光'
     images:
       - ../../assets/activities/story-of-time-2025-08/11.png
     caption: |-
       作为一个云南人，从小就喜欢上山采菌子，今天上山发现云南的湖上居然也长出了一朵大菌子，屏幕前的家人们觉得我能带它回去煮了吃吗。
       城市建筑组
-  - author: '酒馆的鲍勃'
+  - author: '3w'
     images:
       - ../../assets/activities/story-of-time-2025-08/12.png
     caption: '机械的沉默里，爬满了森林的絮语。暗林如墨，那点游移的光，正沿着木径的纹路，去读钢铁与绿叶合著的，那本名为“共生”的书。'
-  - author: 'Carlson'
+  - author: '酒馆的鲍勃'
     images:
       - ../../assets/activities/story-of-time-2025-08/13.png
     caption: '台风“杨柳”席卷珠三角前夜的深中通道，天空日出时分出现了大面积的摊云。'
-  - author: '月某人'
+  - author: 'Carlson'
     images:
       - ../../assets/activities/story-of-time-2025-08/14.png
     caption: '时间是朝向核心的一次精准坍塌。每一道年轮都是一场对无序溃散的终极沉默。'
-  - author: '小明'
+  - author: '月某人'
     images:
       - ../../assets/activities/story-of-time-2025-08/15.png
     caption: '时隔一年终于实现了在香港航拍的想法。傍晚，我在太平山顶起飞无人机，城市灯光渐次亮起，与暮色云海交融。港岛烟火与浪漫，正落进这方璀璨天地。'
-  - author: '水花'
+  - author: '小明'
     images:
       - ../../assets/activities/story-of-time-2025-08/16.png
     caption: '曾经的你伤痕累累，如今的你风采依旧'
-  - author: 'Lucas_枢'
+  - author: '水花'
     images:
       - ../../assets/activities/story-of-time-2025-08/17.png
     caption: '福州市中心著名地标"三山两塔"的白塔和定光寺，有一种大隐隐于市的感觉。'
-  - author: '尧'
+  - author: 'Lucas_枢'
     images:
       - ../../assets/activities/story-of-time-2025-08/18.png
     caption: '在昏暗巨大的穹顶空间里，一束天光从上方洒下，我正好遇到一对拍婚纱的新人。光影、建筑和人物重叠。广角把整个穹顶结构一览无余，满满的空间感，也让画面多了一层叙事感——像是一幅文明洪流中浮现出的梦。'
-  - author: '北初-'
+  - author: '尧'
     images:
       - ../../assets/activities/story-of-time-2025-08/19.png
     caption: '连续四天早起，终于逮到了浮山湾的有光云海！'
-  - author: 'gloryxiaowu'
+  - author: '北初-'
     images:
       - ../../assets/activities/story-of-time-2025-08/20.png
     caption: '《搁浅的岁月》北海的晴空下，那艘锈迹斑驳的旧船，像被潮水遗落的弃物。浅滩退潮后，沙面泛着绸缎般的水光。游人慢行其间，橙衣在灰蓝里跳脱，影子被潮水揉碎又拉长——巨船的沧桑与人间的鲜活，在这方天地里悄然对谈。'
-  - author: 'iwanna我想'
+  - author: 'gloryxiaowu'
     images:
       - ../../assets/activities/story-of-time-2025-08/21.png
     caption: '今年广东暑假，已经吹了很多次台风，在台风天，朝霞晚霞变得相对常见，乌云压着朝霞，将鹅城大桥框入了朝霞的色彩之中。'
-  - author: 'Fearless、'
+  - author: 'iwanna我想'
     images:
       - ../../assets/activities/story-of-time-2025-08/22.png
     caption: '『夏天』江城的暑气向来不与人客气它浩浩荡荡地跨过长江钻进老巷子的每个缝隙阳光泼洒下来将柏油路面烤得发软把两江四岸照得晃眼这也许就是武汉的夏天吧。'
-  - author: '7-up'
+  - author: 'Fearless、'
     images:
       - ../../assets/activities/story-of-time-2025-08/23.png
     caption: '晚霞下的南京奥体中心，台风过境前后往往是最出片的时刻，但也因为在天台吹风淋雨导致了感冒，对于风光佬来说这都不是事。'
-  - author: '辰雾DawnLens'
+  - author: '7-up'
     images:
       - ../../assets/activities/story-of-time-2025-08/24.png
     caption: |-
       用树干画圆，以天为窗。
       人文纪实组
-  - author: '是田田吖'
+  - author: '辰雾DawnLens'
     images:
       - ../../assets/activities/story-of-time-2025-08/25.png
     caption: '广州地铁站的深夜，外卖小哥阿远戴着安全盔，匆匆踏上通道。弧形建筑结构间，黄色墙面勾勒他的身影，似城市脉络里奔忙的符号。刚送完最后一单，返程路上，这独特空间成了意外风景。他脚步不停，心里算着明日订单，光影交错中，平凡的奋斗故事仍在延续，每一步都朝着生活的热望，这夜站穿行，是独属于他的拼搏轨迹。'
-  - author: '张艾艾'
+  - author: '是田田吖'
     images:
       - ../../assets/activities/story-of-time-2025-08/26.png
     caption: |-
@@ -139,25 +140,27 @@ entries:
       沙丘绵延，驼铃悠扬，行者的故事在风沙中缓缓流淌。
       天地无垠，一行足迹，是生命与荒野之间永恒的对话。
       人像肖像组
-  - author: '绿谷'
+  - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-08/27.png
     caption: '「“天色未晚，树有鸣蝉；未提相思，句句相思。”」'
-  - author: '林桑'
+  - author: '绿谷'
     images:
       - ../../assets/activities/story-of-time-2025-08/28.png
     caption: |-
       拍了不止一万次，我还是想拍，致我青涩的电影梦，也致敬青涩的Bilitis。
       商业创意组
-  - author: '宠物摄影师狗哥'
+  - author: '林桑'
     images:
       - ../../assets/activities/story-of-time-2025-08/29.png
     caption: |-
       《帝皇封魔贴》，拍摄于年会期间的帝皇侠cos，这次年会除了见到各位老师之外，最大的惊喜便是见到帝皇侠cos，简直无敌，因为从小到大都很喜欢帝皇侠，也算是圆了我一直以来想拍特摄的念头（虽然没拍上视频），从广州回来后直接肝了几张合成，然后在修出来的四张图中，选了这张我认为姿势张力比较好的出来。
       商业创意组
+  - author: '宠物摄影师狗哥'
+    images:
+      - ../../assets/activities/story-of-time-2025-08/30.png
+    caption: '沉浸在音乐的小猫咪特别可爱呢。'
 poem: |
-  沉浸在音乐的小猫咪特别可爱呢。
-  “写在最后”
   八月的风，从山川至江海，卷起一页又一页光影诗笺。镜头如简，光影似墨，写下仲夏的余韵与将至的清秋。遥望天河倾泻，银光落入人间；俯拾流萤点点，皆可成画入镜。此去岁月，愿你我以心为卷，以镜为笔，将盛夏的热烈与清澄，镌刻在永不褪色的影像里，成为时光最温润的记忆。
 pastIssues:
   - name: '七月篇'
@@ -181,10 +184,13 @@ pastIssues:
 committeeImage: ../../assets/activities/story-of-time-2025-08/committee.jpg
 committee:
   name: '2025年时间的故事组委会'
-  team: '2025年时间的故事组委会'
+  team:
+    '倾斜的地平线  SteveZhang、Lucas_樞(城市） 潘潘猪（自然）
+    周云水（人文)  凌渡(创意） 张艾艾（人像）'
 ---
 
-“时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。”
-——奥古斯丁(古希腊)
+一天，每个人会发生的经历，便成了故事，所有人的故事汇集一起，就成了历史。
 
-“关于这个计划”一天，每个人会发生的经历，便成了故事，所有人的故事汇集一起，就成了历史。《时间的故事》初心未变：用照片记录探索的、冒险的、个人的、集体的历史。从初春到严寒，日月轮换而星辰斗转。我们想看到你坚持下的记录，365个日月轮回后，蓦然回首，我们经历了如此之多。2025年《时间的故事》仍在继续，下面，就让我们来看看2025年八月的“时间的故事”吧！月影集@Eric
+《时间的故事》初心未变：用照片记录探索的、冒险的、个人的、集体的历史。从初春到严寒，日月轮换而星辰斗转。我们想看到你坚持下的记录，365个日月轮回后，蓦然回首，我们经历了如此之多。
+
+2025年《时间的故事》仍在继续，下面，就让我们来看看2025年八月的“时间的故事”吧！
