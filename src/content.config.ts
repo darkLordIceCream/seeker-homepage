@@ -61,6 +61,8 @@ const activities = defineCollection({
       date: z.string().optional(),
       /** 作品名称（不含书名号）；无作品名版式可省略 */
       title: z.string().optional(),
+      /** 所属栏目章节，如「城市」「人像肖像组」；无栏目版式可省略 */
+      group: z.string().optional(),
       /** 作者的一句话说明 */
       caption: z.string(),
       /** 作者署名（不含 @） */
