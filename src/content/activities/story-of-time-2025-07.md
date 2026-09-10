@@ -25,9 +25,7 @@ entries:
   - author: 'potato 小赵'
     images:
       - ../../assets/activities/story-of-time-2025-07/02.jpg
-    caption: |-
-      草原 风车 牧民
-      自然户外组
+    caption: '草原风车牧民'
   - author: '酒馆的鲍勃'
     images:
       - ../../assets/activities/story-of-time-2025-07/03.jpg
@@ -63,7 +61,7 @@ entries:
       - ../../assets/activities/story-of-time-2025-07/09.jpg
     caption: |-
       『加米峰·日月同耀』
-      坐落于中国四川省甘孜藏族自治州康定市孔玉乡，【海拔约 5387 米】，都说这里是川西·多洛米蒂 其实他不叫这个名字，也不是“中国的巴塔哥尼亚分亚”，神山加米峰有自己的名字，藏语称 “玛白东切仁纳”。属于川西不可多得现在还小众的夏季秘境。
+      坐落于中国四川省甘孜藏族自治州康定市孔玉乡，【海拔约 5387 米】，都说这里是川西·多洛米蒂其实他不叫这个名字，也不是“中国的巴塔哥尼亚分亚”，神山加米峰有自己的名字，藏语称 “玛白东切仁纳”。属于川西不可多得现在还小众的夏季秘境。
   - author: '十比特的光'
     images:
       - ../../assets/activities/story-of-time-2025-07/10.jpg
@@ -77,9 +75,7 @@ entries:
   - author: '万古 VS 长青'
     images:
       - ../../assets/activities/story-of-time-2025-07/12.jpg
-    caption: |-
-      时隔许久再来大红山和前几年来已经很不相同了 以前的寸草不生的大红山已经成为了一个绿色大平台了
-      城市建筑组
+    caption: '时隔许久再来大红山和前几年来已经很不相同了以前的寸草不生的大红山已经成为了一个绿色大平台了'
   - author: '卿'
     images:
       - ../../assets/activities/story-of-time-2025-07/13.jpg
@@ -132,9 +128,7 @@ entries:
   - author: 'Talon'
     images:
       - ../../assets/activities/story-of-time-2025-07/23.jpg
-    caption: |-
-      如果我爱上你的笑容 要怎么收藏要怎么拥有
-      人文纪实组
+    caption: '如果我爱上你的笑容要怎么收藏要怎么拥有'
   - author: '超级MateoLee'
     images:
       - ../../assets/activities/story-of-time-2025-07/24.jpg
@@ -150,9 +144,7 @@ entries:
   - author: '是田田吖'
     images:
       - ../../assets/activities/story-of-time-2025-07/29.jpg
-    caption: |-
-      铁窗框住的白，是云朵的碎片，还是未驯服的光？鬃毛垂落如叹息，瞳孔里倒映着远方——一扇它从未触碰的窗。
-      人像肖像组
+    caption: '铁窗框住的白，是云朵的碎片，还是未驯服的光？鬃毛垂落如叹息，瞳孔里倒映着远方——一扇它从未触碰的窗。'
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-07/30.jpg
@@ -169,7 +161,6 @@ entries:
       留给萃取时光的人。
       棕褐的海平面上，
       映着的是你眼波里的光斑。
-      商业创意组
   - author: '绿谷'
     images:
       - ../../assets/activities/story-of-time-2025-07/33.jpg
@@ -177,7 +168,8 @@ entries:
       '人类为棋，神明执子，世界为笼。我亦跳出注视我的循环宿命，信仰之上，我为神。
       --《神笼游戏》'
 poem: |
-  生命最蓬勃的诗行，不止写在恣意生长的光芒里，更写在你我交汇的视线中，写在分享同一阵穿林风时，心底那片被共同照亮的、微澜的湖。 这盛夏的银河倾泻而下，愿你的镜头，我们的心，都成为它最生动的容器，盛满光，盛满热，盛满这被爱意与友情晒透的胸膛里，永不褪色的七月。
+  生命最蓬勃的诗行，不止写在恣意生长的光芒里，更写在你我交汇的视线中，写在分享同一阵穿林风时，心底那片被共同照亮的、微澜的湖。这盛夏的银河倾泻而下，愿你的镜头，我们的心，都成为它最生动的容器，盛满光，盛满热，盛满这被爱意与友情晒透的胸膛里，永不褪色的七月。
+
 pastIssues:
   - name: '六月篇'
     line: '接天莲叶无穷碧，映日荷花别样红'

@@ -177,7 +177,7 @@ const jsonLd = JSON.stringify({
               </span>
               <figcaption class="item-label">
                 {entry.title && <span class="item-title">«{entry.title}»</span>}
-                <p class="item-caption">{entry.caption}</p>
+                {entry.caption && <p class="item-caption">{entry.caption}</p>}
                 <span class="item-author">@{entry.author}</span>
               </figcaption>
             </figure>
@@ -611,6 +611,8 @@ const jsonLd = JSON.stringify({
     font-size: 14px;
     line-height: 1.9;
     white-space: pre-line;
+    /* 防止 CJK 换行末行只剩一两个字（孤字成行） */
+    text-wrap: pretty;
     color: var(--muted-foreground);
   }
 

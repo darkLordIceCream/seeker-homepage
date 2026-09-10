@@ -44,7 +44,7 @@ entries:
   - author: 'iwanna我想'
     images:
       - ../../assets/activities/story-of-time-2025-03/07.jpg
-    caption: '久违的再出发 拍摄于大连排石景区 天地只有我一人。'
+    caption: '久违的再出发拍摄于大连排石景区天地只有我一人。'
   - author: '归零'
     images:
       - ../../assets/activities/story-of-time-2025-03/08.jpg
@@ -58,9 +58,7 @@ entries:
   - author: '酒馆的鲍勃'
     images:
       - ../../assets/activities/story-of-time-2025-03/10.jpg
-    caption: |-
-      冰火两仪眼！复活吧我滴爱人！
-      城市建筑组
+    caption: '冰火两仪眼！复活吧我滴爱人！'
   - author: 'Steve Zhang'
     images:
       - ../../assets/activities/story-of-time-2025-03/11.jpg
@@ -94,9 +92,9 @@ entries:
   - author: '小米粒'
     images:
       - ../../assets/activities/story-of-time-2025-03/17.jpg
-    caption: |-
-      工作压力好大，周四抽空跑出来拍张悬日放松放松，意外捕捉到飞机穿日的治愈画面 。 它像一颗穿越暮色的银色流星，载着未说完的期待驶向天际，让我相信所有奔赴终将抵达。
-      人文纪实组
+    caption:
+      '工作压力好大，周四抽空跑出来拍张悬日放松放松，意外捕捉到飞机穿日的治愈画面
+      。它像一颗穿越暮色的银色流星，载着未说完的期待驶向天际，让我相信所有奔赴终将抵达。'
   - author: '超级MateoLee'
     images:
       - ../../assets/activities/story-of-time-2025-03/18.jpg
@@ -131,9 +129,7 @@ entries:
   - author: '屋顶数星星'
     images:
       - ../../assets/activities/story-of-time-2025-03/24.jpg
-    caption: |-
-      灰色的雾气笼罩着雾都，缆绳和电线融为一体，一抬头仿佛飞屋穿梭在空中，留下模糊的剪影。
-      人像肖像组
+    caption: '灰色的雾气笼罩着雾都，缆绳和电线融为一体，一抬头仿佛飞屋穿梭在空中，留下模糊的剪影。'
   - author: 'Jayden'
     images:
       - ../../assets/activities/story-of-time-2025-03/25.jpg
@@ -153,9 +149,7 @@ entries:
   - author: '张艾艾'
     images:
       - ../../assets/activities/story-of-time-2025-03/29.jpg
-    caption: |-
-      「月明林下美人来」
-      商业创意组
+    caption: '「月明林下美人来」'
   - author: '林桑'
     images:
       - ../../assets/activities/story-of-time-2025-03/30.jpg
@@ -167,6 +161,7 @@ entries:
 poem: |
   在这个崭新的生长的季节里，《时间的故事》也在陪大家一起慢慢长大。
   愿我们都有时间多出去走走拍拍，春天不仅要刻在取景器里，更要看在眼里，装在心里。
+
 pastIssues:
   - name: '十二月篇'
     line: '山川静默冬意浓，岁末欢歌暖寒冬'

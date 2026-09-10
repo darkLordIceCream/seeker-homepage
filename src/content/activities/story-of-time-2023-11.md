@@ -50,8 +50,7 @@ entries:
   - author: 'Zijie- Chen'
     images:
       - ../../assets/activities/story-of-time-2023-11/09.jpg
-    caption:
-      '久违的一起早起拍摄朝霞 也不负众望 蓝调与朝霞的碰撞让我拍摄到了冰火两重奏'
+    caption: '久违的一起早起拍摄朝霞也不负众望蓝调与朝霞的碰撞让我拍摄到了冰火两重奏'
   - author: '丨ion'
     images:
       - ../../assets/activities/story-of-time-2023-11/10.jpg
@@ -84,7 +83,7 @@ entries:
   - author: 'L1uuu'
     images:
       - ../../assets/activities/story-of-time-2023-11/16.jpg
-    caption: '你喜欢松树吗 他从不负冬'
+    caption: '你喜欢松树吗他从不负冬'
   - author: '绿谷'
     images:
       - ../../assets/activities/story-of-time-2023-11/17.jpg
@@ -149,6 +148,7 @@ entries:
 poem: |
   火冷灯稀霜露下，昏昏雪意云垂野。11月的初冬，寒风带着一丝凄美，仿佛在诉说着季节的变换。而我们，用相机记录下时间的流转，季节的更替，定格每个瞬间，在即将结束的年末，不留遗憾。
   最后希望大家在未来的日子里，遇到触动你的，请记得按下快门。每一张照片，都是时光的标本。
+
 pastIssues:
   - name: '·十月篇'
     line: '孟秋风定日，天寒雾起时'

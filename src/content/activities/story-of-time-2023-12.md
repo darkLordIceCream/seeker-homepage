@@ -34,7 +34,7 @@ entries:
   - author: 'Zijie-Chen'
     images:
       - ../../assets/activities/story-of-time-2023-12/05.jpg
-    caption: '朝霞与晨雾融合 留下光影的痕迹'
+    caption: '朝霞与晨雾融合留下光影的痕迹'
   - author: 'ChenGY35'
     images:
       - ../../assets/activities/story-of-time-2023-12/06.jpg
@@ -46,7 +46,7 @@ entries:
   - author: '黄子腾'
     images:
       - ../../assets/activities/story-of-time-2023-12/08.jpg
-    caption: '风车 落日 海边  大雪，这是蓝调时刻雪后的威海。'
+    caption: '风车落日海边  大雪，这是蓝调时刻雪后的威海。'
   - author: 'Wyatt'
     images:
       - ../../assets/activities/story-of-time-2023-12/09.jpg
@@ -144,6 +144,7 @@ entries:
 poem: |
   大概在去年的这个时候，笼罩在每个人头上的疫情乌云终于散开，不知道大家有没有感叹阳光真美好？
   “时间的故事”继续陪伴着大家又渡过了一个年头，见证了大家这一年的拍摄。沉舟侧畔千帆过，“时间的故事”也即将陪伴大家开启的新一年，祝愿大家在新的一年里不忘带卡带电池，对焦对准不跑焦！
+
 pastIssues:
   - name: '·十一月篇'
     line: '风雪吹过长夜，微光拥你入眠'
