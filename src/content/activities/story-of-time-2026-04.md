@@ -17,19 +17,19 @@ layout: gallery-story
 entries:
   - date: '3月29日'
     title: '寻找春天的答案'
-    author: 'BingChen'
+    author: "BingChen"
     images:
       - ../../assets/activities/2026-04/01.jpg
     caption: '三月的最后一周，虽然月相不太好，但天气还不错，初十的月亮还会留下大概一个小时左右的时间来拍摄银河拱桥。我选择从沈阳出发驱车300km来到辽宁为数不多的3级光污染地区，来到本溪桓仁我发现光污染情况要比想象中的理想，于是拍摄了这张春季银拱。带着春天的足迹，寻找星空的答案。'
   - date: '3月29日'
     title: '渡光'
-    author: '立青'
+    author: "立青"
     images:
       - ../../assets/activities/2026-04/02.jpg
     caption: '落日余晖将冰面镀上一层金色，飞过的蛎鹬和静立着的白鹭相映成趣。'
   - date: '4月3日'
     title: '春日序章'
-    author: '宠物摄影师狗哥'
+    author: "宠物摄影师狗哥"
     images:
       - ../../assets/activities/2026-04/03.jpg
     caption:
@@ -37,25 +37,25 @@ entries:
       这次我采用了一只狗咬住毯子，好像俩狗真的在裹住毯子得效果。配合蓝天白云，春日的感觉不就来了吗？'
   - date: '4月3日'
     title: '地坛的海'
-    author: '日行性猫猫'
+    author: "日行性猫猫"
     images:
       - ../../assets/activities/2026-04/04.jpg
     caption: '每次都是匆匆路过北京，这是第一次在这里悠闲地漫步。第一个发现斑驳的墙面反光像大海的人一定很浪漫，这个步履匆匆的城市，仍为我们留有休憩的一角。'
   - date: '4月3日'
     title: '金辉下的澳门港'
-    author: 'X_ming'
+    author: "X_ming"
     images:
       - ../../assets/activities/2026-04/05.jpg
     caption: '清晨的金辉铺满海面，澳门港的桥梁与建筑在柔光中静静舒展。在东望洋山的步道上，远处的风车、海洋、西式建筑构成了一幅和谐的画面。'
   - date: '4月3日'
     title: '城市精灵漫游'
-    author: '柯达拍什么'
+    author: "柯达拍什么"
     images:
       - ../../assets/activities/2026-04/06.jpg
     caption: '时隔多年，带着属于我的全新的视角重返重庆，做一场超现实浪漫的造梦者。'
   - date: '4月4日'
     title: '二七长江大桥'
-    author: 'Tommic'
+    author: "Tommic"
     images:
       - ../../assets/activities/2026-04/07.jpg
     caption:
@@ -63,31 +63,31 @@ entries:
       Pro开源单目深度估计算法，将雾气方程计算结果融合进深度蒙版中，成功创建出雾气深度蒙版，于是这张照片成为第一张应用雾气深度蒙版的照片。不过由于风吹的原因，花出现了位移，景深合成不完美，导致深度计算时出现了些问题——就这样吧，下次换一个更好的环境再优化看效果。（后期加雾仅作计算摄影实践~）'
   - date: '4月5日'
     title: '从“头”开始'
-    author: '屋顶数星星'
+    author: "屋顶数星星"
     images:
       - ../../assets/activities/2026-04/08.jpg
     caption: '清明节去了越南旅行，在街上闲逛的过程时偶然发现了一家在街角的理发店，老板坐在摊子前等待客人，镜子中他仿佛和墙上人物肖像一样定格在框中。'
   - date: '4月9日'
     title: 'Blue Tears'
-    author: '阿羊今天不拍照'
+    author: "阿羊今天不拍照"
     images:
       - ../../assets/activities/2026-04/09.jpg
     caption: '又到一年蓝眼泪季，今年运气还算不错出摊一次就碰到不错的亮度。'
   - date: '4月12日'
     title: '采茶'
-    author: '一把彩虹伞'
+    author: "一把彩虹伞"
     images:
       - ../../assets/activities/2026-04/10.jpg
     caption: '第一次近距离观察采茶人的劳作，都知道杭州的龙井茶最为出名，但鲜有人知背后采茶的故事，每年的三四月份，采茶女会在6点左右开始采茶这个月份经常会有下雨天。采茶女不得不穿着适配的雨衣戴着斗笠在茶田中穿梭。'
   - date: '4月12日'
     title: '怪奇夜行'
-    author: 'Leslin'
+    author: "Leslin"
     images:
       - ../../assets/activities/2026-04/11.png
     caption: '最近在追怪奇物语，在外出扫街到达地铁站的时候，地铁里的灯光和列车行驶闪烁的灯光让我想起剧情的片段，所以我使用了三重曝光将地铁的人流、灯光和主体记录在一张相纸上。'
   - date: '4月16日'
     title: '格聂双拱'
-    author: '尧'
+    author: "尧"
     images:
       - ../../assets/activities/2026-04/12.jpg
     caption:
@@ -95,37 +95,37 @@ entries:
       21:30左右，夏季银拱拍摄于次日 3:20 左右。'
   - date: '4月16日'
     title: '星坦魔方'
-    author: '两萬里'
+    author: "两萬里"
     images:
       - ../../assets/activities/2026-04/13.jpg
     caption: '星空季即将到来，我们也是突发奇想，趁着4月中旬的观星窗口期来到了甘肃敦煌，在4月这个季节，全国都是阴雨天的情况下，只有甘肃得以有罕见的晴天，于是我们从敦煌出发，连夜开车到200公里外的＂宇宙魔方＂2级光污染区拍摄星空，从银河凌晨1:40升起一直拍到5:00天亮，经过一整晚的奋战，终于拍到了我们梦寐以求的人生大片。'
   - date: '4月17日'
     title: '日照神峰与北斗晨星'
-    author: '陳某人'
+    author: "陳某人"
     images:
       - ../../assets/activities/2026-04/14.jpg
     caption: '在则巴村畔的云雾彼端，晨曦为格聂镀上暖芒，北斗七星仍悬于未明夜空，与神山遥望。这是我们远涉川西秘境，收获的最难得景象。'
   - date: '4月17日'
     title: '大漠寻光'
-    author: '阿帆'
+    author: "阿帆"
     images:
       - ../../assets/activities/2026-04/15.jpg
     caption: '四月我与小伙伴一同前往大西北，奔赴一场璀璨银河之约。为远离城市光污染，我们自驾深入戈壁无人区，从凌晨零点坚守至清晨六点，静静等待银河升起。大漠夜风凛冽、旷野寒意刺骨，却始终抵挡不住我们对浩瀚苍穹的热爱与向往。'
   - date: '4月17日'
     title: '赴一场萤光之约'
-    author: '某喵'
+    author: "某喵"
     images:
       - ../../assets/activities/2026-04/16.jpg
     caption: '为了拍这张照片，在草丛喂了几个小时蚊子，从黄昏等到暮色四合。当第一只萤火虫从桥洞下飞出来时，瞬间觉得所有蚊虫叮咬和等待都值得了。按下快门的瞬间，像是把森林里流动的星光都收进了镜头里。'
   - date: '4月19日'
     title: '雾中星空'
-    author: '在九乡河混吃等死'
+    author: "在九乡河混吃等死"
     images:
       - ../../assets/activities/2026-04/17.jpg
     caption: '难得的窗口期，驱车五个多小时直奔皖南，经历了开错路、导航出错、甚至遇到蛇之后，终于拍到了华东低光害下的梦幻星空。'
   - date: '4月19日'
     title: '永恒'
-    author: 'CONST.'
+    author: "CONST."
     images:
       - ../../assets/activities/2026-04/18.jpg
     caption:
@@ -139,13 +139,13 @@ entries:
       而是接纳随机的结果。'
   - date: '4月19日'
     title: '辰光'
-    author: 'jiajian'
+    author: "jiajian"
     images:
       - ../../assets/activities/2026-04/19.jpg
     caption: '在周末天气不错情况下，我们决定跑一趟八界山，据说因为彗星的原因山上挤满了很多人，我们一路寻找不同的机位方向，终于我们找到了另一个几乎只有我们一辆车的山头。但是由于底下的光污染变强，这可能就是广东的特产了吧。我选择凌晨2点等待银河上升一定的高度再进行拍摄！即便被人间人造光干扰，依旧抵挡不住星星的闪烁。'
   - date: '4月20日'
     title: '孤独赶路人'
-    author: 'Carlson'
+    author: "Carlson"
     images:
       - ../../assets/activities/2026-04/20.jpg
     caption: |-
@@ -157,7 +157,7 @@ entries:
       哪怕身后的巨塔再冷，前方的路灯依然照亮生存的尊严。
   - date: '4月23日'
     title: '富士山下'
-    author: '叶秋'
+    author: "叶秋"
     images:
       - ../../assets/activities/2026-04/21.jpg
     caption:
@@ -165,13 +165,13 @@ entries:
       蹬了二十分钟自行车，终于在蓝调时刻赶到了富士山下的罗森，拍下了这张与富士山的合影。按下快门的瞬间，所有早起的疲惫都被治愈了。这是和富士山的一次，只属于蓝调时刻的浪漫约定。'
   - date: '4月24日'
     title: '春天的巴洛克'
-    author: 'Kenza'
+    author: "Kenza"
     images:
       - ../../assets/activities/2026-04/22.jpg
     caption: '今年的春天格外的暖和，很多植物也穿上了绿色的衣服。在校园里散步的时候，看见了图中的这个场景：红墙，绿藤和白花三个层次分明的东西印在了一张照片上。'
   - date: '4月25日'
     title: '无题'
-    author: '黑暗之王'
+    author: "黑暗之王"
     images:
       - ../../assets/activities/2026-04/23.jpg
     caption: '飘飘何所似？天地一沙鸥'
