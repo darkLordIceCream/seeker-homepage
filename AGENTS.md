@@ -41,6 +41,7 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   - 活动图片的像素尺寸登记在 `src/lib/activity-image-meta.ts`
     （构建期供排版分型与 CLS 尺寸预留）；新增期数需同步追加条目
 - **单文件 >500KB 不入 git**；同一批素材只用一套目录命名，杜绝重复副本
+- 上传素材到 R2 时带缓存头：`wrangler r2 object put <bucket>/<key> --file <f> --remote --content-type <type> --cache-control "public, max-age=31536000, immutable"`
 
 ## Startup Workflow
 
