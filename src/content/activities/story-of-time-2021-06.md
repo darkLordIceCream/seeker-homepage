@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '#奔赴山川湖海，定格夏日绽放瞬间'
 issue: '六月篇'
 period: 'JUNE 2021'
-cover: ../../assets/activities/story-of-time-2021-06/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/cover.webp
 excerpt:
   '《时间的故事》六月篇：#奔赴山川湖海，定格夏日绽放瞬间。29
   幅作品，收录组员们的时光片段。'
@@ -17,133 +17,133 @@ layout: gallery-story
 entries:
   - author: 'SEEKER丨ke0v0'
     images:
-      - ../../assets/activities/story-of-time-2021-06/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/30.webp
     caption: '六月初的后半夜夏季银河横跨繁星密布的夜空，竖立在天空的尽头。广西都安菁盛湾，这里的地势奇特，山岭连绵，红水河沿着蜿蜒曲折的峡谷流淌着，形成了许多的江湾，菁盛湾就是其中的一个。我们在一个雨后的晴天来到了这里，恰好在深夜碰上了水汽蒸发形成的雾流，有幸记录下了这一刻。'
   - author: '叁折'
     images:
-      - ../../assets/activities/story-of-time-2021-06/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/31.webp
     caption: '眼看银拱季就要过去，一直心念念的银河拱桥却因天气一再搁置。驱车近六百公里，海拔四千五百米，在雷暴中躲在车里，终于，雨后天空放晴，一点后整个银河全露沟壑，亿万光年外，我伫立群山之中，冷得瑟瑟发抖。远离城市的莲宝叶则，绿色大气辉光炸裂。'
   - author: 'Lucas_Sun'
     images:
-      - ../../assets/activities/story-of-time-2021-06/32.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/32.webp
     caption: '6月如期踏上了规划已久的贵州之旅。感谢老天眷顾，行程中每天都遇到了期待的好天气。阴雨的苗寨、晴朗的夜空、伴着晚霞的仙人桥...在好天气的加持下我也完成了月初的拍摄计划。我想要在仙人桥这个打卡机位寻找独特的视角来体现这里与众不同的地貌——水滴石穿，洞中有洞。终于，找到了这样一个拍摄难度较高的机位，纯盲拍的一组照片，完美诠释了这里的景观。'
   - author: 'Z'
     images:
-      - ../../assets/activities/story-of-time-2021-06/33.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/33.webp
     caption:
-      '提前关注了天气，感觉第二天早上会有很难得的朝霞，早早的就休息了，第二天凌晨三点起床直奔机位，走到一半突然发现自己忘了带云台...还好时间有富裕赶紧折返回去拿，最后不大概在3.40左右到达机位，此时东边天空已经开始泛红（内心极其激动） 
+      '提前关注了天气，感觉第二天早上会有很难得的朝霞，早早的就休息了，第二天凌晨三点起床直奔机位，走到一半突然发现自己忘了带云台...还好时间有富裕赶紧折返回去拿，最后不大概在3.40左右到达机位，此时东边天空已经开始泛红（内心极其激动）
       当我拿出相机准备装上云台的时候我彻底崩溃，因为我又忘了给相机装快装板！！还好此时足够冷静机智，调整好参数把相机放在窗户边缘平台上拍下了如此绝美的朝霞（应该是本年度最佳）最后提醒大家拍照一定检查好设备。'
   - author: 'Just Fell Asleep'
     images:
-      - ../../assets/activities/story-of-time-2021-06/34.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/34.webp
     caption: '19号，注意到天气预报市区有雷暴，中午吃完饭休息一会就上山了。也确实蹲到了强对流天气，雷达图上甚至出现了紫波，有一小个弧积云和一些闪电。时隔一年，再次在鼓山上拍强对流。第二天20号，雷暴预报不如昨天强烈，但也还算可观。正犹豫要不要二刷的时候，在卫星云图上看见了次生雷暴，光速收拾东西后再次冲上山。然而到了以后并没有雷暴，只下了些雨。等待一段时间，在快日落的时候，天边泛起了红光。想着拍着玩吧，来都来了。没想到过了一会时间，直接火烧乳状云，几乎可以算是年度最佳火烧云了。乳状云一般在强对流天气过后才会产生，算是次生雷暴带来的一个彩蛋吧～'
   - author: 'Bo_'
     images:
-      - ../../assets/activities/story-of-time-2021-06/35.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/35.webp
     caption: '很遗憾5月的故事没有参加,于是在6月卯足了劲,但是一想好像往期大都是风光照,所谓我决定拍摄一组棚景人像,毕竟本就是人像摄影师,自己也擅长些,更何况疫情下的广州,去哪都不方便.筹备了一周左右,等待物料到齐之后着手准备拍摄,期间布光方式更换了许多,终于试到了我想要的感觉——阳光,希望,纯洁.刚好与手捧花的雏菊花语相应.同时也是觉得疫情给内心带来的是被乌云笼罩的感觉,所以这组图充满着温暖,阳光.最后,广州加油!'
   - author: '守仁'
     images:
-      - ../../assets/activities/story-of-time-2021-06/36.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/36.webp
     caption:
       '这个月回老家比较忙，基本都没怎么拍片。老家的云没有广州那么猖狂，所以决定拍一组月相图。前前后后拍了十多天，总体上还算顺利。最近几天有点困难，因为云开始变多了，经常要在楼下等上半个小时才能拍到没有云层遮挡的月亮。回去了以后也要经过平均值堆栈以后才能完全消除云层的影响，但是总体来说已经比在广州轻松多了。这次用的镜头也是几百块钱淘来的便宜货，中心锐度意外的还看得过去
       233。'
   - author: 'Toby Zhu'
     images:
-      - ../../assets/activities/story-of-time-2021-06/37.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/37.webp
     caption: '终于疫情渐渐好转，前去奥地利和德国南部度假。住在一个叫罗伊特的奥地利小镇，四周都被雪山环绕，不是旅游胜地，所以非常静谧舒适。傍晚寻找地方拍摄日照金山，去到了一个马场深处。虽然那天没有遇到金山，但也还是捕捉到了日落前撒向雪山的光辉，恰好农场主开着小吉普绕着巡逻，友好地打了招呼，当太阳开始落下，耳边草丛中蛐蛐叫声此起彼伏。'
   - author: 'F0.95'
     images:
-      - ../../assets/activities/story-of-time-2021-06/38.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/38.webp
     caption: '四姑娘山角峰——川西高海拔区域，常见雪山，高原草甸和灌木丛林相结合的景色，这张照照片拍摄于四川省甘孜藏族自治州四姑娘山，角峰透过高山草甸，露出神秘的一角，即使是盛夏时节，依稀可见角峰上尚未化开的白雪。'
   - author: 'Rewind'
     images:
-      - ../../assets/activities/story-of-time-2021-06/39.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/39.webp
     caption: '端午节的假期，准备解锁新的城市拍摄城市风光，然而天公并不作美，阴雨天让天津这座城化身成能见度仅有两公里的“雾都”，不甘心的我修了几个废片，突然灵光闪现，搞起了我比较拿手的明度后期，让这个我所见到北方雾都开启一道光。或许生活有很多不尽人意，但只要心中有光，阴霾也有明亮。大家好，我是追光者－Rewind'
   - author: 'FTJ随时旅'
     images:
-      - ../../assets/activities/story-of-time-2021-06/40.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/40.webp
     caption: '本来没想那么夸张的，群里催了一波图，看了发稿日期来的灵感：“新中国的背后，血与火中的觉醒，漫长百年路，风华正茂期，虽然我只陪她走过20多年，但很有幸成可以见证百年诞辰。【庆祝中国共产党成立100周年】'
   - author: '阿宸'
     images:
-      - ../../assets/activities/story-of-time-2021-06/41.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/41.webp
     caption: '绿，线条及最初的减法——当我再次来到大柴旦翡翠湖，两年前令我映像深刻的颜色在我眼前复苏。于是我意识到翡翠湖的颜色就是它的表达，同时也是它本身，无可替代也不会随时间流逝而消减。我开始放弃那些繁复的画面，从空中，从地面，去寻找那些能够表达色彩的形状和线条……渐渐的，繁复的纹路开始衰退，凌乱变得清晰，阳光明媚，脉络分明。'
   - author: '浩然'
     images:
-      - ../../assets/activities/story-of-time-2021-06/42.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/42.webp
     caption: '六月赶着周末去了一趟川西，在高尔寺山上见到了贡嘎乌云下的日照金山，本来想着去前面一个山头离近一点拍摄，结果在半山腰下起了冰雹还有雷暴，最后我们等冰雹停了赶紧下山，路上还爆了个胎，还好最后平'
   - author: '九重葛202'
     images:
-      - ../../assets/activities/story-of-time-2021-06/43.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/43.webp
     caption: |-
       如果摄影的最终目标由分享转变为收藏，收藏一份回忆，收藏世间万物，凝固时间，提升认知，那么在创作中便有了目标与方向。我时常在拍照中因为拍到一张偶然的照片而萌生出拍摄一组、一系列作品的想法，就像偶然获得一本空白的图鉴，然后有目的性得去点亮其中一个又一个的图标。这个过程辛苦却又充满惊喜，也有着满满的成就感。
       自上次拍到一组花蕊的照片后，现在常常下意识得在生活中寻找这类素材，丰满图库。这次的拍摄的花朵为：四季秋海棠、梨花、石竹（雄）、圣心百合、阔叶半枝莲、漆姑草、石竹（雌）、附地菜、紫竹梅，都是生活中常见的花朵。但这些常见的花朵却能在微观镜头下给人惊艳的视觉体验。
   - author: '冰冰'
     images:
-      - ../../assets/activities/story-of-time-2021-06/44.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/44.webp
     caption: '深夜，一场极品平流雾盖住青岛沿海，海拔200米以下皆是雾气，挡住了城市里的大部分灯火。短暂攀爬过后，登上海拔330米的午山，在雾气之上捕捉到从海平面上升起的银河。这场雾过后，下一次在午山看到银河，又会是多久之后？'
   - author: '正陽兮門下'
     images:
-      - ../../assets/activities/story-of-time-2021-06/45.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/45.webp
     caption:
       '这个月江浙沪多地傍晚喜迎火烧云，杭州人第一次登江湖汇观亭。印象中是这段时间第二个火烧云的日子。但是自认为光比实在太大，单张宽容度拍延时恐怕是拉不回来的，所以干脆放弃后拍了照片。Canon
       EOS R & RF70-200mm F2.8 L IS
       USM。图一135mm，F8，ISO100，-1/0/1EV包围3组堆栈共计9张；图二70mm，F8，ISO100，-1/0/1EV包围30组共计90张合成。'
   - author: 'B-Rabbit'
     images:
-      - ../../assets/activities/story-of-time-2021-06/46.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/46.webp
     caption: '六月初因为一些工作需求，第一次进入了医院的ICU进行拍摄，生命的脆弱真的是要足够接近才能感受得到，在病房里看到了一个个垂危的病人，他们全身插满各种管子，每天要用各种价值不菲的药，感受不到生命的鲜活，只有痛苦的病人和忙碌的医生，病房里气氛是沉闷压抑的，生命也是失去颜色的，所以把他们记录下来后，我决定用黑白和大量的留白和刺眼的曝光来表达这份沉重，希望每个健康的人都能珍惜自己的生命。'
   - author: '谢宁'
     images:
-      - ../../assets/activities/story-of-time-2021-06/47.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/47.webp
     caption: '深圳梧桐山老虎涧位于盐田沙头角一侧，是一条非常原始的溪谷，属于登山爱好者发烧级线路，夏季由于雨季这里水量增大，登山难度大大增加，难度属于中高，危险度较高。这个月广东普降龙舟水，终于结束了连月的干旱天气，想着深圳已经连续下了接近一个月的暴雨，梧桐山老虎涧这会应该水量充沛了，趁着周末休息，又刚好没下雨，便和好友Alvin一起去老虎涧碰碰运气，到了山脚下看到湍急的溪水，感觉到这次拍摄应该能毕业了，欣喜若狂，我们一路溯溪而上，下雨天山路很滑很难走，走了10分钟后终于到达机位，想着天马上又要下雨，赶紧拿出相机和三脚架，想了一下构图，觉得竖构图合适些，刚好前景有两根树干框住，先把相机快门速度调成1/10秒连续拍下几张瀑布保证瀑布不过曝，再把相机快门速度调成1/4秒拍下前景，使得前景的水有点拉丝的感觉，最后我自己再跑到远处的瀑布下面，好友帮我连按快门拍下几个姿势，拍完这组照片下山后全身都湿透了，不过能拍到满意的作品还是很开心。这张照片后期采用HDR合成，简单调下影调出片。'
   - author: '小志'
     images:
-      - ../../assets/activities/story-of-time-2021-06/48.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/48.webp
     caption:
       '六月中旬与朋友一同去高楼探索，在找位置时耽误不少时间，从我来深圳之初就有梦想要用无人机俯瞰华润大厦“笋”尖这次终于实现这个梦啦，中国华润大厦（China
       Resources
       Tower），别名“春笋”，地处广东省深圳市后海金融总部基地的核心地块，是集生态、休闲、运动、商务、居住、商业、文化为一体的复合型湾区商务中心。'
   - author: '紫氣東東來'
     images:
-      - ../../assets/activities/story-of-time-2021-06/49.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/49.webp
     caption: '最近有幸应邀担任了学校党委宣传部微电影剧照拍摄的任务，这张图便是剧集《蜕变》的剧照。这是我第一次用a6000在剧院复杂光线以及多探照灯大光比环境进行拍摄，尽管最后成片的画质有些崩，但我还是很喜欢这次对我而言意义十足的拍摄。'
   - author: '华Dee'
     images:
-      - ../../assets/activities/story-of-time-2021-06/50.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/50.webp
     caption: '雷雨交加的夜晚早早收拾好背包等着停雨赶到机位拍摄，尽管相机设置错误，还是成功捕捉到了广州塔关灯后的闪电瞬间。'
   - author: '源Dream'
     images:
-      - ../../assets/activities/story-of-time-2021-06/51.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/51.webp
     caption: '六月的风，吹不散迷途雾雨。湛蓝天空，紧紧地勾住我心。那一刻，我风尘仆仆，只为见你一面——莲宝叶则。当晚电闪雷鸣风雨交加，以为此行泡汤了，不曾想在第二天清晨整个河谷云雾缭绕，时不时有耶稣光穿透云层。海拔4200米，我站在“象山之尖”，眺望着山河，感受着大自然的同时便与大自然融为了一体！'
   - author: '海鸥之声Yi'
     images:
-      - ../../assets/activities/story-of-time-2021-06/52.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/52.webp
     caption: '自从拍星以来一直局限在江浙沪周边，这次终于逮到机会冲出魔都来到了腾格里沙漠，也是第一次目视二级光污染的星空。肉眼清晰可见的银河结构给我留下了深刻印象，后半夜，银河在沙漠中缓缓竖起，巧合的是路过车辆的灯均匀地照亮了沙漠，显出了规律的纹理。也很开心在毕业之际见到了理想中的星空，跃入人海各自灿烂～我们的征途是星辰和大海！'
   - author: '肖默'
     images:
-      - ../../assets/activities/story-of-time-2021-06/53.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/53.webp
     caption: '进入6月以来，每天经历着风雨交加，电闪雷鸣无常的天气。清晨的朝霞刚露头被突如其来的乌云压了半边天，站在厚街的窗口，拍着东城的国贸大厦，突然一道闪电劈下，嗯，我才意识到，我真的需要一个长焦。'
   - author: '蓦黎CLEi'
     images:
-      - ../../assets/activities/story-of-time-2021-06/54.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/54.webp
     caption: '6月本来想拍银河的，但是天公不作美，拍摄银河的计划一拖再拖，不过好在拍摄人像对天气要求没有那么苛刻，于是约上朋友，到附近的湿地公园拍摄了一组人像，此次拍摄的地点位于昆明市王官湿地公园，昆明多变的天气对这次拍摄带来了不小的挑战，计划中的阴天，在我们开始拍摄的时候就变成了大太阳。由于没料到突然放晴，所以我们并没有准备防晒。为了防止模特被晒伤，不得不把拍摄的速度尽量加快，好在本来为了防止下雨而准备的雨伞可以用作拍摄道具，同时能帮助模特遮挡太阳。再加上拍摄前做了足够的准备，所以拍摄还是比较顺利的。'
   - author: '熊猫骑士阿星(Axing)'
     images:
-      - ../../assets/activities/story-of-time-2021-06/55.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/55.webp
     caption: '每个人都有自己的山海，而莲宝叶则无疑是我山海中的那一簇神秘的向往，这一次终于到达，而神山眷恋竟然也给了我彩虹的惊喜，我们在这一刻心神澎湃，为这天空的礼遇“朝拜”。'
   - author: '药王哥哥丶'
     images:
-      - ../../assets/activities/story-of-time-2021-06/56.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/56.webp
     caption: |-
       疫情防疫期间，被封闭在学生宿舍的我打开了自己憧憬已久的梦幻景色，眼里都是渴望，渴望这种景色在现实中能够上演。
       六月仅此而已，七月依旧摄影人。
   - author: 'Lucas_樞'
     images:
-      - ../../assets/activities/story-of-time-2021-06/57.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/57.webp
     caption: '摄于厦门麻花楼。高考完终于能出去撒欢啦，一年多没有拍片实在手痒痒。那天光线不好是阴天，最后硬着头皮拍了这张，也没寄希望能出片。后期决定重塑光影，对明暗两面分开处理，加强颜色对比，塑造光线，没有光就造光哈哈。'
   - author: '葛炮的号哭'
     images:
-      - ../../assets/activities/story-of-time-2021-06/58.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/58.webp
     caption:
       '2021年6月12号端午节，凌晨3点到兰州机场，马上驱车开往巴丹吉林沙漠，中途还碰上了沙尘暴，本来以为要一无所获的时候，突然风停了，云散了，来到了巴丹吉林附近这个怪石林，拍下手可摘星辰的自己，发现一切值得。拍摄设备：Nikon
       D610，适马40Art，40张拼接。'
@@ -152,7 +152,7 @@ poem: |
   我们不只分享精致的影像，更希望给大家传递一些积极的生活信念——本期主题“奔赴山川湖海，定格夏日绽放瞬间”。
   “2021已然过半，希望各位拥有更加精彩的后半程！”
 
-committeeImage: ../../assets/activities/story-of-time-2021-06/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-06/committee.webp
 ---
 
 每一天都会有很多的故事，或喜或忧，我们希望能够记住并与人分享。

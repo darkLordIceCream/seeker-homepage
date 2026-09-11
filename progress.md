@@ -770,3 +770,29 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   等少量跨目录复用图(约 6MB)保留原状
 - 验证:`./init.sh`
   全通过(install/type-check/lint/build,72 页);dist 中无任何指向已删目录的引用
+
+### 活动照片迁移 R2(2026-09-11)
+
+- 背景活动照片 2062 张(467MB)是 git 仓库最大体积来源;按公益板块既有模式整体迁至R2
+  bucket `seeker-homepage-assets`,自定义域 `r2.xn--seeker-ng2jm403afb4a.club`
+- 转换:sharp 全量转 WebP(q82
+  smartSubsample、最长边 ≤2560、按 EXIF 转正、剥离 EXIF 隐私),
+  467MB→232MB;抽张 100% 放大比对画质无明显损失
+- 代码:
+  - `content.config.ts` activities 集合
+    `cover`/`committeeImage`/`entries[].images` 从 `image()` 改为
+    `z.string().url()`(R2 绝对 URL)
+  - 新增 `src/lib/activity-image-meta.ts`(2062 条像素尺寸清单,迁移脚本生成)+
+    `src/lib/activityImageMeta.ts` 查询函数,替代 astro:assets 的尺寸元数据
+  - `GalleryStory.astro`/`story-of-time.astro` 的 `<Image>`
+    全部换成带 width/height 的
+    `<img>`(排版分型 isStrip/isSide 改用清单查尺寸,CLS 防抖动保留)
+  - `ActsSection.astro` 首页封面、`[slug].astro` og:image 改 R2 URL
+  - 64 个 md 的 `cover`/`entries[].images`/`committeeImage` 批量重写为 R2 URL
+- 删除 `src/assets/activities/`(git rm);`src/assets` 仅剩 UI 小图(420KB)
+- AGENTS.md 写入素材管理规则:素材一律 R2、src/assets 只放 UI 小图、单文件>500KB 不入 git、一期一目录命名唯一
+- 踩坑:全局 wrangler(pnpm 无此依赖),`pnpm --dir <path> wrangler`
+  会把路径当可执行文件报 EACCES;上传脚本需用全局二进制绝对路径
+  `/Users/<user>/Library/pnpm/wrangler`
+- 验证:build 72 页、type-check 0 错误、lint 通过;构建产物 HTML 无本地活动图引用;
+  R2 全量 URL 可达性校验 2062/2062

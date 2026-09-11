@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '别九月秋风送爽，迎金秋硕果盈枝'
 issue: '九月篇'
 period: 'SEPTEMBER 2024'
-cover: ../../assets/activities/story-of-time-2024-09/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/cover.webp
 excerpt:
   '《时间的故事》九月篇：别九月秋风送爽，迎金秋硕果盈枝。30
   幅作品，收录组员们的时光片段。'
@@ -18,17 +18,17 @@ entries:
   - author: '猫白否'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/01.webp
     caption: '东方明珠塔的倒影，仿佛一支温度计，轻量来自日落的浪漫。'
   - author: 'DawnTideNN'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/02.webp
     caption: '八九月份拍摄的建筑主题开始更多地思考视角上的选择，尽可能在一个建筑内外找到更多的拍摄机位，并且一次性处理出来。这次偶然遇到了梅溪湖艺术馆不到一个小时的开放，非常幸运地，我随身携带了15mm移轴镜头。在27张成片中，这一张同时容纳了大厅中庭的玻璃穹顶、人所在楼层的天花板以及完整流畅的曲线，中庭的陌生人补充了关于建筑尺度的信息，让画面更加完整。'
   - author: 'Talon'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/03.webp
     caption: |-
       《理想与现实的摆渡车》
       远处的新街口商圈是美好的理性，眼前的麒麟安置房是无奈的现实，中间的有轨电车是连接两处的摆渡车。这是当代无数城市打工人的生活方式，也是一座城市人文关怀的体现。
@@ -36,7 +36,7 @@ entries:
   - author: 'SteveZhang'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/04.webp
     caption: |-
       划破森林飞鸟，口衔着明月如枝.
       振云匆忙流流，镀金便缓缓暗逝.
@@ -45,27 +45,27 @@ entries:
   - author: '张臭臭'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/05.webp
     caption: '阳光洒在大地上，一对爷爷奶奶漫步在光里，这是在常州与身后高楼大厦浪漫的邂逅。'
   - author: '归零'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/06.webp
     caption: '台风过境给上海带来了前所未有的通透度，因为想记录下这座城市在风雨洗礼后焕发的新生，我来到外滩附近的一座公寓。可惜来到楼顶时天上下起了小雨，相机也因为爬楼而沾上尘土，不过却意外的发现这样的滤镜下，沾上的尘土更像是一个鬼脸，让人回想起那个被台风支配的夜晚。'
   - author: 'ChenGY35'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/07.webp
     caption: '漫步在揭阳古城，古塔静立，岁月悠然，映衬着老人的背影。她如同历史的见证者，背负着往昔的记忆，步伐缓慢却坚定，仿佛在与古塔低语，诉说着岁月的故事。'
   - author: 'FrameTao'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/08.webp
     caption: '和三十几位青岛的小伙伴齐聚沧口岸边拍摄了胶州湾大桥的蛾眉月悬月，很幸运的遇上了亮灯的大桥，搭配上来往车辆的流光和绯红色的落月，别具一番未来感。'
   - author: '景'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/09.webp
     caption: |-
       和很多同龄人一样，我是一个不爱早起的人，但我依然见过日出时的金光万丈。
       小时候，我常和爷爷奶奶住在一起，老人总是很早起床，为了遂他们的意，我也总四五点就起来，和爷爷去坝上看日出。那是我第一次见到晨曦初露，也在以后的日子里每每看见日出便想起那时的日子。
@@ -73,111 +73,111 @@ entries:
   - author: '之二'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/10.webp
     caption: '一个月的学习时光猛然而过，某次下楼瞄见网球场在来来回回打网球，像极了我学习与时间的博弈，于是第二天特意为打网球的人拍摄一张。'
   - author: 'CJieee'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/11.webp
     caption: '中秋佳节，有幸和seeker的小伙伴们来到珠海一起拍烟花，从下午两点一直等到晚上九点，等的过程还是挺煎熬的，但在炎热夏夜见证了烟火绽放的那一瞬却感觉一切都是值得的！当然更加值得开心的是此行不仅拍了喜欢的照片，更是交到了一群志同道合的好友！我想这也是摄影的意义！'
   - author: '摄影师何子毅'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-09/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/12.webp
     caption: '闪电为这宁静的夜晚增添了几分震撼与激情，更让广州这座美丽的羊城在电光火石间，展现出一种别样的魅力，仿佛是天地间最绚烂的烟火，让人叹为观止，心潮澎湃。'
   - author: '几奥'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/13.webp
     caption: |-
       拍摄于：越南河内
       距离市区三十多公里以外的酱油厂，跟酱油厂老板沟通了一下，虽然下着小雨但是他们还是决定满足我们想要拍摄的愿望，两个工人熟练的操作起来。临走时我们觉得非常感动！连连对老板致谢，谁知他伸出3根手指头，30万越南盾！
   - author: '好生读书.'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/14.webp
     caption: '总有人带着炙热的光走出黑暗。这次中秋没想到能在武汉看到火壶表演，当看到表演的时候我十分激动。'
   - author: '木木'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/15.webp
     caption: '夜幕降临，满山的红房子亮着微光，一个喇嘛走在那蜿蜒的小径上，世界仿佛停止了喧嚣，行走在这片神圣的土地上，感受着天地间的肃穆，一个人，却不曾孤单。'
   - author: '小林没有晚餐'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/16.webp
     caption: '“山里人住在山里，就像脚放在鞋里面，舒服。”     ——《那山那人那狗》'
   - author: '江河漫读。'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/17.webp
     caption: '上课时往窗外一看，发现学校新建的公共卫生楼已经完成了大半，两名建筑工人行走在纵横交错的楼体骨架中，虽然工作危险但是他们富有技巧与勇气，从容地在高空中灵活作业，令人敬佩。我立刻拿起相机，记录下这样震撼的一幕。'
   - author: 'Fearless丶'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/18.webp
     caption: '经朋友介绍第一次当livehouse乐队官摄，突破观众视角，使用超广角以极近的距离拍摄更具冲击力的画面。'
   - author: '屋顶数星星'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/19.webp
     caption: '仙风道骨，超然物外。'
   - author: '王梓轩'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-09/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/20.webp
     caption: '在大兴安岭穿越之路，偶遇特殊情况，不得不夜晚穿越。中途修车，大家一起参与的情况被定格下来，也成了难忘的回忆。'
   - author: '淑芬YYDS'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/21.webp
     caption: '大西北之旅，我无数次折服于大自然的鬼斧神工，在张掖看到了如此精彩的树状地貌和令人赞叹的色彩搭配，我立刻用无人机拍下了这张大地之树的照片。'
   - author: '绿谷'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/22.webp
     caption: |-
       斯多伦波利赞歌」
       “我看着，想着，赞叹着，既惊愕又恐惧。”在已知和未知的世界中漫游，这里是现实版的地心游记。
   - author: 'Willett Corleone.'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/23.webp
     caption: '禾木村上慢慢开始有了秋天的气息，远处若影若现的丁达尔光洒在了群山和红砖瓦房子之上，在这里短短一天就让我喜欢上了禾木村。'
   - author: '源Dream'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/24.webp
     caption: '9月初来了西藏的希夏邦马峰徒步拍摄，感受5000+海拔的重装徒步拍摄，终于在南坡的第四天早上迎来好天气，在贡错拍到了希夏邦马的日照金山！'
   - author: '崔什么催'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/25.webp
     caption: '登上山顶，恰逢日落时分，在无人机的高空视角下，日落的光将山峰照的格外漂亮，于是我按下快门拍下了这张照片。'
   - author: '葭月潜龙'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/26.webp
     caption: '有幸在中国最美乡村邂逅一场橘黄色的烂漫。晚霞之下，篁岭逐渐褪去了日间的喧闹，只听见悠悠古乐和稀疏的话语声，恍惚间又回到了从前的那座阡陌交通、鸡犬相闻的小村落。'
   - author: '宠物摄影师狗哥'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/27.webp
     caption: '停在海边的渔船，渔船边的狗狗，他们发生了怎样的故事。'
   - author: 'HANMOSHENG'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-09/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/28.webp
     caption: '中秋佳节恰逢超级月亮，因学业无法与家人团聚，于是拍下了这轮皓月赠与亲朋好友。'
   - author: '是田田吖'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-09/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/29.webp
     caption: '见花不见叶，见叶不见花，生生世世，永不相见！相念相惜总相失。'
   - author: '纯黑的林桑'
     group: '创意'
     images:
-      - ../../assets/activities/story-of-time-2024-09/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/30.webp
     caption: |-
       《直面天命》
       “俺这就取下这金箍给你看！”
@@ -206,7 +206,7 @@ pastIssues:
     line: '还暖寒风之辉，轻素抚慰眠乡'
   - name: '四月篇'
     line: '还暖寒风之辉，轻素抚慰眠乡'
-committeeImage: ../../assets/activities/story-of-time-2024-09/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-09/committee.webp
 committee:
   name: '2024年时间的故事组委会'
   team:

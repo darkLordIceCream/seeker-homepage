@@ -53,7 +53,7 @@ const welfare = defineCollection({
 
 const activities = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
-  schema: ({ image }) => {
+  schema: () => {
     /** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片）。
      *  早期版式（2021-2025）无日期头/作品名，date/title 均可选 */
     const activityEntry = z.object({
@@ -67,8 +67,8 @@ const activities = defineCollection({
       caption: z.string(),
       /** 作者署名（不含 @） */
       author: z.string(),
-      /** 照片（本地资产，astro:assets 自动 webp/srcset/CLS 预留） */
-      images: z.array(image()).min(1),
+      /** 照片（R2 远程 URL，构建期经 src/lib/activity-image-meta 提供尺寸） */
+      images: z.array(z.string()).min(1),
     });
 
     return z.object({
@@ -80,8 +80,8 @@ const activities = defineCollection({
       issue: z.string(),
       /** 期数时间标注，如「AUGUST 2026」 */
       period: z.string(),
-      /** 活动卡片 / 页面封面（本地资产，astro:assets 构建期优化） */
-      cover: image(),
+      /** 活动卡片 / 页面封面（R2 远程 URL，构建期经 src/lib/activity-image-meta 提供尺寸） */
+      cover: z.string(),
       /** 摘要（SEO / 列表展示用） */
       excerpt: z.string(),
       /** 开篇金句 */
@@ -101,8 +101,8 @@ const activities = defineCollection({
       entries: z.array(activityEntry),
       /** 结尾诗（多行） */
       poem: z.string().optional(),
-      /** 组委会收尾品牌图 */
-      committeeImage: image().optional(),
+      /** 组委会收尾品牌图（R2 远程 URL） */
+      committeeImage: z.string().optional(),
       /** 组委会署名 */
       committee: z
         .object({

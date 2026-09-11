@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '#七月流火，八月萑苇'
 issue: '七月篇'
 period: 'JULY 2021'
-cover: ../../assets/activities/story-of-time-2021-07/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/cover.webp
 excerpt:
   '《时间的故事》七月篇：#七月流火，八月萑苇。31 幅作品，收录组员们的时光片段。'
 quote: '时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。——奥古斯丁(古希腊)'
@@ -16,148 +16,148 @@ layout: gallery-story
 entries:
   - author: 'Z'
     images:
-      - ../../assets/activities/story-of-time-2021-07/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/01.webp
     caption: '喜迎建党百年，早早的做了规划，可惜空气质量堪忧而且飞机飞的很高只有临时改为竖拍。祝愿祖国繁荣昌盛！谱写新时代辉煌壮丽篇章！'
   - author: '遇现cbaij'
     images:
-      - ../../assets/activities/story-of-time-2021-07/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/02.webp
     caption: |-
       将军出征
       我一直很向往大连的礁石，今年五月份因为有事搁置了，在这个月恰逢有朋友组队，就去圆了大连扫海梦。但大连之行的问题也从此开始，受到疫情的影响，两个从南京出发的小伙伴没办法过来，四个人一下子就砍掉了一半，原本做计划的大佬过不来了，落地后我开始疯狂做攻略，第一站就选择了大连标志性礁石——将军石。将军石景区由于去年的填沙，使得海岸线变得比较平缓，没办法和以前一样翻起大浪，但勇敢牛牛，不怕困难。在水裤的保护下，踩进了海里寻找不一样的前景，在多番尝试下终于找到了个青苔礁石，流水拉丝的前景，天空也特别魔幻，成功拍到心中所愿。心满意足，不枉我们打不到回去的车，靠村民帮助才能顺利回市区，差一分钟赶上最后一班地铁。
   - author: '守仁'
     images:
-      - ../../assets/activities/story-of-time-2021-07/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/03.webp
     caption:
       '广州的新中轴是中信，珠江新城到广州塔。这条中轴线横穿珠江，从东到西都是日落到日出的机位。这张片拍摄于中轴线与珠江相交的南岸，可以看到北岸的整个珠江新城建筑群和海心沙。阴天拍摄的原片，后期是明度建筑。我并不喜欢黑白的片，所以即使是明度我也会上色。这次用了对比强烈的金色和蓝色。把东塔和大剧院涂成了金色，因为他们一左一右，比较对称。后期总共用时
       10 小时左右，耗时最久的一张片了，最后成片还算满意。'
   - author: 'Just Fell Asleep'
     images:
-      - ../../assets/activities/story-of-time-2021-07/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/04.webp
     caption: '客家土楼，南靖田螺坑土楼颇有特点，被当地人戏称为“四菜一汤”。2019年旅游时偶然发现能拍银河，但受限于携带器材与天气，并未得到很好的效果，土楼银河这个想法就一直留在了心中。两年后，带上了更棒的器材，抓住了更棒的天气，在此复刻两年前的偶遇。'
   - author: 'SEEKER丨倾斜的地平线'
     images:
-      - ../../assets/activities/story-of-time-2021-07/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/05.webp
     caption: '这片区域是第三次来了，第一次和小朱、楠楠和Yeah哥计划拍摄黑岩角，可惜老船长半夜喝醉睡着了没法送我们，早上风浪太大无法上岸；第二次和小朱再次决定去黑岩角，然后因为银河方位原因取消行程；这个是第三次了，宁弟、Wyatt和阿维一起自驾到西涌徒步，下起大雨取消黑岩角行程，在天文台拍摄到海岸，这个海水基本不用后期就可以直出，很棒了。后来回到广州生病了一周，还被老板撵着去医院打针，不然不让去办公室哈哈哈哈。没有去成黑岩角，但大家也没有什么遗憾，本来就是一次gathering，一次聚会，期待秋天或者冬天抽个周末来这边好好度假，好好徒步。'
   - author: 'SEEKER丨YaphetsYi境'
     images:
-      - ../../assets/activities/story-of-time-2021-07/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/06.webp
     caption:
       '7月开始闭关生活，几乎没有碰过相机，7月14日傍晚刚好赶上兰州少见的强对流天气，便拿起相机冲上20几楼的楼道拍摄。黑云从东面向西压来，裹挟着暴雨和一道道闪电，在傍晚时分形成特殊景象，仿佛是对即将进入黑夜前的审判。Sony
       a6000+laowa9mmF2.8 2s F8 ios400、8张叠加'
   - author: 'Pear'
     images:
-      - ../../assets/activities/story-of-time-2021-07/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/07.webp
     caption: '7月13日的清晨，在太阳升起前艰难地爬到了东山澳角大肉山的山腰上，想要拍一下海上日出，迎接我们的却是望不透的云迷雾锁；但是在太阳升起之后，浓雾退散，只余下海面上的薄薄海雾，初生的暖阳将金光抚在海雾和积云上，将天涯澳角染为海上仙境，此情此景，没齿难忘。尼康D810+腾龙70-200mm(A009)，图一95mm六张拼接，图二70mm，图三200mm'
   - author: '包子小方同学'
     images:
-      - ../../assets/activities/story-of-time-2021-07/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/08.webp
     caption: '七月的青岛可以说是充满了未知。海面上一望无际的浒苔，加上台风“烟花”来临前夕，青岛持续N天的阴雨天气，再加上每天雾蒙蒙的天气，让出去拍照变成了一件奢侈的事情。好在就在台风来临的前两天，青岛的天气突然放晴，在第三海水浴场和奥帆中心成功打卡。'
   - author: '潘潘猪'
     images:
-      - ../../assets/activities/story-of-time-2021-07/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/09.webp
     caption: '七月课程结束后，和女朋友到上海旅游。上海的夏日热得我满身是汗，每天也只有早上有时间出来拍照，所以基本只在日出随随便便拍了几张图。这张图的拍摄角度我在来上海前就早早规划，比较喜欢，所以来上海的第二天就赶过去拍摄，并且顺利赶上了一场朝霞。'
   - author: 'Min铭皓'
     images:
-      - ../../assets/activities/story-of-time-2021-07/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/10.webp
     caption: |-
       在广州百年建党活动期间，羊城的天气乌云满布，仿佛诉说着国家建党百年来的艰苦与心酸，终于在建党活动结束初，这座羊城迎来了近段时间的第一次火烧云，仿佛是迟来的祝贺百年建党的中国。
       百年建党，国泰民安。
       看这盛世，如您所愿。
   - author: '海鸥之声Yi'
     images:
-      - ../../assets/activities/story-of-time-2021-07/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/11.webp
     caption: '15号就看到莉景预报第二天有质量不错的朝霞，正好也没在外滩拍过陆家嘴的火烧云，和小伙伴一合计就决定冲一把。三点四十多就到地方架好了机器，日出前火烧云如约而至，虽然持续的时间不长，但仍红透了半边天。日出之后飘来了些低空云，也给黄金时刻锦上添花，增强了氛围感。日出前后各有不同的感觉，这就是魔都的魅力之一吧！'
   - author: '谢宁'
     images:
-      - ../../assets/activities/story-of-time-2021-07/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/12.webp
     caption: '7月份，天气开始“入伏”，6月下了整个月雨水后的深圳又一次迎来蓝天白云的好天气，出现晚霞的概率也要比以往大，那天莉景预测将会有世纪晚霞出现，想去远的机位拍摄时间不充裕就找了在公司附近的机位，日落后，天空果然烧起来了，匆忙按下快门拍下了为数不多的深圳CBD晚霞。'
   - author: '小志Lzj'
     images:
-      - ../../assets/activities/story-of-time-2021-07/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/13.webp
     caption: '7月份，利用巧摄规划好日出轨迹，我三次4点半起床去深圳湾公园蹲守日出，皇天不负有心人终于在第三次拍到此张平安悬日，总的来说：坚持就是胜利'
   - author: 'Forest_Lin'
     images:
-      - ../../assets/activities/story-of-time-2021-07/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/14.webp
     caption: '7月的天气特别好，应该是最适合拍风光的月份之一了，这个月拍到了许多好看的晚霞，但是相较于晚霞的片子，最喜欢的还是这张建筑的照片。通过后期的方式调成了冷暖的对比色，看着就像天使的眼睛一样。'
   - author: '林宇先'
     images:
-      - ../../assets/activities/story-of-time-2021-07/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/15.webp
     caption: '西双版纳的大金塔夜色，旁边就是夜色斑斓的湄公河六国水上市场'
   - author: '火星喵'
     images:
-      - ../../assets/activities/story-of-time-2021-07/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/16.webp
     caption: '第一次拍到广州中轴线晚霞，当看到合成图时，一天上班的疲惫都随之消散。'
   - author: 'SEEKER丨Toby'
     images:
-      - ../../assets/activities/story-of-time-2021-07/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/17.webp
     caption: '经过5个多小时700km的奔驰，终于在下午到达了天鹅堡。相较山那一侧的新天鹅堡，有阿尔卑斯湖衬托的高天鹅堡风光显然更好。湖面静谧如镜，倒映了远处群山。因为景区内禁飞，而且听说到了晚上下山的近道会被关闭，就直接在山下的停车场放了飞机，虽然交了巨额停车费，但也比山上的角度要好很多。'
   - author: 'SEEKER丨ke0v0'
     images:
-      - ../../assets/activities/story-of-time-2021-07/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/18.webp
     caption: '幻世之峰，7月中旬我来到了心心念念的莲宝叶则。雨后的扎尕尔错，烟雨蒙蒙，云雾环绕，金色的阳光照射湖泊对面的山峰上，湖光山色间充满了诗情画意，使用无人机穿越在石光仙境，邂逅了这片神之净土。'
   - author: 'Bo_'
     images:
-      - ../../assets/activities/story-of-time-2021-07/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/19.webp
     caption: '其实很久之前就想创作一组梦境与现实之类的对比感觉,所以这组叫做南柯一梦——梦里梦外虚实之间的朦胧不清。在创作时候还发生了搞笑的事情;由于是棚景，但是我又想要烟雾的感觉,于是淘宝买了5个烟饼(坚决不承认是买不起烟雾器)，点燃的时候出烟量出奇的好，于是烟雾警报器滴滴滴个不停，物业也急忙跑来查看。泡汤之后没办法后期自己扣烟雾，心疼自己。好在成品还是不错的，我可真棒。'
   - author: '紫气东东来'
     images:
-      - ../../assets/activities/story-of-time-2021-07/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/20.webp
     caption: |-
       《沙漠的天秤》
       7月中旬是巴丹吉林一年中最热的时候，而我的创作激情也和天气温度成正比。沙漠拍摄除了关注那些壮观宏大的场景，一些小景也是格外的出色。当我爬到一处附近最高的沙丘顶上向远处望去时，兀地发现远处的队友与座驾在纵横沙漠的映衬下好似天平的两端。我迅速用相机记录下了这有意思的一幕。
       设备：Sony a6000＋E 18-135
   - author: 'Wyatt_Lin'
     images:
-      - ../../assets/activities/story-of-time-2021-07/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/21.webp
     caption: '“城中村”是中国快速城市化进程中的特有现象。随着改革开放的深化，城市蔓延向郊区边远地区，大量土地被开发，而城市政府或开发主体为了规避极高的经济和社会成本，导致被绕开的村落成为“城中村”。广州天河区这片曾经的农田经过近20余年的快速建设，已成为高楼林立的城市中心区。而在国际都市的新外貌下，仍隐藏着石牌村这样的旧时代痕迹。一段别具特色的历史，总会留下一个时代最真实的影子。改革开放的万象更新，便在这片土地上淋漓尽致地演绎。'
   - author: '正陽兮門下'
     images:
-      - ../../assets/activities/story-of-time-2021-07/22_1.png
-      - ../../assets/activities/story-of-time-2021-07/22_2.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/22_1.webp
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/22_2.webp
     caption: '首次西北自驾游，路上前两天或刮风或下雨或沙尘，也没拍多少东西，这天终于开到了茫崖过夜，发现快门线遥控器还坏了。第二天傍晚开到翡翠湖感觉这趟的好运气要开始了，这个翡翠湖真的够大，而且人为破坏较前几天的少很多，在车上还能看到碧绿的湖面完美倒映着天空，下车先航拍一下后找了个位置架相机，却狂风骤起，立刻打碎了一地的碧玉镜面。觉得可能又要拍不到东西了，西面的天空倒是趁着风势排出了疾速移动的云阵，丁达尔效应显现，动态的金光肆意撒在湖面上。我们当即用相机捕捉到了这难得一幕。这趟旅行非常感谢群里好友@熊猫骑士阿星(Axing) 推荐的小众路线（我也确实基本按照攻略走了一周），从兰州起飞回家前@YaphetsYi境 提供了机位大全（虽然我没来得及爬楼但还是很棒，下次再来）。至于只交了这么两张的原因，就是我回家到现在只打开了这俩修了图'
   - author: '蓦黎CLEi'
     images:
-      - ../../assets/activities/story-of-time-2021-07/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/23.webp
     caption: '经常合作的模特突然约我想要拍摄一组赛博朋克的照片，由于赛博朋克的创作我已经拍过了，对于我来说每次拍摄的东西我都会尽量不同，所以我放弃了赛博朋克最常见的红蓝光，选择了一个废旧工厂拍摄。话说我明明想要做一个风光摄影师的，为什么总在拍小姐姐呢？：：：'
   - author: 'Hanmes'
     images:
-      - ../../assets/activities/story-of-time-2021-07/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/24.webp
     caption: '在东山岛，12号刚经历了人生第一次正经扫海的挫败，出的片很一般，还全身都湿了还被蚊子咬。13号凌晨很不甘心，四点多爬起来打算再战一次。于是和梨神杰神两位大佬在能见度只有几米的浓雾里摸着黑爬悬崖到了机位，天气果然没有辜负我们。日出时，见到了人生中最震撼的一场海雾，整个海岛都被金色的雾气笼罩，丁达尔光直射在海面上，远处的岛如同神仙的居所。相机快门几乎全程没有停下来过，而无人机飞到500米后的视角更为震撼，图中右下角被浓雾笼罩的小岛就是我们所在的位置。无人机几乎可以触及到低云的高度，一时间，海、云、雾、光同时出现在画面中。拍完之后忽然对风光摄影有了新的体会，也是第一次在后期的过程中为自己技术的不足而悲叹，担心自己前期后期的能力根本无法还原出双眼看到的那种震撼。'
   - author: '阿宸'
     images:
-      - ../../assets/activities/story-of-time-2021-07/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/25.webp
     caption: '凤舞——这些纵横交错且斑斓的纹理，藏在独库公路北段的峡谷之中。溪水沿着公路缓缓地流，裹挟着树枝力竭于此，干涸后裸露出金黄的细沙，有的则带着一抹明亮的蓝不断向前。于是，安集海封闭的遗憾在此得到补偿，旅行的暂停键被按下，无人机升空，从高空俯瞰，大地的血脉便扑面而来。'
   - author: 'Lucas_樞'
     images:
-      - ../../assets/activities/story-of-time-2021-07/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/26.webp
     caption: |-
       [高高此山顶，四望唯烟云]
       漳州东山县澳角村旁的大肉山自拍。山顶悬崖边有块突出来的一片山体，有一条仅仅一人宽的小路通向最远端，低头看去就是广袤的大海。为了去到这个机位，和梨老师、Hanmes老师一起半夜四点多冒着能见度不足五米的海雾，从靠山体的小路摸黑上山，旁边就是陡峭的悬崖，一路可谓惊险刺激，大概需要十几二十来分钟到达拍摄点。当天运气极佳，遇到了罕见的大雾，日出后阳光穿透远处的薄云，大雾也渐渐散去，一瞬间天边光芒万丈，站在最高处感慨万千，一路的疲倦一扫而空。这张使用老蛙12 单张拍摄而成，简单后期强化了光影。
   - author: 'tangyruo'
     images:
-      - ../../assets/activities/story-of-time-2021-07/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/27.webp
     caption: '7月20号，郑州人还不知道自己将面临的是什么境况，大家都还在调侃可以出门看海的时候，冒着暴雨拍摄了这支香水的静物图。一直以来最喜欢下雨的日子，雨滴与水纹使人轻松拥有视觉沉静。虽然此刻的心中并不能安宁，却希望这样的照片能带给你片刻治愈。愿大家，愿社会一切安好。'
   - author: 'yummy旻'
     images:
-      - ../../assets/activities/story-of-time-2021-07/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/28.webp
     caption: '该图拍摄于7月27日傍晚，在长年阴天的成都，当天火烧云、雪山和彩虹都出现了，真是难得的好天气。图中为凤凰山体育馆，为大运会而建设的运动场馆之一，该馆包含一个足球场和一个篮球场，以及相关配套设施。场馆已经全部修建完毕，外围的公园环境还在完善中，当傍晚阳光穿过云层，将金色的光芒照向大地，将一切都变成了金色。'
   - author: '肖默M0'
     images:
-      - ../../assets/activities/story-of-time-2021-07/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/29.webp
     caption: '小区垃圾桶边的流浪猫，一只猫妈和五个猫孩子，每天定时出来翻垃圾桶找吃的，看着有点心酸，希望有人来领养。猫妈每天只顾跟小区的豚鼠玩，不管孩子。幸好，小区邻居偶尔会送吃的。从最初的怕生到现在见人就出来打招呼，投食还能各种卖萌，喜欢撸猫的赶紧下手。'
   - author: 'B-Rabbit'
     images:
-      - ../../assets/activities/story-of-time-2021-07/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/30.webp
     caption: '身在郑州，于是拍下这些，照片就是我眼中的世界，任何话都显得多余，劫后余生，活着真好。'
   - author: '沉默'
     images:
-      - ../../assets/activities/story-of-time-2021-07/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/31.webp
     caption: '阿那亚之旅虽然有点短暂，但是收货颇多。不过最喜欢的是这张图，主要也是赶上了黄金海岸的黄金时间，并且天气还不错。当然也感谢那个不知名的小姐姐的小建议。否则我自己也想不起来用竖构图的方式。至于这张图，暂且命名为《眺望》吧。毕竟自己月初的主题是和辞职、跳槽有关系的图，但其实也有些千丝万缕的联系，毕竟某种程度来说，自己也在“眺望未来”'
 poem: |
   “希望这个‘七月的记忆’合集能够给每一个路过路过的你们都能带来一点点启发，相信读得懂风景和故事的人都是对生活有向往的”。
   我们不只分享精致的影像，更希望给大家传递一些积极的生活信念——本期主题“七月流火，八月萑苇”。
 
-committeeImage: ../../assets/activities/story-of-time-2021-07/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-07/committee.webp
 ---
 
 每一天都会有很多的故事，或喜或忧，我们希望能够记住并与人分享。

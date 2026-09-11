@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '澹然冬日影，此处极可人'
 issue: '十二月篇'
 period: 'DECEMBER 2022'
-cover: ../../assets/activities/story-of-time-2022-12/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/cover.webp
 excerpt:
   '《时间的故事》十二月篇：澹然冬日影，此处极可人。30
   幅作品，收录组员们的时光片段。'
@@ -18,49 +18,49 @@ entries:
   - author: 'Hiikk'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/01.webp
     caption: '十二月初，迎来了这学期的期末周。趁着为数不多的空闲时间拍摄了位于宿舍旁香港黄埔的"陆地船舰"。在上世纪这里原本为黄埔船坞，而后随着船坞业务转移至香港青衣，1985年黄埔船坞便正式关闭。后来为了纪念这段历史，便修建了这座‘陆地上的船舰’。'
   - author: '陳kevin'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/02.webp
     caption: '12月，2022年的最后一个月，因为天气和疫情的原因，基本没有拿相机拍照。唯一一次拿起相机还是和朋友约着去深圳湾拍鸟，最近挺多人在那拍鸟，我们也凑个热闹，黄昏下的深圳湾被夕阳的照射下成金黄色，海面波光粼粼，成群结队的海鸥在海面上飞来飞去，于是抓拍到这张城市夕阳下的海鸥！'
   - author: 'Chocosundae'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/03.webp
     caption: '短暂的学期结束，我也终于在十二月回到了杭州。虽然已是十二月下旬，不过初冬暖阳甚好，于是再次来到这里进行四季杨公堤的拍摄小计划。初冬的杭州天气通透，无云的午后，西湖就像是少女光洁的脖颈，杨公堤便是淡雅的项链。阳光透过枝桠铺在路面，泬寥的暖意。何为冬月？满目煦色韶光。'
   - author: 'REWIND'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/04.webp
     caption: '12.22日，冬至，星期四天气晴。复工返岗的第一天还有些许不适应。清晨七点拉开窗帘竟还是蓝调时刻，清晨望晴空，车流涌动，东四环的马路车也开始多了起来。在西北方向的国贸建筑群在没有LED的装饰下反射出金黄色的光，仿佛城市之中少了些浮躁多了些希望。'
   - author: '大聪头CongCong'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/05.webp
     caption: '月初还很安全的时候，和朋友一起来到一栋楼上想拍火车。其中一台在拍延时，我用另外一台抓拍火车，没想到火车却是很少。有时候还不容易等来一辆，由于参数设置错误就没拍到。于是，只能继续等待。终于在天黑时，等来了一辆黑夜中照亮前方的车辆！'
   - author: '熊猫骑士阿星'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/06.webp
     caption: |-
       『藏在成都的金色童话世界』如果没有在十二月与成都的银杏相遇一场，你便不会知道一个城市的初冬可以有多迷人。
       成都人爱银杏，从老街巷到公园或大学，似乎没有哪一片金黄可以躲得过大家的眼帘。无事的周末，寻一处银杏大道，穿梭在这金灿灿的黄色拱廊间，这就是独属于成都人的小确幸。
   - author: '火星喵go'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-12/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/07.webp
     caption: '拍摄得这天阴霾的天气，过去人山人海的海珠大塘城中村街道人流变得零星，很多工人应该已经返乡，本该最忙丰收的时候，因为11月疫情多少无奈，图中还能看到部分放在马路边上的水马。谁能料想到11月底突然解除封控并发生种种变化到现在12月完全放开，我想住在里面的工人内心该是五味杂陈吧。'
   - author: '斌子'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/08.webp
     caption: '星星的律动，你可曾听见？我经常在思考我为什么喜欢星空，是喜欢在旷野里看闪烁的星光，还是喜欢偶然划过的流星，直到最近，才发现也许自己喜欢的是星空与人类之间的关系，这张建筑星轨是一个全新的尝试，12月初摄于泸沽湖。'
   - author: 'Steve Zhang'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/09.webp
     caption: |-
       你听啊，这是开往冬天的列车。
       他带着寒风的声音，带着雪的声音，
@@ -74,111 +74,111 @@ entries:
   - author: '葛炮的号哭'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/10.webp
     caption: '这个月挺忙的，这半年一直计划拍一次星星，看天气很好，赶快接了朋友的车出发，开了五小时车，人生地不熟，开启了现场找点，还在除了南面的光污染，其他都可以接受；第一次肉眼观察到大小麦哲伦，其实肉眼下他比月亮可大多了，拍下这个拱桥，加上自己，这段巴西的旅程也是无悔了。'
   - author: '朱北荣治'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/11.webp
     caption: '清晨的水库边，阳光越过山尖洒在秋色满际的树梢，金黄的树梢与远处玉龙雪山的倒影在涟漪阵阵的水面波动。丽江的秋来的晚一些，你在就好了。'
   - author: 'Windsky'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/12.webp
     caption: '一颗双子座火流星在月光的照耀下从天而降，幸好手机架设的是竖构图，才收获了这意外之喜。'
   - author: 'Pear'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/13.webp
     caption: '回漳州后的第一次外出拍摄，背着近二十斤的设备上了山，快到终点时却险些误入歧途，还好及时发现，也赶上了金色时刻。冬天的阳光没有什么温度，但是却格外柔美，日落前的最后一缕光线抚在悬崖边的千年古寺上，又有恰到好处的水帘和炊烟，让人仿佛置身于小说中的隐世宗门，遗世而独立。看着夕阳渐沉，结合上山时的经历，想到了李白《梦游天姥吟留别》中的一句诗：千岩万转路不定，迷花倚石忽已暝。'
   - author: '笨加鸡蛋'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/14.webp
     caption: '3号晚上睡觉前，两个朋友拉着我订了4号去黄山的机票。刚好是疫情开放前夕，上黄山之前无奈的需要当地核酸的3天3检，所以在黄山市呆的无聊，就去了附近的竹海放飞一下无人机，冬日里的绿。'
   - author: '屋顶数星星'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/15.webp
     caption: |-
       这一天仿佛回到了夏天，午后通透澄澈的蓝天，像棉花糖一样的云朵。到了下午天空便像小孩子一样说变就变，远处的积雨云裹挟着雨幕慢慢靠近。期待着，盼望着，终于在相机屏幕前等到了风暴前进过程中的弧状云的，海面上的帆船和小船也在赶在风暴来临前抓紧靠岸。
       在自然面前人类显得是如此的渺小与微弱，就如同现在，时代的尘埃落在我们每个人身上便是一座山。
   - author: 'YaphetsYi境'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/16.webp
     caption: '年末已致，回望这匆匆过去的一整年，突然觉得一阵颓废与枯燥。偶然路过低潮的闽江，发现在它的河床上依然留下浓墨重彩一笔。岁月冲洗刻画痕迹，时光流逝沉淀色彩。人生何尝不如此呢？即便是低潮，也有精彩绝伦的瞬间。凌空闽江之上，看见一幅幅鬼斧神工般的自然画卷。'
   - author: 'REPEATER000'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/17.webp
     caption: '昆明下雪了，1/200的快门也没能抓到飘舞的一根根冰碴子，这些冰碴子一粒粒的打在身上，随即便融化成水，融化的速度就跟放开了一样，快到我措手不及。'
   - author: 'Toby Zhu'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/18.webp
     caption: '圣诞假期去了埃及探险，真的可以算是探险，埃及内陆真的太穷了，各种奇幻的经历，比如在沙漠高速开着开着路没了直接被颠到起飞，或者是突然你的前方出现了逆行的对头车能把人吓一跳，因为路上全是沙子在高速上开快了转弯的角度都打不精准。之前在谷歌地图上看到了这个沙漠中的烧焦的巴士，就决定在路过他时去沙漠中寻找它作为星空拍摄的前景。走向深处大概有100米就能在头灯中看到一个隐约的轮廓，已经被风沙吹得残破不堪。头灯的照射下空气中的沙尘就像在下雨一般，有一说一到半夜看到这个废墟巴士还是有点渗得慌的，但是头顶的星空还是无比的明亮，猎户高悬，冬季大三角闪耀在头顶。沙漠中的无污染星空应该算是一趟冒险中比较值得的一部分了。'
   - author: '蓦黎'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/19.webp
     caption: '从去年这个时候开始，我和朋友们就有在计划到宜良拍摄野生溶洞，但是由于种种原因这个计划被我们一再搁置，直到这个月初，复读机又再次提起这个计划，这次我们终于说走就走，我们在走错了三次路之后，终于在路边找到了目的地。不过由于准备不足，我们还是没能深入探索这个溶洞，不过也算结了我一个心愿，只能计划明年再次前往了。'
   - author: 'Lucas_樞'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-12/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/20.webp
     caption: '这已经是玩摄影以来第三次登上灵通山，特地挑选了一个雨后天晴下午，可算是拍摄到了飞瀑高悬的场景，夕阳洒向悬空古寺，瀑布也被染得金灿，现场望去宛如仙境。千年悬空古寺与垂直落差数百米的瀑布完美并存，难得一见的奇观。'
   - author: '球腾'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/21.webp
     caption: '上周末迎来了威海的第三场大雪，本来晚上就没什么人加上疫情和大雪路上几乎看不到什么人了。走在路上漫无目的的扫街，在一个公交站牌下面看见了两个等车的人。真的希望疫情早点结束，一切生活都回归正常。'
   - author: 'emo小恶魔'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/22.webp
     caption: 'No alarms and no surprise.'
   - author: '王牧之'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/23.webp
     caption: '阳光从昨日的阴霾探出头来，天上的云朵也知趣般离开，小镇迎来了久违的晴天。衣服和被子们享受着日光浴的洗礼后，散出淡淡的太阳的味道。我走上前，蹲下仰望，发现被子就如同画布，映射着那克莱因蓝色的天空。'
   - author: '来者犹可追'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/24.webp
     caption: '很少拍扫街的我，第一次在暴风雪中体验到了恶劣天气扫街的魅力。疫情的肆虐加上极端的天气，路上人烟稀少，然而还是有冒雪行进的人们。风雪寒冷，疫情无情，但总有前进的人，带来的温暖的光。'
   - author: '黑暗之王'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/25.webp
     caption: '或许是我的名字里面带了个“瀚”字，我对地球上浩瀚的大海毫无抵抗力，他辽阔无垠，没有边界。但是那天在看到这幅一家人其乐融融的画面时，我突然觉得好像有一些东西比大海更大。恰好三体动画上映，大刘在开播演讲中谈到了人类之一粟与宇宙之无穷，但是并没有哀吾生之须臾，因为宇宙很大，但是我们的生活更大。同样的，大海很大，但是生活更大，大家一定要对生活充满热爱，我们的生活才是世界上最浩瀚的。'
   - author: 'WM魏'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/26.webp
     caption: '又是一年过去，仍要继续低头赶路，无问西东。'
   - author: 'CaKeHunter'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-12/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/27.webp
     caption: '12月突然的疫情防控新政策、突然的通知放假回家、突然的实习延期、突然的驾照考试取消......这一切都来的让我有些猝不及防、一时间难以适应。走上街，我看到了人们在超市囤货、看到了步行街上以前都是排队买衣服的店门口现在在排队等核酸；也看到了正在拆除的隔离房、看到了之前关门的店铺重新贴出了招聘广告......令我印象最深的是这样一幅画面：一边是新店开业的促销活动，一边是老店清仓的余货大甩卖；一边是放开之后的经济好转，一边又是年底货物没卖完的经济压力。想到一句歌词，“这就是生活的现实，现实的生活”。这些都是在当前形势下的真实反差与并存，需要人们去适应。'
   - author: '海鸥之声'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2022-12/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/28.webp
     caption: '十二月份突如其来的放开，导致中下旬除了工作所需，基本没出门几次，又经历了寒潮降温，原先的城市风光外拍计划也被打乱。好在趁温度还没那么冷，和妹子约了一组可爱风格的圣诞主题外拍。这张的动作有点像打破屏障，冲出阻碍，也希望大家战胜22年的困难，平平安安地迎接新的一年~'
   - author: 'Checkinuniverse'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-12/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/29.webp
     caption: |-
       原计划是去昆明周边的邪不压正的取景地拍一个创作，一起同行的猫哥阳了，我们推迟了半个多月，最后一个周末要去，结果取景地封了不让去了，只能去世博园拍一些素材回来合成。
       最后附一句邪不压正的台词“女人就是这样，你给她一颗精子，她还给你一个孩子；你给她一个房子，她还给你一个家；你给她一个微笑，她还给你一颗心。
   - author: 'Running逐光'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-12/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/30.webp
     caption: '离校前，和枯木告个别，再拍一张形象照，这是我和这两棵树的故事，三年多的陪伴转瞬即逝，三年多的时间里，见证过枯木的繁华和兴衰！自己也从一个摄影小白成长为一名合格的摄影爱好者，未来，希望能将这个专题一直拍摄下去，直到故事消亡的那一天！'
 poem: |
   在一片宁静与寒冷中，十二月悄然过去，就像一个轮回结束一般，新的一年又要开始了，永恒回归不断，日光子夜循环。
@@ -190,7 +190,7 @@ pastIssues:
     line: '山川缅邈，人间曈曚'
   - name: '·十一月篇'
     line: '山川缅邈，人间曈曚'
-committeeImage: ../../assets/activities/story-of-time-2022-12/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-12/committee.webp
 committee:
   name: '2022年时间的故事组委会'
   team:

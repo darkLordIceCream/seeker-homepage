@@ -30,10 +30,17 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
 - `src/styles/global.css` — Tailwind 4 CSS-first config + shadcn CSS variables
   (no `tailwind.config.js`); theme = Catppuccin Latte (light, default) / Mocha
   (dark via `.dark`), brand gradient tokens `--grad-a/--grad-b`
-- `src/assets/` — images processed by `astro:assets`
-- `public/` — static files served as-is. Welfare photos live in R2 as
-  `welfare/<project-slug>/<article-slug>/n.jpg` (project「带上她的眼睛」=
-  `bring-her-eyes`), referenced by absolute URL — one folder per article
+- `src/assets/` — UI 小图 only（svg、logo 级装饰图），由 `astro:assets` 处理
+- `public/` — static files served as-is
+- **照片/视频素材一律存 Cloudflare R2 bucket `seeker-homepage-assets` （自定义域
+  `https://r2.xn--seeker-ng2jm403afb4a.club`），用绝对 URL 引用，不进 git。**现有约定：
+  - 公益照片：`welfare/<project-slug>/<article-slug>/n.jpg`（项目「带上她的眼睛」=
+    `bring-her-eyes`），一个文章一个文件夹
+  - 活动照片：《时间的故事》各期 `activities/story-of-time-YYYY-MM/n.webp`
+    （WebP、最长边 ≤2560、q82 预压缩），一个期数一个文件夹，命名唯一
+  - 活动图片的像素尺寸登记在 `src/lib/activity-image-meta.ts`
+    （构建期供排版分型与 CLS 尺寸预留）；新增期数需同步追加条目
+- **单文件 >500KB 不入 git**；同一批素材只用一套目录命名，杜绝重复副本
 
 ## Startup Workflow
 

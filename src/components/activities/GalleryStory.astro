@@ -4,13 +4,13 @@
 // 与 welfare 三模板同一版式家族（Catppuccin 令牌 + Archivo 元信息 + 宋体标题）
 // 由 /activities/[slug].astro 按 frontmatter layout 分发
 //
-// 图片策略：R2 上有同名 WebP 双档（<name>_640.webp / <name>_1080.webp，q80 批量转码），
-// <picture> 提供 WebP srcset + JPEG 原图回退；lightbus 点击看原图（无依赖，渐进增强）
+// 图片策略：照片本体存于 Cloudflare R2（WebP 预压缩，尺寸清单见 lib/activity-image-meta），
+// <img> 带 width/height 防布局抖动；lightbox 点击看 R2 原图（无依赖，渐进增强）
 import { render } from 'astro:content';
-import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../Navigation.astro';
 import Footer from '../Footer.astro';
+import { activityImageDims } from '../../lib/activityImageMeta';
 
 interface Props {
   article: import('astro:content').CollectionEntry<'activities'>;
@@ -82,17 +82,21 @@ const metaItems = [
  */
 const isStrip = (entry: Entry) => {
   const first = entry.images.at(0);
-  return !!first && entry.images.length === 1 && first.height >= first.width * 3;
+  const dim = first ? activityImageDims(first) : undefined;
+  return !!dim && entry.images.length === 1 && dim.h >= dim.w * 3;
 };
 
 const isSide = (entry: Entry) => {
   const first = entry.images.at(0);
-  if (!first) {return true;}
-  return first.height * 5 >= first.width * 6;
+  const dim = first ? activityImageDims(first) : undefined;
+  if (!dim) {return true;}
+  return dim.h * 5 >= dim.w * 6;
 };
 
 const itemVariant = (entry: Entry) =>
   isStrip(entry) ? 'story-item--strip' : isSide(entry) ? 'story-item--side' : 'story-item--stack';
+
+const coverDim = activityImageDims(data.cover);
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -100,7 +104,7 @@ const jsonLd = JSON.stringify({
   name: `${data.title} · ${data.issue}`,
   description: data.excerpt,
   datePublished: data.pubDate.toISOString(),
-  image: data.cover.src,
+  image: data.cover,
   numberOfItems: data.entries.length,
   author: { '@type': 'Organization', name: 'Seeker追光者' },
   publisher: { '@type': 'Organization', name: 'Seeker追光者' },
@@ -109,7 +113,7 @@ const jsonLd = JSON.stringify({
 
 <Layout
   description={data.excerpt}
-  image={new URL(data.cover.src, Astro.site).toString()}
+  image={data.cover}
   title={`${data.title} · ${data.issue} | Seeker追光者`}
 >
   <Navigation />
@@ -137,12 +141,14 @@ const jsonLd = JSON.stringify({
     </header>
 
     <figure class="story-cover">
-      <Image
+      <img
         alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
+        decoding="async"
         fetchpriority="high"
-        layout="full-width"
-        loading="eager"         quality={90}
+        height={coverDim?.h}
+        loading="eager"
         src={data.cover}
+        width={coverDim?.w}
       />
     </figure>
 
@@ -165,28 +171,32 @@ const jsonLd = JSON.stringify({
           {group.items.map(entry => (
             <figure class:list={['story-item', itemVariant(entry), { 'story-item--multi': entry.images.length > 1 }]}>
               <span class="item-media" style={`--cols: ${entry.images.length}`}>
-                {entry.images.map((img, j) => (
-                  <button
-                    aria-label={entry.title ? `查看大图：《${entry.title}》` : '查看大图'}
-                    class="item-shutter"
-                    data-author={entry.author}
-                    data-full={img.src}
-                    data-title={entry.title ?? ''}
-                    type="button"
-                  >
-                    <Image
-                      alt={entry.title
-                        ? entry.images.length > 1
-                          ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
-                          : `《${entry.title}》——${entry.author}作品`
-                        : `${entry.author}作品`}
-                      layout="constrained"
-                      loading="lazy"
-                      quality={90}
-                      src={img}
-                    />
-                  </button>
-                ))}
+                {entry.images.map((img, j) => {
+                  const dim = activityImageDims(img);
+                  return (
+                    <button
+                      aria-label={entry.title ? `查看大图：《${entry.title}》` : '查看大图'}
+                      class="item-shutter"
+                      data-author={entry.author}
+                      data-full={img}
+                      data-title={entry.title ?? ''}
+                      type="button"
+                    >
+                      <img
+                        alt={entry.title
+                          ? entry.images.length > 1
+                            ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
+                            : `《${entry.title}》——${entry.author}作品`
+                          : `${entry.author}作品`}
+                        decoding="async"
+                        height={dim?.h}
+                        loading="lazy"
+                        src={img}
+                        width={dim?.w}
+                      />
+                    </button>
+                  );
+                })}
               </span>
               <figcaption class="item-label">
                 {entry.title && <span class="item-title">«{entry.title}»</span>}
@@ -207,11 +217,13 @@ const jsonLd = JSON.stringify({
 
       {data.committeeImage && (
         <figure class="committee-figure">
-          <Image
+          <img
             alt="Seeker追光者——成员作品照片墙"
-            layout="constrained"
-            loading="lazy"             quality={90}
+            decoding="async"
+            height={activityImageDims(data.committeeImage)?.h}
+            loading="lazy"
             src={data.committeeImage}
+            width={activityImageDims(data.committeeImage)?.w}
           />
         </figure>
       )}

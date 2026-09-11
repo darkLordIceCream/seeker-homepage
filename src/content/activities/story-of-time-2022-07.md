@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '大风起，听星河'
 issue: '七月篇'
 period: 'JULY 2022'
-cover: ../../assets/activities/story-of-time-2022-07/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/cover.webp
 excerpt:
   '《时间的故事》七月篇：大风起，听星河。31 幅作品，收录组员们的时光片段。'
 quote: '时间是什么？没有人问我时，我很清楚；而当别人问我，我想说明时，却又茫然不知了。——奥古斯丁(古希腊)'
@@ -17,12 +17,12 @@ entries:
   - author: '‍正陽兮門下‍'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/01.webp
     caption: '2022年度超级月亮，满月直径较平时所见大14%，有幸在苏堤共赏雷峰塔穿月。两天前还说自己肯定不拍、一定不拍的，在宋哥不断诱惑和各种消息影响下，还是冲了。下班后打车取镜头，堵车的过程中感觉自己真的要来不及了，最后下车快速步行至拍摄地点，导航提示三米时我与宋哥也刚好三米左右，看来对上点了，并且竟然还有架一个相机的空间，估计是特意留给我的！拿出三脚架的时候下巴一直在滴汗，但心态已经稳住了。拍完序列与宋兄从苏堤到南山街笑谈一路，至今都互相都觉得是对方笑得更大声——毕竟这大月亮基本承包了一个月最多的快乐。'
   - author: '笨加鸡蛋'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/02.webp
     caption: |-
       2022年7月13日，年度最大超级月亮。激动的我们提前3个小时到达已踩点位置，并设置好相机参数及角度，耐心等待月升。刚月升之时，因云太厚，月亮肉眼几乎不可见，但我们所幸还是坚持拍摄，最后月亮她还是羞答答的出来了。图片后期使用5图简单处理而成。
       拍摄地点：广东省深圳市南山区
@@ -31,54 +31,54 @@ entries:
   - author: '海鸥之声'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/03.webp
     caption: '七月初魔都的天气出人意料的好，接连出现了彩虹，朝霞，平流雾，甚至连着四五天都有火烧云，那几天正可谓只要勤奋就能出片。自去年底拥有无人机以来，就一直心心念念想拍一次穿云，奈何今年之前的平流雾都由于各种原因错过了，但这一次，还是把握住了机会，超额完成了今年的目标，拍到了陆家嘴平流雾和朝霞同框的画面。'
   - author: '小志Lzj'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/04.webp
     caption: '7月份的好天气就那么几天，三年来上了5次加林山拍摄港珠澳大桥，但是每次都未能如愿拍到太阳，这次能拍摄到太阳升起，感谢小伙伴的坚持连续冲了两晚在山顶守候，第一天到达拍摄太阳升起有云挡住，下山后拍了晚霞小伙伴看天气觉得很棒，坚持要再冲一晚，才有了这张作品，在上山途中遇到了蛇。'
   - author: 'JIFENG冀峰'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/05.webp
     caption: '在某个周五早上冲了朝霞后回去上了一天班，晚上下班出发滴水湖，由于当时天气不是很好，就先在车上休息了会，大概凌晨两三点钟的时候开始拍摄，从测试曝光，到追求视觉效果，来来回回拍摄了几十次直到蓝调。'
   - author: 'Pear'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/06.webp
     caption: '这个地方是用卫星地图找拍摄内容的时候发现的，排列整齐、颜色鲜艳统一的新集装箱很适合创作画面简约的作品。个人觉得人和人类活动才是这类作品的灵魂，挑了一个好天气上去飞了一圈，集装箱是挺好看的，但是并没有发现什么好的角度可以把地上的人构进去...正准备带着失望返航时，突然发现一片红色集装箱上有个工人正在进行检查，赶紧开着s档飞过去，拍下了这张照片。'
   - author: '凌渡'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/07.webp
     caption: '7月放暑假了，直接提着相机就去了重庆，这次既关注了吃还好好拍照了，要说这次去重庆比较喜欢的照片就是这一张，因为去的时间比较早，大礼堂没还没有人，只有清洁工阿姨在清理整个场地的垃圾，我也刚好找到了合适的角度记录了阿姨弯腰的一瞬间。'
   - author: '张伟靖'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/08.webp
     caption: '7月24日14时22分，搭载问天实验舱的长征五号B遥三运载火箭，在我国文昌航天发射场准时点火发射。提前六小时登上山顶，顶着太阳与热浪等待发射，最终终于拍下心目中的画面！火箭按预定轨道一飞冲天，留下的轨迹震撼人心，身边所有人都在欢呼呐喊，让我们一起见证这一刻！见证这祖国强大的一刻！'
   - author: '火星喵go'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/09.webp
     caption: '这是一张全景图通过ptgui合成出来的，第一次做这种没啥经验，前期拍摄比较讲究，因为这种经验拍摄不足，东塔西塔透视会差点，总体来说也是一次不错的尝试。'
   - author: '屋顶数星星'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/10.webp
     caption: |-
       海口突发疫情，海甸岛被封控一周只进不出，我第一次见到这样空空如也的世纪大桥，幸好有无人机能每天起飞看看外面的世界。那天清晨我照例在宿舍起飞，穿过云海，没想到一抹彩虹挂在了天边！
       风雨已至，阳光和彩虹便不会远了。
   - author: '陳kevin'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/11.webp
     caption: '7月14日，一个深圳摄影师们都记忆犹新的日子，我还没从清晨深圳湾那意外收获的毕业朝霞高兴劲过去，那突如其来的满天红晚霞更是给了我一个大大的惊喜！那天刚好一位seeker小伙伴从广州过来，约我一起拍，于是我们相约法师桥拍晚霞，但是那天的晚霞概率并不高，而且去的路上，感觉云层也有点厚，天气还有点霾，心想应该就是拍个普通的日落蓝调，随着太阳慢慢下山，天空开始变化，由淡黄～金黄～红色～深红，整个天空由西至东，全都染红一片，朋友圈里全是当天火烧云的照片和视频，虽然照片不一定能体现出当时的画面，但现场的壮观场面确实惊艳到我了，最后，附上一张当时无人机航拍后海的接片晚霞！'
   - author: 'Rewind'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-07/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/12.webp
     caption: |-
       自白|不寻常的七月
       床头屋漏又连夜雨，这或许是表达我七月上旬emo的状态吧。都说伟大的事情都发生的下半年，可老家来的噩耗如同晴天霹雳在一瞬间情绪崩塌，自己也万万没想到会是以这种方式回了一趟老家。也许也是为了逃避现实，家里事情办完就回了北京，来回也就一个整天。
@@ -88,7 +88,7 @@ entries:
   - author: '风姿花传'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/13.webp
     caption:
       '在今年冬天进洞失败以后，这是我第二次来到bigfourice
       cave了与冬天不同夏天冰河退去真正的冰洞我们趟过河路过被水冲垮的桥最后终于到达了冰盖在当地探险家的指引下我们找到了一个非常隐蔽的蓝色冰洞
@@ -96,91 +96,91 @@ entries:
   - author: '长大我要当太空人'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/14.webp
     caption: '记得在小学看到国家地理杂志看到冰岛的时候，就有了一个冰岛梦，冰岛成了我旅行清单上那个一生一定要抵达一次的目的地。7月，去到了梦想的终点站冰岛，穿上衣服，上街走一走，就能一直走到海边去，天气好的时候看到海上巨大的蓝色冰川，静静漂浮在海上映照着冰岛的最大冰川。'
   - author: 'Toby Zhu'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/15.webp
     caption: '下午爬升了5公里山路，半走半跑终于赶在日落之前到了这个最佳观景点，开始架起机器拍摄日转夜延时。上山的路上还遇到了一头拦路的公牛，两侧的人都在等待不敢过，最后攒了一波人小心翼翼地从边上快速通过，还挺后怕。到了山脚下才发现低估了这一群山脉的高度，那种压迫感让24mm的镜头都装不下，只能通过接片的形式定格这美妙的一刻。当太阳慢慢落下，在没入云层之前，完美地照红了俊美的多洛米蒂山脉和远处的积雨云。晚上银河也会在山后升起，拍完星空后，完全黑暗中10公里的漫漫下山路途，除了山谷的溪流和虫鸣，以及隐隐约约的牛铃，几乎听不到任何声音，有的是头顶灿烂的繁星，北斗七星在异常繁茂的森林间若隐若现。'
   - author: 'PHOTO_司晨'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/16.webp
     caption: '七月，成都的疫情下难得进了次山，第一次作为高山摄影进行雪山徒步，一天半的时间里完成了往返50公里登顶5276m的四姑娘山二峰行程，站在二峰的峰顶用手机记录下了这张幺妹峰与三峰在日出时分的合影，也算圆了去年因为暴风雪没能成功登顶的遗憾。'
   - author: '懵憧的大西瓜'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/17.webp
     caption: '7月是佛系和欢乐的一个月，单位还没有开始办理入职，选择了云南作为毕业旅行目的地。落地昆明，第二天直奔泸沽湖，乍见泸沽，被它的清澈见底吸引，当你泛舟湖上更能被泸沽的水所折服。在泸沽呆了好多天，遇见过最美的晚霞，遇见“天空之境”，遇见雨后的云雾缭绕。对于一个喜爱自然风光的我来说，泸沽湖满足了我的大部分想象，正值月圆没能在这个1级暗空拍摄银河，算是稍稍遗憾，但也给自己的下一次旅行埋下伏笔。再见，泸沽。'
   - author: '长青'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/18.webp
     caption:
       '7月14日今年物理意义上最大的月亮的前一天出发去软件上选的拍摄地点提前去踩点，下班后一人驱车到达山顶后看了看周边环境后，然后架上一台相机拍着延时
       ，然后就在山顶附近拿着另一台机子边转边拍一些照片，走到村民建的蓄水池时看到水池里中间漂浮着一只鸟看样子已经没有生命迹象了，正准备打算转身离去时听到有叫声低头一看还有一只用爪子努力挂在池边不让自己沉下去，当时手里也没啥工具，在边上找到灌溉树苗用的水带，趴在池边来回打捞了好几次才打捞上来。打捞时它可能也知道是在救它也不闹也不叫。捞出来放到空地上后才发现这应该不是我以为的燕子之类的鸟类，后来拿着照片问了平时拍鸟的朋友，说这个应该是鹰隼。当天给了它一些吃的，吃了后晒着太阳把羽毛晒干后。就拍着翅膀飞走了。这也算是自己第一次近距离接触猛禽鸟类。'
   - author: '源Dream'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/19.webp
     caption: '神山阿尼玛卿，也是我第四次来到这里，为了赶上日出时刻的日照金山，凌晨四点钟，从100公里外的玛沁县城赶了过来，为了目睹神山的芳彩。看着山尖一直都在飘动的旗云，等待着金光撒向山顶的那一刻，我便按下了快门，通过长曝光堆栈来展现它的美。'
   - author: '斌子的影色世界'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/20.webp
     caption: '7月是丽江的雨季.因此在夏天很难见到玉龙雪山.然而在7月初的一个早晨.忽然看到雪山方向有隐隐露出的迹象.因此果断跑到丽江古城的南侧.用御3的长焦.实现了梦里想过很多次的万古楼雪山同框的照片。'
   - author: 'AnthonyKLT'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/21.webp
     caption: '在七月初结束了平潭行后，在回家的途中，打算和同行的朋友一起前往江西的三清山进行拍摄。由于山上环境恶劣，一宿未睡。凌晨三点半，我被辉辉(Running逐光）拉起来去拍蓝调和日出。我强忍着疲惫，腿犹如灌铅了一般，但为了赶上蓝调时刻，还是举步维艰的快速赶路。经过了一个多小时的路程后，在赶到机位的那时，漫天红云，三清山云雾缭绕，那一刻，身体的精疲力尽被激动的心情完全吞没。'
   - author: 'LucasSun'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/22.webp
     caption:
       '期待已久的Pacific
       Northwest之旅终于启程，这是我第二次以拍摄自然风光为目的的旅行。我很喜欢这样纯粹的感觉，每天只有不停的奔赴理想中的机位。圣海伦火山其实并不是我这次最期待的画面，但经过数小时的探索，我找到了一簇还不错的小花，感觉可以尝试拍摄。但由于抵达机位后火山被云完全覆盖，我只好期待第二天的拍摄效果。凌晨4点我们迎着惨淡的月光和若隐若现的云雾，缓缓驶向山巅，当车穿过低云后我们看到了圣海伦火山上空的帽子云、山谷中的小小云海，激动的心情已经按耐不住。风光摄影的魅力就是这样，在不断探索中期待大自然给予的小惊喜。'
   - author: '蓦黎'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-07/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/23.webp
     caption: '7月原本计划到南极洛拍摄，毕竟是目前云南最火的风光摄影圣地。但是很不巧遇上封山，于是只好前往南极洛对面的农布格切。由于龙王隐之疯狂作法，我们到山上的时候风雨大作，好几个我特别喜欢的机位最后效果都不是很理想，反而在心形湖边随便拍的自拍效果却意外的不错。'
   - author: '林宇先'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-07/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/24.webp
     caption: '整个7月都南疆工作，在喀什好不容易有2个小时自由的时间，独自拿着荣耀Magic4走进古城扫街，在一座清真寺前面看到一群孩子在打球，连拍500多张抓到了这个镜头。'
   - author: '黑暗之王'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-07/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/25.webp
     caption: '这一次问天实验舱的发射早在三月份开学时已经计划好了，没想到七月八号海口出现了一系列阳性病例，并且就在学校周围，学校也封校了。原本以为将与他失之交臂，好在海口市防疫行动的给力，十天左右就实现了清零，让我得以在前两天请假出校。这次发射任务是我追火箭以来人最多的一次，我带着四个小伙伴去了希尔顿海滩，又挤又热，但是看到胖五腾空而起的时候，天气再热也没有盖过海滩上沸腾的人群，内心强烈的，只有自己人才懂的感觉覆盖了整个身体，一切都值了，追火箭就是这样的。'
   - author: 'Limbo-'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-07/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/26.webp
     caption: '本该是讨厌雨天的。连续的晴热让人失去兴致，也让梦想变得漂浮。一场预料之外的暴雨，飘洒在窗台上，风放肆地舞动着，给雨夜带来欺凌般的冷凉。透过夜的玻璃，微弱的街灯在雨里显得那么单薄。轻轻地拿起相机，定格着来去匆匆的行人，体味万物交融的细腻。在雨声中，被冲洗净的不只有喧嚣，还有我的心灵。路还该往前走，前路的风景也一定会更好。'
   - author: '阿宸每天都在瞎折腾'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-07/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/27.webp
     caption: '暑假来临，晚上在操场上跑步的人也少了许多，在一个雨过天晴的傍晚，空气中胀满凉风。我在球场边放好脚架，准备为学校陈旧的体育馆拍下一幅照片。在等待日落的时候，我注意到一个骑滑板车的小女孩一次次驶入我的镜头，为了保证背景体院馆的曝光，我无法捕捉到小女孩清晰地面孔，但她欢笑着从我面前略过，又好奇地回头望着我的那份灵动和体育馆融合在了一起。她曾经在这座庞大的建筑下嬉戏，这座建筑亦见证了一个女孩的童年。'
   - author: 'liberal_Shaw'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2022-07/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/28.webp
     caption: '“突如其来的坠落感让我措不及防，不知道此刻还能做什么，无法呼吸地慢慢下沉，我很想做点什么，但是我无法动弹，只能眼睁睁看着自己沉入海底，过了一会儿海面上雷雨交加，疯狂清理着海面，暴雨过后，又好似什么都没发生”这是我做了很多次的噩梦了，突然发现自己很久没有做梦了，这张照片模仿的是国外一摄影师的作品。就是说挺怀念梦里那种神秘感坠落感的。其实在八月初的时候就定下了个计划，决定拍关于梦境的一组照片，想把梦境中发生的事情通过照片的形式表达出来。本月一共拍摄了四张作品，溺水只是其中之一，剩下的还有飞升，颠倒，还有逆世界。'
   - author: 'B-Rabbit'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-07/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/29.webp
     caption: '其实这件事儿是这个月最让我困惑的一次拍摄，拍水果，说起来简单，做起来才知道其中的难处。尤其是前期买水果的时候，我一个平时不吃水果的人，愣是被逼着了解了许多有关水果的知识，当然也买错了不少次，白白浪费了许多成本，最后总结出的道理就是越贵的水果越上镜（不是），但是我本人还是挺乐在其中的，在我看来拍摄就是向着自己未知的领域一步一步进发，在拍摄的过程中也学习到其他方面知识的一个过程。所以，虽然繁琐，但是依旧很开心。'
   - author: 'yummy旻'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-07/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/30.webp
     caption: |-
       《疯帽子的沙发》
       疯帽子说：“你可以留下的。”
@@ -189,14 +189,14 @@ entries:
   - author: '九重葛'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-07/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/31.webp
     caption: '自然是一个伟大的调色师，他将惊艳绝伦的颜色赋予到他所创作的生命之中。我发现一只不同寻常异常美丽的吉丁虫，将它固定、展翅，来展示出它巧夺天工的身体结构，并选取相近色的背景，将它刻画油画中的主角。并通过后期微距堆栈等拍摄方式，淋漓尽致地展现渺小生物的复杂细节，刻画出大自然的精湛“技艺”。当昆虫被放大，我才明白即使是这些最渺小的生物也有值得被记录的精彩，大自然是最伟大的艺术家，通过相机让艺术回归生命，是我的荣幸。'
 poem: |
   我们忙碌着，渴望走在生活的前头，而生活总带给我们一些意外。这些意外或许美好，或许带给我们压力。但不论怎样，我们总会拿起我们的相机，只是想讲故事给自己和身边的人听。
   前方有沙雾模糊了我们的双眼，但不要畏惧。破晓之时听见飞鸟的鸣叫，这就是天空给予的肯定。所谓正确，就是对自己的深信不疑。
   我们不只分享精致的影像，更希望给大家传递一些积极的生活信念——
 
-committeeImage: ../../assets/activities/story-of-time-2022-07/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-07/committee.webp
 committee:
   name: '2022年时间的故事组委会'
   team:

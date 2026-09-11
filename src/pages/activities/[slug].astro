@@ -21,7 +21,7 @@ const { activity, others } = Astro.props;
 
 <Layout
   description={activity.data.excerpt}
-  image={new URL(activity.data.cover.src, Astro.site).toString()}
+  image={activity.data.cover}
   title={`${activity.data.title} · ${activity.data.issue} | Seeker追光者`}
 >
   <GalleryStory article={activity} others={others} />

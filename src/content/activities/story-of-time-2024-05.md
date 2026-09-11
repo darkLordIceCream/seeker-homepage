@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '初夏拂过光影，镜头绘下诗篇'
 issue: '五月篇'
 period: 'MAY 2024'
-cover: ../../assets/activities/story-of-time-2024-05/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/cover.webp
 excerpt:
   '《时间的故事》五月篇：初夏拂过光影，镜头绘下诗篇。30
   幅作品，收录组员们的时光片段。'
@@ -18,12 +18,12 @@ entries:
   - author: '归零'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/01.webp
     caption: '当大家都在等待世纪晚霞时，太阳光悄悄穿过城市的喧嚣，照射在眼前这片金黄的麦田上。来自远方的高铁从田中急速穿过，载着为生活而奔波的人们，一头扎进了日落余晖中。'
   - author: '鱼加宝'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/02.webp
     caption: |-
       霞满京城丨于嘉宝
       拍摄于 2024.5.14
@@ -32,32 +32,32 @@ entries:
   - author: '摄影师何子毅'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/03.webp
     caption: '工作结束后，我意外捕捉到广州夜空中的一道绝美闪电。它犹如天神的画笔，在夜幕上勾勒出震撼的图案。这不仅是自然的杰作，更是广州这座城市独有的魅力。'
   - author: 'May'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/04.webp
     caption: '在五一假期前夕，我有幸拿到了小组的冲锋衣。这不仅是一件实用的衣物，更承载了团队对我的鼓励与期待。穿上它，我满怀期待地踏上了五一假期的创作之旅。这张照片拍摄于北京奥林匹克公园地铁站旁的“鼓楼”。由于两侧一直有行人经过，想要得到空景还是有些困难。每当电梯两侧的人流稍微稀疏一些，我便迅速按下快门，捕捉那些稍纵即逝的瞬间。经过无数次的尝试与等待，我终于拍到了自己想要的照片。'
   - author: 'Rewind'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/05.webp
     caption: '五月一号，阴云细雨中入住了张家界国家森林公园山顶的茶园客栈，意想不到是上来之后的氛围感拉满。蓝调时刻，暖色的灯光只存在于固定框架之中，雾气的神秘色前却有着不受束缚的光芒。在此氛围下我便从脑海构思出了两个自己。'
   - author: 'Lucas_樞'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/06.webp
     caption: '这张是我五一期间去重庆闲逛拍的第一个机位。画面中，建筑结构宛如一只巨大的扭转的穹顶，向上延伸，汇聚于高处的一个光点，形成了强烈的视觉焦点。穹顶上的金属花纹巧妙地排列，透过光线的穿透，营造出一种神秘且未来感十足的氛围。我在这个位置等待许久，恰好有一对夫妻从底下的通道中走过，他们的身影在昏暗的光线中显得渺小而孤独，与宏伟的建筑形成了鲜明的对比。'
   - author: 'X.Chen'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/07.webp
     caption: '在五一期间，一拍即合，来到了山城，这是我第三次游览这个城市了，这座城市所遇到的事情，遇到的人都让我难以忘怀，重庆的轻轨也同样令我着迷。面对夕阳，红色的轻轨缓缓出站，穿越城市的喧嚣，驶向新的终点。人生正如轻轨一般，即使在不停的奔波，也不能迷失方向。于是我驻足，仰望着这穿梭而过的轻轨，按下了快门暂停下了这一瞬间。'
   - author: '江河漫读。'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/08.webp
     caption: |-
       凌晨四点，和旅途中认识的西安、兰州的同伴打车离开兰州市区，在黑暗中探索着崎岖道路，手脚并用爬上野山。架上三脚架，静静等待着曙光的降临。
       经过一个多小时的等候，C625 次城际“动车组”在金调时刻跨越西固区化工厂。
@@ -66,17 +66,17 @@ entries:
   - author: '🥬'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-05/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/09.webp
     caption: '接近三个月没拍照修图，五月中旬终于忙完了手头上的事情，愿接下来的一切都无比顺利，心想事成！'
   - author: 'Xuhaha'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/10.webp
     caption: '清晨的盐田，农民正在辛勤劳作，太阳从地平线缓缓升起，阳光洒在他们身上，拉出长长的影子，一瞬间，光与影相互交织'
   - author: '几奥'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/11.webp
     caption: |-
       黄河渔民
       从最开始用无人机去拍黄河大桥、黄河河床上的脉络、纹理、黄河候鸟、沿岸的麦田，到黄河渔民。
@@ -84,19 +84,19 @@ entries:
   - author: '倾斜的地平线'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/12.webp
     caption: |-
       网格中的人
       阳光照射在写字楼的墙上，时常看到缓慢行走的影子，只有抬头才能发现他们，记录下在城市的钢筋水泥和蓝天之下的身影。
   - author: '北初'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/13.webp
     caption: '繁华的新街口上，好利来整洁的橱窗构成了天然的取景框。当一位环卫工人路过时便构成了这幅有趣的画面。'
   - author: 'Steve Zhang'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/14.webp
     caption: |-
       三番两次狼狈地离开，蓝色的号角催促我寻找新风景.
       彻夜未眠陪伴着心里的疲惫，街头碌碌不知哪里奔走.
@@ -105,19 +105,19 @@ entries:
   - author: 'potato 小赵'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-05/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/15.webp
     caption: '难得的一个周末，我再一次来到了广州，在去看广州美术学院的毕业展时，我发现了这个很有趣的装置艺术，她们用铁丝把一个类似于眼睛的球形装置挂在半空，与下面的人相互对视，装置的设定是在一定时间开关外层，当装置闭上再打开时，里面屏幕里播放的眼睛就会流泪，现实的装置也会流出一滴水，难道是它看到我们每一个人身上的痛苦所留下来的眼泪吗？'
   - author: '猫白否'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/16.webp
     caption: |-
       黄果树献出的哈达
       很幸运拍到了记忆中语文课本上的地方——黄果树瀑布。几日阴雨的补给让它得以有充足的水流泻出，当日转晴的光线令其更显圣洁。阳光刚好照在中间的那瞬间，黄果树瀑布仿佛成为了一条献给虔诚摄影师的哈达。
   - author: 'liiiin'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/17.webp
     caption: |-
       辉梦银桥
       在 5 月 11 日 kp 值即将飙升之际，我与朋友决定前往内蒙古库布齐沙漠，期待一睹极光的壮丽。尽管面临近千公里的往返路程，其中包括 16 小时的硬座火车和 6 小时的自驾，再加上徒步一小时的艰辛，途中还遭遇了沙漠陷车、器材进沙报废和沙尘暴等重重挑战，但我们最终努力克服了所有困难，并于 5 月 12 日凌晨成功观赏到了极光。
@@ -125,19 +125,19 @@ entries:
   - author: 'Kkbbr'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/18.webp
     caption: '那几天一直在导师的催促下不停的修改论文，比较突然的，几个朋友找到我说去拍星。论文还没有通过，我思虑许久才做出决定，决定不错过这样难得的一次拍星机会。于是四人在买好干粮后，驱车三小时来到了湖北天台山。背着几十斤设备攀爬半个多小时登顶，衣服早已湿透。山顶的风很大，吹在湿透的衣裳格外的冷。几番调整，我才选好构图开拍。寒风刺骨的吹，纵使多带了衣物也无济于事。但当抬头望见璀璨的星河后，一切的烦恼、寒冷都抛之脑后，剩下的只有愉悦。石狮静静的守候在门前，青年举灯望向星空。那温暖的灯光照亮了面前的石柱，又好像照亮了青年心中的梦。就那么静静的望着，石狮也在望着，天上的星星闪烁，跨越千百年的光线闪烁着，好似诉说着时间的故事。那一晚不顾一切的踏上旅途，为多年后的恍惚埋下了伏笔。'
   - author: 'DANIEL（李）'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/19.webp
     caption:
       '穿越在腾格里沙漠上，当我抵达第一个盐湖时，我飞起了大疆 mini 4 Pro
       无人机，运用了增广镜扩大了，视野拍摄到了这张盐湖和我的照片，将人物放进自然中，这种拍摄手法一直都是我非常喜欢的，粉色的盐湖顶着中午正上方的太阳，显得格外的梦幻，浅浅的颜色饱和度不高，但是给人一种清新的感觉。'
   - author: 'Just Fell Asleep'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/20.webp
     caption: |-
       散落海底的星辰
       一场冷空气的南下，让阴雨多日的福建也迎来了通透晴朗的天气。早已按耐不住和银河叙旧，只不过与银河的见面，从未想过蓝眼泪也前来参与。
@@ -149,24 +149,24 @@ entries:
   - author: 'Talon'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/21.webp
     caption: '我的毕业旅行，来到了青甘环线。之前一直说着去川西，走之前一周由于天气原因改到青甘，这也许就是这个年纪该有的样子。图片拍摄于大柴旦翡翠湖，盐湖双子，翡翠湖的小盐湖非常多，每一张好看的构图可以说是万里挑一。这趟毕业旅行，在车上写完了毕设终稿，旅行结束就开始了毕业流程，也许这就是“毕业”旅行的意义。此外，对于一个常年生活在东部沿海的人来说，我也认识到大西北不是一片荒凉！她有丰富的光电资源，油气资源以及盐矿资源，还有五彩斑斓的盐湖和高耸的雪山，辽阔的沙漠，独特的雅丹地貌。这一趟旅行，值得！'
   - author: '斌子'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/22.webp
     caption:
       '时隔半个月的新西兰之旅终于结束.第一次去南半球.在蒂卡波湖拍到了史上最炸裂的好牧羊人教堂极光。拍废了很多片子因为极光过曝.总算找出能用的一张接片。没想到第一次拍极光就是
       kp9.还是南极光.真是幸运至极！'
   - author: '猫辰不是猫'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/23.webp
     caption: '偶然在贵阳附近发现的一片长草坪，有一块被压扁的草地从天上看形状很像手掌的形状。让模特往那一躺，诶这不是躺在大地的怀抱吗？'
   - author: 'DawnTideNN'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/24.webp
     caption:
       '乘坐 18 个小时飞机与 4 个小时火车，我终于来到了马特洪峰下的小镇采尔马特
       Zermatt。路上阴雨连绵，使这次拍摄充满了不确定性——直到太阳落山之前，马特洪峰才露出了它的真容。天色正好，点点灯光在街道亮起，小镇与自然在此刻融合。这张照片累计曝光
@@ -175,40 +175,40 @@ entries:
   - author: '無婷'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/25.webp
     caption:
       '5
       月我跟随大哥、拓哥等朋友踏进怪榄林，在虬枝盘曲的树干间偶然遇见趴在野山芋叶上的一只小蜗牛，然而只顾着兴奋跑过去，丝毫没有注意到有一大片的蜘蛛网陷阱拦截在路上。最终，这一方天地间，我用糊了一脸的蜘蛛网，换得了一只小蜗牛的留影日记。'
   - author: '滴歪🍣'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-05/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/26.webp
     caption:
       '五月中旬，少有的整夜无云，我和朋友一拍即合驾车 300
       公里直奔景德镇拍摄星空，抵达已是晚上十点，现场一片漆黑，只有舞动的星辰陪伴着彻夜未眠的我们。随着蓝调时刻的到来，几声鸡鸣响起，大家都以为准备返程的时候，身后的雾气开始缓缓而升，我急忙赶往茶园的最高点起飞无人机，只见大片的晨雾包裹在茶园之上，在长焦的视角下更像是一幅水墨画，返航之时我拍下了这最后的一张照片。'
   - author: '浅羽天一'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-05/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/27.webp
     caption: |-
       素手托净月，霓裳花映红。红花薄外漾清钟。今夜待君无计，翌日仍同。
       夜深了，深绿的衣装和装点的繁花都被烛光照成了橙红色。他现在在干什么呢？她如此想着。窗边的花丛外传来了午夜的钟声。她叹了口气，看来今夜是等不到那人的书信了，那还是等明日吧，说不定明日就能等到他的来信。她夜夜思念的他，也不知何时能相见……
   - author: '宠物摄影师狗哥'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-05/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/28.webp
     caption: '初夏漫步拍摄于江苏太仓七十二理想村。我一直以来的风格都是浪漫主义，表达我对世界的美好向往。海边各种富有趣味的各种线条组合在一起，画面生动，简约又丰富。主人养的四只狗狗有序跟着主人，张力十足，令人向往的美好生活'
   - author: '景'
     group: '创意'
     images:
-      - ../../assets/activities/story-of-time-2024-05/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/29.webp
     caption: |-
       梦是现实的延续,现实是梦的终结。
       同框系列的第四幅作品中，我第一次跳出高达，去尝试更抽象、更复杂、更符号化的 ip——eva，此次在场景上很大程度复刻了 Kurogareki 老师的插画作品，首次尝试了去关节、血迹、色散等特效制作，首次使用低端产品 r 魂作为该系列主体，也是首次在这个比较严肃的系列中使用屏摄手法简化场景合成。总体来说，此次作品不再专注于场景的真实性，而是让真实为 eva 的风格做出了让步。这也符合我创作之初的构想——张力与符号。
   - author: '纯黑的林桑'
     group: '创意'
     images:
-      - ../../assets/activities/story-of-time-2024-05/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/30.webp
     caption: |-
       《降临》拍摄于 2024.05.23 晚
       其实拍起来挺有意思的，只有一个小时拍的时间，刚开始我就随便咔了几张，后来后面不闪的时候，闪光灯那个预览光打在小人身上，加上相机低光状态的那种彩噪感，脑海中瞬间就有画面感了。
@@ -232,7 +232,7 @@ pastIssues:
     line: '孟秋风定日，天寒雾起时'
   - name: '十月篇'
     line: '孟秋风定日，天寒雾起时'
-committeeImage: ../../assets/activities/story-of-time-2024-05/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-05/committee.webp
 committee:
   name: '2024年时间的故事组委会'
   team:
