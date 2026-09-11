@@ -75,10 +75,10 @@ const latestId = editions[0]?.id;
                   <li class="book">
                     <a
                       aria-label={`${edition.data.title} ${edition.data.issue}：${edition.data.subtitle}`}
-                      class="book-link"
+                      class="book-card"
                       href={`/activities/${edition.id}/`}
                     >
-                      <span class="book-cover">
+                      <span class="book-photo">
                         <Image
                           alt=""
                           height={459}
@@ -86,16 +86,21 @@ const latestId = editions[0]?.id;
                           loading="lazy"
                           quality={90}
                           src={edition.data.cover}
-                          widths={[240, 360, 480]}
+                          widths={[320, 480, 640]}
                         />
-                        <span aria-hidden="true" class="book-spine"></span>
-                        <span class="book-tag">{edition.data.issue}</span>
                         {edition.id === latestId && (
                           <span class="book-ribbon">新</span>
                         )}
-                        <span class="book-meta">
-                          <strong>{edition.data.subtitle}</strong>
-                          <span class="book-period">{edition.data.period} · {edition.data.entries.length} 幅</span>
+                      </span>
+                      <span class="book-caption">
+                        <span class="book-row">
+                          <span class="book-issue">{edition.data.issue}</span>
+                          <span class="book-period">{edition.data.period}</span>
+                        </span>
+                        <strong class="book-subtitle">{edition.data.subtitle}</strong>
+                        <span class="book-foot">
+                          <span class="book-count">{edition.data.entries.length} 幅作品</span>
+                          <span aria-hidden="true" class="book-cta">翻阅 →</span>
                         </span>
                       </span>
                     </a>
@@ -444,10 +449,10 @@ const latestId = editions[0]?.id;
     position: relative;
     display: flex;
     align-items: flex-end;
-    gap: 22px;
+    gap: 30px;
     width: max-content;
     min-width: 100%;
-    padding: 10px 6px 0;
+    padding: 24px 10px 0;
     margin: 0;
     list-style: none;
   }
@@ -476,109 +481,90 @@ const latestId = editions[0]?.id;
       0 10px 18px -8px rgba(0, 0, 0, 0.7);
   }
 
-  /* 一册书：竖放的书封 + 书脊 + 下方书名 */
+  /* 一册 = 一本画册式照片卡：宽幅封面完整裱在纸卡上，卡面下方写小字图注
+     （Stephen Shore 画册式；拍立得纸卡质感 + 微倾错落立在架上） */
   .book {
-    width: 172px;
-    /* 高度错落：像真实书架的书 */
-    --bh: 244px;
+    width: 280px;
   }
 
-  .book:nth-child(4n + 2) {
-    --bh: 258px;
+  /* 微倾错落：像立在架上的照片卡 */
+  .book:nth-child(5n + 1) {
+    --tilt: -1.2deg;
+    --dy: 1px;
   }
 
-  .book:nth-child(4n + 3) {
-    --bh: 232px;
+  .book:nth-child(5n + 2) {
+    --tilt: 0.9deg;
+    --dy: 3px;
   }
 
-  .book:nth-child(4n) {
-    --bh: 250px;
+  .book:nth-child(5n + 3) {
+    --tilt: -0.6deg;
+    --dy: 0px;
   }
 
-  .book-link {
-    display: block;
-    text-decoration: none;
-    transform-origin: bottom left;
-    transition:
-      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-      filter 0.3s ease;
+  .book:nth-child(5n + 4) {
+    --tilt: 1.3deg;
+    --dy: 2px;
   }
 
-  /* 抽书：整册上提并轻微倾斜 */
-  .book-link:hover,
-  .book-link:focus-visible {
-    transform: translateY(-8px) rotate(-1.4deg);
+  .book:nth-child(5n) {
+    --tilt: 0.4deg;
+    --dy: 0px;
   }
 
-  .book-link:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-
-  .book-cover {
+  .book-card {
     position: relative;
     display: block;
-    height: var(--bh);
-    border-radius: 2px 5px 5px 2px;
+    padding: 13px 13px 16px;
+    border-radius: 5px;
+    background: var(--paper-face);
+    box-shadow: var(--paper-shadow);
+    text-decoration: none;
+    transform: rotate(var(--tilt, 0deg)) translateY(var(--dy, 0px));
+    transform-origin: bottom center;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+  }
+
+  /* 取书：转正、上提 */
+  .book-card:hover,
+  .book-card:focus-visible {
+    transform: rotate(0deg) translateY(-12px);
+    box-shadow: var(--paper-shadow-lift);
+  }
+
+  .book-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  .book-photo {
+    position: relative;
+    display: block;
     overflow: hidden;
-    background-color: var(--secondary);
-    box-shadow:
-      0 2px 4px rgba(30, 30, 40, 0.22),
-      0 10px 16px -10px rgba(30, 30, 40, 0.4);
+    border-radius: 2px;
+    aspect-ratio: 1080 / 459;
+    background: var(--secondary);
   }
 
-  .book-link:hover .book-cover,
-  .book-link:focus-visible .book-cover {
-    box-shadow:
-      0 6px 12px rgba(30, 30, 40, 0.26),
-      0 20px 32px -12px rgba(30, 30, 40, 0.45);
+  /* 照片压边细线：裱片感 */
+  .book-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(30, 30, 40, 0.1);
+    pointer-events: none;
   }
 
-  .book-cover :global(img) {
+  .book-photo :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-  }
-
-  /* 书脊：左缘暗色渐变条，让平面封面有书的厚度 */
-  .book-spine {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 10px;
-    background: linear-gradient(
-      90deg,
-      rgba(10, 12, 18, 0.42) 0%,
-      rgba(10, 12, 18, 0.12) 55%,
-      transparent 100%
-    );
-  }
-
-  .book-cover::after {
-    /* 封面上缘高光：书页反光 */
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent);
-    pointer-events: none;
-  }
-
-  .book-tag {
-    position: absolute;
-    top: 10px;
-    left: 16px;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: rgba(30, 34, 46, 0.5);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: #fff;
   }
 
   /* 最新一期：书签带 */
@@ -586,6 +572,7 @@ const latestId = editions[0]?.id;
     position: absolute;
     top: 0;
     right: 10px;
+    z-index: 1;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -600,103 +587,77 @@ const latestId = editions[0]?.id;
     color: #fff;
   }
 
-  .book-meta {
-    position: absolute;
-    inset: auto 0 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 26px 9px 7px;
-    background: linear-gradient(180deg, transparent, rgba(8, 10, 16, 0.68));
+  /* 卡面图注：期数 | 时间 · 主题句 · 作品数（Shore 式小字排印） */
+  .book-caption {
+    display: block;
+    padding: 13px 3px 0;
   }
 
-  .book-meta strong {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    line-height: 1.45;
-    color: #fff;
+  .book-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--paper-sub);
+  }
+
+  .book-issue {
+    flex-shrink: 0;
+    color: var(--paper-ink);
+    opacity: 0.82;
+  }
+
+  .book-subtitle {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    margin-top: 8px;
+    font-family: var(--font-serif-song);
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--paper-ink);
   }
 
-  .book-period {
-    font-family: 'Archivo', -apple-system, sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  /* —— 书架滚动箭头与右缘渐隐 —— */
-  .shelf-wrap {
-    position: relative;
-  }
-
-  .shelf-fade {
-    position: absolute;
-    top: 0;
-    bottom: 14px;
-    right: 0;
-    width: 72px;
-    background: linear-gradient(90deg, transparent, var(--background) 88%);
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-
-  .shelf-fade.is-hidden {
-    opacity: 0;
-  }
-
-  .shelf-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
+  .book-foot {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    border: 1px solid var(--divider);
-    border-radius: 50%;
-    background: var(--background);
-    color: var(--foreground);
-    cursor: pointer;
-    box-shadow: 0 6px 16px rgba(30, 30, 40, 0.25);
-    opacity: 0;
-    transition:
-      opacity 0.2s ease,
-      color 0.2s ease;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 9px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--paper-sub);
   }
 
-  .shelf:hover .shelf-arrow,
-  .shelf-arrow:focus-visible {
-    opacity: 1;
-  }
-
-  .shelf-arrow:hover {
+  .book-cta {
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-weight: 600;
     color: var(--grad-a);
-  }
-
-  .shelf-arrow:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: 3px;
-  }
-
-  .shelf-arrow--left {
-    left: 10px;
-  }
-
-  .shelf-arrow--right {
-    right: 10px;
-  }
-
-  .shelf-arrow:disabled {
     opacity: 0;
-    pointer-events: none;
+    transform: translateX(-4px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .book-card:hover .book-cta,
+  .book-card:focus-visible .book-cta {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book-card,
+    .book-cta {
+      transition: none;
+    }
   }
 
   .hub-foot {
@@ -721,19 +682,15 @@ const latestId = editions[0]?.id;
     }
 
     .book {
-      width: 148px;
+      width: 236px;
     }
 
     .shelf-arrow {
       display: none;
     }
 
-    .book:nth-child(4n + 2) {
-      --bh: 232px;
-    }
-
-    .book:nth-child(4n) {
-      --bh: 224px;
+    .book-subtitle {
+      font-size: 14.5px;
     }
   }
 </style>
