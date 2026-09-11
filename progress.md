@@ -755,3 +755,18 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   --paper-shadow-lift 为紧贴卡片的小半径双层影（1px 贴边 +
   16px 漂浮，暗色对应加深），卡片各自独立悬浮，间隙恢复干净画布；hover 抬起仍换 lift 影
 - 验证：build 72 页、lint 通过；浅色/暗色截图目验（阴影带消失）
+
+### 删除 54 个无引用的重复活动图片目录(2026-09-11)
+
+- 磁盘排查发现 `src/assets/activities`
+  有两套命名:`story-of-time-YYYY-MM/`(内容 md 实际引用)与普通
+  `YYYY-MM/`(2021-_~2025-_
+  共 54 个目录、1719 个文件、345MB,全库零引用);MD5 比对确认两套内容字节级相同,且待删集合中 0 个「孤儿」文件(内容均存在于保留目录)
+- 删除上述 54 个普通命名目录;`src/assets`
+  812M→467M,全活动图片 3781→2062 张;同时清理本地 `dist/`(1.5G)与
+  `.wrangler/`(43M)构建产物(不入库)
+- 遗留:`.git` 541M 因历史 blob 不变,需 `git filter-repo`
+  重写历史才能瘦身(影响协作者,暂不动);`committee.jpg`
+  等少量跨目录复用图(约 6MB)保留原状
+- 验证:`./init.sh`
+  全通过(install/type-check/lint/build,72 页);dist 中无任何指向已删目录的引用
