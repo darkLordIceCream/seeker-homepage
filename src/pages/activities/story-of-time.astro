@@ -460,7 +460,6 @@ const latestId = editions[0]?.id;
   /* 一册 = 一本画册式照片卡：宽幅封面完整裱在纸卡上，卡面下方写小字图注
      （Stephen Shore 画册式；拍立得纸卡质感 + 微倾错落悬浮在版面上） */
   .book {
-    position: relative;
     width: 280px;
   }
 
@@ -503,34 +502,6 @@ const latestId = editions[0]?.id;
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 0.35s ease;
-  }
-
-  /* 落地软阴影：卡片悬浮在版面上，代替旧木质架板 */
-  .book::after {
-    content: '';
-    position: absolute;
-    left: 9%;
-    right: 9%;
-    bottom: -11px;
-    height: 15px;
-    z-index: -1;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(30, 30, 40, 0.22) 0%, transparent 68%);
-    filter: blur(5px);
-    transition:
-      opacity 0.35s ease,
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(.dark) .book::after {
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, transparent 68%);
-  }
-
-  /* 卡片提起时：落地影变淡、收窄 */
-  .book:has(.book-card:hover)::after,
-  .book:has(.book-card:focus-visible)::after {
-    opacity: 0.4;
-    transform: scaleX(0.9);
   }
 
   /* 取书：转正、上提 */
@@ -660,8 +631,7 @@ const latestId = editions[0]?.id;
 
   @media (prefers-reduced-motion: reduce) {
     .book-card,
-    .book-cta,
-    .book::after {
+    .book-cta {
       transition: none;
     }
   }
