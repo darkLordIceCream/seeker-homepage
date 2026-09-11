@@ -796,3 +796,16 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   `/Users/<user>/Library/pnpm/wrangler`
 - 验证:build 72 页、type-check 0 错误、lint 通过;构建产物 HTML 无本地活动图引用;
   R2 全量 URL 可达性校验 2062/2062
+
+### git 历史重写瘦身(2026-09-11,用户确认单人维护后执行)
+
+- 备份:重写前全量 bundle 存于
+  `~/Documents/project/seeker/seeker-homepage-history-backup.bundle`(旧历史唯一副本,确认无误后可删)
+- `git filter-repo --invert-paths`
+  清除 src/assets/activities、videos、src/assets/images/videos、src/assets/videos、public/videos、*.mp4、.wrangler 的全部历史 blob(视频在历史中有 4 个路径变体,分三轮清完)
+- 结果:`.git` 541MB→10MB,最大 blob 从 42.5MB(视频)降到 0.7MB
+- 提交记录:155/160 保留;SimZun(15)、wenruohan(2)署名完整;被裁 4 个均为纯视频/大文件操作提交 (remove
+  video file / compress video 25MiB limit / 移除 .wrangler /
+  PR#6 的空 merge 节点),全部是 hanyuan/董瀚元本人
+- remotes 重建(origin 曾被 filter-repo 摘除);main 强推 GitHub+Gitee,chore 分支推 GitHub
+- 验证:build 72 页通过;PR #22
