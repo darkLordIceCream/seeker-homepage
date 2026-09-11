@@ -37,7 +37,7 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   - 公益照片：`welfare/<project-slug>/<article-slug>/n.jpg`（项目「带上她的眼睛」=
     `bring-her-eyes`），一个文章一个文件夹
   - 活动照片：《时间的故事》各期 `activities/story-of-time-YYYY-MM/n.webp`
-    （WebP、最长边 ≤2560、q82 预压缩），一个期数一个文件夹，命名唯一
+    （WebP、q82 预压缩；普通图最长边 ≤2560，画幅 ≥3 的长条全景保留原分辨率），一个期数一个文件夹，命名唯一
   - 活动图片的像素尺寸登记在 `src/lib/activity-image-meta.ts`
     （构建期供排版分型与 CLS 尺寸预留）；新增期数需同步追加条目
 - **单文件 >500KB 不入 git**；同一批素材只用一套目录命名，杜绝重复副本

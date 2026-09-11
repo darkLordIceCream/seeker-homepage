@@ -809,3 +809,13 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   PR#6 的空 merge 节点),全部是 hanyuan/董瀚元本人
 - remotes 重建(origin 曾被 filter-repo 摘除);main 强推 GitHub+Gitee,chore 分支推 GitHub
 - 验证:build 72 页通过;PR #22
+
+### 迁移后风险自查与条图修复(2026-09-11)
+
+- 自查发现:53 张画幅 ≥3 的"胶片长卷"条图被"最长边 ≤2560"规则误缩(如 1000x12417 缩至 206x2560), 条图版式全宽展示会放大模糊;已按原分辨率重转重传(共 31.4MB,53/53 可达),尺寸清单同步更新,
+  AGENTS.md 规则补充长条全景例外
+- 其余检查结论:原图全部 sRGB/无 ICC/无 alpha/无 GPS(116 封面+样张实测),无色彩漂移与隐私泄露;
+  tags/Releases 均无;origin 远程分支干净;gitee 为上一团队遗留仓库,remote 已从本地移除(此前对其main/master 的强推无实际影响)
+- 已知边界:R2 自定义域默认无边缘缓存(cf-cache-status:
+  DYNAMIC),建议 Cloudflare 后台为该域加Cache
+  Rule;GitHub 服务端 refs/pull/* 仍保留旧历史对象(新 clone 干净,但未物理清除);原图全分辨率仅存于本地备份 bundle,建议团队另建原图冷备份
