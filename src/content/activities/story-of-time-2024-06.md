@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '蝉鸣六月烈日下，盛夏绿荫满园中'
 issue: '六月篇'
 period: 'JUNE 2024'
-cover: ../../assets/activities/story-of-time-2024-06/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/cover.webp
 excerpt:
   '《时间的故事》六月篇：蝉鸣六月烈日下，盛夏绿荫满园中。31
   幅作品，收录组员们的时光片段。'
@@ -18,26 +18,26 @@ entries:
   - author: '景'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/01.webp
     caption: |-
       这是我第一次来到北京，来到这个中国最绕不开的城市。各色古现代建筑乱花入眼，来往匆匆的行人讲述着天子脚下的忙碌与压抑，熙熙攘攘的旅客描绘着皇城的辉煌与魅力。
       在这里的旅程我没什么计划，我来到这里仅仅是因为它是北京，因为他们告诉我，中国人应该上京城走走。我穿过这里数不胜数的打卡机位来到了这个 soho，用一张照片记录下我的到来。或许几年后再来到这里，我也会如紧步路过的行人那般焦虑忙碌，但至少在当下，我能漫步其中，感受空气里的沉重而不用融入其中，能得闲体会它的精妙、古典与韵味。
   - author: '鱼加宝'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/02.webp
     caption:
       '六月中旬前北京频发强对流、雷暴天气我也是第一次尝试拍摄这种题材的照片跟随者风的走向雷电的强度一直调整着拍摄的机位终于在凌晨三点捕捉到了当天最强的雷暴云雷电在北京
       CBD 的后方闪烁呈现出自然与城市的交响曲'
   - author: 'May'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/03.webp
     caption: '端午佳节，学校首届龙舟大赛燃情启幕。我有幸以参与拍摄，通过航拍视角捕捉花津湖碧波荡漾与龙舟竞渡的壮观景象。龙舟如龙出海，队员们齐心协力，共同演绎着端午的激情与活力。'
   - author: '柯雷'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/04.webp
     caption: |-
       时维六月，海口已然到了风光季。不论是清晨抑或日暮，火烧云常常铺满天空。十九日，受朋友邀请，我也拍了这个月的第一次日出。
       到机位时，太阳尚未掀开衣角，整座城市还在安眠，只有偶然亮起的点点星火不停闪烁着，像是苏醒的前兆。掐着表，看时间也要到日出的时候了。我展开无人机，准备飞到城市上空俯瞰日出。
@@ -46,38 +46,38 @@ entries:
   - author: '是梨某人啊'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/05.webp
     caption: |-
       蓝调时刻的光线与色彩赋予了整个画面一种神秘的氛围。落日留下的余光给城市盖上了一层蓝紫色的轻纱，上海的现代化与历史建筑在这片暮色中完美融合，给人一种神秘、宁静且柔和的“暮色森林既视感”，远方的内透似天边稀疏的星光，近处的光亮也如游离的萤火虫，一个人漫步在暮色中，可能会感到一种孤独感，但这种孤独往往伴随着内心的安宁，与环境融为一体，释放被快节奏生活所禁锢的心灵。
       尽管这个机位在晚些时候、等武康路的灯光和城市的景观灯亮起时再去拍摄可以更好地展现国际大都市的风采，但我还是更中意蓝调时刻的这种氛围，这种漫步在暮色森林的感觉。
   - author: 'XiaoYi 同学'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/06.webp
     caption: '海口强对流来袭，天空好像漏水了，好像有点理解天气预报中说的“局部暴雨”是什么意思了。所以，这场风暴过后，一起去看日落吗？'
   - author: 'Yeungkingho'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/07.webp
     caption:
       '广州，阴雨连绵太久了我已经忘了多久没有飞过飞机多久没有出去拍过了
       ，人在内心里发霉从里到外的影响着自己的生活还有情绪。在周日，难得放晴打开背包看着仅存百分之四五十的电池，飞着飞机在家附近的球场环绕，确实久没有拍照真的对很多构图取景都会下降，不过突然发现到这些健身器材突如其来的惊喜，当我按下快门这张照片记录了阳光记录了炎热也记录了我这个月拍的第一张照片。'
   - author: 'Kkbbr'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/08.webp
     caption: '在毕业离校的前一天，我再次来到了一直想拍却没拍到的机位，黄鹤楼与杨泗港鹦鹉洲两座大桥的同框。由于杨泗港大桥大部分时间不开灯，好几次都没有拍到蓝调亮灯的场景。没想到在离开生活四年的武汉的前一天，终于拍到了这个机位杨泗港开灯，也算是弥补了一个遗憾，比较圆满的结束了自己的大学生活。'
   - author: '江河漫读。'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/09.webp
     caption: |-
       在医院见习的路上从内环高架远眺中华门，发现一辆地铁正好穿过长干门城墙迅速驶来，我立刻就被这样的景象吸引住了，于是就想能否找到一个爬楼机位去定格下这极具“南京特色”的场景。
       经过一番探索与询问，最终成功发现了长干门附近的一个居民楼楼顶。地铁、城墙与远处的城市天际线交相辉映，动静相谐，古今同框，无比形象地展示了南京这个“六朝古都”的全面风貌。
   - author: '绿谷'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/10.webp
     caption:
       '这是条 1902
       年法国修建的铁路，到今天还在正常运行，如今也成为了网红打卡地，轨道两侧的店铺还依然能体现出越南老城区的风情，作为我和
@@ -86,14 +86,14 @@ entries:
   - author: '被窝探险家'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/11.webp
     caption: |-
       「十里不同天」
       无意间在朋友圈看到了学校附近出现了彩虹，所以抓紧回寝室起飞了无人机。这也让我幸运的拍到了彩虹、雨藩、乳状云齐聚一堂的画面。这种天气来的快去得也快，云幕散去后，又是晴云轻漾。
   - author: 'DawnTideNN'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2024-06/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/12.webp
     caption:
       '离开瑞士日内瓦前的最后一站，我前往了拥有近1000
       年历史的圣皮埃尔大教堂（Cathédralede
@@ -103,19 +103,19 @@ entries:
   - author: '归零'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/13.webp
     caption:
       '很难想象在如此现代化的杭州市区仍保存着这样一片上世纪风格的老街小巷。征得照片中奶奶的同意后，我拍下了这张照片。在这里，时间仿佛都慢了下来，放学回家的学生，街口回收旧电器的喇叭声，趴在地上慵懒睡觉的小狗，阳光下风吹过晾晒的衣服，这些都让我想回到
       18 岁前的那个夏天。'
   - author: 'MateoLee'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/14.webp
     caption: '孤独小人'
   - author: '庄江彬'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/15.webp
     caption: |-
       《冷战》
       希望用诙谐的镜头语言，来形容现实中吵架冷战模样。
@@ -126,7 +126,7 @@ entries:
   - author: 'George Huang'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/16.webp
     caption: |-
       在肯尼亚的基苏木，山区小学“Kiroro”急需翻修。我有幸为学校捐赠了即将用于翻新教室的瓷砖。由于山区道路泥泞，车辆在学校门口陷入困境，学生们自发地帮助我们搬运车上的瓷砖，协助车辆脱困。这张照片捕捉到了一个动人的瞬间，孩子们热情地搬运着瓷砖，毫不知疲，因为他们知道这些瓷砖将很快用于他们的教室，改善他们的学习环境。
       站在车前，看着孩子们热心地帮助，我感受到希望和深受启发。尽管他们每天面临艰难困苦，但他们的精神依然顽强，他们的热情极具感染力。看到他们一起合作，空气中充满欢声笑语，脸上洋溢着笑容，这让我更加坚定了孩子们的力量。
@@ -135,7 +135,7 @@ entries:
   - author: '纯黑的林桑'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/17.webp
     caption: |-
       《起势》
       拍摄于端午节当天下午。
@@ -143,24 +143,24 @@ entries:
   - author: '琦一'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/18.webp
     caption: '你问我为什么喜欢坐火车？我的回答是能看见世间温情和人间百态。在西安火车站台，我看见了各式各样的人，有高管、白领、小孩...但是透过一节节车厢的窗户，最吸引我的，还是一个不起眼的车厢里，一个老爷爷正与对面的人谈笑风生。我听不清他们在谈论什么，但是昏黄的车厢里，我看见了他们热情的笑容，那一刻，无声似有声，那一刻很温馨的小幸福，却也让我呆滞在原地，我按下了快门，这一刻便是永远。他们之间也许是亲人，也许是陌生人，也许是我内心渴求的、很久不曾感受到的温情。什么时候，我们习惯了一个人在熙攘的人群里独行，习惯了在陌生的城市里裹挟，想到这里，眼角湿润...'
   - author: 'Henry'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2024-06/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/19.webp
     caption: '在越南的制香村，香氛弥漫，仿佛穿越时空的香气，诉说着古老的工艺与独特的魅力。每一缕香气，都是手工艺人匠心的结晶，让人心醉神迷。'
   - author: '猫白否'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/20.webp
     caption: |-
       梳羽
       这是我时隔 15 年再次逛动物园所拍摄的片子。在这个信息爆炸时代，许多动物已经不算新奇，但亲眼看到还是能够为之感叹，也很顺利得拍摄了许多满意的照片，作为第一次打鸟的纪念，我就选择这张蓝黄金刚鹦鹉作为六月故事吧。
   - author: 'Steve Zhang'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/21.webp
     caption: |-
       我问自己：
       我们为什么触不到苍穹上的点点星光？
@@ -172,19 +172,19 @@ entries:
   - author: 'HANMOSHENG'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/22.webp
     caption: |-
       《太阳色球层》
       在太阳活动爆发的一年里终于抽空拍摄了一次太阳。这张照片是由自制光谱仪扫描重建得到的，画面里是今天太阳的色球层，一个充满活力和神秘的区域。色球层位于太阳的光球层和日冕之间，是太阳活动的一个关键区域。图中可以看到色球层上的细节结构和活动迹象，展现了太阳大气中不断发生的剧烈动态变化。这些变化包括太阳耀斑和日冕物质抛射等，它们对地球和整个太阳系都有重要影响。
   - author: '猫辰不是猫'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/23.webp
     caption: '雨季的贵州充满了惊喜，和朋友一路摸爬滚打到了翁洞滩。寻找到了一片植被做前景，让朋友走到水中间拍下了这一张照片。'
   - author: '源 Dream'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/24.webp
     caption:
       '2024 年 6 月 10
       日凌晨我在西藏拍到了人生中的照片，本次产生的红色精灵雷暴区域到拍摄地点直线距离约为
@@ -194,37 +194,37 @@ entries:
   - author: '佳佳酱油'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/25.webp
     caption: '在大雨倾盆的一天，跟朋友们一起去爬山探秘，在过程当中由于泥泞的路面导致行走过程很艰难，经过三个小时的徒步，终于到达了一个蝙蝠洞，洞穴里边还能隐隐约约听到蝙蝠的叫唤，墙体上覆盖着许多不规则的斑块，当渺小的我们照亮洞穴，也看不到它神秘的一面。'
   - author: '诗涯无酒'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2024-06/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/26.webp
     caption: '雨后，我与伙伴们穿过泥泞的山路，来到山洞内。洞外的微光，难以照亮深邃的岩洞，但是借助燃烧的钢丝棉，我们瞥见了山洞的另一面，剥落的岩石，腐朽的山木，钢丝棉在空中交织'
   - author: '张艾艾'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-06/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/27.webp
     caption: '“梦里有时身化鹤，人间无数草为萤”前几天半梦半醒之间做了一个梦，梦见一位古装女子深居山林，月下起舞，萤虫围绕，那是难以用语言形容的美感；那是汉人刻在骨血里的优雅；梦醒时分当即就把梦境跃然于画面里。'
   - author: 'Distorting'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-06/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/28.webp
     caption: '来到成都读书已经快两年了，想起自己居然还没有好好去川西玩过。正好六月初好友约去自驾，我便欣然同行。我们第一站来到了格底拉姆，他们都去拍摄贡嘎群峰的日照金山，而我则选择为同行的小姐姐服务，拍下了这组酷酷的照片。'
   - author: '無婷'
     group: '人像'
     images:
-      - ../../assets/activities/story-of-time-2024-06/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/29.webp
     caption: '六一与拓哥、小赖一同前往正佳海洋馆创作，在经历“等人一小时、拍照五分钟”的煎熬之后，终于等到了海王石像前的短暂清场。穿着为这场创作精心准备的露背裙，赤脚走上台阶，正当我抬手之时，一条幽灵般的鲨鱼如同受到了我的召唤，带领小鱼从我所指方向一跃而过，与我共同创作了这篇与海神共舞的乐章。'
   - author: '宠物摄影师狗哥'
     group: '创意'
     images:
-      - ../../assets/activities/story-of-time-2024-06/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/30.webp
     caption: '利用前后错位，广角畸变，拍摄具有视觉感的宠物和花的作品，他们都向阳而生，具有无比的生命力。'
   - author: '张臭臭'
     group: '创意'
     images:
-      - ../../assets/activities/story-of-time-2024-06/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/31.webp
     caption: |-
       《困住我的牢笼》
       这看似光鲜亮丽的透明世界，只不过是将我囚禁的牢笼，一直都在想着摆脱这“水域”，我们称之为上岸，但我只是个被囚禁住的微小蚂蚁！
@@ -246,7 +246,7 @@ pastIssues:
     line: '风雪吹过长夜，微光拥你入眠'
   - name: '十一月篇'
     line: '风雪吹过长夜，微光拥你入眠'
-committeeImage: ../../assets/activities/story-of-time-2024-06/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-06/committee.webp
 committee:
   name: '2024年时间的故事组委会'
   team:

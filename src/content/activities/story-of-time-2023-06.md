@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '悦享夏日艳阳 绘就绚烂篇章'
 issue: '六月篇'
 period: 'JUNE 2023'
-cover: ../../assets/activities/story-of-time-2023-06/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/cover.webp
 excerpt:
   '《时间的故事》六月篇：悦享夏日艳阳 绘就绚烂篇章。30
   幅作品，收录组员们的时光片段。'
@@ -18,12 +18,12 @@ entries:
   - author: '陳kevin'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/01.webp
     caption: '六月，夏日的开始，风光摄影师们开始蠢蠢欲动，六月我确实也拍了不少，但给我印象最深的要数那张“与月共舞”，其实这张片子朋友们已经计划很久了，只是一直没有合适的地点！功夫不负有心人，终于让我们找到了适合模特在楼顶跳舞而且月亮从楼顶穿过的悬月地点，从选点，机位位置，到选择合适的模特，大家共同努力去完成一个完美的计划，拍摄当天却各种考验，先是下午下了一场大雨，模特以为取消了，没想到雨停了，又紧赶慢赶的赶过来，其次我们上的机位楼位置有点偏差，于是现场计算重新让模特同楼屋顶换一个位置，后面天气还算给面子，终于露出了红红的月亮，虽然因为天气的原因月亮不够透，但基本还是完成了大家的一个一直想完成的计划！'
   - author: '大黄'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/02.webp
     caption: |-
       如狂舞如痴如醉的红蝶，烈焰盘旋北国之星.
       似沉吟似喃似泣的低语，注目送别孤身游子.
@@ -37,27 +37,27 @@ entries:
   - author: 'Lucas_樞'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/03.webp
     caption: '拍摄于日落时分，眉山远处那座半透明的建筑——无影教堂，以及前景绚丽的紫色马鞭草花。而画面中的模特则提着一盏灯，犹如一束希望的光芒。这座半透明的建筑物仿佛与天空融为一体，映衬着夕阳的余辉，呈现出一种梦幻般的景象。'
   - author: '来者犹可追'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/04.webp
     caption: '这是今年第一次拍平流雾，极低的团雾又加上良好的光照条件，让我拍到了十分不错的青岛湾有光云海。在飞机拍完要返程的时候，我发现栈桥在云雾中若隐若现，意识到这是个独特的场景，于是顶着最后的电量，拍下了这个栈桥三舟并进的场景。'
   - author: '快门小子'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/05.webp
     caption: '将近一个月没拍照。正好周末满月，于是决定回家拍摄早早规划好的顶月计划。但是在出门之前，发现天空中乌云密布，意识到顶月计划可能翻车，临时改变拍摄地。原以为雨后的天气会通透，但是能见度还是不尽如人意。过多的低空云注定无法出现美丽的晚霞，本以为又要翻车的我回家将照片导入电脑后，发现可以修成黑云压城的氛围，于是，在经过后期修饰，终于得到了让我满意的效果。'
   - author: 'kk'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/06.webp
     caption: '前段时间大黄鸭时隔十年再次来到了香港。但由于学业繁忙，一直没有机会去拍摄。直到撤展前最后一晚，赶上了见大黄鸭最后一面。期待你们下次再来到香港！'
   - author: 'Rewind'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/07.webp
     caption: |-
       你有没有过一个顺瞬间不顾及身体状况临时做出一个冲动决定？就在六月的第一个周末我再次冲动跑到了天津。
       这次的突然决定导致我记错了车票开车的时间，在车站购票处临时有了一张马上出发的车票，就这样我还是拖着生病的身体按照原计划来到了天津滨海新区。由于身体实在不舒服，白天约好的滨海图书馆并没有出去拍，而是在民宿窝了一天。好在这一整天全网找了详细攻略，就在傍晚仅有回血的几个小时里心心念念的天津港集装箱拍摄的十分顺利！金调蓝调所有的时间利用两块半的电池全部捕捉。俯拍视角也能清晰的看到TIAN JIN PORT这个极具代表性的标识。（建议这个地方还是自驾比较方便，打车还是比较难打的）
@@ -65,64 +65,64 @@ entries:
   - author: '绿谷'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/08.webp
     caption: '6月对于我来说是波折的，在这个月经历了很多，也让我的想法改变了很多，由于忙碌焦虑憔悴在中后期无心拍摄，月初在去佛山打卡的时候发现了这个形似龙卷风的建筑，但见过了常规拍摄的我选择了只保留穹顶的部分做了镜像翻转，形成了这个“沙漏”，也提醒了我无论发生什么都要坚持继续走下去，像沙漏里的沙，不前行就会倒退。'
   - author: '辰辰辰Tilo'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/09.webp
     caption: '第一次登临这么高的酒店，恰逢大雨，本来对于这种天气并不抱有期待，没想到却在雨停之后，云层逐渐散开，露出了金茂大厦，这座庞然大物此刻居然如此立体。'
   - author: 'JimmieCHEN'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/10.webp
     caption: '风光摄影的精髓就在于不停的出发，以前来这个机位很多次，终于在六月的第一天，珠海迎来了2023年第一场大规模的晚霞，我也拍到了珠海地标建筑日月贝与晚霞的合影。'
   - author: 'L1u'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/11.webp
     caption: '6月，我完成了人生中的一件大事——高考。在高考完后我来到了西安，那天天气很好，长安塔让我感到非常的震撼，我找到了一个小瀑布当作前景并按下了快门。在这瀑布，古建筑，星空之下我仿佛传遇到了古代时期的长安城，感受到了这座城市的魅力。'
   - author: 'JIFENG冀峰'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-06/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/12.webp
     caption: '早上三点半到达机位，无人机起飞了一会看了眼朝霞，嗯很美，但是只有平流雾和朝霞，建筑没有漏出来，所以悬停了一块电池看了会，然后降落等待时间，大概6点左右感觉云层还可以就重新起飞，等待了好大会才拍了几张，算是记录吧，今年拍的第一次平流'
   - author: '小杨在云南'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/13.webp
     caption: '新疆北部的阿勒泰地区，是新疆的四大牧区之一。每年在萨尔布拉克，生活在这里的哈萨克族牧民会随着季节的更替、草场的变化而赶着牲畜，长途跋涉，举家迁徙，更换牧场。6月上旬，牧民们由冬牧场转向水草肥美的高山夏牧场，到了9月下旬，牧民们又在冬雪到来之前由夏牧场转回冬牧场，以使草场得到更好的循环，这个过程就是所谓的“转场”。这是我心心念念了很久的场景，成千上万的牛羊马迎面奔袭而来，卷起了滚滚的灰尘，这种震撼只需看见一次便能铭记在心。'
   - author: 'TOBY'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/14.webp
     caption: '冰岛是真的适合去4次的地方，春夏秋冬，都有不同的魅力风物。去年经历过白雪皑皑的冬季冰岛，今年决定在6月中旬的初夏再临这个绝美的国家。虽然冰岛高地斑斓的火山地貌和辫状河流也非常壮观，但其中最让我难忘的还是寻找“会飞的企鹅”海鹦Puffin的历程。冰岛是夏季Puffin最大的栖息地，有近60%的海鹦来到这里生活。经历了轮渡，浓雾，景区关门，因为不了解他们的习性去错时间所以一无所获之后，终于在凌晨3点的峡湾看到了上万只海鹦出洞的情形，被震撼得无以复加。看到极昼凌晨初升的太阳打在站在洞口扑棱着翅膀准备去海里捕食的它们身上，真的觉得太美好太幸福了。没有其他游客打扰，在触手可及的海鹦边享受着这几个小时的独处的宁静，能让人瞬间忘却之前几次的失望和驱车的疲惫。'
   - author: 'Kiri桐桐'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/15.webp
     caption: '夜幕降临，星光点点，萤火虫在夜空中飞舞，闪烁着微弱的光芒，像是夜空中的小精灵，为夏季的夜空添加了一份神秘和浪漫。'
   - author: '丨i O N'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/16.webp
     caption: '六月是考试最多的月份。结束了紧张的考试月，难得空出来的端午假期，得以抽出时间去长沙周边玩玩，但又不巧碰上湖南的雨季，整个端午阴雨绵绵。在路上偶遇了一片向日葵花海，便停下车在花海中拍了一张。天气不佳，仍飘着小雨，也没有找到能够拍到向日葵正面的好的角度，从背面看过去的向日葵总给人低声下气的感觉。那我就去做向日葵的彩虹吧'
   - author: 'Wyatt_Lin'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/17.webp
     caption: |-
       这是狗狗带我找到的萤火虫秘境。在听说这处竹林山溪有萤火虫之后，下班后就赶来探探。本来还怕找不到树林的入口，结果到了后就迎上来一只狗狗带着我进了树林，淌到小溪，穿过竹林，来到这处幽谷秘境。想投喂表示感谢，可惜本身也是饿着肚子来，什么吃的都没带，很不好意思。
       两天后又带朋友一同前来，这次大白身边还跟了两只小黑，我们准备了很多火腿肠，一路徒步的过程中不停投喂晚上在这幸运的看到了夸张的萤火虫大爆发，在竹林里差点被萤火虫抬走还和可爱的大白合照了这张照片。
   - author: '叁折'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/18.webp
     caption: '高寒草原，微雨蒙蒙。矗立其中的小帐篷，显得如此孤独。起伏的草原，透露出一种如梦般的朦胧，只有雨滴的轻击声，在空旷苍凉的穹顶隐约可闻。在这里，帐篷是一处可靠的避风港，它将人们与纷扰隔离，沉浸在远离尘嚣的世外。如此小小的存在，承载着牧民的希望和坚守。草原与雨水，宛如一幅淡淡的水墨。'
   - author: 'Just Fell Asleep'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-06/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/19.webp
     caption: |-
       新疆之旅——安集海大峡谷银河
       在日落前看到了一些雷暴云团，我本以为这些云团可能会在夜晚给我带来一些壮观的火烧云，或者闪电星空，但它们不久就消散殆尽……
@@ -130,7 +130,7 @@ entries:
   - author: 'CaKeHunter'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/20.webp
     caption: |-
       新疆之旅正式结束啦。一直很想去南疆，这次非常感谢ted能给我这个机会，组了一个小团可以带我们玩。大家都是特别有趣的人，也发生了很多特别有趣的事，印象最深的就是这张图。
       这里是喀什的“牛羊大巴扎”，是每周日定期举行的一个以买卖牛羊为主的大集市。当时是18号的下午一点左右，我刚刚下飞机，就看到ted在群里喊我们去不去，说错过要后悔一辈子，而且下午两点就结束了。我就一路狂飙去古城青旅放行李，然后打车去大巴扎。去之前其实我没有啥心理准备，以为就是个普通赶集，没想到场面贼震撼。放眼望去全是牛羊和当地老百姓，人多到你得自己在羊屁股里挤条路出来，尘土飞扬，气味也非常刺鼻。我一开始还低头注意路面，怕踩到脏东西，后来索性不管了，然后就是拍拍拍。
@@ -138,42 +138,42 @@ entries:
   - author: 'Sonder'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/21.webp
     caption: '相机没电之前有幸记录下了这一瞬间。'
   - author: '-Y.z.c-'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/22.webp
     caption: '这个月我走上了街头，走到一个地方，等待和人们聊天，准备遇见一切未知，就这样在行走和等待中，找寻最初拍照的乐趣。'
   - author: '插头'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/23.webp
     caption: '六月的第一个星期，随学院来到鲁东大学幼儿园，给大班的小朋友们做物理实验，小朋友非常的可爱活泼啊，面对新事物是那么的好奇。图中是让小朋友们通过镜子感受现实与镜子中像的关系，从他们的眼神中不难看出，实验虽小，但给他们带来的快乐是非常大的。也希望能够通过这一次的物理实验，能激发他们对物理的兴趣爱好。'
   - author: 'RAN'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/24.webp
     caption: '像是困在方形的空间里，逃离，逃离。'
   - author: 'chen'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/25.webp
     caption: '又是一年一度的高考季，我选择来拍摄第一堂语文考试后的考生，从二十九中走出的他们脸上都洋溢不同的神采，或喜或忧，但其实高考结束后，也是对自己高中青涩时期的谢幕'
   - author: '奈何'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/26.webp
     caption: '他懵懂的看着拄着拐杖的她，不懂世事，她慈慕的双眼注视着他，不问世事，她曾是他，而他终将是她'
   - author: 'Happy'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-06/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/27.webp
     caption: '我的眼睛里装着一片海，等待了许久，那艘船终于开进了我的那片海'
   - author: '拍废片的小白林桑'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-06/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/28.webp
     caption: |-
       《勇往直前》
       拍摄于二零二三年六月二日，高考将近，我希望高三学子们能像图中的小人一样，不管前方如何，都要鼓起勇气跨越重重障碍，奔向属于自己的未来。
@@ -182,12 +182,12 @@ entries:
   - author: '阿希金'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-06/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/29.webp
     caption: '月初，趁着期末结课，考试也还没开始，于是很疯狂的去了成都一趟。其实这次旅行已经酝酿了两年，却因为各种原因被迫推迟，很幸运，最后还是和你去了。真的很开心能带你去我从小生活的地方，在我高中里谈一场校园恋爱，在路边小店里听我讲以前调皮的趣事……返程的飞机上，你在翻看我们的合影，阳光透过舷窗恰好射在你的手上，就像这趟旅行一样梦幻。'
   - author: 'Jack·li'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-06/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/30.webp
     caption: '6月1日，我来到了青海工作，本以为气候干燥的大西北不会有远方的水生动物，却偶然间在闹市中发现一汪梦幻的大水母。他们灵动的浮游着，原来水里也有宇宙，有超越时间的永恒，有着自由与孤独的边界'
 poem: |
   与六月同行，共舞于心灵之境，感悟夏日的韵律。让在如诗如画的光阴里，放飞内心的激情，以摄影之笔勾勒出绚丽的印记。在充满活力的夏日光景中，捕捉那些闪烁的瞬间，记录下生命中的绚烂色彩。愿我们与时间相伴，与时间为友，编织出六月最美的篇章，让光阴之舞盛开如诗。
@@ -195,7 +195,7 @@ poem: |
 pastIssues:
   - name: '·五月篇'
     line: '集齐夏时雨，涌涌最上川'
-committeeImage: ../../assets/activities/story-of-time-2023-06/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-06/committee.webp
 committee:
   name: '2022年时间的故事组委会'
   team:

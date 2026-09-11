@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '#花盛春暖 寄游于世间之万千'
 issue: '三月篇'
 period: 'MARCH 2021'
-cover: ../../assets/activities/story-of-time-2021-03/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/cover.webp
 excerpt:
   '《时间的故事》三月篇：#花盛春暖 寄游于世间之万千。29
   幅作品，收录组员们的时光片段。'
@@ -14,81 +14,81 @@ layout: gallery-story
 entries:
   - author: 'SEEKER丨ke0v0'
     images:
-      - ../../assets/activities/story-of-time-2021-03/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/01.webp
     caption: '雾中山水。漓江蜿蜒流过异常陡峭的山时，我看到了一幅非同寻常的景象。清晨，这片区域经常被困在山中，雾霾弥漫。当太阳升起，云雾也会渐渐散去，几分清晰，几分朦胧，如同身处于仙境之中。'
   - author: 'Icer冰冰冰'
     images:
-      - ../../assets/activities/story-of-time-2021-03/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/02.webp
     caption: '这是我3月份最满意的一张星野作品，也是我的赤道仪开光照。沙尘暴来临的那个晚上，我提前很久看好了天气，在犹豫中出发了。到了田横岛发现，只能看到头顶的北斗七星，很忐忑，又很坚定，毕竟自己看了十多次的天气显示凌晨两点以后会雾气和霾会消散。果不其然，凌晨两点朋友开着车带着披萨赶来了，我在睡眼惺忪中看到了漫天的繁星，心中的担子瞬间落地。那晚，用着借来的发光透明伞伞，拍下了星空下的你和我。'
   - author: 'SEEKER丨F0.95'
     images:
-      - ../../assets/activities/story-of-time-2021-03/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/03.webp
     caption: '始建于明朝万历年间的永泰古城，历经400多年的自然洗礼，依旧矗立在中国西北部，这里曾是重要的军事防御和驻兵屯粮的基地。深处腾格里沙漠的边缘，这里拥有波特尔亮度为二级的夜空，斗转星移，银河初升，在黎明的晨光中，和古城拍了一张合影，即使在黎明前的蓝色时刻，银河依旧璀璨。'
   - author: 'B-Rabbit'
     images:
-      - ../../assets/activities/story-of-time-2021-03/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/04.webp
     caption: '3月基本上没有自己出去拍过照，就拿工作中拍的照片来，这是在给一家面包店拍摄的过程中拍的一张照片，因为在拍摄前就和老板确定了拍摄暗调风格的照片，又是在室内拍摄，所以我更希望通过布光去营造出暗调的氛围，所以我用了双灯，主光负责烘托面包质感，把主体和背景分离开加大场景光比，侧逆光负责勾勒轮廓，我对画面氛围感的追求是远远超过拍摄时的参数本身的，所以在场景道具的选择上我也尽量去选暗色，低饱和度并且颜色单一的道具来映衬整体氛围，最后再用面粉去中和过暗的照片基调。单说这张照片它其实有很多不完美的地方，但是它算得上是我对自己一些小小想法的呈现，对我来说这种感觉和想法在拍摄中才是最珍贵的。'
   - author: '潘潘猪'
     images:
-      - ../../assets/activities/story-of-time-2021-03/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/05.webp
     caption: '三月末来到上海参加视觉中国年会，上台和其他获奖朋友们参加圆桌会议，也见到和认识了很多的朋友。第二天早上在乍浦路桥和朋友们一起拍摄，遇到了一次脏脏的云海。因为信号不好，只能草草拍摄。上海的三天令我难忘，也是学摄影以来的高光时刻。这一年将是大学生活中重要的一年，希望学习顺利。'
   - author: 'DomeRaw'
     images:
-      - ../../assets/activities/story-of-time-2021-03/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/06.webp
     caption: |-
       广州石碑村——超级城市进化的背后  (Raw by 凉凉)
       当时第一眼看到这张图是在凉凉的朋友圈，一张前期并不算特别成功的片子，但是看上它的第一眼就有了自己的想法，可能这就是心动的感觉吧。然后通过凉凉的介绍和网上查阅，我了解到了这个村广州最大也是历史最长的城中村，感觉和远处的高楼大厦一起构成了雏形的赛博朋克。可能每个超级城市的进化都存在着像石碑村这样的地方吧，但是希望还要相信有光，不论身处何处，是否自己内心深处也有一个“石碑村”，我们都要继续热爱生活，喜欢自己。（即将毕业的大四人）
   - author: 'Just Fell Asleep'
     images:
-      - ../../assets/activities/story-of-time-2021-03/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/07.webp
     caption: '虽然这张的天气实属垃圾，但是这是我平生第二次出省的纪念。3.20参加未来影像的年会，会场在上海，认识了很多大佬，也学习了很多东西。在上海的这几天天气并不算好，也只能在法师桥留一张打卡照以纪念。'
   - author: '葛炮的号哭'
     images:
-      - ../../assets/activities/story-of-time-2021-03/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/08.webp
     caption: |-
       早晨，人们都过来打卡中卫66号U型公路。夜空，成百上千颗星星斗转星移，只有我举着一盏灯，照亮前进的路。
       2021年3月13日深夜，拍摄于宁夏省中卫市。6D+适马35，ISO 1600，F1.4，60s，35张拼接。
   - author: '鸭梨'
     images:
-      - ../../assets/activities/story-of-time-2021-03/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/09.webp
     caption: '这是我三月份最满意的一张照片。原片是落日，黑的一塌糊涂。本来都想删除了，想了想也许还有救，于是就看了教程依葫芦画飘尝试了一下。争取下个月好好拍一些作品，拣选几张看的过去的，再认真写一写文案。加油。'
   - author: 'SEEKER丨行走的T先森'
     images:
-      - ../../assets/activities/story-of-time-2021-03/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/10.webp
     caption: '好久没有见到内心的太阳了，我时常在想，我会用什么样的方式度过自己的一生，直到我拿起相机的时候，我找寻到了答案，可能孤独是一种常态，想要获得更多精神上的富足，这也是我为什么热爱旅行和摄影，我有自己所追求的东西和热爱，希望可以这样炙热的度过一生，而摄影，也是让我永不停止的动力，是我一生的追求。'
   - author: 'SEEKER ｜ 倾斜的地平线'
     images:
-      - ../../assets/activities/story-of-time-2021-03/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/11.webp
     caption: |-
       和两个好哥们坐在东方明珠前，旁边是一片樱花树，餐厅播放着星球大战主题曲，地球一小时周围的灯慢慢减少，一切都安静下来。
       很多时候我们对上海的表现是它的高楼大厦，他气势磅礴的航拍，而在繁忙的大都市里面，这一些简单的感情往往给我带来更多的感动。
   - author: '小志Lzj'
     images:
-      - ../../assets/activities/story-of-time-2021-03/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/12.webp
     caption: '3月本是深圳云海的开季节，但在月初就相遇了，眼看就要月底还是没能超越月初拍摄的这张，拍摄是朋友带我上了一座正在装修的大厦，要走10层楼梯才能到达拍摄机位，真的是有时候想飞得高你还得付出点体力。付出总会有回报，老天让我通过上帝视角拍下这张云上之巅'
   - author: '林宇先'
     images:
-      - ../../assets/activities/story-of-time-2021-03/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/13.webp
     caption: '3月初西藏之旅第一站到达了林芝索松村，但南迦巴瓦一直在云雾里。只好调转机器对上了对面的多雄拉山，随着太阳渐渐落下去，雪白的山体渐渐有了色彩，云层的层次也丰富了起来，于是就有了我西藏之旅的第一张照片。'
   - author: 'SEEKER丨泡菜'
     images:
-      - ../../assets/activities/story-of-time-2021-03/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/14.webp
     caption: '拍摄这张作品的时候原本是希望下到海边的石滩上进行取景拍摄，不料那天风大浪高涨潮很快使得海水在傍晚前就淹没了原本要去的石滩。正当那时以为已经翻车准备撤退的时候，发现了一个海岸机位临时改变计划顺势而为拍下了这张作品~正应上了那句话“正当你以为开局经济太差直接结束了的时候，不曾想…其实真正的游戏才刚刚开始”。'
   - author: 'tangyruo'
     images:
-      - ../../assets/activities/story-of-time-2021-03/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/15.webp
     caption: |-
       最近对新店兴趣没有非常大，更喜欢出品稳定舒适的老店，就与拍照一样，难的是在一家店挖掘更多新的视角。
       昨天看到了一个静物摄影非常喜欢用逆光的博主，很能凸显液体质感。今天就在绽放趁机抓住了很好的阳光。温度已经可以开始喝冰了，春天真好！
   - author: '九重葛'
     images:
-      - ../../assets/activities/story-of-time-2021-03/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/16.webp
     caption: |-
       去年我无意间拍到一张五星花的花蕊照片，花蕊婀娜的身姿像是自然之灵在倾心舞蹈，这深深的打动着我。接下来的大半年的时间中，我都在寻找这不为人知的“花之舞”。今年3月，我在海边了发现琉璃花开，这也顺利得让我完成了这组“花之舞”的图片。
       微距堆栈的拍摄方法不仅展示花蕊多彩的舞姿，细微到纹理的画质也能解开更多的自然密码。
   - author: '守仁'
     images:
-      - ../../assets/activities/story-of-time-2021-03/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/17.webp
     caption: |-
       中国基建
       “中国南方是典型的山地丘陵地形”
@@ -96,55 +96,55 @@ entries:
       高速贯穿了大大小小株连的河谷，让贵州这个多山的省份最几年也加入了大发展。鸭池河大桥并不是最高的大桥，但是足以让我惊叹不已。昨天在鸭池河大桥下，我要仰头九十度才能依稀看见大桥的身影。只有身临其境才能感受到祖国这几十年的发展离不开大力推动的基础设施建设。
   - author: '叁折'
     images:
-      - ../../assets/activities/story-of-time-2021-03/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/18.webp
     caption: |-
       后期By B-Rabbit
       沿着青藏高原东端北上，一路上的风景飞速变化。我们驶入一段针叶林，安静幽深，阳光透过树的缝隙，雪地上一片斑驳转动。我停下车，走到一棵大树后，那前方的路更让人神往。
   - author: 'Forest_Lin'
     images:
-      - ../../assets/activities/story-of-time-2021-03/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/19.webp
     caption: '三月的稻城亚丁还处在冰与雪的冬天之中，三座神山更是戴着云层的面纱不肯漏出头来。五色海是亚丁景区内的最高景点了海拔大概在约有4700m。高反对第一次踏入高原的我来说，是一道艰难的坎。像初生牛犊不怕虎一样，带着对高反的不屑，背着几十斤的包攀登上稻城亚丁的最高景区五色海，加剧了我的高原反应。迎面吹来更是让我接近窒息，越接近顶端风越是肆虐的让人害怕，但也庆幸背了几十斤的背包加重了自身的重量压低了重心，才能幸免于被风刮着跑。拍摄这张照片的机位在五色海的背坡上，到了五色海后还需要沿着旁边的上坡小道往上走，这段往返看着不到1公里的路，由于山顶风的加剧，硬是走了1个多小时。山顶风大的时候，风吹的我不能站立，只能蹲着暂时躲避，我的氧气瓶也因风大没拿住被吹到了牛奶海里。就这样，只有在风休息的小间隙里，我才能站起身子抓紧机会向上爬，这张照片也是在山顶躲风的间隙拍下的。'
   - author: 'SEEKER丨浩然'
     images:
-      - ../../assets/activities/story-of-time-2021-03/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/20.webp
     caption: '3月正好是杭州樱花开的时候，但因为杭州天气原因三月基本上都是阴雨天气，这张图拍的时候，也是个阴天，走到桥边正好有一束阳光从侧面照了下来，刚好照在后背的树上，最后出了这张照片。后来因为工作和天气原因也没有出门拍摄，希望四月份能拍到满意的照片吧'
   - author: '华Dee'
     images:
-      - ../../assets/activities/story-of-time-2021-03/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/21.webp
     caption: '3月初的广州下起了小雨，我趁着间隙控制无人机飞到广州塔正中的经典位置拍起了延时，刚好捕捉到阳光扫过云层的一幕，图片是其中一帧后期裁切成竖构图。航拍3年以来第一次拍到有光云海'
   - author: 'SEEKER丨YaphetsYi境'
     images:
-      - ../../assets/activities/story-of-time-2021-03/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/22.webp
     caption: |-
       寒假结束后，回到学校后相机便在柜子里沉寂了一段时间。连续两周的学习生活和稀烂的天气令我愈发枯燥。24日下午突然转晴，瞬间让我兴奋了起来。于是我早早回到宿舍拿出相机，赶到漳州八卦楼的天桥附近，拍下这张本学期漳州拍摄的第一张照片。
       SONY α6000 + Laowa 9mm F2.8 + NISI ND64 1.3s F8 iso100
   - author: '叫我幺肆七'
     images:
-      - ../../assets/activities/story-of-time-2021-03/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/23.webp
     caption: '这张片拍摄于3月4号的重庆，重庆难得的好天气，在侧面看着千厮门大桥突发奇想做成极简风格，所以在后期过程把整座桥抠图下来，去除背景的杂乱，用白色背景替代，形成简约设计，把重点更加突出，让画面的视觉效果更加明了，不足之处是画面依旧不够，抠图过程中发现仍有无法抠除的杂色，下次拍需要再找好角度'
   - author: '正陽兮門下'
     images:
-      - ../../assets/activities/story-of-time-2021-03/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/24.webp
     caption: '夜晚的杭州不只是繁华和拥挤，再喧闹的城市也总会有宁静的角落，生活在这里的人向往的更是从外向内欣赏都市的璀璨灯火。午后开始找望仙阁正对城隍阁的机位，在可能拍到的楼顶所在的范围，先后上下五栋楼才寻见了方向最正的天台。空气能见度不算好，为了得到山坡植被更多的细节，在天还亮时先拍了地景素材供后期合成。看过一些直接放超级大月亮和地景的比例太假，所以我选择用几乎相同焦距拍了圆月，感觉和谐最舒适。'
   - author: '年年_Photos'
     images:
-      - ../../assets/activities/story-of-time-2021-03/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/25.webp
     caption: '三月，樱花盛开的季节，一位老人在人潮涌动的樱花树下独自弹奏着乐曲。听说这位老人已经连续三年来到这里。周围的行人来来往往，老爷爷独自一人，没有乐谱，没有伴奏，也不知道已经弹奏了多久。阳光和煦，樱花纷飞。看着周围的时候，老爷爷在想些什么呢。回看照片的时候才发现按下快门的瞬间老爷爷刚好望向这边。沧桑的脸上写满了岁月的痕迹，眼神里似乎有故事。节奏飞快的大城市让人很难驻足，那时候却有很多人在周围听了很久才离去。'
   - author: '紫氣東東來'
     images:
-      - ../../assets/activities/story-of-time-2021-03/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/26.webp
     caption: '在我拥有无人机的第二年，在青岛的第三年，终于拍摄到了可遇不可求的平流雾。这一次是和师哥一起赌一把运气在青岛新高度海天中心附近候了一下午，在日落时分迎来了它！！'
   - author: 'SEEKER丨Toby'
     images:
-      - ../../assets/activities/story-of-time-2021-03/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/27.webp
     caption: '一场大雪过后，亚琛这座德荷比利时三国边境小城变成了最好看的样子，银装素裹。就想着到山顶飞个飞机，雪后空气通透度不高，碰巧遇上了耶稣光，其中这一帧整个画面像是一条通向太阳的大道。'
   - author: '_LGC_'
     images:
-      - ../../assets/activities/story-of-time-2021-03/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/28.webp
     caption: '计划好去广州东站拍火车，在火车站东边找了条铁路桥，本希望拍摄火车出站的画面，到了机位后，眼前却是杂乱交错的电线和极其糟糕的雾霾。正失望想离开，却发现铁路桥旁有一幢居民楼，我赌了一把登上楼顶，环视了一圈便发现这方藏于楼缝之间的光景，铁路桥正斜跨于画面中央，列车穿行于其中，人们来来往往，或驻足，或前行。呆了一下午拍摄了400多张照片，回到家灵光一现，整理出不同道不同向的列车和不同姿势不同方向的行人，并把它们合并到一张照片中。'
   - author: '肖默Mo'
     images:
-      - ../../assets/activities/story-of-time-2021-03/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/29.webp
     caption: |-
       用一点小细节点缀生活，花一份小心思装扮美丽，把平凡的日子过得优雅，把简单的生活过得精致。
       选择好看的装饰物，穿上漂亮的衣服，亲手打造出一个好看舒心的家，做自己的大艺术家，把生活过成一幅画
@@ -155,7 +155,7 @@ poem: |
   我们不只分享精致的影像，更希望给大家传递一些积极的生活信念——本期主题“花盛春暖寄游于世间之万千”。
   “带着三月的未完成，在明媚的四月跑起来”
 
-committeeImage: ../../assets/activities/story-of-time-2021-03/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2021-03/committee.webp
 ---
 
 每一天都会有很多的故事，或喜或忧，我们希望能够记住并与人分享。

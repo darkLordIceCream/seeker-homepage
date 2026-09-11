@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '镜收长天色，影定仲夏心'
 issue: '八月篇'
 period: 'AUGUST 2025'
-cover: ../../assets/activities/story-of-time-2025-08/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/cover.webp
 excerpt:
   '《时间的故事》八月篇：镜收长天色，影定仲夏心。30
   幅作品，收录组员们的时光片段。'
@@ -18,7 +18,7 @@ entries:
   - author: 'Eric'
     group: '月影集'
     images:
-      - ../../assets/activities/story-of-time-2025-08/01.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/01.webp
     caption: |-
       《小镇发廊》
       第一次在镇上住是住在舅舅家，橙黄的路灯透过窗帘折射进屋子里，让人亢奋。我聆听着远道而来的车声，瞅准时间从床上爬起来，趴在窗沿上看着汽车呼啸而去，空气里混杂着汽油的味道，那是不同于泥土味道的新鲜感，长长的时间里都曾使我欲罢不能。
@@ -28,7 +28,7 @@ entries:
   - author: 'Luisx'
     group: '月影集'
     images:
-      - ../../assets/activities/story-of-time-2025-08/02.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/02.webp
     caption: |-
       飞鹅山是香港著名的登山和探险地点之一，海拔约603米是香港九龙半岛最高峰。飞鹅山以其陡峭的山势和壮丽的景色而闻名，其中南脊的一号线是香港最危险徒步线路之一，因此它吸引着许多登山爱好者和冒险者前往挑战。而图中的悬崖地形最为惊心动魄，因路途险峻曾被TVB作为影视跳崖拍摄取景地，因而得名“自杀崖”。
       就是在这样条件下我背着沉甸甸的摄影设备，全程靠绳索、手脚并用攀爬，陡峭崎岖的山路，淌过溪流，每一步都是一种挑战。
@@ -37,124 +37,124 @@ entries:
   - author: 'X_ming'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/03.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/03.webp
     caption: |-
       星悬茶垄入梦来
       十二茅坡是贵州安顺难得的小众之地，早早地看好了云图，我和友人一起蹲守在茶园中，静待云开雾散。夏夜茶园时的叠垄像是被虫鸣泡软的绸缎，随着晚风拌着星河，夹杂些许茶尖的清苦，坠入梦中。
   - author: 'guozhennn'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/04.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/04.webp
     caption: '连续多天的阴雨天气，终于有两天的窗口期，去到一个新地方拍摄了几张星空，也是自己的短板题材，在朋友家的屏幕发现地景死黑，后来朋友说他的屏幕是p3色域……这趟行程真是充满了挑战。好在最后结果还是比较好的。'
   - author: '📸范斯基在拍照'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/05.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/05.webp
     caption: '8月的西藏，前几分钟还是蓝天白云青草地，突然就电闪雷鸣了～在狂风骤雨中我用10分钟的延时记录下了这些闪电。'
   - author: '钪钇'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/06.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/06.webp
     caption: '圣山晨曦，云绕格聂。'
   - author: '源Dream'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/07.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/07.webp
     caption: '年复一年，一次又一次，但这次来到了伴我走过四季的海棠树下。我静静倚靠着它，与它共印夏季银河的合影。'
   - author: 'LEO'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/08.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/08.webp
     caption: '在阿坝州沿着黄河上游行进，我们一路赶往晚上的星空拍摄机位，窗外的天空逐渐变成金黄色，远处的积雨云也孕育出一道彩虹。'
   - author: '在九乡河混吃等死'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/09.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/09.webp
     caption: '飞流直下三千尺'
   - author: 'Chen'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/10.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/10.webp
     caption: '抽出时间和家人出游，一路却遭遇暴雨，车辆也接连出现故障。历经一番维修后，再次出发。雨过天晴时，一抬头，竟见七彩祥云挂在天边，所有疲惫和焦虑瞬间一扫而空。这才真正明白，“风雨过后见彩虹”不止是道理，更是那一刻的感动。'
   - author: '十比特的光'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/11.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/11.webp
     caption: '作为一个云南人，从小就喜欢上山采菌子，今天上山发现云南的湖上居然也长出了一朵大菌子，屏幕前的家人们觉得我能带它回去煮了吃吗。'
   - author: '3w'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/12.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/12.webp
     caption: '机械的沉默里，爬满了森林的絮语。暗林如墨，那点游移的光，正沿着木径的纹路，去读钢铁与绿叶合著的，那本名为“共生”的书。'
   - author: '酒馆的鲍勃'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/13.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/13.webp
     caption: '台风“杨柳”席卷珠三角前夜的深中通道，天空日出时分出现了大面积的摊云。'
   - author: 'Carlson'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/14.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/14.webp
     caption: '时间是朝向核心的一次精准坍塌。每一道年轮都是一场对无序溃散的终极沉默。'
   - author: '月某人'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/15.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/15.webp
     caption: '时隔一年终于实现了在香港航拍的想法。傍晚，我在太平山顶起飞无人机，城市灯光渐次亮起，与暮色云海交融。港岛烟火与浪漫，正落进这方璀璨天地。'
   - author: '小明'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/16.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/16.webp
     caption: '曾经的你伤痕累累，如今的你风采依旧'
   - author: '水花'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/17.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/17.webp
     caption: '福州市中心著名地标"三山两塔"的白塔和定光寺，有一种大隐隐于市的感觉。'
   - author: 'Lucas_枢'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/18.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/18.webp
     caption: '在昏暗巨大的穹顶空间里，一束天光从上方洒下，我正好遇到一对拍婚纱的新人。光影、建筑和人物重叠。广角把整个穹顶结构一览无余，满满的空间感，也让画面多了一层叙事感——像是一幅文明洪流中浮现出的梦。'
   - author: '尧'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/19.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/19.webp
     caption: '连续四天早起，终于逮到了浮山湾的有光云海！'
   - author: '北初-'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/20.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/20.webp
     caption: '《搁浅的岁月》北海的晴空下，那艘锈迹斑驳的旧船，像被潮水遗落的弃物。浅滩退潮后，沙面泛着绸缎般的水光。游人慢行其间，橙衣在灰蓝里跳脱，影子被潮水揉碎又拉长——巨船的沧桑与人间的鲜活，在这方天地里悄然对谈。'
   - author: 'gloryxiaowu'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/21.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/21.webp
     caption: '今年广东暑假，已经吹了很多次台风，在台风天，朝霞晚霞变得相对常见，乌云压着朝霞，将鹅城大桥框入了朝霞的色彩之中。'
   - author: 'iwanna我想'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/22.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/22.webp
     caption: '『夏天』江城的暑气向来不与人客气它浩浩荡荡地跨过长江钻进老巷子的每个缝隙阳光泼洒下来将柏油路面烤得发软把两江四岸照得晃眼这也许就是武汉的夏天吧。'
   - author: 'Fearless、'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/23.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/23.webp
     caption: '晚霞下的南京奥体中心，台风过境前后往往是最出片的时刻，但也因为在天台吹风淋雨导致了感冒，对于风光佬来说这都不是事。'
   - author: '7-up'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/24.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/24.webp
     caption: '用树干画圆，以天为窗。'
   - author: '辰雾DawnLens'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/25.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/25.webp
     caption: '广州地铁站的深夜，外卖小哥阿远戴着安全盔，匆匆踏上通道。弧形建筑结构间，黄色墙面勾勒他的身影，似城市脉络里奔忙的符号。刚送完最后一单，返程路上，这独特空间成了意外风景。他脚步不停，心里算着明日订单，光影交错中，平凡的奋斗故事仍在延续，每一步都朝着生活的热望，这夜站穿行，是独属于他的拼搏轨迹。'
   - author: '是田田吖'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/26.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/26.webp
     caption: |-
       驼铃摇碎夕阳，足迹沉入流沙，荒原铭记着所有的相遇与独行。
       苍穹之下，人与骆驼是移动的剪影，共守着荒原的孤寂与壮美。
@@ -163,22 +163,22 @@ entries:
   - author: '张艾艾'
     group: '人像肖像组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/27.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/27.webp
     caption: '「“天色未晚，树有鸣蝉；未提相思，句句相思。”」'
   - author: '绿谷'
     group: '人像肖像组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/28.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/28.webp
     caption: '拍了不止一万次，我还是想拍，致我青涩的电影梦，也致敬青涩的Bilitis。'
   - author: '林桑'
     group: '商业创意组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/29.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/29.webp
     caption: '《帝皇封魔贴》，拍摄于年会期间的帝皇侠cos，这次年会除了见到各位老师之外，最大的惊喜便是见到帝皇侠cos，简直无敌，因为从小到大都很喜欢帝皇侠，也算是圆了我一直以来想拍特摄的念头（虽然没拍上视频），从广州回来后直接肝了几张合成，然后在修出来的四张图中，选了这张我认为姿势张力比较好的出来。'
   - author: '宠物摄影师狗哥'
     group: '商业创意组'
     images:
-      - ../../assets/activities/story-of-time-2025-08/30.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/30.webp
     caption: '沉浸在音乐的小猫咪特别可爱呢。'
 poem: |
   八月的风，从山川至江海，卷起一页又一页光影诗笺。镜头如简，光影似墨，写下仲夏的余韵与将至的清秋。遥望天河倾泻，银光落入人间；俯拾流萤点点，皆可成画入镜。此去岁月，愿你我以心为卷，以镜为笔，将盛夏的热烈与清澄，镌刻在永不褪色的影像里，成为时光最温润的记忆。
@@ -202,7 +202,7 @@ pastIssues:
     line: '春风无头绪，吹梦成花溪'
   - name: '三月篇'
     line: '春风无头绪，吹梦成花溪'
-committeeImage: ../../assets/activities/story-of-time-2025-08/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-08/committee.webp
 committee:
   name: '2025年时间的故事组委会'
   team:

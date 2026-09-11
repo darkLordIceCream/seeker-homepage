@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '岁红萦绕有更新，颜色缤纷踏春来'
 issue: '启年篇'
 period: 'JANUARY 2025'
-cover: ../../assets/activities/story-of-time-2025-01/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/cover.webp
 excerpt:
   '《时间的故事》启年篇：岁红萦绕有更新，颜色缤纷踏春来。32
   幅作品，收录组员们的时光片段。'
@@ -18,7 +18,7 @@ entries:
   - author: 'Eric'
     group: '月影集'
     images:
-      - ../../assets/activities/story-of-time-2025-01/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/01.webp
     caption: |-
       《奶奶的手和她的神明们》
       前年奶奶摔断了腿，是她亲儿子，我那不争气的叔叔推倒她的。从那之后，奶奶便几乎没有离开过村子，听父亲说，自从爷爷去世后，还没有见过奶奶如此沮丧的。她一日一日的坐在门口，看日头从村子的这头升起，在那头落下，陪着她的只有那条越来越老的狗和村里早已茂盛的荒草。
@@ -27,32 +27,32 @@ entries:
   - author: '三月大的猫'
     group: '月影集'
     images:
-      - ../../assets/activities/story-of-time-2025-01/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/02.webp
     caption: '对乌兰布统的雪景向往已久，在雪地拍摄星空更是我一直以来的梦想之一，终于在今年的二月初我有幸来到了这里，没想到第一天拍星就遇到了寒夜灯柱与幻月流星同框的画面，这个灯柱如此之大以至于在远处看呈现了一个“三叉戟“的形态，于是在-30度的极寒中鏖战2小时，我拍下了这一史诗级同框的画面。'
   - author: '源Dream'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/03.webp
     caption: '2025年的第一天就在喀纳斯的河边朝着村里拍到了寒夜光柱，当时的空气中充满了冰晶，恰好又有喀纳斯村的光源，让形成寒夜光柱的条件都达到了，同时因为空气中的冰晶不均匀，时而强时而弱，可以看到寒夜光柱上下颜色不均匀。'
   - author: '钪钇'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/04.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/04.webp
     caption: '国王峰脚下，我把无人机飞到五千米远，降低高度靠近冰川，在几次信号丢失又重新连上之后，我拍到了这张照片。'
   - author: '之二'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/05.webp
     caption: '峡谷之巅，25年出行第一次旅拍，于新疆安集海大峡谷拍下这张晨曦峡谷断崖。峡谷之巅之上是同行小伙伴，我们经过寒冬，经历每个旅拍的日日夜夜，又在大自然下渺小又充满力量，我们不仅是旅行者，更是自然的倾听者和敬畏者。'
   - author: 'LEOphotoograph'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/06.webp
     caption: '这次的新疆之旅充满了惊喜，在前往禾木的路上，一道时空之门悬浮在天空中，而他其实是“钻石尘”，钻石尘是一种自然现象，一般会在冬季发生，在低温、空气湿度大、早晚温差明显的情况下，大气中的水蒸气，会凝华成微小块的六棱柱状冰晶，经过阳光反射后，看起来如同钻石般璀璨夺目。'
   - author: '年年有于yyuu'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/07.webp
     caption: |-
       冈底斯山脉之王国王峰普拉喜琼
       四五个小时非铺装路面  纯净的暗空
@@ -60,19 +60,19 @@ entries:
   - author: 'HANMOSHENG'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/08.webp
     caption: |-
       《Big Bang！雪球砸宇宙》
       夜空下不一样的禾木援疆桥，冬季的新疆大地就像一颗巨大的雪球，镶嵌在宇宙之中。
   - author: 'guozhennn'
     group: '自然户外组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/09.webp
     caption: '海日熔金映孤羽，暮霭逐波天地悠。大连的海一直以来都是我的创作主力方向，我把目光放在冬季的海上日落，内天在拿到样头之后就迫不及待去试了一下。为了提高容错率在海边一直抓拍了大概30分钟左右，手已经被冻的麻木了，最后以这张照片来结束这场拍摄。'
   - author: 'Luisx'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/10.webp
     caption: |-
       「八家将———摆阵除恶保平安」
       八家将由甘、柳、谢、范四大将军和春、夏、秋、冬四大帝君等组成
@@ -81,19 +81,19 @@ entries:
   - author: '白纸'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/11.webp
     caption: '这是一个很特别的机会，让刚上大学的我可以接触医疗题材的摄影，在这十几天的过程中我见证了生命的无常，更理解医务人员在春节期间的坚守与不易！点滴经历凝结成这十几天时间的故事。'
   - author: '鱼饭'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/12.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/12.webp
     caption: |-
       《奔赴》
       在快节奏的生活当中，巴士站停下的是城市生活的奔波。人们所向往的，只不过是希望能过上简单的日子，而不是高强度快节奏所带来的疲惫。叮叮车上的“PURE”和“TURN LIFE ON”出现在了光线里，暗示了这是开往新生活的班车。离别过去，走在光里，奔赴未来，开启人生新篇章。
   - author: 'JustFellAsleep'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/13.webp
     caption: |-
       「如果一柱香代表一个思念和祝福」
       人们用一柱柱香插在用芒萁草捆扎成的龙身和龙头上，待夜幕降临将其点燃。整条龙在香火中仿佛也有了灵气。
@@ -101,7 +101,7 @@ entries:
   - author: 'SteveZhang'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/14.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/14.webp
     caption: |-
       《炸火燃焰煞秽邪.》
       流星火光炸在满空中，烈焰与热浪交替向人们冲来，形成了独特的尖田村的“炸老爷”民俗.
@@ -112,47 +112,47 @@ entries:
   - author: '快门3w次'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/15.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/15.webp
     caption: '英歌舞似烈火中腾跃的凤凰，红绸翻飞如烈焰之翼。鼓点如雷鸣，舞步似疾风，每一次跃动都是历史的回响，将古老的力量注入现代的躯壳，在瞬间点燃沉寂的夜空。'
   - author: '张臭臭'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/16.webp
     caption: '这个元宵节，我到广西阳朔遇龙河见证了一场震撼人心的金龙巡游，百米金龙，破水而出，与遇龙河山水交相辉映，呈现出一幅壮丽的画卷！置身于山水画卷之中，感受“舟行碧波上，人在画中游”的诗意与浪漫！'
   - author: 'X.Chen'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/17.webp
     caption: '“八将坐炮震乾坤，驱邪纳福佑家门”'
   - author: '摄影师何子毅'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/18.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/18.webp
     caption: '每年正月十一到正月十五，永春达埔镇的夜空都会被鞭炮点亮，在这火光与烟雾交织中，仿佛穿越回明朝洪武年间。赤膊上阵的青年们抬着“赵大天君”神像，在鞭炮的轰鸣中奔跑，祈求来年平安顺遂。这就是被誉为“闽南第一奇”的永春“逐火把”！'
   - author: 'hcc.'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/19.webp
     caption: '俯瞰这片晒香场，被眼前规整又极具视觉冲击力的景象震撼。这里是广东顺德，一个个圆形物体整齐排列，黄绿相间的色彩在阳光下格外夺目。微风拂过，似能闻到空气中弥漫的淡淡香气，那是时光沉淀的味道，用无人机航拍记录下了这份质朴又迷人的美好。'
   - author: '炸薯条'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/20.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/20.webp
     caption: '起初我见图一的奶奶跟朋友聊天笑起来很可爱，便想为她拍下一张肖像照，奶奶很开心地对我说自己年轻的时候其实更可爱。我和朋友去到一个地方会喜欢逛那儿的市场，在丽江的金甲市场里，那儿的人们给我一种工作时少有也有的轻松感，或许也是我不知道怎么形容我身处那个地方的愉悦感叭，虽然这张照片挺简单哈，但我还是很想投这组的，时间的故事记由生活，又述在我的旅行日记中。'
   - author: '葭月潜龍'
     group: '人文纪实组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/21.webp
     caption: '“千斤船百人抬”这是独属于茂名高州忠平社年例的浪漫。年例是茂名人骨子里的年味，有幸用镜头捕捉下这一瞬的热闹，一起看那烟火升腾，照亮了人们的笑脸，空气中弥漫着爆竹的硝烟与喜庆的气息，每一个画面都在诉说着这片土地的深厚底蕴与对生活的热爱。这不仅是一场庆祝，更是文化的延续，对传统的坚守，对未来的祈愿。在这里，藏着茂名人对美好生活最质朴的向往，也让我深深感受到民俗文化的强大生命力。'
   - author: '景'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/22.webp
     caption: '日月光华，旦复旦兮'
   - author: 'Talon'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/23.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/23.webp
     caption: |-
       《应天建邺》
       年二十九南京迎来了最极致的水晶天，应天大街立交、右侧的车流以及下方的屋顶形成了一个箭头，指向远处的世界最高三塔建筑——金鹰世界，这个季节金鹰世界反射出的落日光芒格外耀眼。
@@ -160,12 +160,12 @@ entries:
   - author: 'May'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/24.webp
     caption: '每个人都有对年轻的向往。'
   - author: 'CJieee'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/25.webp
     caption: |-
       寒假来到北海道的一座小城函馆。
       由于暴雪导致缆车停运导致很多人都放弃了登上函馆山一览函馆全景的计划但我还是不愿轻易放弃函馆的作为世界三大夜景之一的百万夜景。
@@ -173,32 +173,32 @@ entries:
   - author: 'iwanna我想'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/26.webp
     caption: '此处曾是未来之城的售票厅，如今只剩下一地荒凉。冰晶一样的堡垒扭曲的折射着当日最后的阳光，在这个没有雪的冬天，我好像觉得更冷了一点。'
   - author: '一只佩奇'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/27.webp
     caption: '新年第一跳，跳出个飞黄腾达！'
   - author: 'X_ming'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/28.webp
     caption: '《外滩擒光》一个人赶着凌晨六点的飞机，一个人来到了一个陌生的城市，一个人在乍浦路桥等待着2025年第一场日出朝霞，这是我第一次一个人的旅行，有些孤单，但是在通过遥控器看到黄浦江上变换着、跃动着的金光，一切都是值得的。'
   - author: 'RoLlᯓᡣ'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/29.webp
     caption: '寒潮来袭，太原植物园湖面上已经凝结了一层浮冰，薄冰下，锦鲤缓缓游动，半球展馆在远处静静伫立，现代与自然交织。阳光洒下，轻柔地拂过水面，冰层微微裂开，像是时光轻语，带来一份宁静的温度。'
   - author: '小米粒'
     group: '城市建筑组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/30.png
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/30.webp
     caption: '哈尔滨的冬日，飘起了细碎小雪。我踏入731罪证纪念馆，馆外建筑庄严肃穆。馆内陈列的罪证，无声诉说着那段惨痛历史。每一步都似踏在历史的伤口上，心情愈发沉重。走出馆外，我按下快门，定格此刻，让这份对历史的敬畏与铭记永存。'
   - author: '林桑'
     group: '商业创意组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/31.webp
     caption: |-
       时间主题是我一直很想拍摄的题材之一，但鉴于没有很好的想法因此没有实践，这次拍摄的灵感来自于很久前看过的一幅油画《记忆的永恒》，我将融化的时钟与慢门拍摄手法融合进我的面具西装系列，最终呈现出这张图的效果。
       《回流》
@@ -207,7 +207,7 @@ entries:
   - author: '绿谷'
     group: '人像肖像组'
     images:
-      - ../../assets/activities/story-of-time-2025-01/32.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/32.webp
     caption: '我对这篝火许愿，要你无灾，无我不欢。'
 poem: |
   2025年，《时间的故事》用一种崭新的面貌和大家见面。以往的一字一句，时间和世界在生命的年轮又刻下深刻痕迹，过去的一光一色，波澜出让自己感动也令世界惊喜的种种瞬间。
@@ -232,7 +232,7 @@ pastIssues:
     line: '落叶知秋意绵绵，星河长明待新篇'
   - name: '八月篇'
     line: '落叶知秋意绵绵，星河长明待新篇'
-committeeImage: ../../assets/activities/story-of-time-2025-01/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-01/committee.webp
 committee:
   name: '2025年时间的故事组委会'
   team:

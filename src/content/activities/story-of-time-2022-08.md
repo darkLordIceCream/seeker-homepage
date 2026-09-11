@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '天际夏日落，入秋月无边'
 issue: '八月篇'
 period: 'AUGUST 2022'
-cover: ../../assets/activities/story-of-time-2022-08/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/cover.webp
 excerpt:
   '《时间的故事》八月篇：天际夏日落，入秋月无边。31
   幅作品，收录组员们的时光片段。'
@@ -18,7 +18,7 @@ entries:
   - author: '正陽兮門下'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/01.webp
     caption:
       '这个月到上海达成了一个年初的计划——无与伦比精准的环金串月。只能说我们是江南四大天选之子，我的机位拍到了月升至正中时轮廓顶部中央恰好处于塔尖。即使毫厘之差也不会有这样精准的画面了。刚到外滩时发现已经有很多三脚架挤在一处，但与我们预规划的机位差距很明显，与宋师傅@Sonder
       单师傅@Chuck Shan
@@ -26,79 +26,79 @@ entries:
   - author: '笨加鸡蛋'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/02.webp
     caption: '8月的某天，由于受台风天气暴雨影响，故陪伴几个外地来的朋友去打卡室内菜市场深圳光明艺术中心。第一个模特表现力不佳，而且不愿配合戴帽子，我一怒之下换了个更帅气更年轻的模特，终于如愿以偿的得到一个稍微不一样的角度，照片使用荣耀魔术4拍摄。'
   - author: '陳kevin'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/03.webp
     caption: '8月，不是高温雾霾就是大雨，虽然天气不是太给力，但趁着间隙也拍了不少片子。印象比较深刻的是本月某天下午，正常的午后下起了大雨，本想着今天可以安心工作，不用惦记日落晚霞，大概4点多，雨停了，看了下外面，好像云层挺低，翻了下软件看应该有希望拍到彩虹或者低云海，于是约上朋友出发，当无人机起飞穿入云中那一刻，那种惊喜，黄昏下的阳光照射在云层之中，一片金黄色，云海低空环绕着城市建筑，今年拍了很多云海的片子，但大部分都是无光云海，像这样的有光云海真的非常幸运，而且是在8月的黄昏，于是利用无人机7倍长焦拍摄接片得到这张片子，也许它不是我这个月最惊艳的片子，却是让我最激动，印象最深的片子！'
   - author: 'Just Fell Asleep'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/04.webp
     caption: '19年，偶然的一次上山，让我邂逅了城市丁达尔光。当时由于器材和知识储备的关系，并没有让我拍成非常满意的素材。虽然后期拯救了绝大部分的瑕疵，但也依旧留下了一个执念。三年过去了，大约是在台风外围影响下，傍晚的天空飘着许多的积云，此情此景与当年是如此相似。我直奔鼓山，终于又让我抓住了三年前那个震撼的画面，只不过这一次，我拥有了更高的规格，更好的画质！'
   - author: '未艾'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/05.webp
     caption: '这个机位是去广州之前就一直在心心念念的，近处的新光大桥，远处的广州三塔，天边的反烧晚霞，构成了我对城市夜景的最完美想象。来广州两个月了，很感谢广州各位群友的指点，你我都不曾想过，会因为摄影而邂逅，接下来的每一天，请多多关照'
   - author: 'DAYU_X'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/06.webp
     caption: '一个周末的下午因为一个约定和小伙伴怀着满腔热血去小梧桐拍摄深圳全景，经过两个小时的攀爬，上到观景台后很是失望，天气很差，但是我和我的小伙伴没有放弃，经过漫长的等待，终于！那道斜阳洒在了建筑上，此刻我按下快门，记录了这梦幻般的城市'
   - author: 'Rewind'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/07.webp
     caption: |-
       古与今
       出于重新捡起摄影解压的念想开始，本月应该是我到北京以来拍摄最多的一个月，再次也感谢kk引路人哈哈。该图片前景为北京前门，即正阳门，正阳门以“宅中定位”的优势，内向拱卫皇城，外向隆示万邦，一直领袖京师诸门。前门大街，从明朝开始就是北京繁华的商业街，到清代更为兴盛。由于当日天气并不通透，而后方国贸CBD建筑群则用了一种明度后期手法，凸显自己对于未来数字化时代的想象。该图通过未来与古代在时间穿梭间融合，来表达我眼中不一样的北京。
   - author: 'Chocosundae'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/08.webp
     caption: '八月份如愿考出了驾照，往后的自驾也多了一份可能。考完证已经是月底，也终于有机会拍一拍最近挺想去的地方。在拍摄迷宫的时候，有飞友的无人机刚好从我下方慢慢经过，像是走进迷宫寻路，有趣～'
   - author: 'Min铭皓'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/09.webp
     caption: '这是朴实无华的深圳打卡的旅行，携手佳人共赴深圳，打卡的过程其实还是很顺利流畅的，做好了很多攻略，来到了心慕已久的深圳光明图书馆，拍完即将要走的时候，看到了一个活泼快乐的小孩儿拿着一把彩虹雨伞在把玩，一下子给我了灵感，跟小孩儿短暂的交流，夺下了这把雨伞，让女朋友打着雨伞走过这整齐的幕墙，这就像是成年人灰色的世界里增加了很多活泼的色彩。仿佛走过了这扇门，我们也可以像小孩子一样活泼快乐。'
   - author: '梓杨'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/10.webp
     caption: '八月初，在结束了半个月的打工生活后，开始了我计划已久的旅行。从长沙到武功山，再到广州和厦门，一路上拍了很多值得纪念的照片，认识了许多新朋友也面基了一些老朋友。最后一站来到了我一直想去的厦门，实现了一个人去海边看日出日落的愿望，也打卡了许多网红机位。在最后一天的下午，我来到了一个天桥上的打卡机位，头顶是厦门BRT，脚下是城市道路，不远处就是通往厦门站的高铁轨道。我架好三脚架，调整构图，静静等待着列车。夕阳下，高架上的藤蔓随风飘动，微风吹拂着我的脸庞，看着这城市车水马龙，想到明天即将离开这里，不禁对这片土地有了些许不舍。在等待了一刻钟后，一辆和谐号驶来，我按下快门，记录下了这一辆“驶向黄昏的列车”。结束旅行之后，每当我看到在旅途中拍的照片，总会回忆起彼时我所看到的风景，认识的朋友，与当时的心绪。我想，这或许就是摄影的意义吧。'
   - author: '冀峰'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/11.webp
     caption: '本月出行的计划因为某些原因推迟到了月底，所以本月作业还是城市。这个机位一共去了三次，终于在第三次的时候想起来给自己拍张照片，也算是机位毕业照了吧，因为本月忙着计划出行的事情，以及工作上的事情，所以有些图还没修，拍摄也相对少了些，希望下次出行计划顺利，可以拍到一些自己满意的照片。'
   - author: '小暑偏大寒'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2022-08/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/12.webp
     caption: '8月，在盛夏的炙烤中回到了武汉，趁着没有开学和好天气冲了好多天。由于高温，本来属于冬季限定的天兴洲滩涂又露出水面，在阳光照耀下沙子浅白浅白，闪耀着光芒。走在江滩边上，目之所及是一群游长江的“泳士”，年龄各异，他们在江上与水流、与自己搏斗。想起来在没有来武汉前关于武汉游泳的刻板印象还停留在节日限定或者重大活动上。但实际上，来了之后才发现这不仅是武汉人避暑的方式之一，在秋天、冬天、春天，在长江、汉江、东湖，无论何时何地都能见到游泳的人。这份精神随着一代一代的传承，历久弥新。吹着江边的晚风，耳边传来浪拍岸声，夹杂着鼓气声和偶尔的船笛，夏天的乐趣不外如是。'
   - author: 'SteveZhang'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/13.webp
     caption: '一次与野兽搏斗为背景的拍照。熊是班夫的主人，他们随意走动，与人类分享领土。我与这野兽争斗了一晚，一早晨。逃脱后，匆匆忙忙前往高山湖水。老天爷似乎是可怜到我，他把一切都泼向了我。于是，布罗肯幽灵打扮成猫儿的形状，在佩托湖上起舞。于是，云海和碧湖相得益彰，为舞者伴奏。我长舒一口气，感叹一切皆值得。 却也仍想起四年前，那个穿梭在班夫的下午。'
   - author: 'Lucas_樞'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/14.webp
     caption: '八月的海风是炙热的，裹挟着滚滚热浪。第二次来到东山澳角村，对这里的一切是感到既熟悉又陌生，街巷、渔港等一切的一切似乎都从未改变，但是在澳角的每一次拍摄，都能有崭新的发现。午觉醒来发现窗外阳光正好，随即在民宿楼顶起飞了无人机，漫无目的地在沙滩上空闲逛，尝试找寻一些极简画面。两道流入大海的溪流吸引了我的注意，心想如果有一个小男孩从沙滩上跑过，配上金黄的沙滩、湛蓝的海浪，岂不妙哉？我将无人机悬停在半空，等了大概十分钟，在电量即将耗尽的时候，画面主角终于出现，不偏不倚从画面中间跑过，构成了我心中所向往的美好画面。'
   - author: '叁折'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/15.webp
     caption: '八月是川西的雨季，我和小伙伴们看好天气，整装出发。顶着重感冒来到贡嘎西坡海拔4600米的湖边露营，预料中的日落晚霞没有出现，贡嘎被厚厚的云层包裹。怀着失落的心情，彻夜无眠，经历了有史以来最严重的高反，一夜和感冒与高反抗衡，就在以为此次与贡嘎无缘相见。凌晨时分，它来了！'
   - author: '风姿花传'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/16.webp
     caption:
       '八月份初我们的西部之旅拍到了犹他州 这是一个荒凉的戈壁之州整个地区被荒漠和高温笼罩其中我最喜欢的还是这张factory
       butt  第四次来到这里我们发现了新的角度绕到背后
@@ -106,80 +106,80 @@ entries:
   - author: 'LucasSun'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/17.webp
     caption: '8月我的旅行主题从雪山花海变成了无人荒漠。犹他州的地形地貌总会让人眼前一亮，仅仅一个小镇方圆一小时车程的土地上就有无数值得拍摄的机位。这个屹立在沙土上的石柱让我脑海中出现了无数个科幻的画面，它像一个方尖碑，像异星灾变，也像索伦的领地魔多...本设想黄昏时的斜阳能留下一片阴影，构建出一个立体的画面，可惜事与愿违。这并不是此行最惊艳的一个画面，但却是我最有灵感的创作机位。感谢同行的风姿帮我按下快门'
   - author: 'YaphetsYi境'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/18.webp
     caption: '外出福州连江拍摄活动，摸鱼之时恰巧遇见夕阳洒落的那一刹那，我毅然决然冲向最接近大海的那片礁石，再狂风与凌乱中放飞无人机，冒着随时被掀翻和有去无还的风险，看见了那个金色笼罩下的蓝色海洋与静谧中海风拂过的礁石，一切都已值得。'
   - author: '来者犹可追'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/19.webp
     caption: '扫海的乐趣可能就是喝海水。看着海浪迎面扑来后按下快门，凝固的瞬间或激情四射，或温柔丝滑。做完一天的实验后看一眼云图，又是一个完美的火烧云条件。然而出发前心里还是有些忐忑，虽然是先前早已看好的机位，但是向前伸出的海岬需要一个伙伴做前景才有效果。于是出发前已经做好了后期键盘p小人的准备。到达地点后，在向机位点前进的过程中，我惊喜的发现小海岬尽头有位钓鱼老哥。他的站位如此之合适，我果断地选择了一个最靠近海浪的礁石上。相机做好必要的保护后，天边开始泛红之际，开始随着海浪狂按快门，最终选择了一个回流的海浪形状。当然也喝饱了海水。不过，对于大海不熟悉的同学建议不要尝试。'
   - author: '张伟靖'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/20.webp
     caption: '第一次到安集海大峡谷，被这大自然的杰作所震撼，但是到的时候阴天下雨，还是有些遗憾，以为拍不到可心的照片，但转头观察到日落方向天边有一道云缝隙，预感日落时分日落光可能透过云隙打到峡谷上方出现彩虹，便等到九点多，终于非常幸运的等到整个半圆形双彩虹横跨安集海大峡谷，非常震撼！'
   - author: '是梨某人啊'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/21.webp
     caption: '海蕴藏了夏天一半的快乐。然而海雾弥漫，连这为数不多的欢乐也要夺去。夏天本应是欢脱的，但是情感的疮疤并不会轻易愈合。违心的笑声和砭骨的痛苦就像海雾一样，茫茫然看不着边。灯塔的光亮还是太微弱了，绝大多数的船永远地沉陷进了这厚重的迷雾中'
   - author: '蓦黎'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/22.webp
     caption: '从去年3月开始，南极洛就一直是我最想前往拍摄的地方。但是却一直因为种种原因没能前往。8月初却因为行程有变而临时决定前往南极洛拍摄。因为自从南极洛爆火之后，湖边的机位已经被拍得差不多了，所以这次我并没有在湖边拍摄，而是寻找更多不同的机位。于是，我爬上了70多度的坡拍下了这张照片。'
   - author: 'DYwhere'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/23.webp
     caption: '七月底，几个福州的朋友一时兴起要冲贵州，我也加入到这场说走就走的旅行。第一天去了个小瀑布，需要走一段山路，下到瀑布处，巨大的水汽向我们喷涌而来。第一次拍摄瀑布类题材，虽然我已经准备了相机雨衣，但没想到前镜组刚露出来就全是水滴。于是我们就在这里前前后后拍了近两个小时，这一张用低角度两张景深合成，记录下了这片秘境。这里还没有被开发成景区，也就没有环境的维护，一批人踩过点后，另一批就会慕名而来，因此一路上遍地垃圾，非常影响观感。而作为大自然的记录者，我们应尊重自然，敬畏自然。'
   - author: '斌子的影色世界'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2022-08/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/24.webp
     caption: '8月是疫情以来最忙的一个月一直在路上忙于商单.因此拍摄照片的机会少之又少.原本月底前打算拍摄的星空也一直未能实现.从仅存的几张片场的花絮里找到一张还算可以的照片。摄于玉龙雪山牦牛坪.即使在夏季.玉龙雪山增添了一抹神秘的色彩。朋友站在搭好的天慕下来一场云端上的咖啡。'
   - author: '圆润鲨鲨'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-08/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/27.webp
     caption: '8月是被导师抓着学程序的一个月，所有对于照片的指望来自于月末的航展，虽然拍了很多飞机的照片但都并不满意，偶然在外场等候飞机降落时看到了这样的一幕，似乎军人的光芒温暖了每一个热爱中国航空的民众们。民众的致意得到了回应，逐年渐长的航展参观人数也证明了越来越多的人关注起了中国航天事业。愿中国空军人才济济'
   - author: 'CaKeHunter'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-08/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/28.webp
     caption: '这个月，央视中秋晚会在家乡张家港进行录制，期间有绚丽的烟花表演。湖边夜空，短暂的烟火，绽放出短暂的美丽。拥簇着的人们，希冀用照片记录下这片刻的、藏在烟火中的浪漫。或许，浪漫的远不止烟火本身，还有这群热爱美好的人们身上的烟火气。将对美好的喜爱藏于烟火之中，将对中秋团圆之情的希冀寄在灿烂火光之上，烟花转瞬即逝，人们的情感却始终不会消磨。愿，人长久，共婵娟；愿，烟火寻常，山河无恙，盛世长存。'
   - author: '林宇先'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-08/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/29.webp
     caption: '8月，一位前辈邀请我去拍摄华南地区最大的盾构机安装，作为国之重器我当然求之不得，2天安装拍了差不多3000张照片。还是最喜欢这张角度独特接近正扣的片子。当时工人在吊车安装整理中间的组件，我飞到接近龙门吊上方拍摄了这个较为独特的角度。也算是另辟蹊径了，感觉自己没浪费这个难得的机会'
   - author: '林宇先'
     group: '人文'
     images:
-      - ../../assets/activities/story-of-time-2022-08/29.jpg
-      - ../../assets/activities/story-of-time-2022-08/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/29.webp
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/27.webp
     caption: |-
       8月，一位前辈邀请我去拍摄华南地区最大的盾构机安装，作为国之重器我当然求之不得，2天安装拍了差不多3000张照片。还是最喜欢这张角度独特接近正扣的片子。当时工人在吊车安装整理中间的组件，我飞到接近龙门吊上方拍摄了这个较为独特的角度。也算是另辟蹊径了，感觉自己没浪费这个难得的机会 ！
       8月是被导师抓着学程序的一个月，所有对于照片的指望来自于月末的航展，虽然拍了很多飞机的照片但都并不满意，偶然在外场等候飞机降落时看到了这样的一幕，似乎军人的光芒温暖了每一个热爱中国航空的民众们。民众的致意得到了回应，逐年渐长的航展参观人数也证明了越来越多的人关注起了中国航天事业。愿中国空军人才济济
   - author: '九重葛'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-08/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/25.webp
     caption: '我生活的兴趣起点都来自摄影。从微距到昆虫，去观察和了解一些很少有人注意的课题。这次打算做一个长期的项目，用统一的风格，拍一本常见昆虫的图鉴，这会是一个很长久也是个很耗费经理的计划，但将拍摄的不同昆虫组合在一起，真的很有成就感。'
   - author: 'Tang'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-08/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/26.webp
     caption: '以产品的色彩构成为灵感，延伸出线条，再进行简单的石块堆叠。视觉平衡与统一不需要太复杂，简简单单耐看已经很难。'
   - author: 'cVv'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2022-08/32.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/32.webp
     caption: |-
       《嘿，对面的兄弟》
       谨以此图纪念8.15日本战败日
@@ -187,7 +187,7 @@ poem: |
   告别夏日的蝉鸣，放下8月的浮躁，9月在秋水长天里，总要开始新的故事，和过去告别，和来日相逢。
   草在结它的种子，风在摇它的叶子，毫无察觉地，稍纵即逝的日子，一下子就把日历翻到了，九月。
 
-committeeImage: ../../assets/activities/story-of-time-2022-08/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2022-08/committee.webp
 committee:
   name: '2022年时间的故事组委会'
   team:

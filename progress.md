@@ -755,3 +755,76 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   --paper-shadow-lift 为紧贴卡片的小半径双层影（1px 贴边 +
   16px 漂浮，暗色对应加深），卡片各自独立悬浮，间隙恢复干净画布；hover 抬起仍换 lift 影
 - 验证：build 72 页、lint 通过；浅色/暗色截图目验（阴影带消失）
+
+### 删除 54 个无引用的重复活动图片目录(2026-09-11)
+
+- 磁盘排查发现 `src/assets/activities`
+  有两套命名:`story-of-time-YYYY-MM/`(内容 md 实际引用)与普通
+  `YYYY-MM/`(2021-_~2025-_
+  共 54 个目录、1719 个文件、345MB,全库零引用);MD5 比对确认两套内容字节级相同,且待删集合中 0 个「孤儿」文件(内容均存在于保留目录)
+- 删除上述 54 个普通命名目录;`src/assets`
+  812M→467M,全活动图片 3781→2062 张;同时清理本地 `dist/`(1.5G)与
+  `.wrangler/`(43M)构建产物(不入库)
+- 遗留:`.git` 541M 因历史 blob 不变,需 `git filter-repo`
+  重写历史才能瘦身(影响协作者,暂不动);`committee.jpg`
+  等少量跨目录复用图(约 6MB)保留原状
+- 验证:`./init.sh`
+  全通过(install/type-check/lint/build,72 页);dist 中无任何指向已删目录的引用
+
+### 活动照片迁移 R2(2026-09-11)
+
+- 背景活动照片 2062 张(467MB)是 git 仓库最大体积来源;按公益板块既有模式整体迁至R2
+  bucket `seeker-homepage-assets`,自定义域 `r2.xn--seeker-ng2jm403afb4a.club`
+- 转换:sharp 全量转 WebP(q82
+  smartSubsample、最长边 ≤2560、按 EXIF 转正、剥离 EXIF 隐私),
+  467MB→232MB;抽张 100% 放大比对画质无明显损失
+- 代码:
+  - `content.config.ts` activities 集合
+    `cover`/`committeeImage`/`entries[].images` 从 `image()` 改为
+    `z.string().url()`(R2 绝对 URL)
+  - 新增 `src/lib/activity-image-meta.ts`(2062 条像素尺寸清单,迁移脚本生成)+
+    `src/lib/activityImageMeta.ts` 查询函数,替代 astro:assets 的尺寸元数据
+  - `GalleryStory.astro`/`story-of-time.astro` 的 `<Image>`
+    全部换成带 width/height 的
+    `<img>`(排版分型 isStrip/isSide 改用清单查尺寸,CLS 防抖动保留)
+  - `ActsSection.astro` 首页封面、`[slug].astro` og:image 改 R2 URL
+  - 64 个 md 的 `cover`/`entries[].images`/`committeeImage` 批量重写为 R2 URL
+- 删除 `src/assets/activities/`(git rm);`src/assets` 仅剩 UI 小图(420KB)
+- AGENTS.md 写入素材管理规则:素材一律 R2、src/assets 只放 UI 小图、单文件>500KB 不入 git、一期一目录命名唯一
+- 踩坑:全局 wrangler(pnpm 无此依赖),`pnpm --dir <path> wrangler`
+  会把路径当可执行文件报 EACCES;上传脚本需用全局二进制绝对路径
+  `/Users/<user>/Library/pnpm/wrangler`
+- 验证:build 72 页、type-check 0 错误、lint 通过;构建产物 HTML 无本地活动图引用;
+  R2 全量 URL 可达性校验 2062/2062
+
+### git 历史重写瘦身(2026-09-11,用户确认单人维护后执行)
+
+- 备份:重写前全量 bundle 存于
+  `~/Documents/project/seeker/seeker-homepage-history-backup.bundle`(旧历史唯一副本,确认无误后可删)
+- `git filter-repo --invert-paths`
+  清除 src/assets/activities、videos、src/assets/images/videos、src/assets/videos、public/videos、*.mp4、.wrangler 的全部历史 blob(视频在历史中有 4 个路径变体,分三轮清完)
+- 结果:`.git` 541MB→10MB,最大 blob 从 42.5MB(视频)降到 0.7MB
+- 提交记录:155/160 保留;SimZun(15)、wenruohan(2)署名完整;被裁 4 个均为纯视频/大文件操作提交 (remove
+  video file / compress video 25MiB limit / 移除 .wrangler /
+  PR#6 的空 merge 节点),全部是 hanyuan/董瀚元本人
+- remotes 重建(origin 曾被 filter-repo 摘除);main 强推 GitHub+Gitee,chore 分支推 GitHub
+- 验证:build 72 页通过;PR #22
+
+### 迁移后风险自查与条图修复(2026-09-11)
+
+- 自查发现:53 张画幅 ≥3 的"胶片长卷"条图被"最长边 ≤2560"规则误缩(如 1000x12417 缩至 206x2560), 条图版式全宽展示会放大模糊;已按原分辨率重转重传(共 31.4MB,53/53 可达),尺寸清单同步更新,
+  AGENTS.md 规则补充长条全景例外
+- 其余检查结论:原图全部 sRGB/无 ICC/无 alpha/无 GPS(116 封面+样张实测),无色彩漂移与隐私泄露;
+  tags/Releases 均无;origin 远程分支干净;gitee 为上一团队遗留仓库,remote 已从本地移除(此前对其main/master 的强推无实际影响)
+- 已知边界:R2 自定义域默认无边缘缓存(cf-cache-status:
+  DYNAMIC),建议 Cloudflare 后台为该域加Cache
+  Rule;GitHub 服务端 refs/pull/* 仍保留旧历史对象(新 clone 干净,但未物理清除);原图全分辨率仅存于本地备份 bundle,建议团队另建原图冷备份
+
+### 画质优化:大图恢复原分辨率 + 封面 q90(2026-09-11,用户反馈大图偏模糊)
+
+- 诊断:2062 张里 1970 张(95.6%)原生即 1080 级别(微信传图压缩所致),模糊感主要源于源图固有分辨率, 非迁移引入;版心 740px,1x 屏清晰,2x
+  retina 下 1080 图略软(历史上一直如此)
+- 修复:14 张被 2560 上限实际缩小的普通图恢复原分辨率;64 张封面 +
+  63 张组委会图(最占屏幕的两类) 从原图按 q90 重转,共 141 张重传 R2(20.6MB),尺寸清单同步
+- 原图来源:迁移时解包的 /tmp/orig-extract(bundle 的临时展开),不依赖重写后的仓库
+- 流程性建议:以后收稿要求组员提供原图(非聊天工具压缩版),前端 R2 方案天然支持任意分辨率

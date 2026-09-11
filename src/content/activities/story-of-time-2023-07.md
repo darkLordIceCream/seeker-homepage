@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '徜徉热情盛夏 延续独家记忆'
 issue: '七月篇'
 period: 'JULY 2023'
-cover: ../../assets/activities/story-of-time-2023-07/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/cover.webp
 excerpt:
   '《时间的故事》七月篇：徜徉热情盛夏 延续独家记忆。31
   幅作品，收录组员们的时光片段。'
@@ -18,94 +18,94 @@ entries:
   - author: '陳kevin'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/01.webp
     caption: '7月深圳的天气确实不错，有朝霞有晚霞，也许是深圳拍的太多的原因，并没有太多的兴奋，相反到香港澳门却拍到很多自己比较喜欢的视角，这也许就是视觉疲劳！7月初和朋友一起冲了两天澳门，天气也不错，走走逛逛，日落时间我们来到一处楼顶，大平台视角也非常好，日落的黄昏照在澳门的建筑上格外舒服，于是架好相机后，开始起飞无人机，环绕着澳门新葡京的建筑找角度构图，于是拍下了这张航拍下黄昏逆光下的新葡金！'
   - author: '丨i O N'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/02.webp
     caption: '七月在实习的周末，一下班就从长沙坐火车到岳阳找同在实习的朋友玩，岳阳烧烤、小龙虾、鱼都超级好吃，我也领略了四大淡水湖之一洞庭湖的浩荡。洞庭湖大桥，似乎连接了两个世界，一面是熙攘的人群和城市的灯光，另一面是无尽的田野和静谧的乡村，每天货轮在江上往来，太阳东升西落，岳阳的人们重复着简单但又不枯燥的两面生活。'
   - author: '屋顶数星星'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/03.webp
     caption: '这个月来到深圳开启了新的生活，第一次爬楼拍下了这张打卡照。向光而行，在前方总会有灿烂的阳光洒满道路。'
   - author: '24'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/04.webp
     caption: '这个月就要拍毕业设计了，从没有独立策划过片子的我还是很紧张的，但是这种紧张又带着些许的兴奋。这个月里不停的到处跑拉赞助，看场地，选器材，忙里偷闲去了拍了一张没打卡过的机位。从我接触影视开始，就想着用自己的专业为家乡做点什么，把家乡的故事说出去，借助这次毕设，我想我的机会来了！虽然可能过程很复杂，很多挫折，但是我想结局终究应该是美好的，就像这张图片一样，永远追着光，永远向着光！'
   - author: 'Lucas_樞'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/05.webp
     caption: '西江千户苗寨，亘古山川间的一抹瑰丽风光。在那潺潺江水的注视下，风雨桥耐心等待着时光的铺陈。阴雨的云雾天，虚幻的氛围透过时间的纱幕，雨丝如诗如画，将苗寨包围。苗寨层层叠叠的建筑仿佛是大地上的琉璃楼阁，倚山而建，恍若人间仙境。身着苗族服饰的女孩坐在风雨桥上，望着前方一幅古老传世的山水画卷。观者倚栏远眺，感受着山间的韵味，与苗寨的故事在心中徐徐展开，时光凝结成永恒。'
   - author: '大聪头CongCong'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/06.webp
     caption: '七月趁着周末不下雨，和同事借了长焦，来到邕江边，终于拍到了一直心心念的龙象塔日落。虽然提前到达拍摄地点时，承受了一个多小时的暴晒，但是当看到太阳落下的那一瞬间，终于理解了什么是夕阳无限好了。'
   - author: '秃头鲨鱼'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/07.webp
     caption: '刚来到北京整天码字还没有怎么出去走过。台风让天气灰蒙蒙的，下班路过一个还挺著名的艺术家具店，白色的建筑锯开了白色的天。'
   - author: 'AnthonyKlt.'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/08.webp
     caption: '大二学期末要求做个项目导致成为了最晚放假的大学生，刚到家就喊上我爱自驾的老爸当司机从江西开车前往贵州。在第二天从黔东南千户苗寨出发前往贵阳，但早晨遇上了平流雾导致飞机三块电池全部用完，此时再去酒店充电不现实，因此在高速公路服务区冲了一块半电池之后赶往黔春立交，最终在蓝调前赶到，拍下了这张照片。'
   - author: 'Osamu'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/09.webp
     caption: 'Be modern. Be softly.'
   - author: '来者犹可追'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/10.webp
     caption: '又是一次绝美的日出，我也终于拍到了夏季的三浴日出，这时的太阳角度最为适合拍摄日出时的建筑群。但是这次拍摄确实一次生理性的折磨，海边的蚊子数量之多令我震惊，在我选好点位的时候，腿上已经停满了蚊子，一巴掌下去手上留下了七八只蚊子的尸体。蚊子之多让我只能站到海水里去躲避蚊子。拍摄结束时，腿上胳膊上留下了上百口蚊子包。'
   - author: 'Just Fell Asleep'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/11.webp
     caption: |-
       平潭海峡公铁两用大桥，一个世界之最的超级工程。
       一直想用它做前景拍摄一个悬日，在21年找到一个角度，可以在17km之外拍摄公铁大桥悬日。天气是至关重要的因素，无论是云层的厚度或者大气的通透度和视宁度，都非常影响拍摄的结果，能够达到如此完美的条件并不算多。转眼21、22年都没有拍摄成功。来到23年，近期在副热带高压的控制下，我们有一个似乎可以拍摄的一个窗口。带上我的朋友们一起，远眺17公里，观赏这一属于世界之最的日出。
   - author: 'DawnTideNN'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-07/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/12.webp
     caption: '7月是今年走过城市最多的一个月。从长沙到深圳、香港、上海，再回到自己的家乡常州，影像把虚幻的记忆化作整齐的电子，刻录在硬盘里。最终还是选择这张记录家乡新貌的作品，它被打上属于常州的水印，向世界介绍龙城的魅力。用影像探索世界，就像从这座油罐的底面仰望蓝天，为每一次经过的飞机欢欣鼓舞。'
   - author: '小杨在云南.RAF'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/13.webp
     caption: '在西北兜兜转转3个月终于是回到了云南，眼睁睁看着从没有游客到茫茫人海。在丽江找到一个清静的民宿偷得几天闲，在阳台上晒晒太阳发发呆，惊喜的是在云南雨季居然能遇到日照金山，顺手拍下了这一张丽江古城加上玉龙雪山。'
   - author: '無婷'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/14.webp
     caption: '7月终于走了一趟大学四年来最想钻的川西，在经过格聂南线某段漂亮路段时，由于下雨我们无心拍摄只想赶路，然而太阳的出现拖住了我们向前的车速。犹豫着回头一看，两道巨大的彩虹正赫然架在身后的路上。回来后感慨万分，打开ps成就了我的第一张自然风光后期。赶路的人们呀别忘了时时回头看一看，总有些容易错过的惊喜会埋藏在你匆匆走过的道路上。'
   - author: '斌子'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/15.webp
     caption: '7月的青海追星之旅.一个人从敦煌一路开到可可西里.在俄博梁魔鬼城的夜里.狂风呼啸.仿佛在拒绝外来人的探访.而我在尝试了一个多小时之后找到了这个位置.用超广记录下这一幕。'
   - author: '葛炮的号哭'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/16.webp
     caption: '7月是我的最疯狂的一次拍星之旅，我先后去了墨西哥，巴西利亚和亚马逊，感受不同的星河，也见过了自己想要在拉美见到的场景，这张在巴西利亚附近三小时的国家公园拍到的。'
   - author: 'Hanmes'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/17.webp
     caption: '从前年开始，就期待着能在花期前往莲保叶则，终于在这个月实现了。阿坝被作为这趟20多天横穿四个省的旅程第一站，承载了许多惊喜和期待。日落时远处的石笋山和近处的紫色高河菜共同构成了一副极其魔幻的画面，不难联想到《魔戒》中的中土世界。'
   - author: '倾斜的地平线'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/18.webp
     caption: |-
       半年前和徐宝约好7月一起去玩，半年后实现了，这个感觉真的很美好。很久没有这种提前约定的旅行，仿佛就像回到大学一样。
       出发的时候突然不明原因的生病，我在想这场旅行是不是完蛋了，幸亏得到Henry一路照顾，第二天恢复了。咱们一起去漂流，去天坑，去农家院抓鸡，去大面山夜爬……一天仿佛经历太多的事情。这张图是我们这次旅行拍下的第1张图片，一直很期待的位置，我似乎都忘了曾经还有这个期待。选了一棵草当做前景，避开普通的构图，非常开心的按下了快门。
@@ -113,64 +113,64 @@ entries:
   - author: '凌渡'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/19.webp
     caption: '7月去了很多地方，也拍到了许多不错的照片。最令我满意的是这一张。看过了太多广角镜头下的三清山，我这次带上了适马的60-600上到了三清山。也找到了一些不错的角度。这张作品的整体质量对于几乎是第一次拍风光的我，还算比较满意的。'
   - author: 'JIFENG冀峰'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/20.webp
     caption: '因为队友高反，自己一人走了剩下了的行程，在莲宝的晚上遇到了好心大叔给了碗热饭，本来说晚上陪我一起拍星的，但是因为大哥不舒服没能陪我，又一直听说晚上有熊和狼出没，导致白天找的机位根本不敢去……只能临时找几个路边机位，车上先调参数，打开车门迅速对焦开拍，拍完迅速上车……一晚上整个景区就我一个人乱窜，这应该是拍的最提心吊胆的一次了……'
   - author: 'Toby'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-07/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/21.webp
     caption: '7月是忙于学业的一个月，但也在享受夏天的美好，本来想着和朋友约着半夜去郊区看星星，但到了那儿2点多其实天已经有点开始亮了，夏天加上高纬度真的对观星很不友好。所以就索性在车里等待日出，当阳光刚开始照向大地的时候，再平平无奇的德国大农村也变得明媚。'
   - author: 'WM魏'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/22.webp
     caption: '拒绝偷拍，从海报做起！'
   - author: 'Chen'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/23.webp
     caption: '一年前，那时候我才开始拍照没多久，在江边闲逛的时候碰到了这个老大爷，他看拿着相机就让我给他拍个照片，他要给我飞一个，后来那张照片在重庆市青少年全媒体创新创意大赛获得了一等奖，时隔一年我再次在江边遇见了那个老大爷，庆幸的是他还记得一年前那个抱着d90到处晃的小屁孩于是我又给他拍下了这一张照片。'
   - author: '牧之也很Zane'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/24.webp
     caption: |-
       赛博树人
       人类把电子眼寄生在树上，让树看到人类想要看到的。
   - author: 'RaN'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/25.webp
     caption: '“爱意如云，无声却弥漫在空气中”'
   - author: '绿谷'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/26.webp
     caption: '“我在她身上学到了一样东西，只要你自己不放弃，你永远还有机会。”你不要说两次，第二次我就相信了，所以这张只拍一次，让我永远记得今日……'
   - author: '小林没有晚餐'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/27.webp
     caption: '白天不懂夜的黑'
   - author: '溯'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-07/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/28.webp
     caption: '赛博武汉，江边的夏天像电影'
   - author: 'Checkinuniverse'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-07/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/29.webp
     caption: '如果要走进成年人世界的黑暗，记得点燃火炬，要把所有光和热留给爱的人。'
   - author: '拍废片的小白林桑'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-07/30.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/30.webp
     caption: |-
       《环游霓虹世界》
       拍摄与二零二三年七月二十六日晚。
@@ -178,7 +178,7 @@ entries:
   - author: 'B-Rabbit'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-07/31.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/31.webp
     caption: '不上班之后总感觉每天好像更忙碌了，天天来回跑，拿起相机的次数都变得越来越少了，上个月怒鸽一个月之后，这个月还是回归静物好了'
 poem: |
   天接云涛连晓雾，星河欲转千帆舞。怀着美好的步履，在如期而至的七月里，在一声声快门中记录下点点滴滴。在热情四溢的盛夏，感受自然的静谧，亦或漫步于城市之中，捕捉美好的光景。心怀浪漫宇宙，也珍惜人间日常。
@@ -191,7 +191,7 @@ pastIssues:
     line: '集齐夏时雨，涌涌最上川'
   - name: '·五月篇'
     line: '集齐夏时雨，涌涌最上川'
-committeeImage: ../../assets/activities/story-of-time-2023-07/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-07/committee.webp
 committee:
   name: '2022年时间的故事组委会'
   team:

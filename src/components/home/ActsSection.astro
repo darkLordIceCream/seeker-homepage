@@ -1,7 +1,7 @@
 ---
 // 首页第3层「活动」：拍立得照片堆——白框厚底照片卡错位叠放
 // hover 抽出转正；未落地的活动指向占位页，公益项目直达 /welfare/
-import storyCover from '../../assets/activities/2026-08/cover.jpg';
+const storyCover = 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-08/cover.webp';
 
 type Act = {
   name: string;
@@ -24,7 +24,7 @@ const events: Act[] = [
     href: '/activities/story-of-time/',
     rot: '-4deg',
     dy: '12px',
-    img: storyCover.src,
+    img: storyCover,
   },
   {
     name: 'Seeker公益 · 带上她的眼睛',

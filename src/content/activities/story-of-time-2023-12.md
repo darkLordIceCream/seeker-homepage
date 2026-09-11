@@ -3,7 +3,7 @@ title: 时间的故事
 subtitle: '取景框看光阴似箭，镜头下映故事如诗'
 issue: '十二月篇'
 period: 'DECEMBER 2023'
-cover: ../../assets/activities/story-of-time-2023-12/cover.jpg
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/cover.webp
 excerpt:
   '《时间的故事》十二月篇：取景框看光阴似箭，镜头下映故事如诗。29
   幅作品，收录组员们的时光片段。'
@@ -18,114 +18,114 @@ entries:
   - author: '饿了的三文鱼'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/01.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/01.webp
     caption: '冬天的故事很幸运的遇上了下雪，普普通通的村落在雪的覆盖下，也变成了梦里的童话世界。青岛的冬天很少下雪，能记录下这样的画面也是今年年终的惊喜吧。'
   - author: 'Lucas_樞'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/02.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/02.webp
     caption: '成都的冬天是阴沉沉的，天空没有一丝细节，但是也很适合城市空间建筑的拍摄。在天府绿道上找了一座天桥，抓拍到了一个骑行的帅哥疾驰而过，10mm超广角带来的夸张透视相当震撼。'
   - author: 'XiaoYi同学'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/03.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/03.webp
     caption: '北京时间2023年12月15日21时41分，我国在文昌航天发射场成功发射长征五号遥六运载火箭，这是我国现役最高的运载火箭。这也是文昌2023年年底最后一次发射任务，我这次借了朋友的nd1000，尝试了一次火箭箭轨的拍摄。下一站——星辰大海，2024年我们继续前进！'
   - author: 'DawnTideNN'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/04.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/04.webp
     caption: '梅溪湖常去常新，每一次后期都有新的体验。大剧院酷似宇宙飞船，也像一朵芙蓉花落在梅溪湖畔，流畅的线条延伸、交汇，就如扎哈的灵感一般滔滔不绝。'
   - author: 'Zijie-Chen'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/05.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/05.webp
     caption: '朝霞与晨雾融合留下光影的痕迹'
   - author: 'ChenGY35'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/06.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/06.webp
     caption: '快毕业了才发现没好好拍过学校，恰逢学校举办了一场摄影比赛，就跟同校好友在学校寻找发现一些角度，时间真快，到现在才感觉舍不得大学时光，后悔每一次逃课，后悔每一次在宿舍摆烂的时光'
   - author: 'Toby Zhu'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/07.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/07.webp
     caption: '12月是忙于毕业和后续入学手续的一个月，没怎么出去耍。自从科隆的铁桥晚上不再亮景观灯后，就2年没刻意去拍过科隆了，这次在一个欧洲冬日罕见的晴天，去拍了一趟科隆的圣诞市场。它位于世界第三高教堂科隆主座教堂下，从上空看是一个红色的菱形，中心围绕着一棵巨大的圣诞树，视觉上给人一种冬日里的温暖。'
   - author: '黄子腾'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/08.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/08.webp
     caption: '风车落日海边  大雪，这是蓝调时刻雪后的威海。'
   - author: 'Wyatt'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/09.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/09.webp
     caption: '城市是一座拜金的修罗场。这里的人们对金钱无比崇拜，以至于建起一座金币大厦。铜臭味流淌在每一条血管中，此番景象正应了那句：天下熙熙皆为利来，天下攘攘皆为利往。'
   - author: '斌子的影色世界'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/10.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/10.webp
     caption: '时隔两年，在一场大雪后，终于又复刻了一张木府和玉龙雪山的合影，木府作为丽江的重要文化遗产，拥有着600多年了历史。'
   - author: 'yeungkingho'
     group: '城市'
     images:
-      - ../../assets/activities/story-of-time-2023-12/11.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/11.webp
     caption: '我看着它，就好像看着我这一年来的过往。在门里是我脑海里面的经历，摄像头好像我的眼睛在到处观看我的人生，岁末年尾回看这一年来的过往，感觉到了今年的进步很成长！回看今年不仅仅是岁数的增加肩上的责任也慢慢的越来越重，也是时候了！这一年好像过得好快又好慢，但是生命中出现多一位重要的人。'
   - author: 'JIFENG冀峰'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/12.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/12.webp
     caption: '作为一个河南人，一直想拍摄一些关于河南的照片，这个月找时间独自去了趟老君山，路上因为雪下的太大导致高速封路，多花了四个小时走小路，却因冰雪导致夜爬关闭，只能等待第二天早上进入景区，好在天气还算可以拍到了不错的画面，这里真的很冷，但是也真的很美，希望之后能有机会多拍摄一些河南区域的风景。'
   - author: 'Henry浩麟'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/13.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/13.webp
     caption: '在这片寂静的自然中，这棵干枯的树静静地存在，寓意着生命的顽强和坚韧，让人感受到一种深沉的力量和情感。它是一首诗，一个故事，一段历史的缩影，让人在欣赏的同时感受到时间的沉淀和生命的韵味。'
   - author: '叁折'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/14.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/14.webp
     caption: '双子座流星雨，一年一次，怎能错过！这回我和伙伴们来到一个奇特的地貌，在川西这样的地质条件下，也属于罕见。夜晚相机全都冻上，人基本也处于半硬状态，尽管如此，我们还是忍受着寒冷，守望着流星雨来临，每当看到一颗流星划过天际，都会发出一阵呼喊。这，也许就是星空摄影里最简单的快乐。'
   - author: '柯雷'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/15.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/15.webp
     caption: '澳门黑沙滩源于上古的火山喷发，黑泥交织着日月，在海水不断的洗涤下形成了这一独特的景观。用无人机从上空看去，浪花飞溅，整个海滩宛若一幅山海年轮，同地球上演着大地与水的奇迹。'
   - author: '小杨在云南'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/16.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/16.webp
     caption: '一年一度的星空盛宴准时上演，在泸沽湖畔我顶着寒风观看了一整晚，每次有流星划过都伴随着周围伙伴的惊呼。一束光，一颗流星，拍照人的快乐就那么简单'
   - author: '老坝子'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/17.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/17.webp
     caption: '“醉后不知天在水，满船清梦压星河”在30度的地方拍双子座流星雨是种什么体验？在流星雨极大值当天，我选择去往西双版纳拍摄，本来穿了里三层外三层的我一下高铁就出了一身汗，只好赶紧换了一身短袖短裤，在拍摄前踩了好几个点，结果当晚拍摄出现意外，有露营的人打着手电到处照，只好临时换了地方，没想到等到后半夜还起了云，不过最后的结果还不错，还是有几颗流星从镜头前划过。'
   - author: '拾伍'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/18.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/18.webp
     caption: '奇形怪状的枝桠，就像我们脑海的想法，需要一点点的迸发出来'
   - author: '来者犹可追'
     group: '自然'
     images:
-      - ../../assets/activities/story-of-time-2023-12/19.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/19.webp
     caption: '12月中旬的两次寒潮，使得青岛的最低气温降至零下十度以下，倔强的胶州湾也终于耐不住严寒，形成了一片冰封的海面。冰封后的海面纹理都极为有趣，犹如一幅随心的画作。我用无人机，记录下了这个画面。'
   - author: 'checkin universe'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/20.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/20.webp
     caption: |-
       2023的岁末，西伯利亚的海鸥又飞回昆明，我从未去专程拍过海鸥，我相处了11年的好朋友从上海回昆明来看我，我们一同去看了海鸥。
       春夏秋冬永不停歇，海鸥永远会回来，除非又过千千万万年，时空交替后这地貌覆灭。世间万物没有永恒，而相机拍摄下的瞬间永恒不变。
   - author: '周志一'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/21.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/21.webp
     caption: '冬日里北方的深夜，极寒。但是在铸造一线的工人们，在上千度的锅炉旁，用汗水和忙碌浇灌出废铁废钢熔铸后的新产物。不同化学元素在铁水里蒸腾出奇幻色彩的蒸汽。这是绝大多数人都未曾见过的景象，这是我想分享给大家的景象。祝我们的人生也能在历经锻造后绽放出光芒。'
   - author: '火锅在逃鲜豆皮'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/22.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/22.webp
     caption: |-
       拍摄于景山公园外的城墙。趁着雪意正浓，拍完故宫，转角匆匆而过，无意中却被街边的小景惊艳到。
       风起肆意，飞雪如花，一夜红墙落白霜，玉树瓦同妆。
@@ -133,39 +133,39 @@ entries:
   - author: '林止月'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/23.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/23.webp
     caption: '福建一年一度的送王船活动'
   - author: '屋顶数星星'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/24.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/24.webp
     caption: '站在深圳北站的人流中，看着旁边的人们步履匆匆，想起了一句诗：人生如逆旅，我亦是行人。'
   - author: '是梨某人啊'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/25.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/25.webp
     caption: '期末月在学校痛苦复习，只能拿手机随手记录一下了。后湖国际艺术园区的平安夜氛围挺不错的。'
   - author: 'ZQ'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/26.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/26.webp
     caption: '十二月经历考研的最后一个月，考试前一直没有拍。考完后，借了颗260镜头准备去拍鸟和飞机，在回学校的路上，和学弟来了个即兴扫街。他拿着超长焦一直在拍，拍花花草草，但是当他突然拍到吃的，乐趣突然来了，用600端拍的图感觉离得很近，随时可以拿走。'
   - author: '那山'
     group: '人文/人像'
     images:
-      - ../../assets/activities/story-of-time-2023-12/27.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/27.webp
     caption: '生活像一首诗歌，不是吗？'
   - author: '是田田吖'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-12/28.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/28.webp
     caption: |-
       遇见光，跟随光，成为光，散发光。
       追光而遇，沐光而行。
   - author: '纯黑的林桑'
     group: '静物/创意'
     images:
-      - ../../assets/activities/story-of-time-2023-12/29.jpg
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/29.webp
     caption: |-
       《操控》
       是ai掌控人类，还是人类掌控ai呢？
@@ -193,7 +193,7 @@ pastIssues:
     line: '徜徉热情盛夏 延续独家记忆'
   - name: '·七月篇'
     line: '徜徉热情盛夏 延续独家记忆'
-committeeImage: ../../assets/activities/story-of-time-2023-12/committee.jpg
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2023-12/committee.webp
 committee:
   name: '2023年时间的故事组委会'
   team:

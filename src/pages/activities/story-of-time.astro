@@ -2,10 +2,10 @@
 // 活动二级页：《时间的故事》活动介绍 + 往期各期入口
 // 各期卡片点击进入具体画廊页 /activities/[slug]
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import Footer from '../../components/Footer.astro';
+import { activityImageDims } from '../../lib/activityImageMeta';
 
 // 各期按 order（月份序）倒序排列：最新一期在前
 const editions = (await getCollection('activities')).sort(
@@ -79,14 +79,13 @@ const latestId = editions[0]?.id;
                       href={`/activities/${edition.id}/`}
                     >
                       <span class="book-photo">
-                        <Image
+                        <img
                           alt=""
-                          height={459}
-                          layout="constrained"
+                          decoding="async"
+                          height={activityImageDims(edition.data.cover)?.h}
                           loading="lazy"
-                          quality={90}
                           src={edition.data.cover}
-                          widths={[320, 480, 640]}
+                          width={activityImageDims(edition.data.cover)?.w}
                         />
                         {edition.id === latestId && (
                           <span class="book-ribbon">新</span>
