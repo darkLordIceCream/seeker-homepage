@@ -733,3 +733,10 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   blur，明暗两套），与首页拍立得堆的悬浮语言一致；hover/聚焦提起时落地影变淡收窄（.book:has() 联动，reduced-motion 门控）
 - .shelf-scroll 底部 padding 26→20px
 - 验证：type-check 0 错误、lint 通过、build 72 页；浅色/暗色 + hover 态截图目验
+
+### 恢复拍立得白框（悬浮式）（2026-09-11，用户澄清）
+
+- 澄清误解：「不要框」实指让拍立得白框卡片做成悬浮式，而非去掉白框；revert
+  51dcff1，回到「白框纸卡（图注在卡面）+
+  paper 悬浮阴影 + 椭圆落地影（hover 联动变淡收窄）+ 微倾错落」，木质架板保持删除；仅修正注释措辞（立在架上 → 悬浮在版面上）
+- 验证：type-check 0 错误、lint 通过、build 72 页；浅色截图目验
