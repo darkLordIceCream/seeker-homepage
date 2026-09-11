@@ -490,54 +490,21 @@ const latestId = editions[0]?.id;
     --dy: 0px;
   }
 
+  /* 一册 = 一张漂浮的宽幅封面：照片直接浮在版面上（参考主分支拍立得堆的
+     悬浮语言：微倾错落 + paper 阴影，hover 转正上提），图注排在页面底色上 */
   .book-card {
     position: relative;
     display: block;
-    padding: 13px 13px 16px;
-    border-radius: 5px;
-    background: var(--paper-face);
-    box-shadow: var(--paper-shadow);
     text-decoration: none;
     transform: rotate(var(--tilt, 0deg)) translateY(var(--dy, 0px));
     transform-origin: bottom center;
-    transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.35s ease;
-  }
-
-  /* 落地软阴影：卡片悬浮在版面上，代替旧木质架板 */
-  .book::after {
-    content: '';
-    position: absolute;
-    left: 9%;
-    right: 9%;
-    bottom: -11px;
-    height: 15px;
-    z-index: -1;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(30, 30, 40, 0.22) 0%, transparent 68%);
-    filter: blur(5px);
-    transition:
-      opacity 0.35s ease,
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(.dark) .book::after {
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, transparent 68%);
-  }
-
-  /* 卡片提起时：落地影变淡、收窄 */
-  .book:has(.book-card:hover)::after,
-  .book:has(.book-card:focus-visible)::after {
-    opacity: 0.4;
-    transform: scaleX(0.9);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* 取书：转正、上提 */
   .book-card:hover,
   .book-card:focus-visible {
     transform: rotate(0deg) translateY(-12px);
-    box-shadow: var(--paper-shadow-lift);
   }
 
   .book-card:focus-visible {
@@ -550,19 +517,16 @@ const latestId = editions[0]?.id;
     position: relative;
     display: block;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 4px;
     aspect-ratio: 1080 / 459;
     background: var(--secondary);
+    box-shadow: var(--paper-shadow);
+    transition: box-shadow 0.35s ease;
   }
 
-  /* 照片压边细线：裱片感 */
-  .book-photo::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 2px;
-    box-shadow: inset 0 0 0 1px rgba(30, 30, 40, 0.1);
-    pointer-events: none;
+  .book-card:hover .book-photo,
+  .book-card:focus-visible .book-photo {
+    box-shadow: var(--paper-shadow-lift);
   }
 
   .book-photo :global(img) {
@@ -595,7 +559,7 @@ const latestId = editions[0]?.id;
   /* 卡面图注：期数 | 时间 · 主题句 · 作品数（Shore 式小字排印） */
   .book-caption {
     display: block;
-    padding: 13px 3px 0;
+    padding: 14px 3px 0;
   }
 
   .book-row {
@@ -608,12 +572,12 @@ const latestId = editions[0]?.id;
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--paper-sub);
+    color: var(--muted-foreground);
   }
 
   .book-issue {
     flex-shrink: 0;
-    color: var(--paper-ink);
+    color: var(--foreground);
     opacity: 0.82;
   }
 
@@ -628,7 +592,7 @@ const latestId = editions[0]?.id;
     font-weight: 700;
     line-height: 1.5;
     letter-spacing: 0.02em;
-    color: var(--paper-ink);
+    color: var(--foreground);
   }
 
   .book-foot {
@@ -638,7 +602,7 @@ const latestId = editions[0]?.id;
     margin-top: 9px;
     font-size: 11px;
     letter-spacing: 0.04em;
-    color: var(--paper-sub);
+    color: var(--muted-foreground);
   }
 
   .book-cta {
@@ -661,7 +625,7 @@ const latestId = editions[0]?.id;
   @media (prefers-reduced-motion: reduce) {
     .book-card,
     .book-cta,
-    .book::after {
+    .book-photo {
       transition: none;
     }
   }
