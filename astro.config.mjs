@@ -13,11 +13,11 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 4321,
-    allowedHosts: ['classroom-derived-democrat-badge.trycloudflare.com'],
+    allowedHosts: ['python-elderly-spectrum-loop.trycloudflare.com'],
   },
 
   preview: {
-    allowedHosts: ['classroom-derived-democrat-badge.trycloudflare.com'],
+    allowedHosts: ['python-elderly-spectrum-loop.trycloudflare.com'],
   },
 
   vite: {

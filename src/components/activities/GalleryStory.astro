@@ -40,15 +40,25 @@ const enDate = (d: string) => {
   return month ? `${month} ${m[2]}` : d;
 };
 
-/** 连续同日条目归入同一日期章节（原文设计：日期仅在变化时显示） */
+/**
+ * 连续同日且同栏目的条目归入同一章节：
+ * - 2026 版式按日期分章（日期仅在变化时显示）
+ * - 2022-2025 版式按栏目分章（城市/自然/人像肖像组…）
+ * - 早期版式两者皆无，归入无分隔的平铺组
+ */
 type Entry = Props['article']['data']['entries'][number];
-const groups: { date: string; dateEn: string; items: Entry[] }[] = [];
+const groups: { date?: string; dateEn?: string; group?: string; items: Entry[] }[] = [];
 for (const entry of data.entries) {
   const last = groups.at(-1);
-  if (last && last.date === entry.date) {
+  if (last && last.date === entry.date && last.group === entry.group) {
     last.items.push(entry);
   } else {
-    groups.push({ date: entry.date, dateEn: enDate(entry.date), items: [entry] });
+    groups.push({
+      date: entry.date,
+      dateEn: entry.date ? enDate(entry.date) : undefined,
+      group: entry.group,
+      items: [entry],
+    });
   }
 }
 
@@ -65,15 +75,24 @@ const metaItems = [
 
 /**
  * 条目排版分型（参考哈苏大师赛/马格南画册的图文节奏）：
+ * - strip：超长竖条拼接图（h ≥ 3w，如竖排串拍）——按胶片长卷全宽呈现
  * - side：竖幅/方幅（h ≥ 1.2w）——照片贴内容左缘大幅（≤84vh），说明挂右侧 sticky 栏
  * - stack：横幅——照片突破版心通栏居中，说明在下方居中（上下中心对称）
  * 一稿多图按首图画幅定型
  */
+const isStrip = (entry: Entry) => {
+  const first = entry.images.at(0);
+  return !!first && entry.images.length === 1 && first.height >= first.width * 3;
+};
+
 const isSide = (entry: Entry) => {
   const first = entry.images.at(0);
   if (!first) {return true;}
   return first.height * 5 >= first.width * 6;
 };
+
+const itemVariant = (entry: Entry) =>
+  isStrip(entry) ? 'story-item--strip' : isSide(entry) ? 'story-item--side' : 'story-item--stack';
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -122,7 +141,7 @@ const jsonLd = JSON.stringify({
         alt={`《${data.title}${data.issue}》封面——${data.subtitle}`}
         fetchpriority="high"
         layout="full-width"
-        loading="eager"
+        loading="eager"         quality={90}
         src={data.cover}
       />
     </figure>
@@ -136,36 +155,42 @@ const jsonLd = JSON.stringify({
     <section aria-label="本期作品" class="story-gallery">
       {groups.map(group => (
         <div class="date-chapter">
-          <h2 class="chapter-divider">
-            <span class="chapter-zh">{group.date}</span>
-            <span class="chapter-en">{group.dateEn}</span>
-          </h2>
+          {(group.date || group.group) && (
+            <h2 class="chapter-divider">
+              {group.date && <span class="chapter-zh">{group.date}</span>}
+              {group.group && <span class="chapter-zh">{group.group}</span>}
+              {group.dateEn && <span class="chapter-en">{group.dateEn}</span>}
+            </h2>
+          )}
           {group.items.map(entry => (
-            <figure class:list={['story-item', { 'story-item--side': isSide(entry), 'story-item--stack': !isSide(entry), 'story-item--multi': entry.images.length > 1 }]}>
+            <figure class:list={['story-item', itemVariant(entry), { 'story-item--multi': entry.images.length > 1 }]}>
               <span class="item-media" style={`--cols: ${entry.images.length}`}>
                 {entry.images.map((img, j) => (
                   <button
-                    aria-label={`查看大图：《${entry.title}》`}
+                    aria-label={entry.title ? `查看大图：《${entry.title}》` : '查看大图'}
                     class="item-shutter"
                     data-author={entry.author}
                     data-full={img.src}
-                    data-title={entry.title}
+                    data-title={entry.title ?? ''}
                     type="button"
                   >
                     <Image
-                      alt={entry.images.length > 1
-                        ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
-                        : `《${entry.title}》——${entry.author}作品`}
+                      alt={entry.title
+                        ? entry.images.length > 1
+                          ? `《${entry.title}》（${j + 1}/${entry.images.length}）——${entry.author}作品`
+                          : `《${entry.title}》——${entry.author}作品`
+                        : `${entry.author}作品`}
                       layout="constrained"
                       loading="lazy"
+                      quality={90}
                       src={img}
                     />
                   </button>
                 ))}
               </span>
               <figcaption class="item-label">
-                <span class="item-title">«{entry.title}»</span>
-                <p class="item-caption">{entry.caption}</p>
+                {entry.title && <span class="item-title">«{entry.title}»</span>}
+                {entry.caption && <p class="item-caption">{entry.caption}</p>}
                 <span class="item-author">@{entry.author}</span>
               </figcaption>
             </figure>
@@ -185,7 +210,7 @@ const jsonLd = JSON.stringify({
           <Image
             alt="Seeker追光者——成员作品照片墙"
             layout="constrained"
-            loading="lazy"
+            loading="lazy"             quality={90}
             src={data.committeeImage}
           />
         </figure>
@@ -321,8 +346,8 @@ const jsonLd = JSON.stringify({
     const slide = slides[current];
     if (!img || !cap || !count || !slide) {return;}
     img.src = slide.full;
-    img.alt = `《${slide.title}》——${slide.author}作品`;
-    cap.textContent = `«${slide.title}» @${slide.author}`;
+    img.alt = slide.title ? `《${slide.title}》——${slide.author}作品` : `${slide.author}作品`;
+    cap.textContent = slide.title ? `«${slide.title}» @${slide.author}` : `@${slide.author}`;
     count.textContent = `${current + 1} / ${slides.length}`;
   };
 
@@ -599,6 +624,8 @@ const jsonLd = JSON.stringify({
     font-size: 14px;
     line-height: 1.9;
     white-space: pre-line;
+    /* 防止 CJK 换行末行只剩一两个字（孤字成行） */
+    text-wrap: pretty;
     color: var(--muted-foreground);
   }
 
@@ -642,11 +669,32 @@ const jsonLd = JSON.stringify({
   }
 
   .story-item--stack .item-media :global(img) {
-    max-width: 100%;
+    /* 画质优先：源图仅 1080px，显示不放大超过源宽，避免拉伸发虚 */
+    max-width: min(100%, 1080px);
     max-height: 80vh;
   }
 
   .story-item--stack .item-label {
+    align-items: center;
+    text-align: center;
+    max-width: 740px;
+    margin: 20px auto 0;
+  }
+
+  /* —— strip 型：超长竖条拼接图（竖排串拍）——按胶片长卷全宽呈现，随页滚动观看 —— */
+  .story-item--strip .item-media {
+    /* 抵消画廊版心 padding，通栏与封面同宽（上限 1080px 源宽） */
+    margin-inline: calc(-1 * var(--edge));
+    justify-content: center;
+  }
+
+  .story-item--strip .item-media :global(img) {
+    width: min(100%, 1080px);
+    height: auto;
+    max-height: none;
+  }
+
+  .story-item--strip .item-label {
     align-items: center;
     text-align: center;
     max-width: 740px;

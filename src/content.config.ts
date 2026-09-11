@@ -54,12 +54,15 @@ const welfare = defineCollection({
 const activities = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/activities' }),
   schema: ({ image }) => {
-    /** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片） */
+    /** 画廊条目：一天多投共用一个日期章节（日期相同即同章）；images 支持一稿多图（同一作品下多张照片）。
+     *  早期版式（2021-2025）无日期头/作品名，date/title 均可选 */
     const activityEntry = z.object({
-      /** 展示日期，如「7月28日」 */
-      date: z.string(),
-      /** 作品名称（不含书名号） */
-      title: z.string(),
+      /** 展示日期，如「7月28日」；无日期版式可省略 */
+      date: z.string().optional(),
+      /** 作品名称（不含书名号）；无作品名版式可省略 */
+      title: z.string().optional(),
+      /** 所属栏目章节，如「城市」「人像肖像组」；无栏目版式可省略 */
+      group: z.string().optional(),
       /** 作者的一句话说明 */
       caption: z.string(),
       /** 作者署名（不含 @） */
