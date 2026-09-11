@@ -725,3 +725,11 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - 保留：每年一层书架 + 横向翻阅（箭头/拖拽/右缘渐隐）、年份锚点、hero 文案
 - 验证：astro check 0 错误、lint 通过、build
   72 页通过；桌面 1440/移动 390、明/暗模式、hover 态截图逐一目验（/tmp/sot-shelf/）
+
+### 删除木质架板 → 悬浮落地影（2026-09-11，用户反馈）
+
+- 用户反馈拍立得卡下方的金色木质架板太丑，与画册卡语言不搭；删除 .books::after 架板（含暗色变体）
+- 替代设计语言：卡片悬浮在版面上，.book::after 椭圆落地软阴影（radial-gradient +
+  blur，明暗两套），与首页拍立得堆的悬浮语言一致；hover/聚焦提起时落地影变淡收窄（.book:has() 联动，reduced-motion 门控）
+- .shelf-scroll 底部 padding 26→20px
+- 验证：type-check 0 错误、lint 通过、build 72 页；浅色/暗色 + hover 态截图目验
