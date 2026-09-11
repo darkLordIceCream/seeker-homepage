@@ -733,3 +733,11 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   blur，明暗两套），与首页拍立得堆的悬浮语言一致；hover/聚焦提起时落地影变淡收窄（.book:has() 联动，reduced-motion 门控）
 - .shelf-scroll 底部 padding 26→20px
 - 验证：type-check 0 错误、lint 通过、build 72 页；浅色/暗色 + hover 态截图目验
+
+### 去框改漂浮式（2026-09-11，用户反馈第二轮）
+
+- 用户要求去掉白纸卡框，参考主分支设计语言做漂浮式：删除 .book-card 的 background/padding/框阴影，paper 阴影直接落在照片上（border-radius
+  4px），照片即漂浮单元；图注（期数|时间、主题句、作品数）直接排在页面底色上，颜色从 paper 令牌换成 --foreground/--muted-foreground
+- 删除上一轮的椭圆落地影（.book::after）与照片裱片细线；悬浮阴影用回主分支同款 --paper-shadow
+  / --paper-shadow-lift（hover 转正上提时加深），reduced-motion 门控保留
+- 验证：type-check 0 错误、lint 通过、build 72 页；浅色/暗色 + hover 截图目验
