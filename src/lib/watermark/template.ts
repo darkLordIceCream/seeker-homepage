@@ -71,7 +71,6 @@ export interface WebFont {
 export interface OutputSpec {
   readonly mimeType: 'image/jpeg';
   readonly quality: number;
-  readonly fileNamePrefix: string;
   readonly extension: string;
 }
 
@@ -95,7 +94,6 @@ const NICKNAME_FONT_STACK =
 const OUTPUT: OutputSpec = {
   mimeType: 'image/jpeg',
   quality: 0.92,
-  fileNamePrefix: 'Seeker七周年',
   extension: '.jpg',
 };
 

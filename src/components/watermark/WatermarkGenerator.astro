@@ -128,6 +128,8 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
   let renderQueued = false;
+  /** 用户上传照片的原始文件名（用于生成下载文件名） */
+  let sourceFileName = '';
 
   // 手势锚点（照片区域中心），切换模板时就地更新
   const areaCenter = { x: 0, y: 0 };
@@ -222,6 +224,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       const loaded = await loadPhoto(file);
       photo?.close();
       photo = loaded;
+      sourceFileName = file.name;
       transform = initialTransform();
       releaseDownload();
       syncControls();
@@ -254,7 +257,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       releaseDownload();
       downloadUrl = URL.createObjectURL(blob);
       downloadLink.href = downloadUrl;
-      downloadLink.download = buildFileName(currentTemplate.output, nicknameInput.value);
+      downloadLink.download = buildFileName(currentTemplate.output, sourceFileName);
       downloadLink.hidden = false;
       downloadLink.click();
       setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），如未自动下载请点「下载海报」。`);

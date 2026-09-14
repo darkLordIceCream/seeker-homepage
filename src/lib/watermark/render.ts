@@ -320,12 +320,12 @@ export function exportImage(canvas: HTMLCanvasElement, output: OutputSpec): Prom
   });
 }
 
-/** 生成下载文件名：前缀_@昵称.ext，过滤文件系统非法字符 */
-export function buildFileName(output: OutputSpec, nickname: string): string {
-  const cleaned = nickname
-    .trim()
+/** 生成下载文件名：原文件名_seeker_7th_watermark.ext（去扩展名与非法字符） */
+export function buildFileName(output: OutputSpec, originalName: string): string {
+  const base = originalName
+    .replace(/\.[^.]+$/, '')
     .replace(/[\\/:*?"<>|\u0000-\u001f]/g, '')
-    .slice(0, 40);
-  const name = cleaned || 'Seeker';
-  return `${output.fileNamePrefix}_@${name}${output.extension}`;
+    .trim()
+    .slice(0, 80);
+  return `${base || 'Seeker'}_seeker_7th_watermark${output.extension}`;
 }
