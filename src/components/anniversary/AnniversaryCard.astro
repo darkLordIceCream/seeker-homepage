@@ -1,0 +1,181 @@
+---
+/**
+ * 【七周年 · 首页周年角卡】。
+ * 每次打开首页都会出现的右下角卡片：不锁滚动、不打断浏览，点击进入 /7th/。
+ * 视觉：海报幽灵字 + 纪念金，与七周年板块同源。
+ */
+---
+
+<aside aria-label="Seeker 七周年" class="anniv-corner" id="anniv-corner">
+  <button aria-label="关闭七周年卡片" class="anniv-corner-close" id="anniv-corner-close" type="button">×</button>
+  <a class="anniv-corner-link" href="/7th/">
+    <span aria-hidden="true" class="anniv-corner-art">
+      <span class="anniv-corner-num">7<small>周年</small></span>
+    </span>
+    <span class="anniv-corner-body">
+      <strong class="anniv-corner-title">追光七载，把光赠予远方</strong>
+      <span class="anniv-corner-desc">水印工坊 · 成员地图墙 · 七周年手记</span>
+      <span class="anniv-corner-cta">进入七周年板块 →</span>
+    </span>
+  </a>
+</aside>
+
+<style>
+  .anniv-corner {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1200;
+    width: min(19rem, calc(100vw - 2rem));
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .anniv-corner.is-shown {
+    animation: anniv-corner-in 0.45s ease forwards;
+  }
+
+  @keyframes anniv-corner-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anniv-corner {
+      opacity: 1;
+      transform: none;
+    }
+    .anniv-corner.is-shown {
+      animation: none;
+    }
+  }
+
+  .anniv-corner-link {
+    display: block;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .anniv-corner-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(245, 197, 66, 0.6);
+  }
+
+  .anniv-corner-art {
+    position: relative;
+    display: block;
+    height: 5.2rem;
+    background:
+      radial-gradient(90% 160% at 20% -30%, rgba(245, 197, 66, 0.28), transparent 55%),
+      url('/templates/seeker-7th-landscape.webp') center 30% / cover no-repeat,
+      #050507;
+  }
+
+  .anniv-corner-num {
+    position: absolute;
+    right: 0.7rem;
+    bottom: 0.25rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #f5c542;
+  }
+
+  .anniv-corner-num small {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(250, 250, 250, 0.85);
+  }
+
+  .anniv-corner-body {
+    display: block;
+    padding: 0.8rem 0.9rem 0.95rem;
+  }
+
+  .anniv-corner-title {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.92rem;
+    color: var(--foreground);
+  }
+
+  .anniv-corner-desc {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.76rem;
+    color: var(--muted-foreground);
+  }
+
+  .anniv-corner-cta {
+    display: inline-block;
+    padding: 0.42rem 0.95rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--on-gradient, #fff);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    border-radius: 999px;
+  }
+
+  .anniv-corner-close {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.45rem;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 1rem;
+    line-height: 1;
+    color: rgba(250, 250, 250, 0.85);
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .anniv-corner-close:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  @media (max-width: 40rem) {
+    .anniv-corner {
+      right: 0.6rem;
+      bottom: 0.6rem;
+    }
+  }
+</style>
+
+<script>
+  function initAnniversaryCard() {
+    const card = document.getElementById('anniv-corner');
+    const close = document.getElementById('anniv-corner-close');
+    if (!card || !close) {
+      return;
+    }
+    // 每次打开首页都展示：延迟滑入，不锁滚动、不打断浏览
+    window.setTimeout(() => {
+      card.classList.add('is-shown');
+    }, 800);
+    close.addEventListener('click', () => {
+      card.classList.remove('is-shown');
+      window.setTimeout(() => {
+        card.remove();
+      }, 300);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnniversaryCard, { once: true });
+  } else {
+    initAnniversaryCard();
+  }
+</script>

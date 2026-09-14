@@ -150,8 +150,8 @@ const provinceMarkers: Marker[] = PROVINCE_POINTS.map(p => {
 }).filter((m): m is Marker => m !== null);
 
 /* 大额分布加文字标签（world 前 5 / china 前 5），其余靠 hover 提示 */
-const topWorld = [...COUNTRY_POINTS].sort((a, b) => b.count - a.count).slice(0, 5);
-const topChina = [...PROVINCE_POINTS].sort((a, b) => b.count - a.count).slice(0, 5);
+const topWorld = [...COUNTRY_POINTS].sort((a, b) => b.count - a.count).slice(0, 3);
+const topChina = [...PROVINCE_POINTS].sort((a, b) => b.count - a.count).slice(0, 3);
 for (const marker of countryMarkers) {
   const point = topWorld.find(c => marker.tip.startsWith(c.name));
   if (point) {
