@@ -2,16 +2,16 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-14 **Branch:** feat/photo-watermark（基于 main
-1075316，未合并）**Active Feature:**
-feat-024 七周年水印海报生成器 —— 功能完成待用户复核
+**Last Updated:** 2026-09-15 凌晨 **Branch:**
+feat/7th-anniversary（由 feat/photo-watermark 改名，未合并）**Active Feature:**
+feat-025 七周年板块（Hub + 周年角卡 + 地图墙 + 水印工坊重设计）—— 通宵开发完成待晨间复核
 
 ## Status
 
 ### What's Done
 
 - [x] feat-001 ~
-      feat-015（历史会话已完成，详见下方「历史记录」与 feature_list.json）
+      feat-024（历史会话已完成，详见下方「历史记录」与 feature_list.json）
 - [x] 依赖更新（feat-020 一部分）
   - Astro 7.0.6 → 7.2.8，React 19.2.8，Tailwind 4.3.3，ESLint 10.9.1 等
   - 跳过跨大版本：TypeScript 7（风险高）、eslint-plugin-astro 3（需改配置）
@@ -957,3 +957,65 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   `pnpm lint`
   报 9 个 comma-dangle 错误。修复：render.ts 全部函数签名单行化或收敛为单个 options 对象（对象字面量尾逗号两边规则一致），复杂调用同理。此冲突是仓库级隐患，未来其他 .ts 文件出现多行参数签名时会复现，届时同样以「签名单行化/options 对象」处理
 - 提交：896b0f5（模板替换 + 签名重构）、4d11ed7（ensureFonts 调用参数尾逗号）
+
+## 会话记录（七周年板块通宵开发，2026-09-14 深夜 → 09-15 凌晨）
+
+### 交付总览（分支 feat/7th-anniversary，由 feat/photo-watermark 改名）
+
+- 用户通宵任务：七周年板块——①首页周年角卡（每次打开都浮现、显眼不打断）→
+  /7th/ 板块 hub；②地图墙（国内精确到省、国外精确到国家）；③水印工坊页面重设计（功能保留、UI/交互重置）；④七周年手记预留。设计决策按 .agents/skills/ 设计方法论（ui-ux-pro-max
+  / design-system / brand / banner-design）执行：Photography
+  Studio 暗色 token、纪念金 accent
+  ≤10%、Bento 入口卡、1.25 字阶、动效令牌 150/200/300ms、弹窗三区法则
+
+- **地图墙** `/7th/map/`：d3-geo 构建期渲染（Astro
+  frontmatter 内投影 → 静态 SVG，零客户端地图运行时/零瓦片服务）。世界面板（Natural
+  Earth 110m，NaturalEarth1 投影）+ 中国省域面板（墨卡托、按大陆固定 bbox
+  fit）。品牌渐变发光标记按人数定半径、Top3 文字标签、hover 提示（30 行原生委托）。GeoJSON：DataV 省级（mapshaper
+  25% 简化 118KB）+ world-atlas 110m（topojson-client 转 GeoJSON
+  436KB），均入库 public/geo 与 src/data
+- **地图墙两大数据坑（已修复并沉淀）**：
+  1. d3 球面多边形绕向：小于半球的外环必须顺时针，逆时针会被当作「全球去框」导致 fitExtent 拟合整个世界（scale
+     70 vs 正确 403）；
+  2. DataV 省级要素把南海海域挂为填充多边形 + 外环为 RFC7946 逆时针：填充渲染会层层叠加成灰块（35 层 ×
+     4.3% 白），d3 质心会算到「球面其余部分」——省域改为纯描边线稿 + 质心取最大环反转后计算
+- **水印工坊重设计**：暗色 hero（幽灵书法背景 + 金色渐变标语）+ 浅色工具区；模板选择器改海报缩略图（白字叠加层在黑底缩略图上即完整海报外观）；新增「没有照片？用示例试试」一键加载内置样图（public/samples/ 两张 ~31KB）；移动端页眉字号/字距适配
+- **Hub 页** `/7th/`：金色大 7 + 幽灵书法 hero +
+  Bento 入口卡（水印工坊暗卡/地图墙/手记·即将上线）
+  - 结尾寄语；卡片接入全站 .reveal 入场动画（错峰 0.12s/0.24s）
+- **首页周年角卡**
+  `AnniversaryCard.astro`：右下角延迟 0.8s 滑入，每次打开首页都出现（用户明确要求），不锁滚动、可关闭（×）、点击整卡进入 /7th/；z-index
+  1200，prefers-reduced-motion 降级
+- **入口三件套**：导航金胶囊「7周年」（兼容导航浮/落两态，不参与 scrollspy）、首页活动区第 4 张卡（海报幽灵字背景，补 nth-child(4) 布局与移动端 n+2/n+3 规则）、水印页移除 noindex
+- **collection 预留**：content.config.ts 注册 anniversary
+  collection（glob 指向 src/content/anniversary/，当前空目录 .gitkeep），文章就位即出现在构建
+
+### 严重事故与修复（当晚）
+
+1. **GeoJSON 简化幻觉**：mapshaper 25% 简化 +
+   precision 舍入曾让省级边界缩水到 125.7°E 以东丢失（疑似 simplify 交集修复副作用），已用 10% 版本（57KB）→ 发现过度简化 → 定稿 25% 版重跑（118KB）并逐省坐标范围扫描验证（黑龙江东界 135.0
+   ✓）
+2. **d3 绕向/质心连环坑**：见上，两次截图对比发现后定位到球面几何约定
+3. **agent-browser daemon 劣化**：长会话后 Page.captureScreenshot
+   EAGAIN（已知问题），首页因 Banner 视频流更必现；改用「DOM 几何断言 + Chrome
+   headless --screenshot」组合验证，首页活动区用 scrollSnapType='none' +
+   scrollIntoView 后可截
+
+### 晨间复核清单（TODO）
+
+- [ ] **替换真实成员分布数据**：src/data/anniversary/map-points.ts 当前为占位数据（34 省级 +
+      15 国家，825 人为虚构），替换后重建即自动更新地图与统计
+- [ ] 七周年手记文章就位：src/content/anniversary/ 加 .md，hub「即将上线」卡换真实链接
+- [ ] 水印昵称 webfont：字体文件 → public/fonts/ + template.ts fonts[] 登记
+- [ ] 板块正式发布时：确认角卡曝光策略（当前每次打开都显示，如需改为每天一次/一次，改 AnniversaryCard 脚本的 localStorage 逻辑）
+- [ ] 7 周年活动结束后下线路径：角卡移除 + 导航/活动卡入口摘除 + 板块页保留或归档
+
+### 验证
+
+- ./init.sh 全绿：astro check + tsc 0 错误、eslint
+  0 错误（3 处 no-console 警告为有意保留）、75 页构建
+- judge 视觉验收第二轮：hub 页与地图墙页双 pass，无 must_fix/should_fix 遗留（第一轮 must_fix「移动端溢出」经 DOM 断言证伪：375px 视口 scrollWidth
+  ==
+  375 零溢出，系无头 Chrome 长页截图伪影；should_fix 幽灵书法压字已加渐变护层修复）
+- 浏览器实测：周年角卡浮现/关闭 ✓；导航 7周年 → /7th/
+  ✓；水印工坊示例照片→模板切换→昵称→缩放→生成（seeker-sample_seeker_7th_watermark.jpg）✓；地图墙世界/中国面板标记、标签、提示 ✓；暗色模式 hub 卡片区协调 ✓

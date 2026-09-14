@@ -191,6 +191,14 @@
       "dependencies": ["feat-008", "feat-021"],
       "status": "done",
       "evidence": "./init.sh 全绿（astro check + tsc 0 错 0 警、eslint 0 错、73 页构建）；agent-browser 端到端实测：竖版/横版切换、适配规则（窄长图上下对齐左右黑边、宽幅全景底部对齐顶部黑边）、底锚缩放 3.32× 无露黑、昵称动态绘制与原海报位置一致、生成 JPEG（原文件名_seeker_7th_watermark.jpg）并目验成图、坏图友好报错、noindex 注入；叠加层脚本含擦除/垫白/透明度自动校验；待办：昵称 webfont 接入、七周年板块上线时去 noindex + 挂入口（见 progress.md）"
+    },
+    {
+      "id": "feat-025",
+      "name": "七周年板块（Hub + 周年角卡 + 地图墙 + 水印重设计）",
+      "description": "七周年纪念板块：①首页右下周年角卡（每次打开首页浮现，显眼不打断、不锁滚动、可关闭）→ 进入 /7th/ 板块 hub；②Hub 暗色沉浸 hero（金色大 7 + 幽灵书法 + slogan）+ Bento 入口卡（水印工坊/地图墙/七周年手记·即将上线）；③水印工坊重设计（暗色 hero + 浅色工具区、海报缩略图模板选择器、示例照片一键试用、长 ID 右对齐自动缩字）；④地图墙：d3-geo 构建期渲染世界（国家）+ 中国（省域）双面板 SVG，品牌渐变发光标记 + hover 提示 + 统计条，占位数据结构化（src/data/anniversary/map-points.ts）待真实数据替换；⑤导航金胶囊「7周年」入口 + 首页活动区第四张七周年卡；⑥anniversary content collection 预留（文章后续上线）",
+      "dependencies": ["feat-024", "feat-008", "feat-021"],
+      "status": "done",
+      "evidence": "./init.sh 全绿（astro check + tsc 0 错误、eslint 0 错误、75 页构建）；judge 视觉验收两轮：第二轮 hub/地图双页 pass 无 must_fix/should_fix 遗留；移动端 375px DOM 验证零横向溢出；地图墙构建期渲染（零客户端地图运行时），白卡绕向/质心两大球面几何坑已修复并记录；七周年手记为占位卡，真实成员分布数据待用户替换（map-points.ts 注释含替换指引）"
     }
   ]
 }
