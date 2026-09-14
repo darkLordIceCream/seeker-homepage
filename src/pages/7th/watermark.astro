@@ -86,7 +86,7 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
   .wm-hero-title {
     margin: 0 0 0.9rem;
     font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-size: clamp(1.9rem, 6vw, 3.4rem);
     font-weight: 700;
     color: #fafafa;
   }
@@ -94,6 +94,13 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
   .wm-hero-dot {
     margin-inline: 0.2em;
     color: #f5c542;
+  }
+
+  @media (max-width: 30rem) {
+    .wm-hero-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.24em;
+    }
   }
 
   .wm-hero-slogan {
