@@ -940,3 +940,20 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   `Seeker七周年_@倾斜的地平线.jpg`、toDataURL 导出目验成图正确；伪造坏图 →
   HEIC 友好文案；页面 head 含 `noindex, nofollow`
 - 测试用 `public/test-photo.jpg` 已删除，未入库
+
+### 无 ID 残留导出替换 + 工具链冲突修复（2026-09-14 第四轮）
+
+- 设计师重新导出（PS 里隐藏了 ID 图层）：竖版/横版 PNG 尺寸不变，昵称核心区可见像素 1127→75
+  / 413→51（残留为书法笔画末端的抗锯齿细条，非 ID）；已替换
+  `scripts/assets/watermark/*-src.png` 并重新生成叠加层
+- `eraseRects`
+  置空（源头已无 ID，避免误擦书法笔画末端），擦除机制保留备将来忘记隐藏图层时用；白卡自校准扫描结果与上版完全一致（竖版 183×183
+  @1713,3399 / 横版 120×120 @2265,1367），确认版式未变
+- 浏览器实测：动态昵称（©测试昵称甲乙丙 /
+  @测试昵称甲乙丙）渲染正常、无任何「肖默」残留
+- ⚠️ 发现并修复仓库工具链冲突：prettier（trailingComma:
+  es5，移除多行函数参数尾逗号）与 eslint（comma-dangle:
+  always-multiline，要求尾逗号）互相矛盾——多行参数列表的函数签名每次提交都会被 lint-staged 的 prettier 打回并导致
+  `pnpm lint`
+  报 9 个 comma-dangle 错误。修复：render.ts 全部函数签名单行化或收敛为单个 options 对象（对象字面量尾逗号两边规则一致），复杂调用同理。此冲突是仓库级隐患，未来其他 .ts 文件出现多行参数签名时会复现，届时同样以「签名单行化/options 对象」处理
+- 提交：896b0f5（模板替换 + 签名重构）、4d11ed7（ensureFonts 调用参数尾逗号）
