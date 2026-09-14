@@ -253,7 +253,18 @@ function fillTextSpaced(
   ctx.textAlign = prevAlign;
 }
 
-/** 绘制动态昵称（前缀 + 用户输入）；输入为空时跳过 */
+/** 按当前 font 设置测量「带字距文本」的总宽度 */
+function measureSpaced(ctx: CanvasRenderingContext2D, text: string, spacing: number): number {
+  const chars = Array.from(text);
+  const total = chars.reduce((sum, ch) => sum + ctx.measureText(ch).width, 0);
+  return total + spacing * (chars.length - 1);
+}
+
+/**
+ * 绘制动态昵称（前缀 + 用户输入）；输入为空时跳过。
+ * 超过 maxWidth 时自动缩小字号（字距随之等比收缩）至 minFontSize 下限，
+ * 保证长 ID 不与模板手写体等固定元素重叠。
+ */
 function drawNickname(
   ctx: CanvasRenderingContext2D,
   template: WatermarkTemplate,
@@ -264,13 +275,27 @@ function drawNickname(
     return;
   }
   const style = template.nickname;
+  const content = style.prefix + text;
+  let size = style.fontSize;
+  let spacing = style.letterSpacing;
   ctx.save();
   ctx.fillStyle = style.color;
   ctx.textBaseline = 'alphabetic';
-  ctx.font = `${style.fontWeight} ${style.fontSize}px ${style.fontFamily}`;
-  const content = style.prefix + text;
-  if (style.letterSpacing > 0) {
-    fillTextSpaced(ctx, content, style.x, style.y, style.letterSpacing, style.align);
+  const setFont = (s: number) => {
+    ctx.font = `${style.fontWeight} ${s}px ${style.fontFamily}`;
+  };
+  setFont(size);
+  for (let i = 0; i < 3; i++) {
+    const width = measureSpaced(ctx, content, spacing);
+    if (width <= style.maxWidth || size <= style.minFontSize) {
+      break;
+    }
+    size = Math.max(style.minFontSize, (size * style.maxWidth) / width);
+    spacing = style.letterSpacing * (size / style.fontSize);
+    setFont(size);
+  }
+  if (spacing > 0) {
+    fillTextSpaced(ctx, content, style.x, style.y, spacing, style.align);
   } else {
     ctx.textAlign = style.align;
     ctx.fillText(content, style.x, style.y);

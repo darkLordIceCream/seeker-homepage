@@ -44,7 +44,10 @@ export interface FitSpec {
 }
 
 export interface NicknameStyle {
-  /** 文字锚点 x（配合 align） */
+  /**
+   * 文字锚点 x（配合 align）。两版均用 'right'：锚在书法尾笔左侧的安全线上，
+   * 长 ID 向左伸展（左侧为空黑区），永不与手写体重叠。
+   */
   readonly x: number;
   /** 文字基线 y */
   readonly y: number;
@@ -59,6 +62,10 @@ export interface NicknameStyle {
   /** 昵称前缀（竖版设计稿为「©」，横版为「@」） */
   readonly prefix: string;
   readonly maxLength: number;
+  /** 昵称（含前缀）的最大绘制宽度，超出时自动缩小字号 */
+  readonly maxWidth: number;
+  /** 自动缩字的下限字号 */
+  readonly minFontSize: number;
 }
 
 export interface WebFont {
@@ -97,7 +104,7 @@ const OUTPUT: OutputSpec = {
   extension: '.jpg',
 };
 
-/** 竖版 9:16 —— 照片上下对齐、左右居中；昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692] */
+/** 竖版 9:16 —— 照片上下对齐、左右居中；昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692]，右锚 1458 避开「方」字尾笔（x≈1470） */
 export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   id: 'seeker-7th-portrait',
   name: 'Seeker 七周年纪念海报 · 竖版',
@@ -107,22 +114,24 @@ export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   photoArea: { x: 0, y: 0, width: 2084, height: 3705, radius: 0 },
   fit: { base: 'height', anchorY: 'center' },
   nickname: {
-    x: 1396,
+    x: 1458,
     y: 1688,
     fontSize: 31,
     fontWeight: '300',
     fontFamily: NICKNAME_FONT_STACK,
     color: '#ffffff',
     letterSpacing: 16,
-    align: 'center',
+    align: 'right',
     prefix: '©',
     maxLength: 20,
+    maxWidth: 560,
+    minFontSize: 18,
   },
   output: OUTPUT,
   fonts: [],
 };
 
-/** 横版 16:10 —— 照片底部和左右对齐；昵称「@肖默」实测 bbox x[848,938] y[985,1012] */
+/** 横版 16:10 —— 照片底部和左右对齐；昵称「@肖默」实测 bbox x[848,938] y[985,1012]，右锚 936 避开「方」字尾笔（x≈950） */
 export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
   id: 'seeker-7th-landscape',
   name: 'Seeker 七周年纪念海报 · 横版',
@@ -132,16 +141,18 @@ export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
   photoArea: { x: 0, y: 0, width: 2500, height: 1559, radius: 0 },
   fit: { base: 'width', anchorY: 'bottom' },
   nickname: {
-    x: 893,
+    x: 936,
     y: 1008,
     fontSize: 27,
     fontWeight: '300',
     fontFamily: NICKNAME_FONT_STACK,
     color: '#ffffff',
     letterSpacing: 5,
-    align: 'center',
+    align: 'right',
     prefix: '@',
     maxLength: 20,
+    maxWidth: 580,
+    minFontSize: 18,
   },
   output: OUTPUT,
   fonts: [],
