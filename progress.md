@@ -828,3 +828,17 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   63 张组委会图(最占屏幕的两类) 从原图按 q90 重转,共 141 张重传 R2(20.6MB),尺寸清单同步
 - 原图来源:迁移时解包的 /tmp/orig-extract(bundle 的临时展开),不依赖重写后的仓库
 - 流程性建议:以后收稿要求组员提供原图(非聊天工具压缩版),前端 R2 方案天然支持任意分辨率
+
+### 边缘缓存闭环 + PR 合并上线(2026-09-11)
+
+- 实验确认:R2 对象带 cache-control 也不会触发边缘缓存(cf-cache-status 仍 DYNAMIC),边缘缓存必须面板 Cache
+  Rule;用户已添加(Hostname equals r2 域 → Eligible for cache,尊重源 max-age)
+- 全部 2062 个对象补写
+  `cache-control: public, max-age=31536000, immutable`(6 个瞬时失败重传清零, 全量校验 2062/2062);浏览器缓存 + 边缘缓存双生效,MISS→HIT 实测通过
+- gitee 为上一团队遗留仓库,remote 已移除;排查期间 `git fetch gitee master`
+  拉入的旧对象已 `git gc`
+  清理,.git 回到 10M;另发现一个旧团队时代的 stash(feature/coming-soon-pages),未动,留用户处置
+- PR
+  #22 审查合并(6 提交/73 文件,CI 绿),main 恢复可构建;生产部署验证:画廊页 67 处 R2 引用、0 处本地图引用
+- 待办:边界 3 原图冷备份(bundle 为原图唯一副本,建议解包去重后另存私有 R2
+  bucket + 移动硬盘); 遗留 stash 处置;确认稳定后可删 bundle
