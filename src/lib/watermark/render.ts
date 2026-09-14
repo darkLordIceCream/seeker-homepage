@@ -97,20 +97,19 @@ export async function ensureFonts(fonts: readonly WebFont[]): Promise<void> {
   if (!('FontFace' in window)) {
     return;
   }
-  await Promise.all(
-    fonts.map(async font => {
-      try {
-        const face = new FontFace(font.family, `url(${font.url})`, {
-          weight: font.weight,
-          style: font.style,
-        });
-        await face.load();
-        document.fonts.add(face);
-      } catch {
-        console.warn(`水印字体加载失败，回退系统字体：${font.family}`);
-      }
-    })
-  );
+  const loads = fonts.map(async font => {
+    try {
+      const face = new FontFace(font.family, `url(${font.url})`, {
+        weight: font.weight,
+        style: font.style,
+      });
+      await face.load();
+      document.fonts.add(face);
+    } catch {
+      console.warn(`水印字体加载失败，回退系统字体：${font.family}`);
+    }
+  });
+  await Promise.all(loads);
 }
 
 function clamp(value: number, min: number, max: number): number {
