@@ -1,0 +1,300 @@
+---
+/**
+ * /7th/ — 【Seeker 七周年板块 · Hub】。
+ * 暗色沉浸 hero（海报视觉）+ 浅色卡片区（Bento 入口墙）。
+ * 子页：/7th/watermark/ 水印工坊 · /7th/map/ 地图墙 · 七周年手记（筹备中）。
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import { MAP_STATS } from '../../data/anniversary/map-points';
+---
+
+<Layout
+  description="追光七载，把光赠予远方。水印工坊、成员地图墙、七周年手记——Seeker 追光者七周年纪念板块。"   title="Seeker 七周年"
+>
+  <Navigation />
+  <main class="anniv-page" id="main-content">
+    <section class="anniv-hero">
+      <div aria-hidden="true" class="anniv-hero-ghost"></div>
+      <div class="anniv-hero-inner">
+        <p class="anniv-eyebrow">SEEKER · 7TH ANNIVERSARY · 2019 → 2026</p>
+        <p aria-hidden="true" class="anniv-num">7</p>
+        <h1 class="anniv-title">追光七载<span class="anniv-title-sep">，</span>把光赠予远方</h1>
+        <p class="anniv-lead">
+          七年，{MAP_STATS.members} 位追光者，{MAP_STATS.countries} 个国家、{MAP_STATS.provinces}
+          个省级行政区。七周年，我们准备了一整套纪念玩法。
+        </p>
+      </div>
+    </section>
+
+    <section aria-label="七周年板块内容" class="anniv-cards-section">
+      <div class="anniv-cards">
+        <a class="anniv-card anniv-card--watermark" href="/7th/watermark/">
+          <span class="anniv-card-tag">互动玩法</span>
+          <h2 class="anniv-card-title">水印工坊</h2>
+          <p class="anniv-card-desc">
+            上传照片做背景，@上你的名字，一键生成专属七周年纪念海报。
+          </p>
+          <span class="anniv-card-go">去生成 →</span>
+        </a>
+
+        <a class="anniv-card anniv-card--map" href="/7th/map/">
+          <span class="anniv-card-tag">成员地图墙</span>
+          <h2 class="anniv-card-title">把快门声带到世界每个角落</h2>
+          <p class="anniv-card-desc">
+            {MAP_STATS.members} 位成员，遍布 {MAP_STATS.countries} 个国家、{MAP_STATS.provinces}
+            个省级行政区。每个光点，都是一次按下快门的时刻。
+          </p>
+          <span class="anniv-card-go">去看地图墙 →</span>
+        </a>
+
+        <div aria-disabled="true" class="anniv-card anniv-card--journal anniv-card--soon">
+          <span class="anniv-card-tag">七周年手记</span>
+          <h2 class="anniv-card-title">七周年手记</h2>
+          <p class="anniv-card-desc">七年的故事，正在路上。</p>
+          <span class="anniv-card-soon">即将上线</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="anniv-outro">
+      <p class="anniv-outro-line">拍一张照片，交一个朋友。</p>
+      <p class="anniv-outro-sub">七周年快乐。下一个七年，继续追光。</p>
+      <div class="anniv-outro-links">
+        <a href="/7th/watermark/">生成纪念海报</a>
+        <a href="/7th/map/">查看地图墙</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .anniv-page {
+    padding-top: 70px; /* 固定导航高度预留 */
+    background: var(--background);
+  }
+
+  /* ---- 暗色沉浸 hero ---- */
+  .anniv-hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4.5rem, 12vw, 8rem) 1.5rem clamp(5rem, 10vw, 7rem);
+    text-align: center;
+    background:
+      radial-gradient(85% 120% at 50% -20%, rgba(245, 197, 66, 0.13), transparent 55%),
+      #050507;
+    color: #fafafa;
+  }
+
+  .anniv-hero-ghost {
+    position: absolute;
+    inset: 0;
+    background: url('/templates/seeker-7th-landscape.webp') center 40% / cover no-repeat;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .anniv-hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 30rem) {
+    .anniv-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.24em;
+    }
+  }
+
+  .anniv-eyebrow {
+    margin: 0 0 1rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.38em;
+    color: rgba(250, 250, 250, 0.5);
+  }
+
+  .anniv-num {
+    margin: 0 0 0.5rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(5.5rem, 18vw, 10rem);
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(160deg, #ffe9a8, #f5c542 45%, #d20f39);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .anniv-title {
+    margin: 0 0 1.2rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+    font-weight: 700;
+    color: #fafafa;
+  }
+
+  .anniv-title-sep {
+    color: #f5c542;
+  }
+
+  .anniv-lead {
+    max-width: 36rem;
+    margin: 0 auto;
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: rgba(250, 250, 250, 0.68);
+  }
+
+  /* ---- 浅色卡片区 ---- */
+  .anniv-cards-section {
+    padding: 0 1.5rem 2rem;
+  }
+
+  .anniv-cards {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 66rem;
+    margin: -3.5rem auto 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .anniv-card {
+    position: relative;
+    display: block;
+    padding: 1.75rem 1.75rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--glass-shadow);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .anniv-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    border-color: rgba(245, 197, 66, 0.55);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
+  }
+
+  .anniv-card-tag {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--on-gradient, #fff);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    border-radius: 999px;
+  }
+
+  .anniv-card-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .anniv-card-desc {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .anniv-card-go {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  /* 水印工坊卡：海报幽灵字背景（左侧文字区加深色渐变护层，保证可读） */
+  .anniv-card--watermark {
+    background:
+      linear-gradient(90deg, #0a0a0c 0%, #0a0a0c 52%, rgba(10, 10, 12, 0.55) 72%, rgba(10, 10, 12, 0.15) 100%),
+      url('/templates/seeker-7th-portrait.webp') right -30px bottom -20px / 55% auto no-repeat,
+      linear-gradient(100deg, #0a0a0c 0%, #17171b 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .anniv-card--watermark .anniv-card-title,
+  .anniv-card--watermark .anniv-card-go {
+    color: #fafafa;
+  }
+
+  .anniv-card--watermark .anniv-card-desc {
+    color: rgba(250, 250, 250, 0.65);
+  }
+
+  .anniv-card--watermark:hover {
+    border-color: rgba(245, 197, 66, 0.5);
+  }
+
+  .anniv-card--soon {
+    opacity: 0.75;
+  }
+
+  .anniv-card-soon {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.78rem;
+    color: var(--muted-foreground);
+    border: 1px dashed var(--border);
+    border-radius: 999px;
+  }
+
+  /* ---- 结尾寄语 ---- */
+  .anniv-outro {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+    text-align: center;
+  }
+
+  .anniv-outro-line {
+    margin: 0 0 0.4rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: 1.25rem;
+    color: var(--foreground);
+  }
+
+  .anniv-outro-sub {
+    margin: 0 0 1.5rem;
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+  }
+
+  .anniv-outro-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 2rem;
+  }
+
+  .anniv-outro-links a {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (min-width: 56rem) {
+    .anniv-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .anniv-card--watermark {
+      grid-row: span 2;
+    }
+  }
+</style>
