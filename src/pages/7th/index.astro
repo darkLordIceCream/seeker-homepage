@@ -30,7 +30,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 
     <section aria-label="七周年板块内容" class="anniv-cards-section">
       <div class="anniv-cards">
-        <a class="anniv-card anniv-card--watermark" href="/7th/watermark/">
+        <a class="anniv-card anniv-card--watermark reveal" href="/7th/watermark/">
           <span class="anniv-card-tag">互动玩法</span>
           <h2 class="anniv-card-title">水印工坊</h2>
           <p class="anniv-card-desc">
@@ -39,7 +39,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
           <span class="anniv-card-go">去生成 →</span>
         </a>
 
-        <a class="anniv-card anniv-card--map" href="/7th/map/">
+        <a class="anniv-card anniv-card--map reveal" href="/7th/map/" style="--reveal-delay: 0.12s">
           <span class="anniv-card-tag">成员地图墙</span>
           <h2 class="anniv-card-title">把快门声带到世界每个角落</h2>
           <p class="anniv-card-desc">
@@ -69,6 +69,23 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   </main>
   <Footer />
 </Layout>
+
+<script>
+  // Hub 卡片滚动入场（与全站 .reveal 系统一致；html.js 由 Layout 注入门控）
+  const cards = document.querySelectorAll<HTMLElement>('.anniv-cards .reveal');
+  const io = new IntersectionObserver(
+    entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.15 },
+  );
+  cards.forEach(card => io.observe(card));
+</script>
 
 <style>
   .anniv-page {
