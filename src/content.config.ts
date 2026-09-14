@@ -114,4 +114,17 @@ const activities = defineCollection({
   },
 });
 
-export const collections = { members, welfare, activities };
+// 七周年手记：文章就位后在此目录新增 .md（schema 参照 welfare）
+const anniversary = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/anniversary' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    cover: z.string().optional(),
+    excerpt: z.string().optional(),
+    pubDate: z.coerce.date(),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { members, welfare, activities, anniversary };

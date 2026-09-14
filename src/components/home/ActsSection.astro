@@ -44,6 +44,15 @@ const events: Act[] = [
     dy: '18px',
     g: 'radial-gradient(circle at 80% 30%, rgba(251,146,60,0.40), transparent 55%), radial-gradient(circle at 15% 75%, rgba(56,189,248,0.32), transparent 52%), linear-gradient(100deg, #242028 0%, #120f16 100%)',
   },
+  {
+    name: '七周年 · 追光七载',
+    desc: '水印工坊 · 成员地图墙 · 七周年手记',
+    tag: '七周年',
+    href: '/7th/',
+    rot: '2.6deg',
+    dy: '14px',
+    g: "url('/templates/seeker-7th-portrait.webp') center 22% / cover no-repeat, linear-gradient(100deg, #0a0a0c 0%, #17171b 100%)",
+  },
 ];
 ---
 
@@ -161,7 +170,7 @@ const events: Act[] = [
 
   .stack-card {
     position: relative;
-    width: min(38%, 430px);
+    width: min(30%, 330px);
     aspect-ratio: 4 / 3.9;
     flex-shrink: 0;
     background: var(--paper-face);
@@ -175,13 +184,12 @@ const events: Act[] = [
     text-decoration: none;
   }
 
-  .stack-card:nth-child(2) {
-    margin-left: -5%;
-    z-index: 2;
+  .stack-card:nth-child(n + 2) {
+    margin-left: -7%;
   }
 
-  .stack-card:nth-child(3) {
-    margin-left: -5%;
+  .stack-card:nth-child(2) {
+    z-index: 2;
   }
 
   /* 突出态由 .active 驱动（JS 跟随鼠标/焦点），移开后保持到下一张 */
@@ -264,13 +272,16 @@ const events: Act[] = [
       width: min(86%, 380px);
     }
 
-    .stack-card:nth-child(2),
-    .stack-card:nth-child(3) {
+    .stack-card {
+      width: min(86%, 380px);
+    }
+
+    .stack-card:nth-child(n + 2) {
       margin-left: 0;
       margin-top: -34px;
     }
 
-    .stack-card:nth-child(3) {
+    .stack-card:nth-child(n + 3) {
       margin-top: -30px;
     }
   }
