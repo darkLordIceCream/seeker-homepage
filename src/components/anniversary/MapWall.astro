@@ -1,0 +1,363 @@
+---
+/**
+ * 【七周年 · 地图墙】成员分布可视化。
+ *
+ * 构建期渲染：d3-geo 在 Astro frontmatter 里把 GeoJSON 投影成静态 SVG 路径，
+ * 浏览器零地图运行时、零瓦片服务；hover 提示为 ~30 行原生脚本。
+ * 数据来自 src/data/anniversary/map-points.ts（当前为占位数据，见该文件头注释）。
+ */
+import { geoMercator, geoNaturalEarth1, geoPath, geoCentroid } from 'd3-geo';
+import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import worldRaw from '../../data/anniversary/geo/world-countries.json';
+import chinaRaw from '../../data/anniversary/geo/china-provinces.json';
+import { COUNTRY_POINTS, MAP_STATS, PROVINCE_POINTS } from '../../data/anniversary/map-points';
+
+type WorldFc = FeatureCollection<Geometry, { name?: string }>;
+type ChinaFc = FeatureCollection<Geometry, { name?: string }>;
+const worldFc = worldRaw as unknown as WorldFc;
+const chinaFc = chinaRaw as unknown as ChinaFc;
+
+/* ---- 世界地图墙：Natural Earth 投影，1000×540 ---- */
+const WORLD_W = 1000;
+const WORLD_H = 540;
+const worldProjection = geoNaturalEarth1().fitExtent(
+  [
+    [14, 14],
+    [WORLD_W - 14, WORLD_H - 14],
+  ],
+  worldFc,
+);
+const worldPath = geoPath(worldProjection);
+const worldShapes = worldFc.features
+  .map(f => ({ d: worldPath(f), name: f.properties?.name }))
+  .filter((s): s is { d: string; name?: string } => Boolean(s.d));
+
+/* ---- 中国省域面板：墨卡托投影，460×560 ---- */
+const CHINA_W = 460;
+const CHINA_H = 560;
+
+/**
+ * DataV 省级要素把南海海域作为填充多边形挂在 广东/海南 等省下，
+ * 会把 fitExtent 和质心一起拖偏。因此：
+ * - 投影改为按大陆固定经纬边界框 fit；
+ * - 标记质心只取要素里面积最大的多边形环（陆地本体）。
+ */
+const MAINLAND_BBOX: GeoJSON = {
+  type: 'Polygon',
+  // 注意绕向：d3 球面多边形外环必须顺时针（小于半球时），逆时针会被当作
+  // 「全球去掉这个框」，fitExtent 就会拟合整个世界导致 scale 错误
+  coordinates: [[
+    [73, 53.8],
+    [135.5, 53.8],
+    [135.5, 17.5],
+    [73, 17.5],
+    [73, 53.8],
+  ]],
+};
+const chinaProjection = geoMercator().fitExtent(
+  [
+    [10, 10],
+    [CHINA_W - 10, CHINA_H - 10],
+  ],
+  MAINLAND_BBOX,
+);
+const chinaPath = geoPath(chinaProjection);
+
+/** 取要素中面积最大的多边形环（甩开南海飞地后求质心）。
+ * DataV 数据外环为 RFC7946 逆时针，而 d3 球面质心按顺时针约定积分——
+ * 直接算会得到「球面其余部分」的质心，必须先反转环。 */
+function mainlandCentroid(feature: Feature<Geometry>): [number, number] {
+  const geom = feature.geometry;
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+  let best = polys[0]!;
+  let bestArea = 0;
+  for (const poly of polys) {
+    const ring = poly[0]!;
+    let area = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+      area += ring[i]![0] * ring[i + 1]![1] - ring[i + 1]![0] * ring[i]![1];
+    }
+    if (Math.abs(area) > bestArea) {
+      bestArea = Math.abs(area);
+      best = poly;
+    }
+  }
+  return geoCentroid({ type: 'Polygon', coordinates: [best[0]!.slice().reverse()] });
+}
+
+const memberProvinceNames = new Set(PROVINCE_POINTS.map(p => p.name));
+const chinaShapes = chinaFc.features
+  .map(f => ({
+    d: chinaPath(f),
+    name: f.properties?.name,
+    member: memberProvinceNames.has(f.properties?.name ?? ''),
+  }))
+  .filter((s): s is { d: string; name?: string; member: boolean } => Boolean(s.d));
+
+/* ---- 标记点：按 count 决定半径，世界取国界中心/手工坐标，中国取省中心 ---- */
+interface Marker {
+  tip: string;
+  cx: number;
+  cy: number;
+  r: number;
+  label?: string;
+}
+
+const countryMarkers: Marker[] = COUNTRY_POINTS.map(c => {
+  const feature = c.worldName
+    ? worldFc.features.find(f => f.properties?.name === c.worldName)
+    : undefined;
+  const center = feature
+    ? geoCentroid(feature as Feature<Geometry>)
+    : c.lngLat;
+  if (!center) {
+    return null;
+  }
+  const [cx, cy] = worldProjection(center) ?? [0, 0];
+  return {
+    tip: `${c.name} · ${c.count} 位成员`,
+    cx,
+    cy,
+    r: 3.2 + Math.sqrt(c.count) * 1.15,
+  };
+}).filter((m): m is Marker => m !== null);
+
+const provinceMarkers: Marker[] = PROVINCE_POINTS.map(p => {
+  const feature = chinaFc.features.find(f => f.properties?.name === p.name);
+  if (!feature) {
+    return null;
+  }
+  const [cx, cy] = chinaProjection(mainlandCentroid(feature)) ?? [0, 0];
+  return {
+    tip: `${p.name} · ${p.count} 位成员`,
+    cx,
+    cy,
+    r: 2.6 + Math.sqrt(p.count) * 0.8,
+  };
+}).filter((m): m is Marker => m !== null);
+
+/* 大额分布加文字标签（world 前 5 / china 前 5），其余靠 hover 提示 */
+const topWorld = [...COUNTRY_POINTS].sort((a, b) => b.count - a.count).slice(0, 5);
+const topChina = [...PROVINCE_POINTS].sort((a, b) => b.count - a.count).slice(0, 5);
+for (const marker of countryMarkers) {
+  const point = topWorld.find(c => marker.tip.startsWith(c.name));
+  if (point) {
+    marker.label = `${point.name} ${point.count}`;
+  }
+}
+for (const marker of provinceMarkers) {
+  const point = topChina.find(p => marker.tip.startsWith(p.name));
+  if (point) {
+    marker.label = `${point.name} ${point.count}`;
+  }
+}
+
+const stats = MAP_STATS;
+---
+
+<div class="map-wall" data-map-wall data-probe="v42">
+  <figure class="map-panel map-panel--world">
+    <svg
+      aria-label={`世界地图墙：Seeker 成员分布于 ${stats.countries} 个国家`}       role="img"       viewBox={`0 0 ${WORLD_W} ${WORLD_H}`}
+    >
+      <defs>
+        <radialGradient cx="50%" cy="50%" id="wm-marker" r="50%">
+          <stop offset="0%" stop-color="#ffe9a8"></stop>
+          <stop offset="55%" stop-color="#f5c542"></stop>
+          <stop offset="100%" stop-color="#d20f39"></stop>
+        </radialGradient>
+      </defs>
+      {
+        worldShapes.map(shape => (
+          <path class="wm-country" d={shape.d}>
+            {shape.name && <title>{shape.name}</title>}
+          </path>
+        ))
+      }
+      {
+        countryMarkers.map(m => (
+          <g class="wm-marker" data-tip={m.tip}>
+            <circle class="wm-marker-halo" cx={m.cx} cy={m.cy} r={m.r * 2.1} />
+            <circle class="wm-marker-core" cx={m.cx} cy={m.cy} fill="url(#wm-marker)" r={m.r} />
+            <title>{m.tip}</title>
+          </g>
+        ))
+      }
+      {
+        countryMarkers
+          .filter(m => m.label)
+          .map(m => (
+            <text class="wm-marker-label" text-anchor="middle" x={m.cx} y={m.cy - m.r - 7}>
+              {m.label}
+            </text>
+          ))
+      }
+    </svg>
+    <figcaption class="map-caption">海外 · 精确到国家</figcaption>
+  </figure>
+
+  <figure class="map-panel map-panel--china">
+    <svg
+      aria-label={`中国省域地图：Seeker 成员遍布 ${stats.provinces} 个省级行政区`}       role="img"       viewBox={`0 0 ${CHINA_W} ${CHINA_H}`}
+    >
+      {
+        chinaShapes.map(shape => (
+          <path
+            class:list={[`wm-province`, {'wm-province--member': shape.member}]}
+            d={shape.d}
+          >
+            {shape.name && <title>{shape.name}</title>}
+          </path>
+        ))
+      }
+      {
+        provinceMarkers.map(m => (
+          <g class="wm-marker" data-tip={m.tip}>
+            <circle class="wm-marker-halo" cx={m.cx} cy={m.cy} r={m.r * 1.9} />
+            <circle class="wm-marker-core" cx={m.cx} cy={m.cy} fill="url(#wm-marker)" r={m.r} />
+            <title>{m.tip}</title>
+          </g>
+        ))
+      }
+      {
+        provinceMarkers
+          .filter(m => m.label)
+          .map(m => (
+            <text class="wm-marker-label" text-anchor="middle" x={m.cx} y={m.cy - m.r - 6}>
+              {m.label}
+            </text>
+          ))
+      }
+    </svg>
+    <figcaption class="map-caption">国内 · 精确到省</figcaption>
+  </figure>
+
+  <div aria-hidden="true" class="map-tooltip" data-map-tooltip role="presentation"></div>
+</div>
+
+<style>
+  .map-wall {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+
+  .map-panel {
+    margin: 0;
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .map-panel svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .map-caption {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-align: center;
+    color: rgba(250, 250, 250, 0.55);
+  }
+
+  .wm-country,
+  .wm-province {
+    /* 省域只用描边线稿：DataV 省级要素含南海大面积填充多边形，任何 fill 都会层层叠加变灰块 */
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 0.7;
+    transition: stroke 0.2s ease;
+  }
+
+  .wm-country {
+    fill: rgba(255, 255, 255, 0.045);
+  }
+
+  .wm-province--member {
+    stroke: rgba(245, 197, 66, 0.42);
+  }
+
+  .wm-marker {
+    cursor: default;
+  }
+
+  .wm-marker-halo {
+    fill: rgba(245, 197, 66, 0.16);
+    transition: fill 0.2s ease;
+  }
+
+  .wm-marker-core {
+    stroke: rgba(0, 0, 0, 0.55);
+    stroke-width: 0.8;
+  }
+
+  .wm-marker:hover .wm-marker-halo {
+    fill: rgba(245, 197, 66, 0.34);
+  }
+
+  .wm-marker-label {
+    fill: rgba(250, 250, 250, 0.88);
+    font-size: 12px;
+    font-weight: 600;
+    paint-order: stroke;
+    stroke: rgba(0, 0, 0, 0.6);
+    stroke-width: 2.5px;
+    pointer-events: none;
+  }
+
+  .map-tooltip {
+    position: fixed;
+    z-index: 1300;
+    display: none;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.82rem;
+    color: #0a0a0c;
+    font-weight: 600;
+    pointer-events: none;
+    background: #f5c542;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    transform: translate(-50%, calc(-100% - 12px));
+    white-space: nowrap;
+  }
+
+  @media (min-width: 60rem) {
+    .map-wall {
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      align-items: start;
+      gap: 2rem;
+    }
+  }
+</style>
+
+<script>
+  // 轻量 hover 提示：事件委托 + 单一浮层
+  const wall = document.querySelector('[data-map-wall]');
+  const tip = document.querySelector<HTMLElement>('[data-map-tooltip]');
+  if (wall && tip) {
+    wall.addEventListener('mouseover', e => {
+      const target = (e.target as Element).closest('[data-tip]');
+      if (!(target instanceof Element)) {
+        return;
+      }
+      tip.textContent = target.getAttribute('data-tip') ?? '';
+      tip.style.display = 'block';
+    });
+    wall.addEventListener('mousemove', e => {
+      if (tip.style.display !== 'block') {
+        return;
+      }
+      tip.style.left = `${e.clientX}px`;
+      tip.style.top = `${e.clientY}px`;
+    });
+    wall.addEventListener('mouseleave', () => {
+      tip.style.display = 'none';
+    });
+  }
+</script>

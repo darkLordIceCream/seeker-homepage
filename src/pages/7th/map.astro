@@ -1,0 +1,174 @@
+---
+/**
+ * /7th/map — 【七周年板块 · 地图墙】成员分布可视化。
+ * 暗色沉浸展示页：地图本身即内容，整页固定暗色（不随主题切换）。
+ * 数据：src/data/anniversary/map-points.ts（当前为占位数据，替换后重建即更新）。
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import MapWall from '../../components/anniversary/MapWall.astro';
+import { MAP_STATS } from '../../data/anniversary/map-points';
+---
+
+<Layout
+  description="七年，我们把快门声带到了世界的各个角落。看看 Seeker 追光者的成员遍布哪些国家和省份。"   title="Seeker 七周年 · 地图墙"
+>
+  <Navigation />
+  <main class="map-page" id="main-content">
+    <header class="map-hero">
+      <p class="map-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
+      <h1 class="map-title">追光者的地图墙</h1>
+      <p class="map-lead">
+        七年，{MAP_STATS.members} 位追光者把快门声带到了世界的各个角落——
+        {MAP_STATS.countries} 个国家，{MAP_STATS.provinces} 个省级行政区。
+        每一个光点，都是一次按下快门的时刻。
+      </p>
+      <dl class="map-stats">
+        <div class="map-stat">
+          <dt>国家</dt>
+          <dd>{MAP_STATS.countries}</dd>
+        </div>
+        <div class="map-stat">
+          <dt>省级行政区</dt>
+          <dd>{MAP_STATS.provinces}</dd>
+        </div>
+        <div class="map-stat">
+          <dt>位成员</dt>
+          <dd>{MAP_STATS.members}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <MapWall />
+
+    <section aria-label="板块导航" class="map-footer">
+      <p class="map-note">成员分布持续更新中 · 追光七载，把光赠予远方</p>
+      <div class="map-links">
+        <a class="map-cta" href="/7th/watermark/">去做一张七周年水印海报 →</a>
+        <a class="map-back" href="/7th/">← 返回七周年板块</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  /* 暗色沉浸展示页：显式深色值，不随 ThemeToggle 切换 */
+  .map-page {
+    padding-top: 70px; /* 固定导航高度预留 */
+    background:
+      radial-gradient(120% 55% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
+      #050507;
+    color: #fafafa;
+  }
+
+  .map-hero {
+    max-width: 68rem;
+    margin-inline: auto;
+    padding: 4rem 1.5rem 2.5rem;
+    text-align: center;
+  }
+
+  .map-eyebrow {
+    margin: 0 0 0.9rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: rgba(250, 250, 250, 0.5);
+  }
+
+  .map-title {
+    margin: 0 0 1.1rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+    font-weight: 700;
+    color: #fafafa;
+  }
+
+  .map-lead {
+    max-width: 38rem;
+    margin: 0 auto 2.2rem;
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: rgba(250, 250, 250, 0.72);
+  }
+
+  .map-stats {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    margin: 0;
+  }
+
+  .map-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .map-stat dd {
+    order: -1;
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffe9a8, #f5c542 55%, #d20f39);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .map-stat dt {
+    font-size: 0.85rem;
+    color: rgba(250, 250, 250, 0.6);
+  }
+
+  .map-footer {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    text-align: center;
+  }
+
+  .map-note {
+    margin: 0 0 1.4rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: rgba(250, 250, 250, 0.45);
+  }
+
+  .map-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+
+  .map-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.4rem;
+    font-weight: 600;
+    color: #0a0a0c;
+    background: linear-gradient(45deg, #ffe9a8, #f5c542);
+    border-radius: 999px;
+    text-decoration: none;
+  }
+
+  .map-cta:hover {
+    filter: brightness(1.05);
+  }
+
+  .map-back {
+    color: rgba(250, 250, 250, 0.65);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .map-back:hover {
+    color: #fafafa;
+  }
+</style>
