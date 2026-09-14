@@ -1,15 +1,17 @@
 /**
- * Seeker 七周年水印海报模板配置。
+ * Seeker 七周年水印海报模板配置（竖版 / 横版）。
  *
- * 更换 / 新增模板只需要改这个文件：
- * - `src`：模板图地址。要求照片区域挖空保持透明（带 alpha 通道），
- *   否则 Canvas 合成时模板会盖住用户照片；参见
- *   scripts/make-placeholder-template.mjs 头部的真实模板导出说明。
- * - `photoArea` / `nickname`：与 PSD 设计稿对齐的坐标（单位一律为模板原始像素，
- *   预览与导出时按比例映射）。
- * - `fonts`：`@昵称` 动态文字的 webfont 清单（FontFace API 加载）。
- *   为空数组时回退 `fontFamily` 里的系统字体栈；字体文件到位后
- *   放入 `public/fonts/` 并在此登记即可全设备渲染一致。
+ * 照片角色：用户照片做**全幅背景**（cover 铺满整张海报），
+ * 白色模板元素（SEEKER 幽灵字母、手写体、小字、二维码）叠加其上，
+ * 动态昵称由 Canvas 绘制。
+ *
+ * 叠加层资产：`public/templates/seeker-7th-{portrait,landscape}.webp`
+ * （白色元素 + alpha 透明底；二维码卡片区域保持不透明保证可扫）。
+ * 当前版本由 scripts/make-watermark-overlays.mjs 从海报 JPG 重建；
+ * 设计师从 PSD 导出「隐藏黑底层 + 昵称层」的透明 PNG 后直接覆盖同名文件。
+ *
+ * 更换 / 新增模板只需改本文件：src、尺寸、photoArea、nickname 坐标
+ * （单位一律为模板原始像素）。
  */
 
 export interface Rect {
@@ -20,7 +22,7 @@ export interface Rect {
 }
 
 export interface PhotoArea extends Rect {
-  /** 照片窗口圆角半径（需与模板图相框圆角一致） */
+  /** 照片窗口圆角半径（全幅背景为 0） */
   readonly radius: number;
 }
 
@@ -37,7 +39,7 @@ export interface NicknameStyle {
   /** 字距（px），0 表示不启用 */
   readonly letterSpacing: number;
   readonly align: CanvasTextAlign;
-  /** 昵称前缀，如 "@" */
+  /** 昵称前缀（竖版设计稿为「©」，横版为「@」） */
   readonly prefix: string;
   readonly maxLength: number;
 }
@@ -68,31 +70,71 @@ export interface WatermarkTemplate {
   readonly fonts: readonly WebFont[];
 }
 
-export const SEEKER_7TH_TEMPLATE: WatermarkTemplate = {
-  id: 'seeker-7th',
-  name: 'Seeker 七周年纪念海报',
-  src: '/templates/seeker-7th-placeholder.webp',
-  width: 1440,
-  height: 1920,
-  photoArea: { x: 120, y: 280, width: 1200, height: 1200, radius: 28 },
+/** 昵称动态文字的系统字体栈（跨设备接近；精确字体待设计提供 webfont） */
+const NICKNAME_FONT_STACK =
+  "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif";
+
+const OUTPUT: OutputSpec = {
+  mimeType: 'image/jpeg',
+  quality: 0.92,
+  fileNamePrefix: 'Seeker七周年',
+  extension: '.jpg',
+};
+
+/** 竖版 9:16 —— 昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692] */
+export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
+  id: 'seeker-7th-portrait',
+  name: 'Seeker 七周年纪念海报 · 竖版',
+  src: '/templates/seeker-7th-portrait.webp',
+  width: 2084,
+  height: 3705,
+  photoArea: { x: 0, y: 0, width: 2084, height: 3705, radius: 0 },
   nickname: {
-    x: 720,
-    y: 1760,
-    fontSize: 64,
-    fontWeight: '600',
-    fontFamily:
-      "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif",
-    color: '#3b3a36',
-    letterSpacing: 2,
+    x: 1396,
+    y: 1688,
+    fontSize: 31,
+    fontWeight: '300',
+    fontFamily: NICKNAME_FONT_STACK,
+    color: '#ffffff',
+    letterSpacing: 16,
+    align: 'center',
+    prefix: '©',
+    maxLength: 20,
+  },
+  output: OUTPUT,
+  fonts: [],
+};
+
+/** 横版 16:10 —— 昵称「@肖默」实测 bbox x[848,938] y[985,1012] */
+export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
+  id: 'seeker-7th-landscape',
+  name: 'Seeker 七周年纪念海报 · 横版',
+  src: '/templates/seeker-7th-landscape.webp',
+  width: 2500,
+  height: 1559,
+  photoArea: { x: 0, y: 0, width: 2500, height: 1559, radius: 0 },
+  nickname: {
+    x: 893,
+    y: 1008,
+    fontSize: 27,
+    fontWeight: '300',
+    fontFamily: NICKNAME_FONT_STACK,
+    color: '#ffffff',
+    letterSpacing: 5,
     align: 'center',
     prefix: '@',
     maxLength: 20,
   },
-  output: {
-    mimeType: 'image/jpeg',
-    quality: 0.92,
-    fileNamePrefix: 'Seeker七周年',
-    extension: '.jpg',
-  },
+  output: OUTPUT,
   fonts: [],
 };
+
+export const WATERMARK_TEMPLATES: readonly WatermarkTemplate[] = [
+  SEEKER_7TH_PORTRAIT,
+  SEEKER_7TH_LANDSCAPE,
+];
+
+export const DEFAULT_WATERMARK_TEMPLATE: WatermarkTemplate = SEEKER_7TH_PORTRAIT;
+
+/** 昵称输入框长度上限（各模板取最大值） */
+export const NICKNAME_MAX_LENGTH = Math.max(...WATERMARK_TEMPLATES.map(t => t.nickname.maxLength));

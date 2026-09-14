@@ -879,11 +879,34 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   → 已全部修复；`.wm-zoom-row button`
   固定宽挤压「重置」成竖排 → 方形样式收窄到 +/- 按钮 + nowrap
 
+### 真实海报设计接入（用户提供的两张成品 JPG，2026-09-14 第二轮）
+
+- 用户确认设计形态：**照片做全幅背景**，白色模板元素直接叠加；两张成品海报（竖版 2084×3705、横版 2500×1559，纯黑底 + 纯白元素）即最终效果，`@肖默`
+  位置为动态 ID 位
+- **叠加层从 JPG 精确重建**（`scripts/make-watermark-overlays.mjs`）：海报是纯白/纯黑二值图形，逐像素alpha
+  =
+  max(R,G,B)、RGB=白（抗锯齿自然保留为半透明，黑→透明）；重建揭示了设计细节——SEEKER竖排字母本身是低透明度幽灵水印，手写体/小字实白
+- **二维码卡片区域例外处理**：保留原始像素强制不透明（白底黑码蓝标浮于照片，保证可扫），坐标实测竖版 {1701,3401,201,184}、横版 {2240,1370,129,129}
+- **昵称参数像素级实测**（坐标网格裁剪目测 + 白像素扫描）：竖版「© 肖 默」center
+  x1396 / baseline y1688 / 31px / 字距 16；横版「@肖默」x893 / y1008 / 27px
+  / 字距 5；字重 300（Light）
+- 组件升级双模板：面板「海报模板」切换按钮（aria-pressed），切换时 aspect-ratio 动态调整、变换重置、叠加层按 id 缓存；`template.ts`
+  重构为 WATERMARK_TEMPLATES 数组 + DEFAULT，photoArea 全幅
+- 旧「相纸风」占位模板及其脚本删除（被真实设计取代）；源 JPG 副本入库
+  `scripts/assets/watermark/`（竖版 559KB 超 500KB 线，mozjpeg
+  q88 重压缩至 149KB）
+- 浏览器实测：竖版/横版切换、照片注入、昵称位置与原海报逐区域比对一致、成图导出目验正确
+
+### ⚠️ 真实资产替换路径（PSD 导出到位后）
+
+- 设计师从 PSD 导出「隐藏黑色背景层 + 昵称层」的透明 PNG → 直接覆盖
+  `public/templates/seeker-7th-portrait.webp` / `seeker-7th-landscape.webp`
+  同名文件（配置零改动）。注意：若导出中 SEEKER 字母为灰色而非白色带透明度，效果与当前重建层略有差异（黑白合成图无法区分「灰不透明」与「白半透明」，当前取白半透明——更贴近「光」的气质），以设计稿为准
+- 二维码在 PSD 导出中若变成透明镂空码，需保留白底或告知后期垫白
+
 ### 待办（七周年板块接入时，见 feature_list.json feat-024）
 
-1. 真实模板：PSD 导出带 alpha 的 PNG（**照片区域必须挖空透明**）+ 照片区域/昵称坐标 →
-   <500KB 放 `public/templates/`，否则传 R2 `templates/`
-   并给 bucket 配 CORS（Canvas toBlob 导出必需），更新 `template.ts` 即完成替换
+1. PSD 透明 PNG 导出到位后覆盖 `public/templates/` 同名文件（见上节替换路径）
 2. 昵称字体：woff2 → `public/fonts/` + `template.ts`
    fonts[] 登记（CJK 全量字体1.5-8MB，接入时评估子集化/加载策略）
 3. 板块上线：移除 `/7th/watermark.astro` 的 noindex meta；入口三选一——Navigation

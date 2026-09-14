@@ -161,8 +161,8 @@ function drawPhoto(
   ctx.save();
   roundedRectPath(ctx, area, area.radius);
   ctx.clip();
-  // 底色垫底，避免亚像素缝隙透出画布底
-  ctx.fillStyle = '#e9e2d2';
+  // 底色垫底，避免亚像素缝隙透出画布底（七周年海报为黑底）
+  ctx.fillStyle = '#000000';
   ctx.fillRect(area.x, area.y, area.width, area.height);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';

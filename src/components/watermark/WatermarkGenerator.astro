@@ -1,16 +1,16 @@
 ---
 /**
- * 七周年水印海报生成器。
+ * 七周年水印海报生成器（竖版 / 横版双模板）。
  * 纯浏览器 Canvas 合成：照片只在用户设备内存中处理，不上传服务器。
  * 交互脚本为本组件内原生 TypeScript（与全站 Navigation/ThemeToggle 同模式）；
  * 模板参数统一在 src/lib/watermark/template.ts 配置。
  */
-import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
+import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
 ---
 
 <div class="wm-generator">
   <div class="wm-stage" id="wm-stage">
-    <canvas aria-label={`${TEMPLATE.name}预览`} id="wm-canvas"></canvas>
+    <canvas aria-label="海报预览" id="wm-canvas"></canvas>
     <button class="wm-dropzone" id="wm-dropzone" type="button">
       <span class="wm-dropzone-card">
         <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
@@ -25,10 +25,29 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   </div>
 
   <div class="wm-panel glass-card">
+    <div class="wm-field">
+      <span class="wm-label">海报模板</span>
+      <div aria-label="选择海报模板" class="wm-tpl-row" role="group">
+        {
+          WATERMARK_TEMPLATES.map((t, i) => (
+            <button
+              aria-pressed={i === 0 ? 'true' : 'false'}               class="wm-tpl-btn"               data-template-id={t.id}               type="button"
+            >
+              {t.name.split('·').pop()?.trim() ?? t.name}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
     <label class="wm-field">
       <span class="wm-label">你的昵称</span>
       <input
-        autocomplete="off"         id="wm-nickname"         maxlength={TEMPLATE.nickname.maxLength}         placeholder="例如：倾斜的地平线"         type="text"
+        autocomplete="off"
+        id="wm-nickname"
+        maxlength={NICKNAME_MAX_LENGTH}
+        placeholder="例如：倾斜的地平线"
+        type="text"
       />
     </label>
 
@@ -68,7 +87,11 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
     type LoadedPhoto,
     type PhotoTransform,
   } from '../../lib/watermark/render';
-  import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
+  import {
+    DEFAULT_WATERMARK_TEMPLATE,
+    WATERMARK_TEMPLATES,
+    type WatermarkTemplate,
+  } from '../../lib/watermark/template';
 
   const MIN_SCALE = 1;
   const MAX_SCALE = 4;
@@ -93,17 +116,25 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   const downloadLink = required('wm-download', HTMLAnchorElement);
   const changeBtn = required('wm-change', HTMLButtonElement);
   const statusEl = required('wm-status', HTMLParagraphElement);
+  const tplButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.wm-tpl-btn[data-template-id]'),
+  );
 
-  const areaCenter = {
-    x: TEMPLATE.photoArea.x + TEMPLATE.photoArea.width / 2,
-    y: TEMPLATE.photoArea.y + TEMPLATE.photoArea.height / 2,
-  };
-
+  let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
   let templateBitmap: ImageBitmap | null = null;
+  const overlayCache = new Map<string, ImageBitmap>();
   let photo: LoadedPhoto | null = null;
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
   let renderQueued = false;
+
+  // 手势锚点（照片区域中心），切换模板时就地更新
+  const areaCenter = { x: 0, y: 0 };
+
+  function syncAreaCenter(): void {
+    areaCenter.x = currentTemplate.photoArea.x + currentTemplate.photoArea.width / 2;
+    areaCenter.y = currentTemplate.photoArea.y + currentTemplate.photoArea.height / 2;
+  }
 
   function setStatus(message: string, isError = false): void {
     statusEl.textContent = message;
@@ -119,9 +150,12 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
       // 预览分辨率：容器 CSS 尺寸 × dPR，长边封顶 1600px 保证交互流畅
       const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const scale = Math.max(Math.min((cssWidth * dpr) / TEMPLATE.width, 1600 / TEMPLATE.width), 0.2);
+      const scale = Math.max(
+        Math.min((cssWidth * dpr) / currentTemplate.width, 1600 / currentTemplate.width),
+        0.2,
+      );
       renderComposition(canvas, {
-        template: TEMPLATE,
+        template: currentTemplate,
         templateImage: templateBitmap,
         photo,
         transform,
@@ -132,7 +166,13 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   }
 
   const normalize = (t: PhotoTransform): PhotoTransform =>
-    photo ? clampTransform(TEMPLATE, photo, t) : t;
+    photo ? clampTransform(currentTemplate, photo, t) : t;
+
+  function syncTplButtons(): void {
+    for (const btn of tplButtons) {
+      btn.setAttribute('aria-pressed', String(btn.dataset.templateId === currentTemplate.id));
+    }
+  }
 
   function syncControls(): void {
     const hasPhoto = photo !== null;
@@ -201,17 +241,17 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
     try {
       const out = document.createElement('canvas');
       renderComposition(out, {
-        template: TEMPLATE,
+        template: currentTemplate,
         templateImage: templateBitmap,
         photo,
         transform,
         nickname: nicknameInput.value,
       });
-      const blob = await exportImage(out, TEMPLATE.output);
+      const blob = await exportImage(out, currentTemplate.output);
       releaseDownload();
       downloadUrl = URL.createObjectURL(blob);
       downloadLink.href = downloadUrl;
-      downloadLink.download = buildFileName(TEMPLATE.output, nicknameInput.value);
+      downloadLink.download = buildFileName(currentTemplate.output, nicknameInput.value);
       downloadLink.hidden = false;
       downloadLink.click();
       setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），如未自动下载请点「下载海报」。`);
@@ -222,7 +262,38 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
     }
   }
 
+  async function switchTemplate(template: WatermarkTemplate): Promise<void> {
+    if (template.id === currentTemplate.id && templateBitmap) {return;}
+    setStatus('模板加载中…');
+    try {
+      let bitmap = overlayCache.get(template.id);
+      if (!bitmap) {
+        bitmap = await loadTemplate(template.src);
+        overlayCache.set(template.id, bitmap);
+      }
+      currentTemplate = template;
+      templateBitmap = bitmap;
+      transform = initialTransform();
+      releaseDownload();
+      canvas.style.aspectRatio = `${template.width} / ${template.height}`;
+      syncAreaCenter();
+      syncTplButtons();
+      syncControls();
+      requestRender();
+      setStatus('');
+    } catch {
+      setStatus('模板加载失败，请检查网络后刷新重试。', true);
+    }
+  }
+
   // ---- 事件绑定 ----
+
+  for (const btn of tplButtons) {
+    const tpl = WATERMARK_TEMPLATES.find((t) => t.id === btn.dataset.templateId);
+    btn.addEventListener('click', () => {
+      if (tpl) {void switchTemplate(tpl);}
+    });
+  }
 
   dropzone.addEventListener('click', () => fileInput.click());
   changeBtn.addEventListener('click', () => fileInput.click());
@@ -273,7 +344,7 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   attachGestures(canvas, {
     getTransform: () => transform,
     normalize,
-    cssToTemplate: () => TEMPLATE.width / (canvas.clientWidth || 1),
+    cssToTemplate: () => currentTemplate.width / (canvas.clientWidth || 1),
     areaCenter,
     minScale: MIN_SCALE,
     maxScale: MAX_SCALE,
@@ -287,12 +358,16 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   const resizeObserver = new ResizeObserver(() => requestRender());
   resizeObserver.observe(stage);
 
-  // ---- 初始化：字体 → 模板 → 首绘 ----
+  // ---- 初始化：字体 → 默认模板 → 首绘 ----
   void (async () => {
     setStatus('正在加载模板…');
     try {
-      await ensureFonts(TEMPLATE.fonts);
-      templateBitmap = await loadTemplate(TEMPLATE.src);
+      await ensureFonts(currentTemplate.fonts);
+      templateBitmap = await loadTemplate(currentTemplate.src);
+      overlayCache.set(currentTemplate.id, templateBitmap);
+      canvas.style.aspectRatio = `${currentTemplate.width} / ${currentTemplate.height}`;
+      syncAreaCenter();
+      syncTplButtons();
       syncControls();
       requestRender();
       setStatus('');
@@ -314,7 +389,7 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
     position: relative;
     overflow: hidden;
     border-radius: calc(var(--radius) + 4px);
-    background: var(--muted);
+    background: #000;
     box-shadow: var(--glass-shadow);
   }
 
@@ -326,7 +401,7 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
   #wm-canvas {
     display: block;
     width: 100%;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 2084 / 3705;
     touch-action: none;
     cursor: grab;
   }
@@ -399,6 +474,31 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--muted-foreground);
+  }
+
+  .wm-tpl-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .wm-tpl-btn {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .wm-tpl-btn[aria-pressed='true'] {
+    color: var(--on-gradient, #fff);
+    font-weight: 600;
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    border-color: transparent;
   }
 
   #wm-nickname {
@@ -506,7 +606,7 @@ import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
 
   @media (min-width: 48rem) {
     .wm-generator {
-      grid-template-columns: minmax(0, 26rem) minmax(18rem, 22rem);
+      grid-template-columns: minmax(0, 24rem) minmax(18rem, 22rem);
       align-items: start;
     }
   }
