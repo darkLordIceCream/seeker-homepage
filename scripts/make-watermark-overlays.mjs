@@ -28,8 +28,11 @@ const SOURCES = [
     /** 成品海报 JPG（flatten 后的真实外观，二维码白卡在此完全可见） */
     flatSrc: 'scripts/assets/watermark/seeker-7th-portrait.jpg',
     out: `${OUT_DIR}/seeker-7th-portrait.webp`,
-    /** 擦除区域（烙入的昵称），alpha 清零 */
-    eraseRects: [{ x: 1320, y: 1650, width: 142, height: 52 }],
+    /**
+     * 擦除区域（若导出图烙入了昵称层则在此配置，alpha 清零）。
+     * 当前导出已在 PS 里隐藏昵称图层，无需擦除；留空数组保留机制。
+     */
+    eraseRects: [],
     /** 白卡扫描窗口（需覆盖整张白卡、避开下方文字）与静区行的最小连续白段 */
     cardWindow: { x0: 1550, x1: 2050, y0: 3300, y1: 3660 },
     minRun: 170,
@@ -39,7 +42,7 @@ const SOURCES = [
     src: 'scripts/assets/watermark/seeker-7th-landscape-src.png',
     flatSrc: 'scripts/assets/watermark/seeker-7th-landscape.jpg',
     out: `${OUT_DIR}/seeker-7th-landscape.webp`,
-    eraseRects: [{ x: 832, y: 970, width: 118, height: 52 }],
+    eraseRects: [],
     cardWindow: { x0: 2050, x1: 2499, y0: 1280, y1: 1558 },
     minRun: 100,
   },
