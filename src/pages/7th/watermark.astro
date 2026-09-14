@@ -1,8 +1,9 @@
 ---
 /**
- * /7th/watermark — Seeker 七周年水印工坊。
- * 面向七周年板块的独立工具页：入口暂不挂导航/首页（板块上线时再接），
- * 页面先 noindex，上线时移除下方 robots meta 并添加入口。
+ * /7th/watermark — 【七周年板块 · 水印工坊】。
+ * 页面结构：暗色沉浸 hero（海报幽灵字背景）+ 浅色工具区（WatermarkGenerator）。
+ * 生成逻辑与模板配置见 src/lib/watermark/；本页只负责壳与视觉。
+ * 七周年板块已上线：入口在导航与首页周年卡，无需 noindex。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
@@ -13,128 +14,129 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
 <Layout
   description="上传一张照片、写下你的昵称，生成 Seeker 追光者七周年纪念海报。全程在你的浏览器本地完成，照片不会上传服务器。"   title="Seeker 七周年 · 水印工坊"
 >
-  <meta content="noindex, nofollow" name="robots" slot="head" />
   <Navigation />
   <main class="wm-page" id="main-content">
-    <header class="wm-hero">
-      <p class="wm-hero-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
-      <h1 class="wm-hero-title grad-text">七周年水印工坊</h1>
-      <p class="wm-hero-sub">
-        选一张你最满意的照片做背景，套上「追光七载，把光赠予远方」七周年海报，@上你的名字——生成属于你的
-        Seeker 七周年纪念海报。
-      </p>
-    </header>
-
-    <WatermarkGenerator />
-
-    <section aria-label="使用步骤" class="wm-how">
-      <ol>
-        <li>
-          <span class="wm-how-num">1</span>
-          <strong>选择照片与模板</strong>
-          <p>点击、拖拽或粘贴上传一张照片（不会离开你的设备），挑竖版或横版海报。</p>
-        </li>
-        <li>
-          <span class="wm-how-num">2</span>
-          <strong>写下昵称</strong>
-          <p>输入你想展示的昵称，拖动和缩放照片到满意的位置。</p>
-        </li>
-        <li>
-          <span class="wm-how-num">3</span>
-          <strong>生成下载</strong>
-          <p>一键生成纪念海报并保存，转发朋友圈一起为 Seeker 庆生。</p>
-        </li>
-      </ol>
+    <section class="wm-hero">
+      <div class="wm-hero-inner">
+        <p class="wm-hero-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
+        <h1 class="wm-hero-title">
+          七周年<span class="wm-hero-dot">·</span>水印工坊
+        </h1>
+        <p class="wm-hero-slogan">追光七载，把光赠予远方</p>
+        <p class="wm-hero-sub">
+          选一张你最满意的照片做背景，套上七周年纪念框，@上你的名字——
+          三步生成专属纪念海报。
+        </p>
+      </div>
     </section>
+
+    <section aria-label="水印海报生成器" class="wm-tool">
+      <WatermarkGenerator />
+    </section>
+
+    <nav aria-label="七周年板块导航" class="wm-plate-nav">
+      <a href="/7th/map/">去看看成员地图墙 →</a>
+      <a href="/7th/">← 返回七周年板块</a>
+    </nav>
   </main>
   <Footer />
 </Layout>
 
 <style>
   .wm-page {
-    padding-top: 70px; /* 固定导航栏高度预留，与 welfare 页一致 */
+    padding-top: 70px; /* 固定导航高度预留 */
+    background: var(--background);
   }
 
+  /* ---- 暗色沉浸 hero：海报幽灵字 + 纪念金点缀 ---- */
   .wm-hero {
-    max-width: 46rem;
-    margin-inline: auto;
-    padding: 3.5rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    padding: clamp(3.5rem, 9vw, 6rem) 1.5rem;
     text-align: center;
+    background:
+      radial-gradient(90% 130% at 50% -10%, rgba(245, 197, 66, 0.12), transparent 55%),
+      #050507;
+    color: #fafafa;
+  }
+
+  .wm-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/templates/seeker-7th-landscape.webp') center 38% / 130% auto no-repeat;
+    opacity: 0.13;
+    pointer-events: none;
+  }
+
+  .wm-hero-inner {
+    position: relative;
+    z-index: 1;
   }
 
   .wm-hero-eyebrow {
-    margin: 0 0 0.75rem;
-    font-size: 0.8rem;
+    margin: 0 0 0.9rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.35em;
-    color: var(--muted-foreground);
+    letter-spacing: 0.38em;
+    color: rgba(250, 250, 250, 0.5);
   }
 
   .wm-hero-title {
-    margin: 0 0 1rem;
-    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin: 0 0 0.9rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
     font-weight: 700;
+    color: #fafafa;
+  }
+
+  .wm-hero-dot {
+    margin-inline: 0.2em;
+    color: #f5c542;
+  }
+
+  .wm-hero-slogan {
+    margin: 0 0 1.1rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+    letter-spacing: 0.14em;
+    background: linear-gradient(45deg, #ffe9a8, #f5c542 60%, #f38ba8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .wm-hero-sub {
+    max-width: 34rem;
     margin: 0 auto;
-    max-width: 36rem;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--muted-foreground);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(250, 250, 250, 0.65);
   }
 
-  .wm-how {
-    max-width: 46rem;
-    margin: 0 auto;
-    padding: 1rem 1.5rem 4rem;
+  /* ---- 浅色工具区：跟随主站浅色主题 ---- */
+  .wm-tool {
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    background: var(--background);
   }
 
-  .wm-how ol {
-    display: grid;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .wm-how li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 0.9rem;
-    align-items: center;
-    padding: 1rem 1.2rem;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-  }
-
-  .wm-how-num {
-    grid-row: 1 / 3;
-    display: inline-flex;
-    align-items: center;
+  .wm-plate-nav {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    font-weight: 700;
-    color: var(--on-gradient, #fff);
-    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
-    border-radius: 50%;
+    gap: 1rem 1.75rem;
+    padding: 0.5rem 1.5rem 4rem;
+    font-size: 0.95rem;
   }
 
-  .wm-how strong {
-    font-size: 1rem;
-  }
-
-  .wm-how p {
-    margin: 0.15rem 0 0;
-    font-size: 0.88rem;
+  .wm-plate-nav a {
     color: var(--muted-foreground);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
-  @media (min-width: 48rem) {
-    .wm-how ol {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .wm-plate-nav a:hover {
+    color: var(--primary);
   }
 </style>
