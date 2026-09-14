@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-08-29 **Branch:**
-main（feat/update-astro-homepage 已随 PR #10 合入，合并提交 05cd810）**Active
-Feature:** 无 —— 首页画册式改版（feat-020~022）已完成并合并
+**Last Updated:** 2026-09-14 **Branch:** feat/photo-watermark（基于 main
+1075316，未合并）**Active Feature:**
+feat-024 七周年水印海报生成器 —— 功能完成待用户复核
 
 ## Status
 
@@ -842,3 +842,61 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   #22 审查合并(6 提交/73 文件,CI 绿),main 恢复可构建;生产部署验证:画廊页 67 处 R2 引用、0 处本地图引用
 - 待办:边界 3 原图冷备份(bundle 为原图唯一副本,建议解包去重后另存私有 R2
   bucket + 移动硬盘); 遗留 stash 处置;确认稳定后可删 bundle
+
+## 会话记录（七周年水印海报生成器，2026-09-14）
+
+### 交付（分支 feat/photo-watermark，基于 main 1075316）
+
+- 需求：Seeker 七周年——用户上传照片 + 昵称 → 套统一纪念模板 → 拖动/缩放调整 → 下载成图；**照片全程只在浏览器内存处理，不上传服务器**（用户提供计划书，本会话评审后落地）
+- 方案：纯原生 Canvas + Astro
+  `<script>`（与全站交互模式一致，零新依赖、零 React）；PSD 不参与运行时，只消费导出的模板图
+- 新文件：
+  - `src/lib/watermark/template.ts`
+    —— 模板配置唯一入口：模板URL/尺寸、照片区域、昵称样式（字体/字号/颜色/字距/对齐）、输出格式、FontFace清单
+  - `src/lib/watermark/render.ts` —— 渲染管线：loadPhoto（createImageBitmap +
+    EXIF 方向，失败退
+    <img>，HEIC 等不可解码抛 PhotoDecodeError）、loadTemplate（fetch→blob 防 Canvas 污染）、ensureFonts、cover 适配 + 防露边钳制、圆角裁剪、带字距逐字排布文字、toBlob 导出、文件名清洗
+  - `src/lib/watermark/gestures.ts`
+    —— 指针手势：单指拖动、双指捏合（增量式）、滚轮/触控板缩放，围绕锚点缩放保持视野
+  - `src/components/watermark/WatermarkGenerator.astro` ——
+    UI + 原生 TS脚本：上传（点击/拖拽/Ctrl-V 粘贴）、昵称实时预览、滑杆/±/重置、生成下载（自动触发 + 常驻链接）、状态/错误文案、隐私提示
+  - `src/pages/7th/watermark.astro`
+    —— 页面壳（Layout+Navigation+Footer，70px 顶距），noindex 直达页
+  - `scripts/make-placeholder-template.mjs` +
+    `public/templates/seeker-7th-placeholder.webp` ——
+    1440×1920 占位模板：相纸底 + 取景框四角 +
+    evenodd 挖空照片窗口；脚本自带两项校验：窗口中心 alpha=0（防真实模板重蹈覆辙）、产物 ≤500KB 入库上限
+- 用户确认的决策：占位模板先行（参数配置化零返工替换）；昵称字体文件后续提供（一期系统字体栈 +
+  FontFace 通道已就绪）；路由 `/7th/watermark/`
+  为七周年板块留命名空间、入口暂不挂导航/首页；输出 JPEG
+  q0.92（**推翻计划书的 WebP 默认值**：iOS 存相册/微信兼容性差）
+
+### 排障
+
+- 占位模板 SVG 整幅底色矩形把照片窗口也盖住（绘制顺序照片→模板，成图无照片）→
+  evenodd 挖洞 + alpha 自动校验
+- ESLint：curly（单行 if 必须花括号）、no-duplicate-imports、no-non-null-assertion
+  → 已全部修复；`.wm-zoom-row button`
+  固定宽挤压「重置」成竖排 → 方形样式收窄到 +/- 按钮 + nowrap
+
+### 待办（七周年板块接入时，见 feature_list.json feat-024）
+
+1. 真实模板：PSD 导出带 alpha 的 PNG（**照片区域必须挖空透明**）+ 照片区域/昵称坐标 →
+   <500KB 放 `public/templates/`，否则传 R2 `templates/`
+   并给 bucket 配 CORS（Canvas toBlob 导出必需），更新 `template.ts` 即完成替换
+2. 昵称字体：woff2 → `public/fonts/` + `template.ts`
+   fonts[] 登记（CJK 全量字体1.5-8MB，接入时评估子集化/加载策略）
+3. 板块上线：移除 `/7th/watermark.astro` 的 noindex meta；入口三选一——Navigation
+   `nav-list` 加 `<li>`（不带 data-section）/ ActsSection `events`
+   数组加卡 / 首页七周年弹窗
+
+### Evidence
+
+- `./init.sh` 全绿：astro check + tsc 0 错 0 警、eslint
+  0 错（2 处有意保留的 no-console 警告）、73 页构建
+- agent-browser 端到端实测（dev
+  4321）：注入照片 → 预览合成正确（照片入框 + 模板叠加 + 圆角）；昵称「@倾斜的地平线」带字距居中绘制；滑杆 1.8x 缩放生效；滚轮缩放 1→1.43；重置回 1；「生成纪念海报」→ 状态「已生成（0.1
+  MB）」、下载文件名
+  `Seeker七周年_@倾斜的地平线.jpg`、toDataURL 导出目验成图正确；伪造坏图 →
+  HEIC 友好文案；页面 head 含 `noindex, nofollow`
+- 测试用 `public/test-photo.jpg` 已删除，未入库

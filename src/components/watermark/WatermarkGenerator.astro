@@ -1,0 +1,513 @@
+---
+/**
+ * 七周年水印海报生成器。
+ * 纯浏览器 Canvas 合成：照片只在用户设备内存中处理，不上传服务器。
+ * 交互脚本为本组件内原生 TypeScript（与全站 Navigation/ThemeToggle 同模式）；
+ * 模板参数统一在 src/lib/watermark/template.ts 配置。
+ */
+import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
+---
+
+<div class="wm-generator">
+  <div class="wm-stage" id="wm-stage">
+    <canvas aria-label={`${TEMPLATE.name}预览`} id="wm-canvas"></canvas>
+    <button class="wm-dropzone" id="wm-dropzone" type="button">
+      <span class="wm-dropzone-card">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+          <path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"></path>
+          <circle cx="12" cy="13" r="3.5"></circle>
+        </svg>
+        <strong>点击选择照片</strong>
+        <span>或拖拽 / 粘贴到此处 · JPG / PNG / WebP</span>
+      </span>
+    </button>
+    <input accept="image/jpeg,image/png,image/webp" hidden id="wm-file" type="file" />
+  </div>
+
+  <div class="wm-panel glass-card">
+    <label class="wm-field">
+      <span class="wm-label">你的昵称</span>
+      <input
+        autocomplete="off"         id="wm-nickname"         maxlength={TEMPLATE.nickname.maxLength}         placeholder="例如：倾斜的地平线"         type="text"
+      />
+    </label>
+
+    <div class="wm-field">
+      <span class="wm-label">调整照片（拖动 / 双指缩放）</span>
+      <div class="wm-zoom-row">
+        <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
+        <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
+        <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
+        <button class="wm-text-btn" disabled id="wm-reset" type="button">重置</button>
+      </div>
+    </div>
+
+    <div class="wm-actions">
+      <button class="wm-primary" disabled id="wm-generate" type="button">生成纪念海报</button>
+      <a class="wm-primary wm-download" download hidden id="wm-download">下载海报</a>
+      <button class="wm-text-btn" hidden id="wm-change" type="button">换一张照片</button>
+    </div>
+
+    <p class="wm-status" id="wm-status" role="status"></p>
+    <p class="wm-privacy">🔒 照片只在你自己的浏览器里处理，不会上传到任何服务器。</p>
+  </div>
+</div>
+
+<script>
+  import { attachGestures } from '../../lib/watermark/gestures';
+  import {
+    buildFileName,
+    clampTransform,
+    ensureFonts,
+    exportImage,
+    initialTransform,
+    loadPhoto,
+    loadTemplate,
+    PhotoDecodeError,
+    renderComposition,
+    type LoadedPhoto,
+    type PhotoTransform,
+  } from '../../lib/watermark/render';
+  import { SEEKER_7TH_TEMPLATE as TEMPLATE } from '../../lib/watermark/template';
+
+  const MIN_SCALE = 1;
+  const MAX_SCALE = 4;
+  const ZOOM_STEP = 1.25;
+
+  function required<T extends HTMLElement>(id: string, ctor: new () => T): T {
+    const el = document.getElementById(id);
+    if (!(el instanceof ctor)) {throw new Error(`水印生成器缺少元素 #${id}`);}
+    return el;
+  }
+
+  const canvas = required('wm-canvas', HTMLCanvasElement);
+  const stage = required('wm-stage', HTMLDivElement);
+  const dropzone = required('wm-dropzone', HTMLButtonElement);
+  const fileInput = required('wm-file', HTMLInputElement);
+  const nicknameInput = required('wm-nickname', HTMLInputElement);
+  const zoomSlider = required('wm-zoom', HTMLInputElement);
+  const zoomInBtn = required('wm-zoom-in', HTMLButtonElement);
+  const zoomOutBtn = required('wm-zoom-out', HTMLButtonElement);
+  const resetBtn = required('wm-reset', HTMLButtonElement);
+  const generateBtn = required('wm-generate', HTMLButtonElement);
+  const downloadLink = required('wm-download', HTMLAnchorElement);
+  const changeBtn = required('wm-change', HTMLButtonElement);
+  const statusEl = required('wm-status', HTMLParagraphElement);
+
+  const areaCenter = {
+    x: TEMPLATE.photoArea.x + TEMPLATE.photoArea.width / 2,
+    y: TEMPLATE.photoArea.y + TEMPLATE.photoArea.height / 2,
+  };
+
+  let templateBitmap: ImageBitmap | null = null;
+  let photo: LoadedPhoto | null = null;
+  let transform: PhotoTransform = initialTransform();
+  let downloadUrl: string | null = null;
+  let renderQueued = false;
+
+  function setStatus(message: string, isError = false): void {
+    statusEl.textContent = message;
+    statusEl.classList.toggle('is-error', isError);
+  }
+
+  function requestRender(): void {
+    if (renderQueued || !templateBitmap) {return;}
+    renderQueued = true;
+    requestAnimationFrame(() => {
+      renderQueued = false;
+      if (!templateBitmap) {return;}
+      // 预览分辨率：容器 CSS 尺寸 × dPR，长边封顶 1600px 保证交互流畅
+      const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const scale = Math.max(Math.min((cssWidth * dpr) / TEMPLATE.width, 1600 / TEMPLATE.width), 0.2);
+      renderComposition(canvas, {
+        template: TEMPLATE,
+        templateImage: templateBitmap,
+        photo,
+        transform,
+        nickname: nicknameInput.value,
+        scale,
+      });
+    });
+  }
+
+  const normalize = (t: PhotoTransform): PhotoTransform =>
+    photo ? clampTransform(TEMPLATE, photo, t) : t;
+
+  function syncControls(): void {
+    const hasPhoto = photo !== null;
+    zoomSlider.value = String(transform.scale);
+    zoomSlider.disabled = !hasPhoto;
+    zoomInBtn.disabled = !hasPhoto;
+    zoomOutBtn.disabled = !hasPhoto;
+    resetBtn.disabled = !hasPhoto;
+    generateBtn.disabled = !hasPhoto;
+    dropzone.hidden = hasPhoto;
+    changeBtn.hidden = !hasPhoto;
+  }
+
+  /** 围绕照片区域中心缩放（视野中心的内容保持不动） */
+  function zoomBy(factor: number): void {
+    const t0 = transform;
+    const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t0.scale * factor));
+    if (scale === t0.scale) {return;}
+    transform = normalize({
+      scale,
+      x: (t0.x * scale) / t0.scale,
+      y: (t0.y * scale) / t0.scale,
+    });
+    syncControls();
+    requestRender();
+  }
+
+  function releaseDownload(): void {
+    if (downloadUrl) {
+      URL.revokeObjectURL(downloadUrl);
+      downloadUrl = null;
+    }
+    downloadLink.hidden = true;
+  }
+
+  async function handleFile(file: File | null | undefined): Promise<void> {
+    if (!file) {return;}
+    if (!file.type.startsWith('image/')) {
+      setStatus('请选择图片文件（JPG / PNG / WebP）', true);
+      return;
+    }
+    setStatus('正在读取照片…');
+    try {
+      const loaded = await loadPhoto(file);
+      photo?.close();
+      photo = loaded;
+      transform = initialTransform();
+      releaseDownload();
+      syncControls();
+      requestRender();
+      setStatus('');
+    } catch (error) {
+      setStatus(
+        error instanceof PhotoDecodeError
+          ? '这张照片无法在浏览器中解码，请改用 JPG / PNG 格式（iPhone 可在「设置 → 相机 → 格式」选「兼容性最佳」后重新保存）。'
+          : '照片读取失败，请重试。',
+        true,
+      );
+    }
+  }
+
+  async function generate(): Promise<void> {
+    if (!templateBitmap || !photo) {return;}
+    generateBtn.disabled = true;
+    setStatus('正在生成…');
+    try {
+      const out = document.createElement('canvas');
+      renderComposition(out, {
+        template: TEMPLATE,
+        templateImage: templateBitmap,
+        photo,
+        transform,
+        nickname: nicknameInput.value,
+      });
+      const blob = await exportImage(out, TEMPLATE.output);
+      releaseDownload();
+      downloadUrl = URL.createObjectURL(blob);
+      downloadLink.href = downloadUrl;
+      downloadLink.download = buildFileName(TEMPLATE.output, nicknameInput.value);
+      downloadLink.hidden = false;
+      downloadLink.click();
+      setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），如未自动下载请点「下载海报」。`);
+    } catch {
+      setStatus('生成失败，请重试。', true);
+    } finally {
+      generateBtn.disabled = false;
+    }
+  }
+
+  // ---- 事件绑定 ----
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  changeBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', () => {
+    void handleFile(fileInput.files?.[0]);
+    fileInput.value = '';
+  });
+
+  stage.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    stage.classList.add('is-dragover');
+  });
+  stage.addEventListener('dragleave', () => stage.classList.remove('is-dragover'));
+  stage.addEventListener('drop', (e) => {
+    e.preventDefault();
+    stage.classList.remove('is-dragover');
+    void handleFile(e.dataTransfer?.files?.[0]);
+  });
+
+  document.addEventListener('paste', (e) => {
+    void handleFile(e.clipboardData?.files?.[0]);
+  });
+
+  nicknameInput.addEventListener('input', () => requestRender());
+
+  zoomSlider.addEventListener('input', () => {
+    const scale = Number.parseFloat(zoomSlider.value);
+    if (!Number.isFinite(scale)) {return;}
+    const factor = scale / transform.scale;
+    transform = normalize({
+      scale,
+      x: transform.x * factor,
+      y: transform.y * factor,
+    });
+    requestRender();
+  });
+
+  zoomInBtn.addEventListener('click', () => zoomBy(ZOOM_STEP));
+  zoomOutBtn.addEventListener('click', () => zoomBy(1 / ZOOM_STEP));
+  resetBtn.addEventListener('click', () => {
+    transform = initialTransform();
+    syncControls();
+    requestRender();
+  });
+  generateBtn.addEventListener('click', () => void generate());
+
+  attachGestures(canvas, {
+    getTransform: () => transform,
+    normalize,
+    cssToTemplate: () => TEMPLATE.width / (canvas.clientWidth || 1),
+    areaCenter,
+    minScale: MIN_SCALE,
+    maxScale: MAX_SCALE,
+    onChange: (t) => {
+      transform = t;
+      zoomSlider.value = String(t.scale);
+      requestRender();
+    },
+  });
+
+  const resizeObserver = new ResizeObserver(() => requestRender());
+  resizeObserver.observe(stage);
+
+  // ---- 初始化：字体 → 模板 → 首绘 ----
+  void (async () => {
+    setStatus('正在加载模板…');
+    try {
+      await ensureFonts(TEMPLATE.fonts);
+      templateBitmap = await loadTemplate(TEMPLATE.src);
+      syncControls();
+      requestRender();
+      setStatus('');
+    } catch {
+      setStatus('模板加载失败，请检查网络后刷新重试。', true);
+    }
+  })();
+</script>
+
+<style>
+  .wm-generator {
+    display: grid;
+    gap: 1.5rem;
+    width: min(100%, 46rem);
+    margin-inline: auto;
+  }
+
+  .wm-stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: calc(var(--radius) + 4px);
+    background: var(--muted);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .wm-stage.is-dragover {
+    outline: 3px dashed var(--primary);
+    outline-offset: -6px;
+  }
+
+  #wm-canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  #wm-canvas:active {
+    cursor: grabbing;
+  }
+
+  .wm-dropzone {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .wm-dropzone-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.25rem 1.75rem;
+    border: 1.5px dashed var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: var(--glass-shadow);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .wm-dropzone:hover .wm-dropzone-card,
+  .wm-stage.is-dragover .wm-dropzone-card {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .wm-dropzone svg {
+    width: 2rem;
+    height: 2rem;
+    color: var(--primary);
+  }
+
+  .wm-dropzone strong {
+    font-size: 1rem;
+  }
+
+  .wm-dropzone span {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+  }
+
+  .wm-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.5rem;
+  }
+
+  .wm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .wm-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  #wm-nickname {
+    padding: 0.65rem 0.85rem;
+    font: inherit;
+    color: var(--foreground);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  #wm-nickname:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+
+  .wm-zoom-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  #wm-zoom-in,
+  #wm-zoom-out {
+    flex: 0 0 auto;
+    width: 2.3rem;
+    height: 2.3rem;
+    font-size: 1.1rem;
+    color: var(--foreground);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #wm-zoom {
+    flex: 1;
+    accent-color: var(--primary);
+  }
+
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .wm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .wm-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.3rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--on-gradient, #fff);
+    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .wm-primary:hover {
+    filter: brightness(1.06);
+  }
+
+  .wm-text-btn {
+    padding: 0.55rem 0.9rem;
+    font: inherit;
+    color: var(--muted-foreground);
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+
+  .wm-status {
+    min-height: 1.4em;
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+
+  .wm-status.is-error {
+    color: var(--destructive);
+  }
+
+  .wm-privacy {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (min-width: 48rem) {
+    .wm-generator {
+      grid-template-columns: minmax(0, 26rem) minmax(18rem, 22rem);
+      align-items: start;
+    }
+  }
+</style>
