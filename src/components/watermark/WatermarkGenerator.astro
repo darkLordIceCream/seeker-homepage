@@ -84,6 +84,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     loadTemplate,
     PhotoDecodeError,
     renderComposition,
+    zoomAtTransform,
     type LoadedPhoto,
     type PhotoTransform,
   } from '../../lib/watermark/render';
@@ -186,16 +187,18 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     changeBtn.hidden = !hasPhoto;
   }
 
-  /** 围绕照片区域中心缩放（视野中心的内容保持不动） */
+  /** 围绕照片区域中心缩放（视野中心的内容保持不动，锚点语义随模板 fit） */
   function zoomBy(factor: number): void {
-    const t0 = transform;
-    const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t0.scale * factor));
-    if (scale === t0.scale) {return;}
-    transform = normalize({
-      scale,
-      x: (t0.x * scale) / t0.scale,
-      y: (t0.y * scale) / t0.scale,
-    });
+    transform = zoomAtTransform(
+      currentTemplate,
+      photo,
+      transform,
+      areaCenter.x,
+      areaCenter.y,
+      factor,
+      MIN_SCALE,
+      MAX_SCALE,
+    );
     syncControls();
     requestRender();
   }
@@ -323,12 +326,16 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   zoomSlider.addEventListener('input', () => {
     const scale = Number.parseFloat(zoomSlider.value);
     if (!Number.isFinite(scale)) {return;}
-    const factor = scale / transform.scale;
-    transform = normalize({
-      scale,
-      x: transform.x * factor,
-      y: transform.y * factor,
-    });
+    transform = zoomAtTransform(
+      currentTemplate,
+      photo,
+      transform,
+      areaCenter.x,
+      areaCenter.y,
+      scale / transform.scale,
+      MIN_SCALE,
+      MAX_SCALE,
+    );
     requestRender();
   });
 
@@ -342,15 +349,24 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   generateBtn.addEventListener('click', () => void generate());
 
   attachGestures(canvas, {
-    getTransform: () => transform,
-    normalize,
     cssToTemplate: () => currentTemplate.width / (canvas.clientWidth || 1),
-    areaCenter,
-    minScale: MIN_SCALE,
-    maxScale: MAX_SCALE,
-    onChange: (t) => {
-      transform = t;
-      zoomSlider.value = String(t.scale);
+    drag: (dx, dy) => {
+      transform = normalize({ ...transform, x: transform.x + dx, y: transform.y + dy });
+      zoomSlider.value = String(transform.scale);
+      requestRender();
+    },
+    zoomAt: (px, py, factor) => {
+      transform = zoomAtTransform(
+        currentTemplate,
+        photo,
+        transform,
+        px,
+        py,
+        factor,
+        MIN_SCALE,
+        MAX_SCALE,
+      );
+      zoomSlider.value = String(transform.scale);
       requestRender();
     },
   });

@@ -187,10 +187,10 @@
     {
       "id": "feat-024",
       "name": "七周年水印海报生成器",
-      "description": "浏览器本地 Canvas 合成：上传照片 + 昵称 → 套七周年纪念模板 → 拖动/缩放调整 → 下载 JPEG，照片全程不上传服务器。页面 /7th/watermark/（为七周年板块留命名空间，入口暂隐藏 + noindex）。占位模板先行，照片区域/昵称样式/输出格式/字体全部在 src/lib/watermark/template.ts 配置化，真实 PSD 模板与字体文件到位后仅需更新该配置",
+      "description": "浏览器本地 Canvas 合成：上传照片做海报背景（竖版上下对齐左右居中 / 横版底部和左右对齐）+ 昵称 → 套七周年真实模板（SEEKER 幽灵字母 + 手写体 + 二维码）→ 拖动/缩放微调 → 下载 JPEG，照片全程不上传服务器。页面 /7th/watermark/（为七周年板块留命名空间，入口暂隐藏 + noindex）。竖版/横版双模板切换，叠加层为设计师 PSD 导出 PNG 经脚本修补（擦烙入昵称 + 二维码垫白）的无损 WebP，模板参数全部在 src/lib/watermark/template.ts 配置化",
       "dependencies": ["feat-008", "feat-021"],
       "status": "done",
-      "evidence": "./init.sh 全绿（astro check + tsc 0 错 0 警、eslint 0 错、73 页构建）；agent-browser 端到端实测：上传照片→预览合成入框、昵称带字距绘制、滑杆/滚轮缩放与防露边钳制、重置、生成 JPEG（Seeker七周年_@昵称.jpg）并目验成图、坏图友好报错（HEIC 引导文案）、noindex 注入验证；占位模板脚本含照片窗口透明自动校验（scripts/make-placeholder-template.mjs）；待办：真实模板替换、字体文件接入、七周年板块上线时去 noindex + 挂入口（见 progress.md）"
+      "evidence": "./init.sh 全绿（astro check + tsc 0 错 0 警、eslint 0 错、73 页构建）；agent-browser 端到端实测：竖版/横版切换、适配规则（窄长图上下对齐左右黑边、宽幅全景底部对齐顶部黑边）、底锚缩放 3.32× 无露黑、昵称动态绘制与原海报位置一致、生成 JPEG（Seeker七周年_@昵称.jpg）并目验成图、坏图友好报错、noindex 注入；叠加层脚本含擦除/垫白/透明度自动校验；待办：昵称 webfont 接入、七周年板块上线时去 noindex + 挂入口（见 progress.md）"
     }
   ]
 }

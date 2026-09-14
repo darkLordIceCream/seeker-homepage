@@ -897,21 +897,38 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   q88 重压缩至 149KB）
 - 浏览器实测：竖版/横版切换、照片注入、昵称位置与原海报逐区域比对一致、成图导出目验正确
 
-### ⚠️ 真实资产替换路径（PSD 导出到位后）
+### 真实 PSD 导出接入 + 照片适配规则（用户提供的两张透明 PNG，2026-09-14 第三轮）
 
-- 设计师从 PSD 导出「隐藏黑色背景层 + 昵称层」的透明 PNG → 直接覆盖
-  `public/templates/seeker-7th-portrait.webp` / `seeker-7th-landscape.webp`
-  同名文件（配置零改动）。注意：若导出中 SEEKER 字母为灰色而非白色带透明度，效果与当前重建层略有差异（黑白合成图无法区分「灰不透明」与「白半透明」，当前取白半透明——更贴近「光」的气质），以设计稿为准
-- 二维码在 PSD 导出中若变成透明镂空码，需保留白底或告知后期垫白
+- 用户提供设计师 PSD 导出的透明 PNG（竖版/横版，尺寸与此前一致 2084×3705 /
+  2500×1559），直接替换 JPG 重建管线：`make-watermark-overlays.mjs` 改为消费
+  `scripts/assets/watermark/seeker-7th-*-src.png`（262KB /
+  456KB 可入库），输出**无损 WebP** （212KB / 117KB，二维码模块零损耗保证可扫）
+- **导出图两处程序修补**（PSD 图层结构所致，脚本自动处理并校验）：
+  1. 昵称层被烙进导出图（设计师未隐藏昵称层）→
+     eraseRects 内 alpha 清零（竖版 {1320,1650,142,52}、横版 {832,970,118,52}），该位置由 Canvas 绘制动态昵称；
+  2. 二维码白卡是透明的（白卡与背景层编组）→
+     backingRects 垫白强制不透明（竖版 {1698,3398,208,193}、横版 {2237,1367,136,136}）
+- **照片适配规则落地**（用户约定，替代 cover）：
+  - 竖版：照片与模板**上下对齐、左右居中**——高度铺满，过宽裁两侧、过窄两侧留黑边居中（fit:
+    base height / anchorY center）
+  - 横版：照片与模板**底部和左右对齐**——宽度铺满，过高裁顶、过矮顶部留黑、底边对齐（fit:
+    base width / anchorY bottom）
+  - 实现：`template.ts` 新增 FitSpec；`render.ts` baseScale /
+    clampTransform（锚点感知钳制，letterbox 轴锁 0）/
+    drawPhoto（锚点定位）/ 新增 zoomAtTransform（绕点缩放，(p-ref)(1-k)+t·k 公式，ref 随 anchorY 取中心或底边）；`gestures.ts`
+    收敛为 drag/zoomAt 纯回调契约，变换语义全部收口到 render.ts
+- 浏览器实测：竖版+窄长图（上下对齐左右黑边 ✓）、横版+宽幅全景（底部对齐顶部黑边 ✓）、底锚缩放 3.32×（顶部锚点放大后照片铺满、无露黑 ✓）
 
 ### 待办（七周年板块接入时，见 feature_list.json feat-024）
 
-1. PSD 透明 PNG 导出到位后覆盖 `public/templates/` 同名文件（见上节替换路径）
-2. 昵称字体：woff2 → `public/fonts/` + `template.ts`
+1. 昵称字体：woff2 → `public/fonts/` + `template.ts`
    fonts[] 登记（CJK 全量字体1.5-8MB，接入时评估子集化/加载策略）
-3. 板块上线：移除 `/7th/watermark.astro` 的 noindex meta；入口三选一——Navigation
+2. 板块上线：移除 `/7th/watermark.astro` 的 noindex meta；入口三选一——Navigation
    `nav-list` 加 `<li>`（不带 data-section）/ ActsSection `events`
    数组加卡 / 首页七周年弹窗
+3. 设计师后续更新导出图时：**请隐藏昵称图层**再导出（否则依赖脚本的擦除坐标），覆盖
+   `scripts/assets/watermark/*-src.png` 后重跑
+   `node scripts/make-watermark-overlays.mjs`
 
 ### Evidence
 

@@ -1,36 +1,15 @@
 /**
  * 照片预览手势：单指/鼠标拖动、双指捏合缩放、滚轮/触控板缩放。
- * 位移与缩放统一在「模板像素」坐标系中进行，
- * 由调用方通过 normalize 负责钳制（照片不露边）并通过 onChange 触发重绘。
+ * 本模块只做指针簿记与「CSS px → 模板 px」换算；
+ * 全部变换语义（基准适配、锚点、钳制）由调用方通过 drag / zoomAt 实现。
  */
-import type { PhotoTransform } from './render';
-
 export interface GestureHandlers {
-  getTransform(): PhotoTransform;
-  /** 应用业务钳制（cover 不露边、scale 上下限） */
-  normalize(transform: PhotoTransform): PhotoTransform;
+  /** 单指拖动产生的位移（模板 px） */
+  drag(dx: number, dy: number): void;
+  /** 以模板坐标 (px, py) 为锚点缩放 factor 倍（保持该点内容不动） */
+  zoomAt(px: number, py: number, factor: number): void;
   /** CSS px → 模板 px 的换算系数 */
   cssToTemplate(): number;
-  /** 照片区域中心（模板 px），缩放围绕该点保持视野 */
-  areaCenter: { readonly x: number; readonly y: number };
-  minScale: number;
-  maxScale: number;
-  onChange(transform: PhotoTransform): void;
-}
-
-/** 在模板坐标 (px, py) 处缩放 factor 倍：保持该点下的照片内容不动 */
-function zoomAt(handlers: GestureHandlers, px: number, py: number, factor: number): void {
-  const t0 = handlers.getTransform();
-  const scale = Math.min(handlers.maxScale, Math.max(handlers.minScale, t0.scale * factor));
-  if (scale === t0.scale) {
-    return;
-  }
-  const { x: cx, y: cy } = handlers.areaCenter;
-  const relX = (px - cx - t0.x) / t0.scale;
-  const relY = (py - cy - t0.y) / t0.scale;
-  handlers.onChange(
-    handlers.normalize({ scale, x: px - cx - relX * scale, y: py - cy - relY * scale })
-  );
 }
 
 /** 绑定手势，返回解绑函数 */
@@ -70,9 +49,8 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
     p.y = e.clientY;
 
     if (pointers.size === 1) {
-      const t0 = handlers.getTransform();
       const k = handlers.cssToTemplate();
-      handlers.onChange(handlers.normalize({ ...t0, x: t0.x + dx * k, y: t0.y + dy * k }));
+      handlers.drag(dx * k, dy * k);
     } else if (pointers.size === 2 && pinch) {
       const pts = [...pointers.values()];
       if (!(pts[0] && pts[1])) {
@@ -80,7 +58,7 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
       }
       const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1;
       const mid = templatePoint((pts[0].x + pts[1].x) / 2, (pts[0].y + pts[1].y) / 2);
-      zoomAt(handlers, mid.x, mid.y, dist / pinch.prevDist);
+      handlers.zoomAt(mid.x, mid.y, dist / pinch.prevDist);
       pinch.prevDist = dist;
     }
   };
@@ -96,7 +74,7 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
     e.preventDefault();
     const p = templatePoint(e.clientX, e.clientY);
     const factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
-    zoomAt(handlers, p.x, p.y, factor);
+    handlers.zoomAt(p.x, p.y, factor);
   };
 
   el.addEventListener('pointerdown', onPointerDown);

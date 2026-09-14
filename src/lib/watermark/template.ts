@@ -1,16 +1,21 @@
 /**
  * Seeker 七周年水印海报模板配置（竖版 / 横版）。
  *
- * 照片角色：用户照片做**全幅背景**（cover 铺满整张海报），
- * 白色模板元素（SEEKER 幽灵字母、手写体、小字、二维码）叠加其上，
- * 动态昵称由 Canvas 绘制。
+ * 照片角色：用户照片做海报背景，白色模板元素（SEEKER 幽灵字母、手写体、
+ * 小字、二维码）叠加其上，动态昵称由 Canvas 绘制。
+ *
+ * 照片适配规则（用户约定）：
+ * - 竖版：照片与模板**上下对齐、左右居中**（高度铺满，宽度过宽裁两侧、
+ *   过窄时两侧留黑边居中）；
+ * - 横版：照片与模板**底部和左右对齐**（宽度铺满，高度过高裁顶部、
+ *   过矮时顶部留黑边、底边对齐）。
+ * 用户可在基准适配之上拖动 / 缩放微调。
  *
  * 叠加层资产：`public/templates/seeker-7th-{portrait,landscape}.webp`
- * （白色元素 + alpha 透明底；二维码卡片区域保持不透明保证可扫）。
- * 当前版本由 scripts/make-watermark-overlays.mjs 从海报 JPG 重建；
- * 设计师从 PSD 导出「隐藏黑底层 + 昵称层」的透明 PNG 后直接覆盖同名文件。
+ * （设计师 PSD 导出的透明 PNG 经 scripts/make-watermark-overlays.mjs
+ * 修补昵称擦除 + 二维码垫白后无损转换）。
  *
- * 更换 / 新增模板只需改本文件：src、尺寸、photoArea、nickname 坐标
+ * 更换 / 新增模板只需改本文件：src、尺寸、photoArea、fit、nickname 坐标
  * （单位一律为模板原始像素）。
  */
 
@@ -24,6 +29,18 @@ export interface Rect {
 export interface PhotoArea extends Rect {
   /** 照片窗口圆角半径（全幅背景为 0） */
   readonly radius: number;
+}
+
+/**
+ * 照片基准适配模式：
+ * - `base: 'height'` 照片高度对齐区域高度（竖版，anchorY = 'center'）；
+ * - `base: 'width'` 照片宽度对齐区域宽度（横版，anchorY = 'bottom'）。
+ * anchorY 是放大后纵向拖动的锚定语义：'center' 上下对称裁切，
+ * 'bottom' 底边始终对齐、只裁/补顶部。
+ */
+export interface FitSpec {
+  readonly base: 'height' | 'width';
+  readonly anchorY: 'center' | 'bottom';
 }
 
 export interface NicknameStyle {
@@ -65,6 +82,7 @@ export interface WatermarkTemplate {
   readonly width: number;
   readonly height: number;
   readonly photoArea: PhotoArea;
+  readonly fit: FitSpec;
   readonly nickname: NicknameStyle;
   readonly output: OutputSpec;
   readonly fonts: readonly WebFont[];
@@ -81,7 +99,7 @@ const OUTPUT: OutputSpec = {
   extension: '.jpg',
 };
 
-/** 竖版 9:16 —— 昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692] */
+/** 竖版 9:16 —— 照片上下对齐、左右居中；昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692] */
 export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   id: 'seeker-7th-portrait',
   name: 'Seeker 七周年纪念海报 · 竖版',
@@ -89,6 +107,7 @@ export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   width: 2084,
   height: 3705,
   photoArea: { x: 0, y: 0, width: 2084, height: 3705, radius: 0 },
+  fit: { base: 'height', anchorY: 'center' },
   nickname: {
     x: 1396,
     y: 1688,
@@ -105,7 +124,7 @@ export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   fonts: [],
 };
 
-/** 横版 16:10 —— 昵称「@肖默」实测 bbox x[848,938] y[985,1012] */
+/** 横版 16:10 —— 照片底部和左右对齐；昵称「@肖默」实测 bbox x[848,938] y[985,1012] */
 export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
   id: 'seeker-7th-landscape',
   name: 'Seeker 七周年纪念海报 · 横版',
@@ -113,6 +132,7 @@ export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
   width: 2500,
   height: 1559,
   photoArea: { x: 0, y: 0, width: 2500, height: 1559, radius: 0 },
+  fit: { base: 'width', anchorY: 'bottom' },
   nickname: {
     x: 893,
     y: 1008,

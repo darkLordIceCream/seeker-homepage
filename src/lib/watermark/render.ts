@@ -1,10 +1,15 @@
 /**
- * 水印海报渲染管线：照片/模板加载、cover 适配与变换钳制、Canvas 合成、导出。
+ * 水印海报渲染管线：照片/模板加载、基准适配与变换钳制、Canvas 合成、导出。
  * 全部函数为纯浏览器端实现，用户照片不经过任何网络请求。
  */
 import type { OutputSpec, PhotoArea, WatermarkTemplate, WebFont } from './template';
 
-/** 用户调整状态：offset 为相对「照片区域中心」的位移（模板 px） */
+/**
+ * 用户调整状态（模板 px）：
+ * - `scale` 相对基准适配（fit）的放大倍数，≥ 1；
+ * - `x` 相对「左右居中」锚点的位移；
+ * - `y` 相对纵向锚点（fit.anchorY：'center' 居中 / 'bottom' 底对齐）的位移。
+ */
 export interface PhotoTransform {
   scale: number;
   x: number;
@@ -101,15 +106,32 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-/** cover 基准缩放：照片刚好铺满照片区域所需的比例 */
-export function coverScale(area: Rect2D, photo: { width: number; height: number }): number {
-  return Math.max(area.width / photo.width, area.height / photo.height);
+/** 基准适配缩放（scale = 1 时）：按 fit 规则铺满基准边所需的比例 */
+export function baseScale(
+  template: WatermarkTemplate,
+  photo: { width: number; height: number }
+): number {
+  const area = template.photoArea;
+  return template.fit.base === 'height' ? area.height / photo.height : area.width / photo.width;
 }
 
 type Rect2D = Pick<PhotoArea, 'x' | 'y' | 'width' | 'height'>;
 
+/** 当前变换下照片的绘制尺寸（模板 px） */
+function drawnSize(
+  template: WatermarkTemplate,
+  photo: { width: number; height: number },
+  t: PhotoTransform
+): { w: number; h: number } {
+  const s = baseScale(template, photo) * t.scale;
+  return { w: photo.width * s, h: photo.height * s };
+}
+
 /**
- * 钳制用户变换：scale ≥ 1（cover 已铺满），位移保证照片永不露出区域边缘。
+ * 钳制用户变换：
+ * - scale ≥ 1（只允许在基准适配之上放大）；
+ * - X：左右居中，照片铺满宽度后允许对称位移，不足宽度（留黑边）时锁 0；
+ * - Y：'center' 上下对称位移；'bottom' 底对齐锁下限 0、只可上移裁顶。
  */
 export function clampTransform(
   template: WatermarkTemplate,
@@ -117,15 +139,48 @@ export function clampTransform(
   t: PhotoTransform
 ): PhotoTransform {
   const area = template.photoArea;
-  const drawW = photo.width * coverScale(area, photo) * t.scale;
-  const drawH = photo.height * coverScale(area, photo) * t.scale;
-  const maxX = Math.max(0, (drawW - area.width) / 2);
-  const maxY = Math.max(0, (drawH - area.height) / 2);
+  const { w: drawW, h: drawH } = drawnSize(template, photo, t);
+  const rangeX = Math.max(0, (drawW - area.width) / 2);
+  const rangeY = Math.max(0, (drawH - area.height) / 2);
+  const y =
+    template.fit.anchorY === 'bottom' ? clamp(t.y, 0, rangeY * 2) : clamp(t.y, -rangeY, rangeY);
   return {
     scale: Math.max(1, t.scale),
-    x: clamp(t.x, -maxX, maxX),
-    y: clamp(t.y, -maxY, maxY),
+    x: clamp(t.x, -rangeX, rangeX),
+    y,
   };
+}
+
+/**
+ * 围绕模板坐标 (px, py) 缩放 factor 倍：保持该点下的照片内容不动。
+ * 锚点参照系随 fit.anchorY 变化（'center' 区域中心 / 'bottom' 区域底边）。
+ */
+export function zoomAtTransform(
+  template: WatermarkTemplate,
+  photo: { width: number; height: number } | null,
+  t: PhotoTransform,
+  px: number,
+  py: number,
+  factor: number,
+  minScale: number,
+  maxScale: number
+): PhotoTransform {
+  if (!photo) {
+    return t;
+  }
+  const scale = clamp(t.scale * factor, minScale, maxScale);
+  if (scale === t.scale) {
+    return t;
+  }
+  const k = scale / t.scale;
+  const area = template.photoArea;
+  const xRef = area.x + area.width / 2;
+  const yRef = template.fit.anchorY === 'bottom' ? area.y + area.height : area.y + area.height / 2;
+  return clampTransform(template, photo, {
+    scale,
+    x: (px - xRef) * (1 - k) + t.x * k,
+    y: (py - yRef) * (1 - k) + t.y * k,
+  });
 }
 
 function roundedRectPath(ctx: CanvasRenderingContext2D, area: Rect2D, radius: number): void {
@@ -144,7 +199,7 @@ function roundedRectPath(ctx: CanvasRenderingContext2D, area: Rect2D, radius: nu
   ctx.closePath();
 }
 
-/** 在照片区域内绘制用户照片（cover + 用户位移/缩放，圆角裁剪） */
+/** 在照片区域内绘制用户照片（基准适配 + 用户位移/缩放，圆角裁剪） */
 function drawPhoto(
   ctx: CanvasRenderingContext2D,
   template: WatermarkTemplate,
@@ -152,11 +207,12 @@ function drawPhoto(
   transform: PhotoTransform
 ): void {
   const area = template.photoArea;
-  const scale = coverScale(area, photo) * transform.scale;
-  const drawW = photo.width * scale;
-  const drawH = photo.height * scale;
+  const { w: drawW, h: drawH } = drawnSize(template, photo, transform);
   const dx = area.x + area.width / 2 + transform.x - drawW / 2;
-  const dy = area.y + area.height / 2 + transform.y - drawH / 2;
+  const dy =
+    template.fit.anchorY === 'bottom'
+      ? area.y + area.height - drawH + transform.y
+      : area.y + area.height / 2 + transform.y - drawH / 2;
 
   ctx.save();
   roundedRectPath(ctx, area, area.radius);
