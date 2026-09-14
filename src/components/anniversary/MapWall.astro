@@ -7,7 +7,7 @@
  * 数据来自 src/data/anniversary/map-points.ts（当前为占位数据，见该文件头注释）。
  */
 import { geoMercator, geoNaturalEarth1, geoPath, geoCentroid } from 'd3-geo';
-import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
 import worldRaw from '../../data/anniversary/geo/world-countries.json';
 import chinaRaw from '../../data/anniversary/geo/china-provinces.json';
 import { COUNTRY_POINTS, MAP_STATS, PROVINCE_POINTS } from '../../data/anniversary/map-points';
@@ -28,9 +28,15 @@ const worldProjection = geoNaturalEarth1().fitExtent(
   worldFc,
 );
 const worldPath = geoPath(worldProjection);
-const worldShapes = worldFc.features
-  .map(f => ({ d: worldPath(f), name: f.properties?.name }))
-  .filter((s): s is { d: string; name?: string } => Boolean(s.d));
+interface WorldShape {
+  d: string;
+  name?: string;
+}
+const worldShapes: WorldShape[] = worldFc.features
+  .map(
+    (f): WorldShape => ({ d: worldPath(f) ?? '', name: f.properties?.name ?? undefined }),
+  )
+  .filter(s => Boolean(s.d));
 
 /* ---- 中国省域面板：墨卡托投影，460×560 ---- */
 const CHINA_W = 460;
@@ -42,7 +48,7 @@ const CHINA_H = 560;
  * - 投影改为按大陆固定经纬边界框 fit；
  * - 标记质心只取要素里面积最大的多边形环（陆地本体）。
  */
-const MAINLAND_BBOX: GeoJSON = {
+const MAINLAND_BBOX: Polygon = {
   type: 'Polygon',
   // 注意绕向：d3 球面多边形外环必须顺时针（小于半球时），逆时针会被当作
   // 「全球去掉这个框」，fitExtent 就会拟合整个世界导致 scale 错误
@@ -67,12 +73,12 @@ const chinaPath = geoPath(chinaProjection);
  * DataV 数据外环为 RFC7946 逆时针，而 d3 球面质心按顺时针约定积分——
  * 直接算会得到「球面其余部分」的质心，必须先反转环。 */
 function mainlandCentroid(feature: Feature<Geometry>): [number, number] {
-  const geom = feature.geometry;
+  const geom = feature.geometry as Polygon | MultiPolygon;
   const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
   let best = polys[0]!;
   let bestArea = 0;
   for (const poly of polys) {
-    const ring = poly[0]!;
+    const ring = poly[0] as [number, number][];
     let area = 0;
     for (let i = 0; i < ring.length - 1; i++) {
       area += ring[i]![0] * ring[i + 1]![1] - ring[i + 1]![0] * ring[i]![1];
@@ -86,13 +92,20 @@ function mainlandCentroid(feature: Feature<Geometry>): [number, number] {
 }
 
 const memberProvinceNames = new Set(PROVINCE_POINTS.map(p => p.name));
-const chinaShapes = chinaFc.features
-  .map(f => ({
-    d: chinaPath(f),
-    name: f.properties?.name,
-    member: memberProvinceNames.has(f.properties?.name ?? ''),
-  }))
-  .filter((s): s is { d: string; name?: string; member: boolean } => Boolean(s.d));
+interface MapShape {
+  d: string;
+  name?: string;
+  member?: boolean;
+}
+const chinaShapes: MapShape[] = chinaFc.features
+  .map(
+    (f): MapShape => ({
+      d: chinaPath(f) ?? '',
+      name: f.properties?.name ?? undefined,
+      member: memberProvinceNames.has(f.properties?.name ?? ''),
+    }),
+  )
+  .filter(s => Boolean(s.d));
 
 /* ---- 标记点：按 count 决定半径，世界取国界中心/手工坐标，中国取省中心 ---- */
 interface Marker {
@@ -338,7 +351,7 @@ const stats = MAP_STATS;
 
 <script>
   // 轻量 hover 提示：事件委托 + 单一浮层
-  const wall = document.querySelector('[data-map-wall]');
+  const wall = document.querySelector<HTMLElement>('[data-map-wall]');
   const tip = document.querySelector<HTMLElement>('[data-map-tooltip]');
   if (wall && tip) {
     wall.addEventListener('mouseover', e => {
