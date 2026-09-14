@@ -1,8 +1,19 @@
 /**
  * 水印海报渲染管线：照片/模板加载、基准适配与变换钳制、Canvas 合成、导出。
  * 全部函数为纯浏览器端实现，用户照片不经过任何网络请求。
+ *
+ * 注意：本文件刻意避免多行函数参数列表 —— 仓库里 prettier（trailingComma: es5）
+ * 与 eslint（comma-dangle: always-multiline）对参数列表尾逗号的要求互相矛盾，
+ * 多行参数列表会在提交钩子与 lint 之间来回翻转；复杂参数一律收敛为单个
+ * options 对象（对象字面量的尾逗号两边规则一致）。
  */
 import type { OutputSpec, PhotoArea, WatermarkTemplate, WebFont } from './template';
+
+/** 照片尺寸（仅宽高） */
+export interface PhotoSize {
+  readonly width: number;
+  readonly height: number;
+}
 
 /**
  * 用户调整状态（模板 px）：
@@ -107,24 +118,29 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 /** 基准适配缩放（scale = 1 时）：按 fit 规则铺满基准边所需的比例 */
-export function baseScale(
-  template: WatermarkTemplate,
-  photo: { width: number; height: number }
-): number {
+export function baseScale(template: WatermarkTemplate, photo: PhotoSize): number {
   const area = template.photoArea;
   return template.fit.base === 'height' ? area.height / photo.height : area.width / photo.width;
 }
 
 type Rect2D = Pick<PhotoArea, 'x' | 'y' | 'width' | 'height'>;
 
+interface DrawnSize {
+  w: number;
+  h: number;
+}
+
 /** 当前变换下照片的绘制尺寸（模板 px） */
-function drawnSize(
-  template: WatermarkTemplate,
-  photo: { width: number; height: number },
-  t: PhotoTransform
-): { w: number; h: number } {
-  const s = baseScale(template, photo) * t.scale;
+function drawnSize(template: WatermarkTemplate, photo: PhotoSize, scale: number): DrawnSize {
+  const s = baseScale(template, photo) * scale;
   return { w: photo.width * s, h: photo.height * s };
+}
+
+/** 钳制变换的输入：模板、照片尺寸与用户变换 */
+export interface ClampSpec {
+  template: WatermarkTemplate;
+  photo: PhotoSize;
+  transform: PhotoTransform;
 }
 
 /**
@@ -133,13 +149,10 @@ function drawnSize(
  * - X：左右居中，照片铺满宽度后允许对称位移，不足宽度（留黑边）时锁 0；
  * - Y：'center' 上下对称位移；'bottom' 底对齐锁下限 0、只可上移裁顶。
  */
-export function clampTransform(
-  template: WatermarkTemplate,
-  photo: { width: number; height: number },
-  t: PhotoTransform
-): PhotoTransform {
+export function clampTransform(spec: ClampSpec): PhotoTransform {
+  const { template, photo, transform: t } = spec;
   const area = template.photoArea;
-  const { w: drawW, h: drawH } = drawnSize(template, photo, t);
+  const { w: drawW, h: drawH } = drawnSize(template, photo, t.scale);
   const rangeX = Math.max(0, (drawW - area.width) / 2);
   const rangeY = Math.max(0, (drawH - area.height) / 2);
   const y =
@@ -151,20 +164,24 @@ export function clampTransform(
   };
 }
 
+/** 绕点缩放的输入（photo 允许为 null——未选照片时原样返回当前变换） */
+export interface ZoomAtSpec {
+  template: WatermarkTemplate;
+  photo: PhotoSize | null;
+  transform: PhotoTransform;
+  px: number;
+  py: number;
+  factor: number;
+  minScale: number;
+  maxScale: number;
+}
+
 /**
  * 围绕模板坐标 (px, py) 缩放 factor 倍：保持该点下的照片内容不动。
  * 锚点参照系随 fit.anchorY 变化（'center' 区域中心 / 'bottom' 区域底边）。
  */
-export function zoomAtTransform(
-  template: WatermarkTemplate,
-  photo: { width: number; height: number } | null,
-  t: PhotoTransform,
-  px: number,
-  py: number,
-  factor: number,
-  minScale: number,
-  maxScale: number
-): PhotoTransform {
+export function zoomAtTransform(spec: ZoomAtSpec): PhotoTransform {
+  const { template, photo, transform: t, px, py, factor, minScale, maxScale } = spec;
   if (!photo) {
     return t;
   }
@@ -176,10 +193,14 @@ export function zoomAtTransform(
   const area = template.photoArea;
   const xRef = area.x + area.width / 2;
   const yRef = template.fit.anchorY === 'bottom' ? area.y + area.height : area.y + area.height / 2;
-  return clampTransform(template, photo, {
-    scale,
-    x: (px - xRef) * (1 - k) + t.x * k,
-    y: (py - yRef) * (1 - k) + t.y * k,
+  return clampTransform({
+    template,
+    photo,
+    transform: {
+      scale,
+      x: (px - xRef) * (1 - k) + t.x * k,
+      y: (py - yRef) * (1 - k) + t.y * k,
+    },
   });
 }
 
@@ -199,15 +220,18 @@ function roundedRectPath(ctx: CanvasRenderingContext2D, area: Rect2D, radius: nu
   ctx.closePath();
 }
 
+/** 照片绘制的输入：模板、已加载照片与用户变换 */
+export interface DrawPhotoSpec {
+  template: WatermarkTemplate;
+  photo: LoadedPhoto;
+  transform: PhotoTransform;
+}
+
 /** 在照片区域内绘制用户照片（基准适配 + 用户位移/缩放，圆角裁剪） */
-function drawPhoto(
-  ctx: CanvasRenderingContext2D,
-  template: WatermarkTemplate,
-  photo: LoadedPhoto,
-  transform: PhotoTransform
-): void {
+function drawPhoto(ctx: CanvasRenderingContext2D, spec: DrawPhotoSpec): void {
+  const { template, photo, transform } = spec;
   const area = template.photoArea;
-  const { w: drawW, h: drawH } = drawnSize(template, photo, transform);
+  const { w: drawW, h: drawH } = drawnSize(template, photo, transform.scale);
   const dx = area.x + area.width / 2 + transform.x - drawW / 2;
   const dy =
     template.fit.anchorY === 'bottom'
@@ -226,15 +250,18 @@ function drawPhoto(
   ctx.restore();
 }
 
+/** 带字距文字的绘制参数 */
+export interface SpacedTextSpec {
+  text: string;
+  x: number;
+  y: number;
+  spacing: number;
+  align: CanvasTextAlign;
+}
+
 /** 带字距的文字绘制（ctx.letterSpacing 兼容性不足，手动逐字排布），支持 center/left/right */
-function fillTextSpaced(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  spacing: number,
-  align: CanvasTextAlign
-): void {
+function fillTextSpaced(ctx: CanvasRenderingContext2D, spec: SpacedTextSpec): void {
+  const { text, x, y, spacing, align } = spec;
   const chars = Array.from(text);
   const widths = chars.map(ch => ctx.measureText(ch).width);
   const total = widths.reduce((sum, w) => sum + w, 0) + spacing * (chars.length - 1);
@@ -260,16 +287,20 @@ function measureSpaced(ctx: CanvasRenderingContext2D, text: string, spacing: num
   return total + spacing * (chars.length - 1);
 }
 
+/** 动态昵称绘制的输入 */
+export interface NicknameDrawSpec {
+  template: WatermarkTemplate;
+  /** 用户输入的昵称（不含前缀） */
+  nickname: string;
+}
+
 /**
  * 绘制动态昵称（前缀 + 用户输入）；输入为空时跳过。
  * 超过 maxWidth 时自动缩小字号（字距随之等比收缩）至 minFontSize 下限，
  * 保证长 ID 不与模板手写体等固定元素重叠。
  */
-function drawNickname(
-  ctx: CanvasRenderingContext2D,
-  template: WatermarkTemplate,
-  nickname: string
-): void {
+function drawNickname(ctx: CanvasRenderingContext2D, spec: NicknameDrawSpec): void {
+  const { template, nickname } = spec;
   const text = nickname.trim();
   if (!text) {
     return;
@@ -295,7 +326,7 @@ function drawNickname(
     setFont(size);
   }
   if (spacing > 0) {
-    fillTextSpaced(ctx, content, style.x, style.y, spacing, style.align);
+    fillTextSpaced(ctx, { text: content, x: style.x, y: style.y, spacing, align: style.align });
   } else {
     ctx.textAlign = style.align;
     ctx.fillText(content, style.x, style.y);
@@ -326,22 +357,20 @@ export function renderComposition(canvas: HTMLCanvasElement, input: CompositionI
   ctx.setTransform(scale, 0, 0, scale, 0, 0);
   ctx.clearRect(0, 0, template.width, template.height);
   if (photo) {
-    drawPhoto(ctx, template, photo, transform);
+    drawPhoto(ctx, { template, photo, transform });
   }
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(templateImage, 0, 0, template.width, template.height);
-  drawNickname(ctx, template, nickname);
+  drawNickname(ctx, { template, nickname });
 }
 
 /** 按输出配置导出画布为 Blob */
 export function exportImage(canvas: HTMLCanvasElement, output: OutputSpec): Promise<Blob> {
   return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      blob => (blob ? resolve(blob) : reject(new Error('图片导出失败'))),
-      output.mimeType,
-      output.quality
-    );
+    const onDone = (blob: Blob | null) =>
+      blob ? resolve(blob) : reject(new Error('图片导出失败'));
+    canvas.toBlob(onDone, output.mimeType, output.quality);
   });
 }
 
