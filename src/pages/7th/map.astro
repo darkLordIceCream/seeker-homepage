@@ -21,6 +21,7 @@ import MapGlobe from '../../components/anniversary/MapGlobe.astro';
 <style>
   /* 整屏沉浸：地球仪占满导航以下全部视口，无滚动（类似首页整屏体验） */
   .map-page {
+    margin-top: 70px; /* 固定导航以下整屏 */
     height: calc(100dvh - 70px);
     overflow: hidden;
     background: #020206;

@@ -49,8 +49,8 @@ function mainlandCentroid(feature: Feature<Geometry>): [number, number] {
   }
   return geoCentroid({
     type: 'Polygon',
-    coordinates: [best.slice().reverse()],
-  } as unknown as Polygon);
+    coordinates: [best[0]!.slice().reverse()],
+  });
 }
 
 /** 国家标记：worldName 匹配世界图取质心，小国用 lngLat 手工标注 */
@@ -383,6 +383,9 @@ const statsJson = JSON.stringify(stats);
     canvas.style.width = `${W}px`;
     canvas.style.height = `${H}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    projection
+      .translate([W / 2, H / 2 + H * 0.02])
+      .scale(baseRadius() * scaleFactor);
     drawStars();
     needsRender = true;
   }
@@ -393,6 +396,16 @@ const statsJson = JSON.stringify(stats);
     }
     projection.rotate(rotation);
     projection.scale(baseRadius() * scaleFactor);
+    (window as unknown as { __globeDebug?: unknown }).__globeDebug = {
+      W,
+      H,
+      dpr,
+      scale: projection.scale(),
+      translate: projection.translate(),
+      rotation,
+      canvasBuf: [canvas.width, canvas.height],
+      canvasCSS: [canvas.style.width, canvas.style.height],
+    };
     ctx.clearRect(0, 0, W, H);
 
     const cx = W / 2;
