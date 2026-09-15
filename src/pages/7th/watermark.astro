@@ -1,13 +1,12 @@
 ---
 /**
  * /7th/watermark — 【七周年板块 · 水印工坊】。
- * 页面结构：暗色沉浸 hero（海报幽灵字背景）+ 浅色工具区（WatermarkGenerator）。
- * 生成逻辑与模板配置见 src/lib/watermark/；本页只负责壳与视觉。
- * 七周年板块已上线：入口在导航与首页周年卡，无需 noindex。
+ * 画布优先沉浸式布局：整页即海报舞台，控制收纳为底部悬浮玻璃工具条。
+ * 生成逻辑与模板配置见 src/lib/watermark/；本页只负责壳与页头。
+ * 七周年板块已上线：入口在导航与首页周年角卡，无需 noindex。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
-import Footer from '../../components/Footer.astro';
 import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.astro';
 ---
 
@@ -16,134 +15,58 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
 >
   <Navigation />
   <main class="wm-page" id="main-content">
-    <section class="wm-hero">
-      <div class="wm-hero-inner">
-        <p class="wm-hero-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
-        <h1 class="wm-hero-title">
-          七周年<span class="wm-hero-dot">·</span>水印工坊
-        </h1>
-        <p class="wm-hero-slogan">追光七载，把光赠予远方</p>
-        <p class="wm-hero-sub">
-          选一张你最满意的照片做背景，套上七周年纪念框，@上你的名字——
-          三步生成专属纪念海报。
-        </p>
-      </div>
-    </section>
-
-    <section aria-label="水印海报生成器" class="wm-tool">
-      <WatermarkGenerator />
-    </section>
-
-    <nav aria-label="七周年板块导航" class="wm-plate-nav">
-      <a href="/7th/map/">去看看成员地图墙 →</a>
-      <a href="/7th/">← 返回七周年板块</a>
-    </nav>
+    <div class="wm-page-head">
+      <a class="wm-back" href="/7th/">← 七周年板块</a>
+      <span class="wm-page-title">水印工坊</span>
+      <span class="wm-page-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
+        🔒 仅本地处理
+      </span>
+    </div>
+    <WatermarkGenerator />
   </main>
-  <Footer />
 </Layout>
 
 <style>
+  /* 画布优先：整页即舞台，无 hero / 无页脚；跟随主题双模式 */
   .wm-page {
+    min-height: calc(100dvh - 70px);
     padding-top: 70px; /* 固定导航高度预留 */
-    background: var(--background);
-  }
-
-  /* ---- 暗色沉浸 hero：海报幽灵字 + 纪念金点缀 ---- */
-  .wm-hero {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(3.5rem, 9vw, 6rem) 1.5rem;
-    text-align: center;
     background:
-      radial-gradient(90% 130% at 50% -10%, rgba(245, 197, 66, 0.12), transparent 55%),
-      #050507;
-    color: #fafafa;
+      radial-gradient(90% 55% at 50% 0%, rgba(245, 197, 66, 0.06), transparent 60%),
+      var(--background);
   }
 
-  .wm-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('/templates/seeker-7th-landscape.webp') center 38% / 130% auto no-repeat;
-    opacity: 0.13;
-    pointer-events: none;
-  }
-
-  .wm-hero-inner {
+  .wm-page-head {
     position: relative;
-    z-index: 1;
-  }
-
-  .wm-hero-eyebrow {
-    margin: 0 0 0.9rem;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.38em;
-    color: rgba(250, 250, 250, 0.5);
-  }
-
-  .wm-hero-title {
-    margin: 0 0 0.9rem;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: clamp(1.9rem, 6vw, 3.4rem);
-    font-weight: 700;
-    color: #fafafa;
-  }
-
-  .wm-hero-dot {
-    margin-inline: 0.2em;
-    color: #f5c542;
-  }
-
-  @media (max-width: 30rem) {
-    .wm-hero-eyebrow {
-      font-size: 0.6rem;
-      letter-spacing: 0.16em;
-    }
-  }
-
-  .wm-hero-slogan {
-    margin: 0 0 1.1rem;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: clamp(1.1rem, 2.6vw, 1.45rem);
-    letter-spacing: 0.14em;
-    background: linear-gradient(45deg, #ffe9a8, #f5c542 60%, #f38ba8);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .wm-hero-sub {
-    max-width: 34rem;
-    margin: 0 auto;
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: rgba(250, 250, 250, 0.65);
-  }
-
-  /* ---- 浅色工具区：跟随主站浅色主题 ---- */
-  .wm-tool {
-    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
-    background: var(--background);
-  }
-
-  .wm-plate-nav {
+    z-index: 20;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem 1.75rem;
-    padding: 0.5rem 1.5rem 4rem;
-    font-size: 0.95rem;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 0.65rem 1rem;
   }
 
-  .wm-plate-nav a {
+  .wm-back {
+    font-size: 0.82rem;
     color: var(--muted-foreground);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    text-decoration: none;
   }
 
-  .wm-plate-nav a:hover {
+  .wm-back:hover {
     color: var(--primary);
+  }
+
+  .wm-page-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .wm-page-privacy {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--muted-foreground);
+    cursor: help;
   }
 </style>
