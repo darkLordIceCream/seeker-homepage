@@ -304,6 +304,11 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       sourceFileName = file.name;
       releaseDownload();
 
+      transform = initialTransform();
+      syncControls();
+      requestRender();
+      setStatus('');
+
       // 自动识别横竖版：宽 ≥ 高 → 横版，否则竖版；与当前模板不一致时自动切换
       const detected =
         loaded.width >= loaded.height
@@ -311,13 +316,10 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
           : WATERMARK_TEMPLATES.find((t) => t.fit.base === 'height');
       if (detected && detected.id !== currentTemplate.id) {
         await switchTemplate(detected, { silent: true });
-        toast(`已识别为${loaded.width >= loaded.height ? '横图' : '竖图'} · 自动套用${detected.name.split('·').pop()?.trim() ?? ''}模板，可在下方工具条切换`);
+        toast(
+          `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${detected.name.split('·').pop()?.trim() ?? ''}模板 · 可在下方工具条切换`,
+        );
       }
-
-      transform = initialTransform();
-      syncControls();
-      requestRender();
-      setStatus('');
     } catch (error) {
       setStatus(
         error instanceof PhotoDecodeError
