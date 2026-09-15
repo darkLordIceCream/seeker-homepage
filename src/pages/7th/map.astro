@@ -1,12 +1,13 @@
 ---
 /**
- * /7th/map — 【七周年板块 · 地图墙】成员分布地球仪。
- * 整屏沉浸：一颗实时晨昏线地球仪占满导航以下全部视口（类似首页整屏体验），
- * 信息以浮动玻璃面板叠加。数据为占位数据（见 map-points.ts）。
+ * /7th/map — 【七周年板块 · 地图墙】成员分布可视化 · ECharts 版。
+ * 结构：紧凑页头（标题 + 统计）→ 世界地图全宽屏 → 中国省域全宽屏 → 说明与入口。
+ * 地图本体为 MapWall 组件（ECharts 懒加载）；数据见 map-points.ts（当前为占位数据）。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
-import MapGlobe from '../../components/anniversary/MapGlobe.astro';
+import MapWall from '../../components/anniversary/MapWall.astro';
+import { MAP_STATS } from '../../data/anniversary/map-points';
 ---
 
 <Layout
@@ -14,16 +15,159 @@ import MapGlobe from '../../components/anniversary/MapGlobe.astro';
 >
   <Navigation />
   <main class="map-page" id="main-content">
-    <MapGlobe />
+    <header class="map-hero">
+      <p class="map-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
+      <h1 class="map-title">追光者的地图墙</h1>
+      <dl class="map-stats">
+        <div class="map-stat">
+          <dd>{MAP_STATS.countries}</dd>
+          <dt>国家</dt>
+        </div>
+        <div class="map-stat">
+          <dd>{MAP_STATS.provinces}</dd>
+          <dt>省级行政区</dt>
+        </div>
+        <div class="map-stat">
+          <dd>{MAP_STATS.members}</dd>
+          <dt>位成员</dt>
+        </div>
+      </dl>
+    </header>
+
+    <MapWall />
+
+    <section aria-label="板块导航" class="map-footer">
+      <p class="map-note">成员分布持续更新中 · 追光七载，把光赠予远方</p>
+      <div class="map-links">
+        <a class="map-cta" href="/7th/watermark/">去做一张七周年水印海报 →</a>
+        <a class="map-back" href="/7th/">← 返回七周年板块</a>
+      </div>
+    </section>
   </main>
 </Layout>
 
 <style>
-  /* 整屏沉浸：地球仪占满导航以下全部视口，无滚动（类似首页整屏体验） */
+  /* 暗色沉浸展示页：显式深色值，不随主题切换 */
   .map-page {
-    margin-top: 70px; /* 固定导航以下整屏 */
-    height: calc(100dvh - 70px);
-    overflow: hidden;
-    background: #020206;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    padding-top: 70px; /* 固定导航高度预留 */
+    background:
+      radial-gradient(120% 55% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
+      #050507;
+    color: #fafafa;
+  }
+
+  .map-hero {
+    max-width: 68rem;
+    margin-inline: auto;
+    padding: 2.5rem 1.5rem 1.75rem;
+    text-align: center;
+  }
+
+  .map-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: rgba(250, 250, 250, 0.5);
+  }
+
+  @media (max-width: 30rem) {
+    .map-eyebrow {
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+    }
+  }
+
+  .map-title {
+    margin: 0 0 1rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 700;
+    color: #fafafa;
+  }
+
+  .map-stats {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    margin: 0;
+  }
+
+  .map-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .map-stat dd {
+    order: -1;
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffe9a8, #f5c542 55%, #d20f39);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .map-stat dt {
+    font-size: 0.84rem;
+    color: rgba(250, 250, 250, 0.6);
+  }
+
+  .map-wall {
+    flex: 1;
+  }
+
+  .map-footer {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    text-align: center;
+  }
+
+  .map-note {
+    margin: 0 0 1.3rem;
+    font-size: 0.84rem;
+    letter-spacing: 0.12em;
+    color: rgba(250, 250, 250, 0.45);
+  }
+
+  .map-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+
+  .map-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7rem 1.35rem;
+    font-weight: 600;
+    color: #0a0a0c;
+    background: linear-gradient(135deg, #ffe9a8, #f5c542);
+    border-radius: 999px;
+    text-decoration: none;
+  }
+
+  .map-cta:hover {
+    filter: brightness(1.05);
+  }
+
+  .map-back {
+    color: rgba(250, 250, 250, 0.65);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .map-back:hover {
+    color: #fafafa;
   }
 </style>
