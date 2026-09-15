@@ -94,9 +94,16 @@ export interface WatermarkTemplate {
   readonly fonts: readonly WebFont[];
 }
 
-/** 昵称动态文字的系统字体栈（跨设备接近；精确字体待设计提供 webfont） */
+/**
+ * 昵称动态文字字体栈：
+ * - 'DengXian'（等线，设计稿原字体）：Windows/Office 设备本地已有，零下载精确匹配；
+ * - 'NotoSansSCSub'：思源黑体 Light 的 GB2312 一级字子集 webfont
+ *   （public/fonts/noto-sans-sc-300-subset.woff2，466KB，OFL 授权可自由内嵌），
+ *   由本文件 fonts[] 经 FontFace 注册，覆盖其余所有设备；
+ * - 其余为系统回退栈。
+ */
 const NICKNAME_FONT_STACK =
-  "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif";
+  "'DengXian', 'DengXian Light', 'NotoSansSCSub', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif";
 
 const OUTPUT: OutputSpec = {
   mimeType: 'image/jpeg',
@@ -128,7 +135,7 @@ export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
     minFontSize: 18,
   },
   output: OUTPUT,
-  fonts: [],
+  fonts: [{ family: 'NotoSansSCSub', url: '/fonts/noto-sans-sc-300-subset.woff2', weight: '300' }],
 };
 
 /** 横版 16:10 —— 照片底部和左右对齐；昵称「@肖默」实测 bbox x[848,938] y[985,1012]，右锚 936 避开「方」字尾笔（x≈950） */
@@ -155,7 +162,7 @@ export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
     minFontSize: 18,
   },
   output: OUTPUT,
-  fonts: [],
+  fonts: [{ family: 'NotoSansSCSub', url: '/fonts/noto-sans-sc-300-subset.woff2', weight: '300' }],
 };
 
 export const WATERMARK_TEMPLATES: readonly WatermarkTemplate[] = [
