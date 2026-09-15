@@ -231,4 +231,11 @@ export default [
       'astro/no-set-html-directive': 'off',
     },
   },
+  // 七周年地图墙：set:html 仅用于输出构建期常量（标记数据 JSON 岛，非用户输入）
+  {
+    files: ['src/components/anniversary/MapGlobe.astro'],
+    rules: {
+      'astro/no-set-html-directive': 'off',
+    },
+  },
 ];
