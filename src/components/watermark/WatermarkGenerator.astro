@@ -1,105 +1,138 @@
 ---
 /**
- * 七周年水印海报生成器 · 画布优先沉浸式编辑器（竖版 / 横版双模板）。
+ * 【SEEKER 07 / DARKROOM】七周年水印海报生成器 · 暗房表现层。
  *
- * 交互逻辑（画布优先）：
- * 1. 进入即海报舞台；空状态 = 大目标上传卡（点击/拖拽/粘贴）+ 示例照片；
- * 2. 选择照片后自动识别横竖（宽 ≥ 高 → 横版，否则竖版）并自动套用模板，
- *    toast 提示且可在工具条手动覆盖（手动选择保留至下一张照片）；
- * 3. 昵称双通道：工具条常驻输入框 + 点击海报昵称区域就地弹出编辑框；
- * 4. 底部悬浮玻璃工具条收纳全部控件；「生成纪念海报」为唯一主 CTA。
+ * 状态机（画布优先，照片为第一主体）：
+ * - 未上传：editorial 上传块为主视觉（选择照片 / 拖拽 / 粘贴 / 示例）；
+ * - 编辑：大尺寸海报预览 + 控制区在照片下方（FORMAT 比例选择器 / NAME / SCALE）；
+ * - 生成：光线扫过动画（reduced-motion 跳过）→ YOUR FRAME IS READY 完成态；
+ * - 再做一张：回到上传态。
  *
- * 照片只在浏览器内存中处理，不上传服务器。
- * 逻辑层：render.ts（合成/钳制/缩放）· gestures.ts（手势）· template.ts（模板配置）。
+ * 交互：自动识别横竖版（宽 ≥ 高 → 横版）、昵称双通道（下方输入 + 画布 SAFE AREA 热区
+ * 就地编辑）、拖动/双指缩放 + 滑杆双通道。照片仅在浏览器本地处理。
+ * 逻辑层：render.ts / gestures.ts / template.ts（零改动）。
  */
 import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
+import { MAP_STATS } from '../../data/anniversary/map-points';
 ---
 
-<div class="wm-app">
-  <!-- 海报舞台：整页画布 -->
-  <div class="wm-stage" id="wm-stage">
-    <canvas aria-label="海报预览" id="wm-canvas"></canvas>
+<div class="dr" data-darkroom>
+  <!-- 页眉：档案眉题 -->
+  <header class="dr-head">
+    <a class="dr-back" href="/7th/">← 七周年档案</a>
+    <p class="dr-eyebrow">SEEKER 07 / DARKROOM</p>
+    <p class="dr-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
+      完全在浏览器本地处理
+    </p>
+  </header>
 
-    <!-- 昵称就地编辑热区（定位由脚本按模板坐标计算） -->
-    <button
-      aria-label="点击修改昵称"
-      class="wm-nick-hit"
-      hidden
-      id="wm-nick-hit"
-      type="button"
-    ></button>
+  <!-- 未上传态：editorial 上传块 -->
+  <section class="dr-empty" id="dr-empty">
+    <h1 class="dr-empty-title">MAKE YOUR<br />ANNIVERSARY FRAME</h1>
+    <p class="dr-empty-sub">把这一刻，留在七周年。</p>
+    <button class="dr-upload-btn" id="wm-dropzone" type="button">选择照片</button>
+    <p class="dr-empty-hint">或将照片拖入 / 粘贴到此处 · JPG · PNG · WEBP</p>
+    <button class="dr-sample" id="wm-sample" type="button">没有照片？用示例试试 →</button>
+  </section>
 
-    <!-- 空状态上传卡 -->
-    <button class="wm-dropzone" hidden id="wm-dropzone" type="button">
-      <span class="wm-dropzone-card">
-        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-          <path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"></path>
-          <circle cx="12" cy="13" r="3.5"></circle>
-        </svg>
-        <strong>点击选择照片</strong>
-        <span>或拖拽 / 粘贴到此处 · JPG / PNG / WebP</span>
-        <span class="wm-dropzone-privacy">照片仅在你的浏览器内处理，不会上传</span>
-      </span>
-    </button>
-    <input accept="image/jpeg,image/png,image/webp" hidden id="wm-file" type="file" />
+  <input accept="image/jpeg,image/png,image/webp" hidden id="wm-file" type="file" />
 
-    <!-- toast（自动识别结果 / 成功 / 错误） -->
-    <div class="wm-toast" hidden id="wm-toast" role="status"></div>
-  </div>
-
-  <!-- 示例照片入口（空状态时显示在舞台下方） -->
-  <div class="wm-sample-row" id="wm-sample-row">
-    <button class="wm-text-btn" id="wm-sample" type="button">没有照片？用示例试试 →</button>
-  </div>
-
-  <!-- 悬浮玻璃工具条 -->
-  <div aria-label="编辑工具" class="wm-toolbar" role="toolbar">
-    <div aria-label="切换海报模板" class="wm-seg" role="group">
-      {
-        WATERMARK_TEMPLATES.map((t, i) => (
-          <button
-            aria-pressed={i === 0 ? 'true' : 'false'}
-            class="wm-seg-btn"
-            data-template-id={t.id}
-            type="button"
-          >
-            {t.name.split('·').pop()?.trim() ?? t.name}
-          </button>
-        ))
-      }
+  <!-- 编辑态 -->
+  <section class="dr-editor" hidden id="dr-editor">
+    <div class="dr-stage-wrap">
+      <div class="dr-stage" id="wm-stage">
+        <canvas aria-label="海报预览" id="wm-canvas"></canvas>
+        <!-- SAFE AREA：昵称安全区指示 + 就地编辑热区（生成结果不含此元素） -->
+        <button
+          aria-label="点击修改昵称"
+          class="dr-safe"
+          data-tip="SAFE AREA · 点击修改昵称"
+          hidden
+          id="wm-nick-hit"
+          type="button"
+        ></button>
+        <!-- 光线扫过动画层 -->
+        <div aria-hidden="true" class="dr-sweep" id="dr-sweep"></div>
+      </div>
     </div>
 
-    <div class="wm-nick-field">
-      <label class="wm-sr" for="wm-nickname">昵称</label>
-      <input
-        autocomplete="off"
-        id="wm-nickname"
-        maxlength={NICKNAME_MAX_LENGTH}
-        placeholder="输入你的昵称"
-        type="text"
-      />
+    <!-- 控制区：照片下方 -->
+    <div class="dr-controls" id="dr-controls">
+      <div class="dr-ctrl dr-ctrl--format">
+        <span class="dr-ctrl-label">FORMAT</span>
+        <div aria-label="切换海报版式" class="dr-formats" role="group">
+          {
+            WATERMARK_TEMPLATES.map((t, i) => (
+              <button
+                aria-pressed={i === 0 ? 'true' : 'false'}
+                class="dr-format"
+                data-template-id={t.id}
+                type="button"
+              >
+                <span
+                  class="dr-format-box"
+                  data-portrait={t.fit.base === 'height' ? 'true' : 'false'}
+                />
+                <span class="dr-format-name">{t.name.split('·').pop()?.trim() ?? t.name}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="dr-ctrl dr-ctrl--name">
+        <label class="dr-ctrl-label" for="wm-nickname">NAME</label>
+        <input
+          autocomplete="off"
+          id="wm-nickname"
+          maxlength={NICKNAME_MAX_LENGTH}
+          placeholder="你的昵称"
+          type="text"
+        />
+      </div>
+
+      <div class="dr-ctrl dr-ctrl--scale">
+        <span class="dr-ctrl-label">SCALE</span>
+        <div class="dr-scale-row">
+          <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
+          <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
+          <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
+          <button aria-label="重置位置与缩放" class="dr-reset" disabled id="wm-reset" type="button">↺</button>
+        </div>
+      </div>
     </div>
 
-    <div class="wm-zoom-row">
-      <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
-      <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
-      <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
-      <button aria-label="重置位置与缩放" disabled id="wm-reset" type="button">↺</button>
+    <div class="dr-actions" id="dr-actions">
+      <button class="dr-make" disabled id="wm-generate" type="button">MAKE MY FRAME</button>
+      <button class="dr-swap" hidden id="wm-change" type="button">换一张照片</button>
     </div>
 
-    <button class="wm-cta" disabled id="wm-generate" type="button">生成纪念海报</button>
-    <a class="wm-cta wm-cta--download" download hidden id="wm-download">下载</a>
-  </div>
+    <!-- 完成态 -->
+    <div class="dr-ready" hidden id="dr-ready">
+      <p class="dr-ready-title">YOUR FRAME<br />IS READY.</p>
+      <div class="dr-ready-actions">
+        <a class="dr-make dr-make--ready" download hidden id="wm-download">下载海报</a>
+        <button class="dr-swap" id="dr-again" type="button">再做一张</button>
+      </div>
+    </div>
+
+    <p class="dr-note">
+      与 {MAP_STATS.members} 位追光者一起，把光赠予远方 · 照片仅在本地处理，不会上传
+    </p>
+  </section>
 
   <!-- 昵称就地编辑 popover -->
-  <div class="wm-pop" hidden id="wm-pop">
-    <label class="wm-pop-label" for="wm-pop-input">
+  <div class="dr-pop" hidden id="wm-pop">
+    <label class="dr-pop-label" for="wm-pop-input">
       昵称
-      <span class="wm-pop-count" id="wm-pop-count"></span>
+      <span id="wm-pop-count"></span>
     </label>
     <input autocomplete="off" id="wm-pop-input" maxlength={NICKNAME_MAX_LENGTH} type="text" />
-    <p class="wm-pop-hint">Enter 确认 · 点击空白处退出</p>
+    <p class="dr-pop-hint">Enter 确认 · 点击空白处退出</p>
   </div>
+
+  <!-- toast -->
+  <div class="dr-toast" hidden id="wm-toast" role="status"></div>
 </div>
 
 <script>
@@ -128,21 +161,25 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   const MIN_SCALE = 1;
   const MAX_SCALE = 4;
   const ZOOM_STEP = 1.25;
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function required<T extends HTMLElement>(id: string, ctor: new () => T): T {
-    const el = document.getElementById(id);
-    if (!(el instanceof ctor)) {
-      throw new Error(`水印生成器缺少元素 #${id}`);
+    const node = document.getElementById(id);
+    if (!(node instanceof ctor)) {
+      throw new Error(`暗房缺少元素 #${id}`);
     }
-    return el;
+    return node;
   }
 
-  const stage = required('wm-stage', HTMLDivElement);
+  const emptySec = required('dr-empty', HTMLElement);
+  const editorSec = required('dr-editor', HTMLElement);
+  const stage = required('wm-stage', HTMLElement);
   const canvas = required('wm-canvas', HTMLCanvasElement);
   const dropzone = required('wm-dropzone', HTMLButtonElement);
   const fileInput = required('wm-file', HTMLInputElement);
   const nickHit = required('wm-nick-hit', HTMLButtonElement);
-  const toastEl = required('wm-toast', HTMLDivElement);
+  const sweepEl = required('dr-sweep', HTMLElement);
+  const toastEl = required('wm-toast', HTMLElement);
   const sampleBtn = required('wm-sample', HTMLButtonElement);
   const nicknameInput = required('wm-nickname', HTMLInputElement);
   const zoomSlider = required('wm-zoom', HTMLInputElement);
@@ -151,12 +188,17 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   const resetBtn = required('wm-reset', HTMLButtonElement);
   const generateBtn = required('wm-generate', HTMLButtonElement);
   const downloadLink = required('wm-download', HTMLAnchorElement);
-  const tplButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.wm-seg-btn[data-template-id]'),
-  );
-  const popEl = required('wm-pop', HTMLDivElement);
+  const changeBtn = required('wm-change', HTMLButtonElement);
+  const againBtn = required('dr-again', HTMLButtonElement);
+  const controlsEl = required('dr-controls', HTMLElement);
+  const actionsEl = required('dr-actions', HTMLElement);
+  const readyEl = required('dr-ready', HTMLElement);
+  const popEl = required('wm-pop', HTMLElement);
   const popInput = required('wm-pop-input', HTMLInputElement);
   const popCount = required('wm-pop-count', HTMLElement);
+  const tplButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]'),
+  );
 
   let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
   let templateBitmap: ImageBitmap | null = null;
@@ -168,7 +210,6 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   let sourceFileName = '';
   let toastTimer = 0;
 
-  /** 手势锚点（照片区域中心），切换模板时就地更新 */
   const areaCenter = { x: 0, y: 0 };
 
   function syncAreaCenter(): void {
@@ -176,27 +217,23 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     areaCenter.y = currentTemplate.photoArea.y + currentTemplate.photoArea.height / 2;
   }
 
-  function setStatus(message: string, isError = false): void {
+  function setStatus(message: string, isError = false, sticky = false): void {
     toastEl.textContent = message;
     toastEl.classList.toggle('is-error', isError);
-    toastEl.classList.add('is-shown');
+    toastEl.hidden = !message;
     if (toastTimer) {
       window.clearTimeout(toastTimer);
     }
-    if (message) {
+    if (message && !sticky) {
       toastTimer = window.setTimeout(() => {
-        toastEl.classList.remove('is-shown');
-        window.setTimeout(() => {
-          toastEl.hidden = true;
-        }, 250);
+        toastEl.hidden = true;
       }, 2800);
-    } else {
-      toastEl.hidden = true;
     }
   }
 
-  function toast(message: string): void {
-    setStatus(message);
+  function showEditor(show: boolean): void {
+    emptySec.hidden = show;
+    editorSec.hidden = !show;
   }
 
   function requestRender(): void {
@@ -209,7 +246,6 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       if (!templateBitmap) {
         return;
       }
-      // 预览分辨率：容器 CSS 尺寸 × dPR，长边封顶 1600px 保证交互流畅
       const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const scale = Math.max(
@@ -244,20 +280,15 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     zoomOutBtn.disabled = !hasPhoto;
     resetBtn.disabled = !hasPhoto;
     generateBtn.disabled = !hasPhoto;
-    dropzone.hidden = hasPhoto;
-    changePhotoVisibility();
+    changeBtn.hidden = !hasPhoto;
   }
 
-  function changePhotoVisibility(): void {
-    // 有照片时隐藏示例入口；昵称热区在有模板时始终可用
-    document.getElementById('wm-sample-row')?.toggleAttribute('hidden', hasPhotoBool());
+  function resetToReady(showReady: boolean): void {
+    controlsEl.hidden = showReady;
+    actionsEl.hidden = showReady;
+    readyEl.hidden = !showReady;
   }
 
-  function hasPhotoBool(): boolean {
-    return photo !== null;
-  }
-
-  /** 围绕照片区域中心缩放（视野中心的内容保持不动，锚点语义随模板 fit） */
   function zoomBy(factor: number): void {
     transform = zoomAtTransform({
       template: currentTemplate,
@@ -281,6 +312,17 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     downloadLink.hidden = true;
   }
 
+  /** 再做一张：回到上传态 */
+  function backToEmpty(): void {
+    photo?.close();
+    photo = null;
+    transform = initialTransform();
+    releaseDownload();
+    resetToReady(false);
+    showEditor(false);
+    setStatus('');
+  }
+
   async function handleFile(file: File | null | undefined): Promise<void> {
     if (!file) {
       return;
@@ -295,24 +337,25 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       photo?.close();
       photo = loaded;
       sourceFileName = file.name;
-      releaseDownload();
-
       transform = initialTransform();
-      syncControls();
-      requestRender();
-      setStatus('');
+      releaseDownload();
+      resetToReady(false);
+      showEditor(true);
 
-      // 自动识别横竖版：宽 ≥ 高 → 横版，否则竖版；与当前模板不一致时自动切换
+      // 自动识别横竖版：宽 ≥ 高 → 横版
       const detected =
         loaded.width >= loaded.height
-          ? WATERMARK_TEMPLATES.find((t) => t.fit.base === 'width')
-          : WATERMARK_TEMPLATES.find((t) => t.fit.base === 'height');
+          ? WATERMARK_TEMPLATES.find(t => t.fit.base === 'width')
+          : WATERMARK_TEMPLATES.find(t => t.fit.base === 'height');
       if (detected && detected.id !== currentTemplate.id) {
-        await switchTemplate(detected, { silent: true });
-        toast(
-          `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${detected.name.split('·').pop()?.trim() ?? ''}模板 · 可在下方工具条切换`,
-        );
+        await switchTemplate(detected, true);
+      } else {
+        syncControls();
+        requestRender();
       }
+      setStatus(
+        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`,
+      );
     } catch (error) {
       setStatus(
         error instanceof PhotoDecodeError
@@ -323,13 +366,27 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     }
   }
 
+  function playSweep(): Promise<void> {
+    if (REDUCED) {
+      return Promise.resolve();
+    }
+    return new Promise(resolve => {
+      sweepEl.classList.add('is-sweeping');
+      window.setTimeout(() => {
+        sweepEl.classList.remove('is-sweeping');
+        resolve();
+      }, 850);
+    });
+  }
+
   async function generate(): Promise<void> {
     if (!templateBitmap || !photo) {
       return;
     }
     generateBtn.disabled = true;
-    generateBtn.textContent = '正在生成…';
+    generateBtn.textContent = 'PRINTING…';
     setStatus('');
+    const sweep = playSweep();
     try {
       const out = document.createElement('canvas');
       renderComposition(out, {
@@ -344,26 +401,25 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       downloadUrl = URL.createObjectURL(blob);
       downloadLink.href = downloadUrl;
       downloadLink.download = buildFileName(currentTemplate.output, sourceFileName);
+      await sweep;
       downloadLink.hidden = false;
-      downloadLink.click();
-      generateBtn.textContent = '重新生成';
-      setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），已开始下载`);
+      resetToReady(true);
+      setStatus(`FRAME READY · ${(blob.size / 1024 / 1024).toFixed(1)} MB`);
     } catch {
+      await sweep;
       setStatus('生成失败，请重试。', true);
     } finally {
-      generateBtn.disabled = photo === null;
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'MAKE MY FRAME';
     }
   }
 
-  async function switchTemplate(
-    template: WatermarkTemplate,
-    opts: { announce?: boolean; silent?: boolean } = {},
-  ): Promise<void> {
+  async function switchTemplate(template: WatermarkTemplate, silent = false): Promise<void> {
     if (template.id === currentTemplate.id && templateBitmap) {
       return;
     }
-    if (!opts.silent) {
-      setStatus('模板加载中…');
+    if (!silent) {
+      setStatus('版式切换中…');
     }
     try {
       let bitmap = overlayCache.get(template.id);
@@ -382,7 +438,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       updateNickHit();
       syncControls();
       requestRender();
-      if (!opts.silent) {
+      if (!silent) {
         setStatus('');
       }
     } catch {
@@ -390,29 +446,18 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     }
   }
 
-  /** 舞台尺寸：按模板纵横比在「页头以下、工具条以上」的剩余空间内取最大。
-   *  高度上限 = 视口高 − 导航 70 − 页头 44 − 底部工具条预留（含安全区间距）。 */
+  /** 舞台尺寸：编辑态下按剩余视口高度最大化 */
   function layoutStage(): void {
     const aspect = currentTemplate.width / currentTemplate.height;
-    const barEl = document.querySelector('.wm-toolbar');
-    const barH = barEl ? barEl.getBoundingClientRect().height : 66;
-    const NAV = 70;
-    const HEAD = 44;
-    const RESERVE = 46; // 工具条下边距 + 间隙 + 安全区
-    document.documentElement.style.setProperty(
-      '--wm-toolbar-reserve',
-      `${Math.round(barH + RESERVE)}px`,
-    );
-    const availW = Math.min(window.innerWidth * 0.92, 1280);
-    const availH = Math.max(
-      window.innerHeight - NAV - HEAD - barH - RESERVE,
-      300,
-    );
+    const availW = Math.min(window.innerWidth - 32, 920);
+    const headH = 56;
+    const reserve = window.innerWidth < 768 ? 340 : 220;
+    const availH = Math.max(window.innerHeight - headH - reserve, 280);
     const w = Math.min(availW, availH * aspect);
     stage.style.width = `${Math.round(w)}px`;
   }
 
-  /** 昵称就地编辑热区：按模板昵称坐标换算为舞台百分比 */
+  /** SAFE AREA 热区定位（模板昵称坐标 → 舞台百分比） */
   function updateNickHit(): void {
     const n = currentTemplate.nickname;
     const estWidth = Math.min(
@@ -425,7 +470,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     nickHit.style.height = `${((n.fontSize * 2.1 + 20) / currentTemplate.height) * 100}%`;
   }
 
-  /* ---- 昵称就地编辑 popover ---- */
+  /* —— 昵称就地编辑 —— */
   function showPop(): void {
     const hit = nickHit.getBoundingClientRect();
     popEl.hidden = false;
@@ -458,16 +503,14 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     requestRender();
   });
 
-  popInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+  popInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === 'Escape') {
       hidePop();
       requestRender();
-    } else if (e.key === 'Escape') {
-      hidePop();
     }
   });
 
-  document.addEventListener('pointerdown', (e) => {
+  document.addEventListener('pointerdown', e => {
     if (popEl.hidden) {
       return;
     }
@@ -477,19 +520,19 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     }
   });
 
-  // ---- 事件绑定 ----
-
+  /* —— 事件绑定 —— */
   for (const btn of tplButtons) {
-    const tpl = WATERMARK_TEMPLATES.find((t) => t.id === btn.dataset.templateId);
+    const tpl = WATERMARK_TEMPLATES.find(t => t.id === btn.dataset.templateId);
     btn.addEventListener('click', () => {
-      if (!tpl) {
-        return;
+      if (tpl) {
+        void switchTemplate(tpl);
       }
-      void switchTemplate(tpl);
     });
   }
 
   dropzone.addEventListener('click', () => fileInput.click());
+  changeBtn.addEventListener('click', () => fileInput.click());
+  againBtn.addEventListener('click', backToEmpty);
 
   const SAMPLE_SOURCES: Record<string, string> = {
     'seeker-7th-portrait': '/samples/seeker-sample-portrait.jpg',
@@ -520,18 +563,19 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     fileInput.value = '';
   });
 
-  stage.addEventListener('dragover', (e) => {
+  document.addEventListener('dragover', e => {
     e.preventDefault();
-    stage.classList.add('is-dragover');
+    if (!editorSec.hidden) {
+      stage.classList.add('is-dragover');
+    }
   });
-  stage.addEventListener('dragleave', () => stage.classList.remove('is-dragover'));
-  stage.addEventListener('drop', (e) => {
+  document.addEventListener('dragleave', () => stage.classList.remove('is-dragover'));
+  document.addEventListener('drop', e => {
     e.preventDefault();
     stage.classList.remove('is-dragover');
     void handleFile(e.dataTransfer?.files?.[0]);
   });
-
-  document.addEventListener('paste', (e) => {
+  document.addEventListener('paste', e => {
     void handleFile(e.clipboardData?.files?.[0]);
   });
 
@@ -592,14 +636,16 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
 
   const resizeObserver = new ResizeObserver(() => requestRender());
   resizeObserver.observe(stage);
-  window.addEventListener('resize', () => layoutStage());
-  // 字体/首屏渲染会改变页头与工具条实高，就绪后二次校准舞台尺寸
-  document.fonts.ready.then(() => layoutStage());
-  window.addEventListener('load', () => layoutStage());
+  window.addEventListener('resize', () => {
+    layoutStage();
+  });
+  document.fonts.ready.then(() => {
+    layoutStage();
+    requestRender();
+  });
 
-  // ---- 初始化：字体 → 默认模板 → 首绘 ----
+  /* —— 初始化：模板常驻预载，进入编辑态零等待 —— */
   void (async () => {
-    setStatus('正在加载模板…');
     try {
       await ensureFonts(currentTemplate.fonts);
       templateBitmap = await loadTemplate(currentTemplate.src);
@@ -609,82 +655,166 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       syncAreaCenter();
       syncTplButtons();
       syncControls();
+      updateNickHit();
       requestRender();
-      setStatus('');
     } catch {
-      setStatus('模板加载失败，请检查网络后刷新重试。', true);
+      setStatus('模板加载失败，请检查网络后刷新重试。', true, true);
     }
   })();
 </script>
 
 <style>
-  .wm-app {
-    position: relative;
-    flex: 1 1 auto;
-    min-height: 0;
+  .dr {
+    min-height: calc(100dvh - 70px);
+    display: flex;
+    flex-direction: column;
+    background: var(--anniv-bg);
+    color: var(--anniv-fg);
+  }
+
+  /* —— 页眉 —— */
+  .dr-head {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    max-width: 72rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.8rem 1.25rem;
+    border-bottom: 1px solid var(--anniv-border);
+  }
+
+  .dr-back {
+    font-size: 0.8rem;
+    color: var(--anniv-muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+  }
+
+  .dr-back:hover {
+    color: var(--anniv-accent);
+  }
+
+  .dr-eyebrow {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    color: var(--anniv-accent);
+  }
+
+  .dr-privacy {
+    margin-left: auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--anniv-faint);
+    cursor: help;
+  }
+
+  /* —— 未上传态 —— */
+  .dr-empty {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.75rem 1rem calc(var(--wm-toolbar-reserve, 100px) + env(safe-area-inset-bottom, 0px));
-    background:
-      radial-gradient(90% 60% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
-      var(--background);
+    text-align: center;
+    padding: 4rem 1.5rem;
+    border: 1px dashed transparent;
+    transition: border-color var(--dur-normal) ease;
   }
 
-  /* ---- 左上角浮标 ---- */
-  .wm-chips {
-    position: absolute;
-    top: 84px;
-    left: 1rem;
-    z-index: 20;
+  .dr-empty.is-dragover {
+    border-color: var(--anniv-accent);
+  }
+
+  .dr-empty-title {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(2rem, 6.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.04em;
+    color: var(--anniv-fg);
+  }
+
+  .dr-empty-sub {
+    margin: 1.4rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    letter-spacing: 0.16em;
+    color: var(--anniv-muted);
+  }
+
+  .dr-upload-btn {
+    margin-top: 3rem;
+    padding: 1rem 4.5rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--anniv-bg);
+    background: var(--anniv-fg);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease;
+  }
+
+  .dr-upload-btn:hover {
+    background: var(--anniv-accent);
+  }
+
+  .dr-empty-hint {
+    margin: 1.3rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+    color: var(--anniv-faint);
+  }
+
+  .dr-sample {
+    margin-top: 2.2rem;
+    padding: 0.5rem 0.9rem;
+    font: inherit;
+    font-size: 0.82rem;
+    color: var(--anniv-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    transition: color var(--dur-fast) ease;
+  }
+
+  .dr-sample:hover {
+    color: var(--anniv-accent);
+    border-color: var(--anniv-accent);
+  }
+
+  /* —— 编辑态 —— */
+  .dr-editor {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4rem;
-  }
-
-  .wm-chip {
-    display: inline-flex;
     align-items: center;
-    padding: 0.3rem 0.7rem;
-    font-size: 0.75rem;
-    color: var(--muted-foreground);
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 999px;
+    padding: 1.8rem 1rem 2.5rem;
   }
 
-  .wm-chip--brand {
-    font-weight: 600;
-    color: var(--foreground);
+  .dr-stage-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
-  .wm-chip--link {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .wm-chip--link:hover {
-    text-decoration: underline;
-  }
-
-  /* ---- 海报舞台 ---- */
-  .wm-stage {
+  .dr-stage {
     position: relative;
-    margin: auto 0;
-    border-radius: 12px;
-    background: #050507;
-    box-shadow:
-      0 24px 70px rgba(0, 0, 0, 0.35),
-      0 0 0 1px var(--border);
-    transition: box-shadow 0.2s ease;
+    border: 1px solid var(--anniv-border);
+    background: #030304;
   }
 
-  .wm-stage.is-dragover {
-    outline: 3px dashed var(--primary);
+  .dr-stage.is-dragover {
+    outline: 2px dashed var(--anniv-accent);
     outline-offset: -6px;
   }
 
@@ -694,310 +824,346 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     aspect-ratio: 2084 / 3705;
     touch-action: none;
     cursor: grab;
-    border-radius: 12px;
   }
 
   #wm-canvas:active {
     cursor: grabbing;
   }
 
-  /* ---- 昵称热区 ---- */
-  .wm-nick-hit {
+  /* SAFE AREA 指示 */
+  .dr-safe {
     position: absolute;
     background: transparent;
-    border: 1.5px dashed transparent;
-    border-radius: 8px;
+    border: 1px dashed rgba(232, 199, 102, 0.55);
+    border-radius: 2px;
     cursor: text;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    opacity: 0;
+    transition: opacity var(--dur-normal) ease;
   }
 
-  .wm-nick-hit:hover,
-  .wm-nick-hit:focus-visible {
-    border-color: rgba(245, 197, 66, 0.7);
-    background: rgba(245, 197, 66, 0.08);
+  .dr-safe:hover,
+  .dr-safe:focus-visible {
+    opacity: 1;
+    background: rgba(232, 199, 102, 0.06);
     outline: none;
   }
 
-  /* ---- 空状态上传卡 ---- */
-  .wm-dropzone {
+  /* 光线扫过 */
+  .dr-sweep {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    border: none;
-    background: transparent;
-    cursor: pointer;
+    pointer-events: none;
+    opacity: 0;
   }
 
-  .wm-dropzone-card {
+  .dr-sweep.is-sweeping {
+    opacity: 1;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(232, 199, 102, 0.16) 47%,
+      rgba(255, 250, 235, 0.5) 50%,
+      rgba(232, 199, 102, 0.16) 53%,
+      transparent 65%
+    );
+    background-size: 250% 100%;
+    animation: dr-light-sweep 850ms var(--ease-enter) forwards;
+  }
+
+  @keyframes dr-light-sweep {
+    from {
+      background-position: 160% 0;
+    }
+    to {
+      background-position: -60% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dr-sweep.is-sweeping {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  /* —— 控制区（照片下方） —— */
+  .dr-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1.2rem 3rem;
+    width: min(100%, 60rem);
+    margin-top: 2rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--anniv-border);
+  }
+
+  .dr-ctrl {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .dr-ctrl-label {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--anniv-faint);
+  }
+
+  /* FORMAT 比例选择器 */
+  .dr-formats {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .dr-format {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
-    padding: 1.4rem 1.9rem;
-    background: var(--card);
-    color: var(--card-foreground);
-    border: 1.5px dashed var(--border);
-    border-radius: 16px;
-    box-shadow: var(--glass-shadow);
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .wm-dropzone:hover .wm-dropzone-card,
-  .wm-stage.is-dragover .wm-dropzone-card {
-    border-color: var(--primary);
-    transform: translateY(-2px);
-  }
-
-  .wm-dropzone svg {
-    width: 2rem;
-    height: 2rem;
-    color: var(--primary);
-  }
-
-  .wm-dropzone strong {
-    font-size: 1rem;
-  }
-
-  .wm-dropzone span {
-    font-size: 0.78rem;
-    color: var(--muted-foreground);
-  }
-
-  .wm-dropzone .wm-dropzone-privacy {
-    margin-top: 0.3rem;
-    font-size: 0.72rem;
-    opacity: 0.85;
-  }
-
-  .wm-sample-row {
-    text-align: center;
-    margin-top: 0.75rem;
-  }
-
-  /* ---- 悬浮玻璃工具条 ---- */
-  .wm-toolbar {
-    position: fixed;
-    left: 50%;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
-    transform: translateX(-50%);
-    z-index: 40;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    width: min(96vw, 56rem);
-    padding: 0.6rem 0.7rem;
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: var(--glass-shadow);
-  }
-
-  .wm-seg {
-    display: flex;
-    background: var(--muted);
-    border-radius: 10px;
-    padding: 2px;
-    gap: 2px;
-  }
-
-  .wm-seg-btn {
-    padding: 0.42rem 0.85rem;
-    font: inherit;
-    font-size: 0.82rem;
-    color: var(--muted-foreground);
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
     background: transparent;
-    border: none;
-    border-radius: 8px;
+    border: 1px solid var(--anniv-border);
     cursor: pointer;
-    min-height: 34px;
+    transition:
+      border-color var(--dur-fast) ease,
+      background-color var(--dur-fast) ease;
   }
 
-  .wm-seg-btn[aria-pressed='true'] {
-    color: var(--foreground);
-    font-weight: 600;
-    background: var(--background);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  .dr-format:hover {
+    border-color: var(--anniv-muted);
   }
 
-  .wm-nick-field {
-    flex: 1 1 9rem;
-    min-width: 8rem;
+  .dr-format[aria-pressed='true'] {
+    border-color: var(--anniv-accent);
+    background: rgba(232, 199, 102, 0.06);
   }
 
-  #wm-nickname {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
+  .dr-format-box {
+    display: block;
+    border: 1px solid currentColor;
+    color: var(--anniv-fg);
+  }
+
+  .dr-format-box[data-portrait='true'] {
+    width: 22px;
+    height: 30px;
+  }
+
+  .dr-format-box[data-portrait='false'] {
+    width: 34px;
+    height: 22px;
+  }
+
+  .dr-format[aria-pressed='true'] .dr-format-box {
+    color: var(--anniv-accent);
+    background: rgba(232, 199, 102, 0.18);
+  }
+
+  .dr-format-name {
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    color: var(--anniv-muted);
+  }
+
+  .dr-format[aria-pressed='true'] .dr-format-name {
+    color: var(--anniv-fg);
+  }
+
+  /* NAME */
+  .dr-ctrl--name input {
+    width: 15rem;
+    padding: 0.6rem 0.8rem;
     font: inherit;
-    font-size: 0.9rem;
-    color: var(--foreground);
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    font-size: 0.92rem;
+    color: var(--anniv-fg);
+    background: var(--anniv-surface);
+    border: 1px solid var(--anniv-border);
+    border-radius: 0;
   }
 
-  #wm-nickname:focus-visible {
-    outline: 2px solid var(--primary);
+  .dr-ctrl--name input:focus-visible {
+    outline: 1px solid var(--anniv-accent);
     outline-offset: 1px;
   }
 
-  .wm-zoom-row {
+  /* SCALE */
+  .dr-scale-row {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
   }
 
-  .wm-zoom-row button {
+  .dr-scale-row button {
     width: 2.4rem;
     height: 2.4rem;
     font-size: 1.05rem;
-    color: var(--foreground);
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    color: var(--anniv-fg);
+    background: var(--anniv-surface);
+    border: 1px solid var(--anniv-border);
+    border-radius: 0;
     cursor: pointer;
+  }
+
+  .dr-reset {
+    font-size: 0.95rem;
   }
 
   #wm-zoom {
-    width: clamp(5rem, 12vw, 8rem);
-    accent-color: var(--primary);
+    width: clamp(6rem, 14vw, 9rem);
+    accent-color: var(--anniv-accent);
   }
 
   button:disabled {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
-  .wm-cta {
-    display: inline-flex;
+  /* —— 生成 / 完成态 —— */
+  .dr-actions {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    min-height: 2.75rem;
-    padding: 0.6rem 1.3rem;
-    font: inherit;
+    gap: 1.4rem;
+    margin-top: 2rem;
+  }
+
+  .dr-make {
+    padding: 1rem 3.2rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.88rem;
     font-weight: 600;
-    color: var(--on-gradient, #fff);
-    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--anniv-bg);
+    background: var(--anniv-accent);
     border: none;
-    border-radius: 12px;
     cursor: pointer;
     text-decoration: none;
-    white-space: nowrap;
+    transition: filter var(--dur-fast) ease;
   }
 
-  .wm-cta:hover:not(:disabled) {
-    filter: brightness(1.06);
+  .dr-make:hover:not(:disabled) {
+    filter: brightness(1.08);
   }
 
-  .wm-cta--download {
-    padding: 0.6rem 0.9rem;
-    background: var(--muted);
-    color: var(--foreground);
+  .dr-swap {
+    padding: 0.6rem 1rem;
+    font: inherit;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--anniv-muted);
+    background: transparent;
+    border: 1px solid var(--anniv-border);
+    cursor: pointer;
+    transition:
+      color var(--dur-fast) ease,
+      border-color var(--dur-fast) ease;
   }
 
-  .wm-sr {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+  .dr-swap:hover {
+    color: var(--anniv-fg);
+    border-color: var(--anniv-muted);
   }
 
-  /* ---- toast ---- */
-  .wm-toast {
-    position: absolute;
-    top: 0.9rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 30;
-    max-width: 92%;
-    padding: 0.5rem 0.95rem;
-    font-size: 0.85rem;
+  .dr-ready {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
+    margin-top: 2.4rem;
+    padding: 2.2rem 2rem;
+    border: 1px solid var(--anniv-accent);
     text-align: center;
-    color: var(--foreground);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    box-shadow: var(--glass-shadow);
   }
 
-  .wm-toast.is-error {
-    color: var(--destructive);
-    border-color: var(--destructive);
+  .dr-ready-title {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.1em;
+    color: var(--anniv-accent);
   }
 
-  .wm-toast.is-shown {
-    display: block;
+  .dr-ready-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
   }
 
-  /* ---- 就地编辑 popover ---- */
-  .wm-pop {
+  .dr-note {
+    margin: 2rem 0 0;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    color: var(--anniv-faint);
+    text-align: center;
+  }
+
+  /* —— popover / toast —— */
+  .dr-pop {
     position: fixed;
-    z-index: 50;
+    z-index: 60;
     width: 240px;
-    padding: 0.65rem 0.75rem 0.55rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--glass-shadow);
+    padding: 0.7rem 0.8rem 0.6rem;
+    background: var(--anniv-surface);
+    border: 1px solid var(--anniv-border);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
   }
 
-  .wm-pop-label {
+  .dr-pop-label {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
-  }
-
-  .wm-pop-count {
-    font-weight: 400;
-  }
-
-  #wm-pop-input {
-    width: 100%;
-    padding: 0.45rem 0.6rem;
-    font: inherit;
-    font-size: 0.9rem;
-    color: var(--foreground);
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-  }
-
-  #wm-pop-input:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
-  }
-
-  .wm-pop-hint {
-    margin: 0.4rem 0 0;
+    margin-bottom: 0.4rem;
+    font-family: 'Archivo', sans-serif;
     font-size: 0.7rem;
-    color: var(--muted-foreground);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--anniv-muted);
   }
 
-  .wm-text-btn {
-    padding: 0.45rem 0.8rem;
+  .dr-pop input {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
     font: inherit;
-    font-size: 0.85rem;
-    color: var(--muted-foreground);
-    background: transparent;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+    color: var(--anniv-fg);
+    background: var(--anniv-bg);
+    border: 1px solid var(--anniv-border);
   }
 
-  .wm-text-btn:hover {
-    color: var(--primary);
-    background: var(--muted);
+  .dr-pop input:focus-visible {
+    outline: 1px solid var(--anniv-accent);
+  }
+
+  .dr-pop-hint {
+    margin: 0.45rem 0 0;
+    font-size: 0.68rem;
+    color: var(--anniv-faint);
+  }
+
+  .dr-toast {
+    position: fixed;
+    top: 5.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 70;
+    max-width: min(92vw, 34rem);
+    padding: 0.55rem 1.1rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: var(--anniv-fg);
+    background: var(--anniv-surface);
+    border: 1px solid var(--anniv-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .dr-toast.is-error {
+    color: #e88080;
+    border-color: rgba(232, 128, 128, 0.4);
   }
 
   [hidden] {
@@ -1005,16 +1171,17 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   @media (max-width: 48rem) {
-    .wm-toolbar {
-      flex-wrap: wrap;
+    .dr-controls {
+      gap: 1.4rem;
     }
 
-    .wm-cta {
-      flex: 1 1 100%;
+    .dr-actions {
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .wm-chips {
-      top: 78px;
+    .dr-ctrl--name input {
+      width: min(100vw - 4rem, 15rem);
     }
   }
 </style>

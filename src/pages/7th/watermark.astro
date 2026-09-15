@@ -1,9 +1,7 @@
 ---
 /**
- * /7th/watermark — 【七周年板块 · 水印工坊】。
- * 画布优先沉浸式布局：整页即海报舞台，控制收纳为底部悬浮玻璃工具条。
- * 生成逻辑与模板配置见 src/lib/watermark/；本页只负责壳与页头。
- * 七周年板块已上线：入口在导航与首页周年角卡，无需 noindex。
+ * /7th/watermark — 【SEEKER 07 / DARKROOM】七周年水印工坊。
+ * 整页暗房（anniv 档案令牌，不随主题切换）；生成逻辑见 src/lib/watermark/。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
@@ -14,65 +12,15 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
   description="上传一张照片、写下你的昵称，生成 Seeker 追光者七周年纪念海报。全程在你的浏览器本地完成，照片不会上传服务器。"   title="Seeker 七周年 · 水印工坊"
 >
   <Navigation />
-  <main class="wm-page" id="main-content">
-    <div class="wm-page-head">
-      <a class="wm-back" href="/7th/">← 七周年板块</a>
-      <span class="wm-page-title">水印工坊</span>
-      <span class="wm-page-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
-        🔒 仅本地处理
-      </span>
-    </div>
+  <main class="dr-page" id="main-content">
     <WatermarkGenerator />
   </main>
 </Layout>
 
 <style>
-  /* 画布优先：整页即舞台，无 hero / 无页脚；跟随主题双模式。
-     flex 列模型：页头 44px 固定，生成器占满剩余高度（内部再为悬浮工具条预留） */
-  .wm-page {
-    display: flex;
-    flex-direction: column;
+  .dr-page {
     min-height: 100dvh;
     padding-top: 70px; /* 固定导航高度预留 */
-    background:
-      radial-gradient(90% 55% at 50% 0%, rgba(245, 197, 66, 0.06), transparent 60%),
-      var(--background);
-  }
-
-  .wm-page-head {
-    position: relative;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    flex: none;
-    height: 44px; /* 固定高度：layoutStage 的预留量依赖稳定测量 */
-    max-width: 68rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-    width: 100%;
-  }
-
-  .wm-back {
-    font-size: 0.82rem;
-    color: var(--muted-foreground);
-    text-decoration: none;
-  }
-
-  .wm-back:hover {
-    color: var(--primary);
-  }
-
-  .wm-page-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--foreground);
-  }
-
-  .wm-page-privacy {
-    margin-left: auto;
-    font-size: 0.72rem;
-    color: var(--muted-foreground);
-    cursor: help;
+    background: var(--anniv-bg);
   }
 </style>
