@@ -351,3 +351,24 @@ html.js .reveal.in-view {
     transition: none;
   }
 }
+
+/* —— SEEKER 07 · 七周年「摄影档案」板块令牌 ——
+   设计语言：LIGHT / FRAME / FILM / DARKROOM / ARCHIVE
+   深色、低饱和、高留白、克制；仅作用于 7th 板块，不随主题切换 */
+:root {
+  --anniv-bg: #060607;
+  --anniv-surface: #0e0e11;
+  --anniv-fg: #f2f0eb;
+  --anniv-muted: rgba(242, 240, 235, 0.55);
+  --anniv-faint: rgba(242, 240, 235, 0.32);
+  --anniv-border: rgba(242, 240, 235, 0.12);
+  --anniv-accent: #e8c766; /* 档案金：克制使用，仅点缀 */
+  --anniv-serif: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+
+  /* motion tokens：慢、轻、克制 */
+  --dur-fast: 150ms;
+  --dur-normal: 300ms;
+  --dur-slow: 700ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}

@@ -1,8 +1,10 @@
 ---
 /**
- * /7th/ — 【Seeker 七周年板块 · Hub】。
- * 暗色沉浸 hero（海报视觉）+ 浅色卡片区（Bento 入口墙）。
- * 子页：/7th/watermark/ 水印工坊 · /7th/map/ 地图墙 · 七周年手记（筹备中）。
+ * /7th/ — SEEKER 07 · 七周年「摄影档案」首页。
+ * 设计语言：LIGHT / FRAME / FILM / DARKROOM / ARCHIVE——不是活动页，是七年的档案。
+ * 结构：档案 Hero（07 主视觉）→ 01 ANNIVERSARY（水印工坊）→ 02 PEOPLE（地图墙 + 统计）
+ *       → 03 MEMORY（手记档案）→ Ending（2019 → 7 → 2026 叙事收尾）。
+ * 统计数字从 map-points.ts 派生（单一数据源），进入视口 Count Up。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
@@ -11,307 +13,485 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 ---
 
 <Layout
-  description="追光七载，把光赠予远方。水印工坊、成员地图墙、七周年手记——Seeker 追光者七周年纪念板块。"   title="Seeker 七周年"
+  title="Seeker 七周年"
+  description="SEEKER 07 · YEARS OF LIGHT · 2019—2026。追光七载，把光赠予远方——七年摄影档案：水印工坊、成员地图墙、七周年手记。"
 >
   <Navigation />
-  <main class="anniv-page" id="main-content">
-    <section class="anniv-hero">
-      <div aria-hidden="true" class="anniv-hero-ghost"></div>
-      <div class="anniv-hero-inner">
-        <p class="anniv-eyebrow">SEEKER · 7TH ANNIVERSARY · 2019 → 2026</p>
-        <p aria-hidden="true" class="anniv-num">7</p>
-        <h1 class="anniv-title">追光七载<span class="anniv-title-sep">，</span>把光赠予远方</h1>
-        <p class="anniv-lead">
-          七年，{MAP_STATS.members} 位追光者，{MAP_STATS.countries} 个国家、{MAP_STATS.provinces}
-          个省级行政区。七周年，我们准备了一整套纪念玩法。
-        </p>
-      </div>
-    </section>
+  <main class="arc" id="main-content">
+    <!-- 档案 Hero -->
+    <header class="arc-hero">
+      <p class="arc-hero-brand">SEEKER</p>
+      <p class="arc-hero-num" aria-hidden="true">07</p>
+      <p class="arc-hero-years">YEARS OF LIGHT</p>
+      <p class="arc-hero-range">2019 — 2026</p>
+      <h1 class="arc-hero-slogan">追光七载，把光赠予远方</h1>
+      <a class="arc-enter" href="#archive">ENTER ARCHIVE ↓</a>
+    </header>
 
-    <section aria-label="七周年板块内容" class="anniv-cards-section">
-      <div class="anniv-cards">
-        <a class="anniv-card anniv-card--watermark reveal" href="/7th/watermark/">
-          <span class="anniv-card-tag">互动玩法</span>
-          <h2 class="anniv-card-title">水印工坊</h2>
-          <p class="anniv-card-desc">
-            上传照片做背景，@上你的名字，一键生成专属七周年纪念海报。
-          </p>
-          <span class="anniv-card-go">去生成 →</span>
-        </a>
-
-        <a class="anniv-card anniv-card--map reveal" href="/7th/map/" style="--reveal-delay: 0.12s">
-          <span class="anniv-card-tag">成员地图墙</span>
-          <h2 class="anniv-card-title">把快门声带到世界每个角落</h2>
-          <p class="anniv-card-desc">
-            {MAP_STATS.members} 位成员，遍布 {MAP_STATS.countries} 个国家、{MAP_STATS.provinces}
-            个省级行政区。每个光点，都是一次按下快门的时刻。
-          </p>
-          <span class="anniv-card-go">去看地图墙 →</span>
-        </a>
-
-        <div aria-disabled="true" class="anniv-card anniv-card--journal anniv-card--soon">
-          <span class="anniv-card-tag">七周年手记</span>
-          <h2 class="anniv-card-title">七周年手记</h2>
-          <p class="anniv-card-desc">七年的故事，正在路上。</p>
-          <span class="anniv-card-soon">即将上线</span>
+    <div class="arc-body" id="archive">
+      <!-- 01 / ANNIVERSARY -->
+      <section class="arc-sec" aria-labelledby="sec-anniversary">
+        <div class="arc-sec-head">
+          <span class="arc-sec-no">01</span>
+          <h2 class="arc-sec-title" id="sec-anniversary">ANNIVERSARY<span class="arc-sec-zh">纪念</span></h2>
         </div>
-      </div>
-    </section>
+        <div class="arc-sec-body arc-sec-body--tilt">
+          <div class="arc-copy">
+            <p class="arc-copy-lead">把这一刻，留在七周年。</p>
+            <p class="arc-copy-text">
+              每一张照片，都是留下的痕迹。走进暗房，为你最好的一帧装上七周年纪念框，@上你的名字——它将成为这份档案的一部分。
+            </p>
+            <a class="arc-link" href="/7th/watermark/">ENTER DARKROOM →</a>
+          </div>
+          <div class="arc-visual" aria-hidden="true">
+            <span class="arc-visual-frame"></span>
+            <span class="arc-visual-seven">07</span>
+          </div>
+        </div>
+      </section>
 
-    <section class="anniv-outro">
-      <p class="anniv-outro-line">拍一张照片，交一个朋友。</p>
-      <p class="anniv-outro-sub">七周年快乐。下一个七年，继续追光。</p>
-      <div class="anniv-outro-links">
-        <a href="/7th/watermark/">生成纪念海报</a>
-        <a href="/7th/map/">查看地图墙</a>
-      </div>
-    </section>
+      <!-- 02 / PEOPLE -->
+      <section class="arc-sec" aria-labelledby="sec-people">
+        <div class="arc-sec-head">
+          <span class="arc-sec-no">02</span>
+          <h2 class="arc-sec-title" id="sec-people">PEOPLE<span class="arc-sec-zh">追光者</span></h2>
+        </div>
+        <div class="arc-sec-body">
+          <p class="arc-copy-lead">每一个光点，都是一个追光者。</p>
+          <dl class="arc-stats" data-countup>
+            <div class="arc-stat">
+              <dd data-count-to={MAP_STATS.members}>0</dd>
+              <dt>SEEKERS</dt>
+            </div>
+            <div class="arc-stat">
+              <dd data-count-to={MAP_STATS.countries}>0</dd>
+              <dt>COUNTRIES</dt>
+            </div>
+            <div class="arc-stat">
+              <dd data-count-to={MAP_STATS.provinces}>0</dd>
+              <dt>REGIONS</dt>
+            </div>
+          </dl>
+          <a class="arc-link" href="/7th/map/">WHERE WE ARE →</a>
+        </div>
+      </section>
+
+      <!-- 03 / MEMORY -->
+      <section class="arc-sec" aria-labelledby="sec-memory">
+        <div class="arc-sec-head">
+          <span class="arc-sec-no">03</span>
+          <h2 class="arc-sec-title" id="sec-memory">MEMORY<span class="arc-sec-zh">档案</span></h2>
+        </div>
+        <div class="arc-sec-body">
+          <p class="arc-memory-title">THE ARCHIVE</p>
+          <p class="arc-copy-lead arc-copy-lead--serif">七年的故事，还没有结束。</p>
+          <p class="arc-memory-range">2019 — 2026</p>
+          <p class="arc-memory-continues">THE STORY CONTINUES.</p>
+        </div>
+      </section>
+
+      <!-- Ending -->
+      <section class="arc-ending" aria-label="七周年结语">
+        <div class="arc-ending-line">
+          <span class="arc-ending-year">2019</span>
+          <span class="arc-ending-cap">WE STARTED</span>
+        </div>
+        <p class="arc-ending-seven" aria-hidden="true">7</p>
+        <div class="arc-ending-line">
+          <span class="arc-ending-year">2026</span>
+          <span class="arc-ending-cap">THE NEXT FRAME IS YOURS.</span>
+        </div>
+        <div class="arc-ending-brand">
+          <p class="arc-ending-slogan">拍一张照片，交一个朋友。</p>
+          <a class="arc-link" href="/7th/watermark/">留下你的痕迹 →</a>
+        </div>
+      </section>
+    </div>
   </main>
   <Footer />
 </Layout>
 
 <script>
-  // Hub 卡片滚动入场（与全站 .reveal 系统一致；html.js 由 Layout 注入门控）
-  const cards = document.querySelectorAll<HTMLElement>('.anniv-cards .reveal');
+  // Count Up：统计数字进入视口后从 0 滚动到终值（reduced-motion 直接显示终值）
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nums = document.querySelectorAll<HTMLElement>('[data-countup] [data-count-to]');
+  const animate = (el: HTMLElement) => {
+    const target = Number(el.dataset.countTo ?? '0');
+    if (REDUCED) {
+      el.textContent = String(target);
+      return;
+    }
+    const start = performance.now();
+    const DUR = 900;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / DUR, 1);
+      const eased = 1 - (1 - t) ** 3;
+      el.textContent = String(Math.round(target * eased));
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+    requestAnimationFrame(tick);
+  };
   const io = new IntersectionObserver(
     entries => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
+          animate(entry.target as HTMLElement);
           io.unobserve(entry.target);
         }
       }
     },
-    { threshold: 0.15 },
+    { threshold: 0.4 },
   );
-  cards.forEach(card => io.observe(card));
+  nums.forEach(n => io.observe(n));
 </script>
 
 <style>
-  .anniv-page {
+  .arc {
     padding-top: 70px; /* 固定导航高度预留 */
-    background: var(--background);
+    background: var(--anniv-bg);
+    color: var(--anniv-fg);
   }
 
-  /* ---- 暗色沉浸 hero ---- */
-  .anniv-hero {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(4.5rem, 12vw, 8rem) 1.5rem clamp(5rem, 10vw, 7rem);
+  /* —— 档案 Hero：07 为主视觉，纯编辑排版 —— */
+  .arc-hero {
+    min-height: calc(100svh - 70px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    background:
-      radial-gradient(85% 120% at 50% -20%, rgba(245, 197, 66, 0.13), transparent 55%),
-      #050507;
-    color: #fafafa;
+    padding: 3rem 1.5rem;
   }
 
-  .anniv-hero-ghost {
+  .arc-hero-brand {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.55em;
+    text-indent: 0.55em;
+    color: var(--anniv-fg);
+  }
+
+  .arc-hero-num {
+    margin: 0.4rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(9rem, 34vw, 22rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--anniv-fg);
+  }
+
+  .arc-hero-years {
+    margin: 0.6rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+    font-weight: 500;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    color: var(--anniv-accent);
+  }
+
+  .arc-hero-range {
+    margin: 1.1rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--anniv-muted);
+  }
+
+  .arc-hero-slogan {
+    margin: 1.6rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.25rem, 3.4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--anniv-fg);
+  }
+
+  .arc-enter {
+    margin-top: 3rem;
+    padding: 0.85rem 2.2rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--anniv-fg);
+    border: 1px solid var(--anniv-border);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-normal) var(--ease-enter),
+      color var(--dur-normal) var(--ease-enter);
+  }
+
+  .arc-enter:hover {
+    border-color: var(--anniv-accent);
+    color: var(--anniv-accent);
+  }
+
+  /* —— 章节体 —— */
+  .arc-body {
+    border-top: 1px solid var(--anniv-border);
+  }
+
+  .arc-sec {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(4rem, 10vw, 7.5rem) 1.5rem;
+    border-bottom: 1px solid var(--anniv-border);
+  }
+
+  .arc-sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.1rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .arc-sec-no {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--anniv-accent);
+  }
+
+  .arc-sec-no::after {
+    content: ' /';
+    color: var(--anniv-faint);
+  }
+
+  .arc-sec-title {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--anniv-fg);
+  }
+
+  .arc-sec-zh {
+    margin-left: 1.1rem;
+    font-family: var(--anniv-serif);
+    font-size: 0.5em;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--anniv-muted);
+  }
+
+  .arc-sec-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .arc-copy-lead {
+    margin: 0 0 0.9rem;
+    max-width: 34em;
+    font-size: clamp(1.15rem, 2.6vw, 1.55rem);
+    line-height: 1.7;
+    color: var(--anniv-fg);
+  }
+
+  .arc-copy-lead--serif {
+    font-family: var(--anniv-serif);
+    letter-spacing: 0.06em;
+  }
+
+  .arc-copy-text {
+    margin: 0 0 1.6rem;
+    max-width: 30em;
+    line-height: 2;
+    color: var(--anniv-muted);
+  }
+
+  .arc-link {
+    display: inline-block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--anniv-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-fast) ease;
+  }
+
+  .arc-link:hover {
+    border-color: var(--anniv-accent);
+  }
+
+  /* 01 的非对称排版：左文右相框 */
+  .arc-visual {
+    position: relative;
+    align-self: flex-end;
+    width: min(100%, 22rem);
+    aspect-ratio: 3 / 4;
+  }
+
+  .arc-visual-frame {
     position: absolute;
     inset: 0;
-    background: url('/templates/seeker-7th-landscape.webp') center 40% / cover no-repeat;
-    opacity: 0.12;
-    pointer-events: none;
+    border: 1px solid var(--anniv-border);
   }
 
-  .anniv-hero-inner {
-    position: relative;
-    z-index: 1;
+  .arc-visual-frame::after {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid var(--anniv-faint);
   }
 
-  @media (max-width: 30rem) {
-    .anniv-eyebrow {
-      font-size: 0.62rem;
-      letter-spacing: 0.24em;
-    }
-  }
-
-  .anniv-eyebrow {
-    margin: 0 0 1rem;
+  .arc-visual-seven {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -52%);
     font-family: 'Archivo', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.38em;
-    color: rgba(250, 250, 250, 0.5);
+    font-size: clamp(4rem, 9vw, 6.5rem);
+    font-weight: 700;
+    color: var(--anniv-accent);
+    opacity: 0.85;
   }
 
-  .anniv-num {
-    margin: 0 0 0.5rem;
+  /* 02 统计 */
+  .arc-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(2rem, 7vw, 5.5rem);
+    margin: 0 0 2.2rem;
+  }
+
+  .arc-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .arc-stat dd {
+    order: -1;
+    margin: 0;
     font-family: 'Archivo', sans-serif;
-    font-size: clamp(5.5rem, 18vw, 10rem);
+    font-size: clamp(3rem, 8vw, 5.2rem);
     font-weight: 700;
     line-height: 1;
-    background: linear-gradient(160deg, #ffe9a8, #f5c542 45%, #d20f39);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--anniv-fg);
   }
 
-  .anniv-title {
-    margin: 0 0 1.2rem;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: clamp(1.6rem, 4.5vw, 2.6rem);
-    font-weight: 700;
-    color: #fafafa;
-  }
-
-  .anniv-title-sep {
-    color: #f5c542;
-  }
-
-  .anniv-lead {
-    max-width: 36rem;
-    margin: 0 auto;
-    font-size: 0.98rem;
-    line-height: 1.8;
-    color: rgba(250, 250, 250, 0.68);
-  }
-
-  /* ---- 浅色卡片区 ---- */
-  .anniv-cards-section {
-    padding: 0 1.5rem 2rem;
-  }
-
-  .anniv-cards {
-    display: grid;
-    gap: 1.25rem;
-    max-width: 66rem;
-    margin: -3.5rem auto 0;
-    position: relative;
-    z-index: 2;
-  }
-
-  .anniv-card {
-    position: relative;
-    display: block;
-    padding: 1.75rem 1.75rem 1.5rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--glass-shadow);
-    text-decoration: none;
-    overflow: hidden;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease,
-      border-color 0.2s ease;
-  }
-
-  .anniv-card:hover {
-    transform: translateY(-3px) scale(1.01);
-    border-color: rgba(245, 197, 66, 0.55);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
-  }
-
-  .anniv-card-tag {
-    display: inline-block;
-    padding: 0.2rem 0.65rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--on-gradient, #fff);
-    background: linear-gradient(45deg, var(--grad-a), var(--grad-b));
-    border-radius: 999px;
-  }
-
-  .anniv-card-title {
-    margin: 0 0 0.5rem;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--foreground);
-  }
-
-  .anniv-card-desc {
-    margin: 0 0 1rem;
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--muted-foreground);
-  }
-
-  .anniv-card-go {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary);
-  }
-
-  /* 水印工坊卡：海报幽灵字背景（左侧文字区加深色渐变护层，保证可读） */
-  .anniv-card--watermark {
-    background:
-      linear-gradient(90deg, #0a0a0c 0%, #0a0a0c 52%, rgba(10, 10, 12, 0.55) 72%, rgba(10, 10, 12, 0.15) 100%),
-      url('/templates/seeker-7th-portrait.webp') right -30px bottom -20px / 55% auto no-repeat,
-      linear-gradient(100deg, #0a0a0c 0%, #17171b 100%);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .anniv-card--watermark .anniv-card-title,
-  .anniv-card--watermark .anniv-card-go {
-    color: #fafafa;
-  }
-
-  .anniv-card--watermark .anniv-card-desc {
-    color: rgba(250, 250, 250, 0.65);
-  }
-
-  .anniv-card--watermark:hover {
-    border-color: rgba(245, 197, 66, 0.5);
-  }
-
-  .anniv-card--soon {
-    opacity: 0.75;
-  }
-
-  .anniv-card-soon {
-    display: inline-block;
-    padding: 0.2rem 0.65rem;
+  .arc-stat dt {
+    margin-top: 0.6rem;
+    font-family: 'Archivo', sans-serif;
     font-size: 0.78rem;
-    color: var(--muted-foreground);
-    border: 1px dashed var(--border);
-    border-radius: 999px;
+    letter-spacing: 0.32em;
+    color: var(--anniv-muted);
   }
 
-  /* ---- 结尾寄语 ---- */
-  .anniv-outro {
-    max-width: 40rem;
+  /* 03 档案 */
+  .arc-memory-title {
+    margin: 0 0 1.4rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1rem, 2.4vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    color: var(--anniv-faint);
+  }
+
+  .arc-memory-range {
+    margin: 1.4rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--anniv-muted);
+  }
+
+  .arc-memory-continues {
+    margin: 0.5rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--anniv-accent);
+  }
+
+  /* —— Ending —— */
+  .arc-ending {
+    max-width: 72rem;
     margin: 0 auto;
-    padding: 2rem 1.5rem 5rem;
+    padding: clamp(4.5rem, 11vw, 8rem) 1.5rem clamp(5rem, 12vw, 9rem);
     text-align: center;
   }
 
-  .anniv-outro-line {
-    margin: 0 0 0.4rem;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: 1.25rem;
-    color: var(--foreground);
-  }
-
-  .anniv-outro-sub {
-    margin: 0 0 1.5rem;
-    font-size: 0.9rem;
-    color: var(--muted-foreground);
-  }
-
-  .anniv-outro-links {
+  .arc-ending-line {
     display: flex;
-    flex-wrap: wrap;
+    align-items: baseline;
     justify-content: center;
-    gap: 1rem 2rem;
+    gap: 1.4rem;
   }
 
-  .anniv-outro-links a {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--primary);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+  .arc-ending-year {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.3rem, 3.4vw, 2rem);
+    font-weight: 700;
+    color: var(--anniv-fg);
+  }
+
+  .arc-ending-cap {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+    letter-spacing: 0.32em;
+    color: var(--anniv-muted);
+  }
+
+  .arc-ending-seven {
+    margin: clamp(0.8rem, 2.5vw, 1.4rem) 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(4.5rem, 13vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--anniv-accent);
+  }
+
+  .arc-ending-brand {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .arc-ending-slogan {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    letter-spacing: 0.18em;
+    color: var(--anniv-fg);
   }
 
   @media (min-width: 56rem) {
-    .anniv-cards {
-      grid-template-columns: 1fr 1fr;
+    .arc-sec-body--tilt {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 4rem;
     }
 
-    .anniv-card--watermark {
-      grid-row: span 2;
+    .arc-sec-body--tilt .arc-copy {
+      flex: 1.2;
+    }
+
+    .arc-sec-body--tilt .arc-visual {
+      flex: 1;
+      align-self: stretch;
+      width: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arc-enter,
+    .arc-link {
+      transition: none;
     }
   }
 </style>
