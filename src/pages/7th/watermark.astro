@@ -27,9 +27,12 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
 </Layout>
 
 <style>
-  /* 画布优先：整页即舞台，无 hero / 无页脚；跟随主题双模式 */
+  /* 画布优先：整页即舞台，无 hero / 无页脚；跟随主题双模式。
+     flex 列模型：页头 44px 固定，生成器占满剩余高度（内部再为悬浮工具条预留） */
   .wm-page {
-    min-height: calc(100dvh - 70px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
     padding-top: 70px; /* 固定导航高度预留 */
     background:
       radial-gradient(90% 55% at 50% 0%, rgba(245, 197, 66, 0.06), transparent 60%),
@@ -42,9 +45,12 @@ import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.as
     display: flex;
     align-items: center;
     gap: 0.9rem;
+    flex: none;
+    height: 44px; /* 固定高度：layoutStage 的预留量依赖稳定测量 */
     max-width: 68rem;
     margin: 0 auto;
-    padding: 0.65rem 1rem;
+    padding: 0 1rem;
+    width: 100%;
   }
 
   .wm-back {

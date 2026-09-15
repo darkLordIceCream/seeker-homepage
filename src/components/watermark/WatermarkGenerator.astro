@@ -397,11 +397,24 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     }
   }
 
-  /** 舞台尺寸：按模板纵横比占满可用视区（避开导航/工具条） */
+  /** 舞台尺寸：按模板纵横比在「页头以下、工具条以上」的剩余空间内取最大。
+   *  高度上限 = 视口高 − 导航 70 − 页头 44 − 底部工具条预留（含安全区间距）。 */
   function layoutStage(): void {
     const aspect = currentTemplate.width / currentTemplate.height;
+    const barEl = document.querySelector('.wm-toolbar');
+    const barH = barEl ? barEl.getBoundingClientRect().height : 66;
+    const NAV = 70;
+    const HEAD = 44;
+    const RESERVE = 46; // 工具条下边距 + 间隙 + 安全区
+    document.documentElement.style.setProperty(
+      '--wm-toolbar-reserve',
+      `${Math.round(barH + RESERVE)}px`,
+    );
     const availW = Math.min(window.innerWidth * 0.92, 1280);
-    const availH = Math.max(window.innerHeight - 210, 300);
+    const availH = Math.max(
+      window.innerHeight - NAV - HEAD - barH - RESERVE,
+      300,
+    );
     const w = Math.min(availW, availH * aspect);
     stage.style.width = `${Math.round(w)}px`;
   }
@@ -587,6 +600,9 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   const resizeObserver = new ResizeObserver(() => requestRender());
   resizeObserver.observe(stage);
   window.addEventListener('resize', () => layoutStage());
+  // 字体/首屏渲染会改变页头与工具条实高，就绪后二次校准舞台尺寸
+  document.fonts.ready.then(() => layoutStage());
+  window.addEventListener('load', () => layoutStage());
 
   // ---- 初始化：字体 → 默认模板 → 首绘 ----
   void (async () => {
@@ -611,11 +627,13 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
 <style>
   .wm-app {
     position: relative;
-    min-height: calc(100dvh - 70px);
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 76px 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+    justify-content: center;
+    padding: 0.75rem 1rem calc(var(--wm-toolbar-reserve, 100px) + env(safe-area-inset-bottom, 0px));
     background:
       radial-gradient(90% 60% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
       var(--background);
