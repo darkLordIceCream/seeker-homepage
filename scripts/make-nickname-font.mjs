@@ -23,7 +23,7 @@ const OUT = 'public/fonts/noto-sans-sc-300-subset.woff2';
 let charset = '';
 // ASCII 可打印区
 for (let c = 0x20; c <= 0x7e; c++) {
-  charset += String.fromCharCode(c);
+  charset += '，。！？、；：\u201C\u201D\u2018\u2019（）《》【】〈〉…—～·◎○●◇■□△▲※©@#%&+-=*/_';
 }
 // GB2312 一级汉字高频区（0xB0A1-0xD5FE，约 3600 字；末区低频字与二级生僻字回退系统字体）
 const buf = Buffer.alloc(2);
@@ -38,7 +38,7 @@ for (let hi = 0xb0; hi <= 0xd3; hi++) {
   }
 }
 // 常用中文标点与符号
-charset += "，。！？、；：“”‘’（）《》【】〈〉…—～·◎○●◇■□△▲※©@#%&+-=*/_";
+charset += '，。！？、；：“”‘’（）《》【】〈〉…—～·◎○●◇■□△▲※©@#%&+-=*/_';
 // 去重（保持顺序）
 const unique = [...new Set(charset)].join('');
 console.log(`字符集: ${[...unique].length} 个字符`);

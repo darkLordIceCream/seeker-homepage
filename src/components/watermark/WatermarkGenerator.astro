@@ -1,17 +1,43 @@
 ---
 /**
- * 七周年水印海报生成器（竖版 / 横版双模板）。
- * 纯浏览器 Canvas 合成：照片只在用户设备内存中处理，不上传服务器。
- * 交互脚本为本组件内原生 TypeScript（与全站 Navigation/ThemeToggle 同模式）；
- * 模板参数统一在 src/lib/watermark/template.ts 配置。
+ * 七周年水印海报生成器 · 画布优先沉浸式编辑器（竖版 / 横版双模板）。
+ *
+ * 交互逻辑（画布优先）：
+ * 1. 进入即海报舞台；空状态 = 大目标上传卡（点击/拖拽/粘贴）+ 示例照片；
+ * 2. 选择照片后自动识别横竖（宽 ≥ 高 → 横版，否则竖版）并自动套用模板，
+ *    toast 提示且可在工具条手动覆盖（手动选择保留至下一张照片）；
+ * 3. 昵称双通道：工具条常驻输入框 + 点击海报昵称区域就地弹出编辑框；
+ * 4. 底部悬浮玻璃工具条收纳全部控件；「生成纪念海报」为唯一主 CTA。
+ *
+ * 照片只在浏览器内存中处理，不上传服务器。
+ * 逻辑层：render.ts（合成/钳制/缩放）· gestures.ts（手势）· template.ts（模板配置）。
  */
 import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
 ---
 
-<div class="wm-generator">
+<div class="wm-app">
+  <!-- 左上角品牌/隐私/返回浮标 -->
+  <div class="wm-chips">
+    <span class="wm-chip wm-chip--brand">水印工坊</span>
+    <span class="wm-chip" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">🔒 仅本地处理</span>
+    <a class="wm-chip wm-chip--link" href="/7th/">← 七周年板块</a>
+  </div>
+
+  <!-- 海报舞台：整页画布 -->
   <div class="wm-stage" id="wm-stage">
     <canvas aria-label="海报预览" id="wm-canvas"></canvas>
-    <button class="wm-dropzone" id="wm-dropzone" type="button">
+
+    <!-- 昵称就地编辑热区（定位由脚本按模板坐标计算） -->
+    <button
+      aria-label="点击修改昵称"
+      class="wm-nick-hit"
+      hidden
+      id="wm-nick-hit"
+      type="button"
+    ></button>
+
+    <!-- 空状态上传卡 -->
+    <button class="wm-dropzone" hidden id="wm-dropzone" type="button">
       <span class="wm-dropzone-card">
         <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
           <path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"></path>
@@ -19,61 +45,67 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
         </svg>
         <strong>点击选择照片</strong>
         <span>或拖拽 / 粘贴到此处 · JPG / PNG / WebP</span>
+        <span class="wm-dropzone-privacy">照片仅在你的浏览器内处理，不会上传</span>
       </span>
     </button>
     <input accept="image/jpeg,image/png,image/webp" hidden id="wm-file" type="file" />
+
+    <!-- toast（自动识别结果 / 成功 / 错误） -->
+    <div class="wm-toast" hidden id="wm-toast" role="status"></div>
   </div>
 
-  <div class="wm-panel glass-card">
-    <div class="wm-field">
-      <span class="wm-label">海报模板</span>
-      <div aria-label="选择海报模板" class="wm-tpl-row" role="group">
-        {
-          WATERMARK_TEMPLATES.map((t, i) => (
-            <button
-              aria-pressed={i === 0 ? 'true' : 'false'}
-              class="wm-tpl-btn"
-              data-template-id={t.id}
-              type="button"
-            >
-              <img alt="" loading="lazy" src={t.src} />
-              <span>{t.name.split('·').pop()?.trim() ?? t.name}</span>
-            </button>
-          ))
-        }
-      </div>
+  <!-- 示例照片入口（空状态时显示在舞台下方） -->
+  <div class="wm-sample-row" id="wm-sample-row">
+    <button class="wm-text-btn" id="wm-sample" type="button">没有照片？用示例试试 →</button>
+  </div>
+
+  <!-- 悬浮玻璃工具条 -->
+  <div aria-label="编辑工具" class="wm-toolbar" role="toolbar">
+    <div aria-label="切换海报模板" class="wm-seg" role="group">
+      {
+        WATERMARK_TEMPLATES.map((t, i) => (
+          <button
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            class="wm-seg-btn"
+            data-template-id={t.id}
+            type="button"
+          >
+            {t.name.split('·').pop()?.trim() ?? t.name}
+          </button>
+        ))
+      }
     </div>
 
-    <label class="wm-field">
-      <span class="wm-label">你的昵称</span>
+    <div class="wm-nick-field">
+      <label class="wm-sr" for="wm-nickname">昵称</label>
       <input
         autocomplete="off"
         id="wm-nickname"
         maxlength={NICKNAME_MAX_LENGTH}
-        placeholder="例如：倾斜的地平线"
+        placeholder="输入你的昵称"
         type="text"
       />
+    </div>
+
+    <div class="wm-zoom-row">
+      <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
+      <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
+      <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
+      <button aria-label="重置位置与缩放" disabled id="wm-reset" type="button">↺</button>
+    </div>
+
+    <button class="wm-cta" disabled id="wm-generate" type="button">生成纪念海报</button>
+    <a class="wm-cta wm-cta--download" download hidden id="wm-download">下载</a>
+  </div>
+
+  <!-- 昵称就地编辑 popover -->
+  <div class="wm-pop" hidden id="wm-pop">
+    <label class="wm-pop-label" for="wm-pop-input">
+      昵称
+      <span class="wm-pop-count" id="wm-pop-count"></span>
     </label>
-
-    <div class="wm-field">
-      <span class="wm-label">调整照片（拖动 / 双指缩放）</span>
-      <div class="wm-zoom-row">
-        <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
-        <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
-        <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
-        <button class="wm-text-btn" disabled id="wm-reset" type="button">重置</button>
-      </div>
-    </div>
-
-    <div class="wm-actions">
-      <button class="wm-primary" disabled id="wm-generate" type="button">生成纪念海报</button>
-      <a class="wm-primary wm-download" download hidden id="wm-download">下载海报</a>
-      <button class="wm-text-btn" hidden id="wm-change" type="button">换一张照片</button>
-      <button class="wm-text-btn" id="wm-sample" type="button">没有照片？用示例试试</button>
-    </div>
-
-    <p class="wm-status" id="wm-status" role="status"></p>
-    <p class="wm-privacy">🔒 照片只在你自己的浏览器里处理，不会上传到任何服务器。</p>
+    <input autocomplete="off" id="wm-pop-input" maxlength={NICKNAME_MAX_LENGTH} type="text" />
+    <p class="wm-pop-hint">Enter 确认 · 点击空白处退出</p>
   </div>
 </div>
 
@@ -95,6 +127,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   } from '../../lib/watermark/render';
   import {
     DEFAULT_WATERMARK_TEMPLATE,
+    NICKNAME_MAX_LENGTH,
     WATERMARK_TEMPLATES,
     type WatermarkTemplate,
   } from '../../lib/watermark/template';
@@ -105,14 +138,19 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
 
   function required<T extends HTMLElement>(id: string, ctor: new () => T): T {
     const el = document.getElementById(id);
-    if (!(el instanceof ctor)) {throw new Error(`水印生成器缺少元素 #${id}`);}
+    if (!(el instanceof ctor)) {
+      throw new Error(`水印生成器缺少元素 #${id}`);
+    }
     return el;
   }
 
-  const canvas = required('wm-canvas', HTMLCanvasElement);
   const stage = required('wm-stage', HTMLDivElement);
+  const canvas = required('wm-canvas', HTMLCanvasElement);
   const dropzone = required('wm-dropzone', HTMLButtonElement);
   const fileInput = required('wm-file', HTMLInputElement);
+  const nickHit = required('wm-nick-hit', HTMLButtonElement);
+  const toastEl = required('wm-toast', HTMLDivElement);
+  const sampleBtn = required('wm-sample', HTMLButtonElement);
   const nicknameInput = required('wm-nickname', HTMLInputElement);
   const zoomSlider = required('wm-zoom', HTMLInputElement);
   const zoomInBtn = required('wm-zoom-in', HTMLButtonElement);
@@ -120,12 +158,12 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   const resetBtn = required('wm-reset', HTMLButtonElement);
   const generateBtn = required('wm-generate', HTMLButtonElement);
   const downloadLink = required('wm-download', HTMLAnchorElement);
-  const changeBtn = required('wm-change', HTMLButtonElement);
-  const sampleBtn = required('wm-sample', HTMLButtonElement);
-  const statusEl = required('wm-status', HTMLParagraphElement);
   const tplButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.wm-tpl-btn[data-template-id]'),
+    document.querySelectorAll<HTMLButtonElement>('.wm-seg-btn[data-template-id]'),
   );
+  const popEl = required('wm-pop', HTMLDivElement);
+  const popInput = required('wm-pop-input', HTMLInputElement);
+  const popCount = required('wm-pop-count', HTMLElement);
 
   let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
   let templateBitmap: ImageBitmap | null = null;
@@ -134,10 +172,10 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
   let renderQueued = false;
-  /** 用户上传照片的原始文件名（用于生成下载文件名） */
   let sourceFileName = '';
+  let toastTimer = 0;
 
-  // 手势锚点（照片区域中心），切换模板时就地更新
+  /** 手势锚点（照片区域中心），切换模板时就地更新 */
   const areaCenter = { x: 0, y: 0 };
 
   function syncAreaCenter(): void {
@@ -146,16 +184,38 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   function setStatus(message: string, isError = false): void {
-    statusEl.textContent = message;
-    statusEl.classList.toggle('is-error', isError);
+    toastEl.textContent = message;
+    toastEl.classList.toggle('is-error', isError);
+    toastEl.classList.add('is-shown');
+    if (toastTimer) {
+      window.clearTimeout(toastTimer);
+    }
+    if (message) {
+      toastTimer = window.setTimeout(() => {
+        toastEl.classList.remove('is-shown');
+        window.setTimeout(() => {
+          toastEl.hidden = true;
+        }, 250);
+      }, 2800);
+    } else {
+      toastEl.hidden = true;
+    }
+  }
+
+  function toast(message: string): void {
+    setStatus(message);
   }
 
   function requestRender(): void {
-    if (renderQueued || !templateBitmap) {return;}
+    if (renderQueued || !templateBitmap) {
+      return;
+    }
     renderQueued = true;
     requestAnimationFrame(() => {
       renderQueued = false;
-      if (!templateBitmap) {return;}
+      if (!templateBitmap) {
+        return;
+      }
       // 预览分辨率：容器 CSS 尺寸 × dPR，长边封顶 1600px 保证交互流畅
       const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -192,7 +252,16 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     resetBtn.disabled = !hasPhoto;
     generateBtn.disabled = !hasPhoto;
     dropzone.hidden = hasPhoto;
-    changeBtn.hidden = !hasPhoto;
+    changePhotoVisibility();
+  }
+
+  function changePhotoVisibility(): void {
+    // 有照片时隐藏示例入口；昵称热区在有模板时始终可用
+    document.getElementById('wm-sample-row')?.toggleAttribute('hidden', hasPhotoBool());
+  }
+
+  function hasPhotoBool(): boolean {
+    return photo !== null;
   }
 
   /** 围绕照片区域中心缩放（视野中心的内容保持不动，锚点语义随模板 fit） */
@@ -220,7 +289,9 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   async function handleFile(file: File | null | undefined): Promise<void> {
-    if (!file) {return;}
+    if (!file) {
+      return;
+    }
     if (!file.type.startsWith('image/')) {
       setStatus('请选择图片文件（JPG / PNG / WebP）', true);
       return;
@@ -231,8 +302,19 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       photo?.close();
       photo = loaded;
       sourceFileName = file.name;
-      transform = initialTransform();
       releaseDownload();
+
+      // 自动识别横竖版：宽 ≥ 高 → 横版，否则竖版；与当前模板不一致时自动切换
+      const detected =
+        loaded.width >= loaded.height
+          ? WATERMARK_TEMPLATES.find((t) => t.fit.base === 'width')
+          : WATERMARK_TEMPLATES.find((t) => t.fit.base === 'height');
+      if (detected && detected.id !== currentTemplate.id) {
+        await switchTemplate(detected, { silent: true });
+        toast(`已识别为${loaded.width >= loaded.height ? '横图' : '竖图'} · 自动套用${detected.name.split('·').pop()?.trim() ?? ''}模板，可在下方工具条切换`);
+      }
+
+      transform = initialTransform();
       syncControls();
       requestRender();
       setStatus('');
@@ -247,9 +329,12 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   async function generate(): Promise<void> {
-    if (!templateBitmap || !photo) {return;}
+    if (!templateBitmap || !photo) {
+      return;
+    }
     generateBtn.disabled = true;
-    setStatus('正在生成…');
+    generateBtn.textContent = '正在生成…';
+    setStatus('');
     try {
       const out = document.createElement('canvas');
       renderComposition(out, {
@@ -266,17 +351,25 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       downloadLink.download = buildFileName(currentTemplate.output, sourceFileName);
       downloadLink.hidden = false;
       downloadLink.click();
-      setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），如未自动下载请点「下载海报」。`);
+      generateBtn.textContent = '重新生成';
+      setStatus(`已生成（${(blob.size / 1024 / 1024).toFixed(1)} MB），已开始下载`);
     } catch {
       setStatus('生成失败，请重试。', true);
     } finally {
-      generateBtn.disabled = false;
+      generateBtn.disabled = photo === null;
     }
   }
 
-  async function switchTemplate(template: WatermarkTemplate): Promise<void> {
-    if (template.id === currentTemplate.id && templateBitmap) {return;}
-    setStatus('模板加载中…');
+  async function switchTemplate(
+    template: WatermarkTemplate,
+    opts: { announce?: boolean; silent?: boolean } = {},
+  ): Promise<void> {
+    if (template.id === currentTemplate.id && templateBitmap) {
+      return;
+    }
+    if (!opts.silent) {
+      setStatus('模板加载中…');
+    }
     try {
       let bitmap = overlayCache.get(template.id);
       if (!bitmap) {
@@ -288,37 +381,116 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       transform = initialTransform();
       releaseDownload();
       canvas.style.aspectRatio = `${template.width} / ${template.height}`;
+      layoutStage();
       syncAreaCenter();
       syncTplButtons();
+      updateNickHit();
       syncControls();
       requestRender();
-      setStatus('');
+      if (!opts.silent) {
+        setStatus('');
+      }
     } catch {
       setStatus('模板加载失败，请检查网络后刷新重试。', true);
     }
   }
+
+  /** 舞台尺寸：按模板纵横比占满可用视区（避开导航/工具条） */
+  function layoutStage(): void {
+    const aspect = currentTemplate.width / currentTemplate.height;
+    const availW = Math.min(window.innerWidth * 0.92, 1280);
+    const availH = Math.max(window.innerHeight - 210, 300);
+    const w = Math.min(availW, availH * aspect);
+    stage.style.width = `${Math.round(w)}px`;
+  }
+
+  /** 昵称就地编辑热区：按模板昵称坐标换算为舞台百分比 */
+  function updateNickHit(): void {
+    const n = currentTemplate.nickname;
+    const estWidth = Math.min(
+      n.maxWidth,
+      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2,
+    );
+    nickHit.style.left = `${((n.x - estWidth / 2 - 14) / currentTemplate.width) * 100}%`;
+    nickHit.style.top = `${((n.y - n.fontSize * 1.5 - 10) / currentTemplate.height) * 100}%`;
+    nickHit.style.width = `${((estWidth + 28) / currentTemplate.width) * 100}%`;
+    nickHit.style.height = `${((n.fontSize * 2.1 + 20) / currentTemplate.height) * 100}%`;
+  }
+
+  /* ---- 昵称就地编辑 popover ---- */
+  function showPop(): void {
+    const hit = nickHit.getBoundingClientRect();
+    popEl.hidden = false;
+    const popW = 240;
+    let left = hit.left + hit.width / 2 - popW / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - popW - 8));
+    const top = hit.top - popEl.offsetHeight - 10;
+    popEl.style.left = `${Math.round(left)}px`;
+    popEl.style.top = `${Math.round(Math.max(8, top))}px`;
+    popInput.value = nicknameInput.value;
+    popCount.textContent = `${nicknameInput.value.length} / ${NICKNAME_MAX_LENGTH}`;
+    window.setTimeout(() => popInput.focus(), 0);
+  }
+
+  function hidePop(): void {
+    popEl.hidden = true;
+  }
+
+  nickHit.addEventListener('click', () => {
+    if (popEl.hidden) {
+      showPop();
+    } else {
+      hidePop();
+    }
+  });
+
+  popInput.addEventListener('input', () => {
+    nicknameInput.value = popInput.value;
+    popCount.textContent = `${popInput.value.length} / ${NICKNAME_MAX_LENGTH}`;
+    requestRender();
+  });
+
+  popInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      hidePop();
+      requestRender();
+    } else if (e.key === 'Escape') {
+      hidePop();
+    }
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (popEl.hidden) {
+      return;
+    }
+    const t = e.target as Element;
+    if (!popEl.contains(t) && t !== nickHit && !nickHit.contains(t)) {
+      hidePop();
+    }
+  });
 
   // ---- 事件绑定 ----
 
   for (const btn of tplButtons) {
     const tpl = WATERMARK_TEMPLATES.find((t) => t.id === btn.dataset.templateId);
     btn.addEventListener('click', () => {
-      if (tpl) {void switchTemplate(tpl);}
+      if (!tpl) {
+        return;
+      }
+      void switchTemplate(tpl);
     });
   }
 
   dropzone.addEventListener('click', () => fileInput.click());
-  changeBtn.addEventListener('click', () => fileInput.click());
 
-  // 示例照片：按当前模板方向取内置样图，方便访客零门槛试用
-  const SAMPLES: Record<string, string> = {
+  const SAMPLE_SOURCES: Record<string, string> = {
     'seeker-7th-portrait': '/samples/seeker-sample-portrait.jpg',
     'seeker-7th-landscape': '/samples/seeker-sample-landscape.jpg',
   };
   sampleBtn.addEventListener('click', () => {
     const src =
-      SAMPLES[currentTemplate.id] ??
-      SAMPLES['seeker-7th-portrait'] ??
+      SAMPLE_SOURCES[currentTemplate.id] ??
+      SAMPLE_SOURCES['seeker-7th-portrait'] ??
       '/samples/seeker-sample-portrait.jpg';
     void (async () => {
       sampleBtn.disabled = true;
@@ -355,11 +527,16 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     void handleFile(e.clipboardData?.files?.[0]);
   });
 
-  nicknameInput.addEventListener('input', () => requestRender());
+  nicknameInput.addEventListener('input', () => {
+    popInput.value = nicknameInput.value;
+    requestRender();
+  });
 
   zoomSlider.addEventListener('input', () => {
     const scale = Number.parseFloat(zoomSlider.value);
-    if (!Number.isFinite(scale)) {return;}
+    if (!Number.isFinite(scale)) {
+      return;
+    }
     transform = zoomAtTransform({
       template: currentTemplate,
       photo,
@@ -407,6 +584,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
 
   const resizeObserver = new ResizeObserver(() => requestRender());
   resizeObserver.observe(stage);
+  window.addEventListener('resize', () => layoutStage());
 
   // ---- 初始化：字体 → 默认模板 → 首绘 ----
   void (async () => {
@@ -416,6 +594,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
       templateBitmap = await loadTemplate(currentTemplate.src);
       overlayCache.set(currentTemplate.id, templateBitmap);
       canvas.style.aspectRatio = `${currentTemplate.width} / ${currentTemplate.height}`;
+      layoutStage();
       syncAreaCenter();
       syncTplButtons();
       syncControls();
@@ -428,19 +607,67 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
 </script>
 
 <style>
-  .wm-generator {
-    display: grid;
-    gap: 1.5rem;
-    width: min(100%, 46rem);
-    margin-inline: auto;
+  .wm-app {
+    position: relative;
+    min-height: calc(100dvh - 70px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 76px 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+    background:
+      radial-gradient(90% 60% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
+      var(--background);
   }
 
+  /* ---- 左上角浮标 ---- */
+  .wm-chips {
+    position: absolute;
+    top: 84px;
+    left: 1rem;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .wm-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+  }
+
+  .wm-chip--brand {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .wm-chip--link {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .wm-chip--link:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- 海报舞台 ---- */
   .wm-stage {
     position: relative;
-    overflow: hidden;
-    border-radius: calc(var(--radius) + 4px);
-    background: #000;
-    box-shadow: var(--glass-shadow);
+    margin: auto 0;
+    border-radius: 12px;
+    background: #050507;
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.35),
+      0 0 0 1px var(--border);
+    transition: box-shadow 0.2s ease;
   }
 
   .wm-stage.is-dragover {
@@ -454,12 +681,31 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     aspect-ratio: 2084 / 3705;
     touch-action: none;
     cursor: grab;
+    border-radius: 12px;
   }
 
   #wm-canvas:active {
     cursor: grabbing;
   }
 
+  /* ---- 昵称热区 ---- */
+  .wm-nick-hit {
+    position: absolute;
+    background: transparent;
+    border: 1.5px dashed transparent;
+    border-radius: 8px;
+    cursor: text;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .wm-nick-hit:hover,
+  .wm-nick-hit:focus-visible {
+    border-color: rgba(245, 197, 66, 0.7);
+    background: rgba(245, 197, 66, 0.08);
+    outline: none;
+  }
+
+  /* ---- 空状态上传卡 ---- */
   .wm-dropzone {
     position: absolute;
     inset: 0;
@@ -477,11 +723,11 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
-    padding: 1.25rem 1.75rem;
-    border: 1.5px dashed var(--border);
-    border-radius: 14px;
+    padding: 1.4rem 1.9rem;
     background: var(--card);
     color: var(--card-foreground);
+    border: 1.5px dashed var(--border);
+    border-radius: 16px;
     box-shadow: var(--glass-shadow);
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
@@ -503,76 +749,80 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   .wm-dropzone span {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--muted-foreground);
   }
 
-  .wm-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-    padding: 1.5rem;
+  .wm-dropzone .wm-dropzone-privacy {
+    margin-top: 0.3rem;
+    font-size: 0.72rem;
+    opacity: 0.85;
   }
 
-  .wm-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
+  .wm-sample-row {
+    text-align: center;
+    margin-top: 0.75rem;
   }
 
-  .wm-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
+  /* ---- 悬浮玻璃工具条 ---- */
+  .wm-toolbar {
+    position: fixed;
+    left: 50%;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: min(96vw, 56rem);
+    padding: 0.6rem 0.7rem;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
   }
 
-  .wm-tpl-row {
+  .wm-seg {
     display: flex;
-    gap: 0.5rem;
+    background: var(--muted);
+    border-radius: 10px;
+    padding: 2px;
+    gap: 2px;
   }
 
-  /* 模板缩略图：黑底白字海报的白色叠加层在黑底上即完整海报外观 */
-  .wm-tpl-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.45rem 0.45rem 0.55rem;
+  .wm-seg-btn {
+    padding: 0.42rem 0.85rem;
     font: inherit;
     font-size: 0.82rem;
     color: var(--muted-foreground);
-    background: var(--background);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: border-color 0.15s ease, transform 0.15s ease;
-  }
-
-  .wm-tpl-btn img {
-    width: 100%;
-    height: 4.6rem;
-    object-fit: cover;
-    background: #000;
+    background: transparent;
+    border: none;
     border-radius: 8px;
+    cursor: pointer;
+    min-height: 34px;
   }
 
-  .wm-tpl-btn[aria-pressed='true'] {
-    color: var(--primary);
+  .wm-seg-btn[aria-pressed='true'] {
+    color: var(--foreground);
     font-weight: 600;
-    border-color: var(--primary);
+    background: var(--background);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   }
 
-  .wm-tpl-btn[aria-pressed='true'] img {
-    outline: 1px solid rgba(0, 0, 0, 0.2);
-  }
-
-  .wm-tpl-btn:hover {
-    transform: translateY(-1px);
+  .wm-nick-field {
+    flex: 1 1 9rem;
+    min-width: 8rem;
   }
 
   #wm-nickname {
-    padding: 0.65rem 0.85rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
     font: inherit;
+    font-size: 0.9rem;
     color: var(--foreground);
     background: var(--background);
     border: 1px solid var(--border);
@@ -587,15 +837,13 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   .wm-zoom-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
   }
 
-  #wm-zoom-in,
-  #wm-zoom-out {
-    flex: 0 0 auto;
-    width: 2.3rem;
-    height: 2.3rem;
-    font-size: 1.1rem;
+  .wm-zoom-row button {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.05rem;
     color: var(--foreground);
     background: var(--background);
     border: 1px solid var(--border);
@@ -604,7 +852,7 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
   }
 
   #wm-zoom {
-    flex: 1;
+    width: clamp(5rem, 12vw, 8rem);
     accent-color: var(--primary);
   }
 
@@ -613,18 +861,12 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     cursor: not-allowed;
   }
 
-  .wm-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .wm-primary {
+  .wm-cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.7rem 1.3rem;
+    min-height: 2.75rem;
+    padding: 0.6rem 1.3rem;
     font: inherit;
     font-weight: 600;
     color: var(--on-gradient, #fff);
@@ -633,50 +875,133 @@ import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/te
     border-radius: 12px;
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;
   }
 
-  .wm-primary:hover {
+  .wm-cta:hover:not(:disabled) {
     filter: brightness(1.06);
   }
 
-  .wm-text-btn {
-    padding: 0.55rem 0.9rem;
+  .wm-cta--download {
+    padding: 0.6rem 0.9rem;
+    background: var(--muted);
+    color: var(--foreground);
+  }
+
+  .wm-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* ---- toast ---- */
+  .wm-toast {
+    position: absolute;
+    top: 0.9rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    max-width: 92%;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--foreground);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .wm-toast.is-error {
+    color: var(--destructive);
+    border-color: var(--destructive);
+  }
+
+  .wm-toast.is-shown {
+    display: block;
+  }
+
+  /* ---- 就地编辑 popover ---- */
+  .wm-pop {
+    position: fixed;
+    z-index: 50;
+    width: 240px;
+    padding: 0.65rem 0.75rem 0.55rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .wm-pop-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  .wm-pop-count {
+    font-weight: 400;
+  }
+
+  #wm-pop-input {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
     font: inherit;
+    font-size: 0.9rem;
+    color: var(--foreground);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  #wm-pop-input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+
+  .wm-pop-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+  }
+
+  .wm-text-btn {
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    font-size: 0.85rem;
     color: var(--muted-foreground);
     background: transparent;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    white-space: nowrap;
   }
 
-  .wm-status {
-    min-height: 1.4em;
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--muted-foreground);
-  }
-
-  .wm-status.is-error {
-    color: var(--destructive);
-  }
-
-  .wm-privacy {
-    margin: 0;
-    font-size: 0.8rem;
-    color: var(--muted-foreground);
+  .wm-text-btn:hover {
+    color: var(--primary);
+    background: var(--muted);
   }
 
   [hidden] {
     display: none !important;
   }
 
-  @media (min-width: 48rem) {
-    .wm-generator {
-      grid-template-columns: minmax(0, 24rem) minmax(18rem, 22rem);
-      align-items: start;
+  @media (max-width: 48rem) {
+    .wm-toolbar {
+      flex-wrap: wrap;
+    }
+
+    .wm-cta {
+      flex: 1 1 100%;
+    }
+
+    .wm-chips {
+      top: 78px;
     }
   }
 </style>
