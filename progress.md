@@ -1006,7 +1006,9 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 - [ ] **替换真实成员分布数据**：src/data/anniversary/map-points.ts 当前为占位数据（34 省级 +
       15 国家，825 人为虚构），替换后重建即自动更新地图与统计
 - [ ] 七周年手记文章就位：src/content/anniversary/ 加 .md，hub「即将上线」卡换真实链接
-- [ ] 水印昵称 webfont：字体文件 → public/fonts/ + template.ts fonts[] 登记
+- [x] 水印昵称 webfont：✅ 已解决（09-15 凌晨补充）——用户确认设计稿字体为等线；等线为方正/微软商业字体不可直接内嵌，改用免费商用（Apache-2.0）的思源黑体 Light 子集 webfont（GB2312 一级高频字 3512 字 +
+      ASCII/标点，466KB ≤
+      480KB 入库线）+ 字体栈 DengXian 优先（装了 Office 的设备本地精确匹配零下载），FontFace 注册家族 NotoSansSCSub；生成脚本 scripts/make-nickname-font.mjs（可随时重跑调整字符集）
 - [ ] 板块正式发布时：确认角卡曝光策略（当前每次打开都显示，如需改为每天一次/一次，改 AnniversaryCard 脚本的 localStorage 逻辑）
 - [ ] 7 周年活动结束后下线路径：角卡移除 + 导航/活动卡入口摘除 + 板块页保留或归档
 
