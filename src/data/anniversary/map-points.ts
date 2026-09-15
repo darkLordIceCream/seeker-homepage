@@ -71,21 +71,21 @@ export const PROVINCE_POINTS: readonly ProvincePoint[] = [
 
 /** 海外成员分布（国家，占位数据） */
 export const COUNTRY_POINTS: readonly CountryPoint[] = [
-  { name: '日本', worldName: 'Japan', count: 11 },
-  { name: '美国', worldName: 'United States of America', count: 14 },
-  { name: '澳大利亚', worldName: 'Australia', count: 9 },
+  { name: '日本', worldName: 'Japan', count: 11, lngLat: [138.5, 36.5] },
+  { name: '美国', worldName: 'United States', count: 14, lngLat: [-98.0, 39.5] },
+  { name: '澳大利亚', worldName: 'Australia', count: 9, lngLat: [134.0, -24.0] },
   { name: '新加坡', lngLat: [103.8198, 1.3521], count: 7 },
-  { name: '加拿大', worldName: 'Canada', count: 6 },
-  { name: '英国', worldName: 'United Kingdom', count: 5 },
-  { name: '德国', worldName: 'Germany', count: 4 },
-  { name: '新西兰', worldName: 'New Zealand', count: 4 },
-  { name: '法国', worldName: 'France', count: 3 },
-  { name: '韩国', worldName: 'South Korea', count: 3 },
-  { name: '马来西亚', worldName: 'Malaysia', count: 3 },
-  { name: '泰国', worldName: 'Thailand', count: 2 },
-  { name: '荷兰', worldName: 'Netherlands', count: 2 },
-  { name: '瑞士', worldName: 'Switzerland', count: 1 },
-  { name: '阿联酋', worldName: 'United Arab Emirates', count: 1 },
+  { name: '加拿大', worldName: 'Canada', count: 6, lngLat: [-106.0, 56.0] },
+  { name: '英国', worldName: 'United Kingdom', count: 5, lngLat: [-1.5, 52.5] },
+  { name: '德国', worldName: 'Germany', count: 4, lngLat: [10.4, 51.2] },
+  { name: '新西兰', worldName: 'New Zealand', count: 4, lngLat: [172.8, -41.5] },
+  { name: '法国', worldName: 'France', count: 3, lngLat: [2.4, 46.8] },
+  { name: '韩国', worldName: 'Korea', count: 3, lngLat: [127.8, 36.3] },
+  { name: '马来西亚', worldName: 'Malaysia', count: 3, lngLat: [102.0, 4.2] },
+  { name: '泰国', worldName: 'Thailand', count: 2, lngLat: [101.0, 15.1] },
+  { name: '荷兰', worldName: 'Netherlands', count: 2, lngLat: [5.3, 52.2] },
+  { name: '瑞士', worldName: 'Switzerland', count: 1, lngLat: [8.2, 46.8] },
+  { name: '阿联酋', worldName: 'United Arab Emirates', count: 1, lngLat: [54.3, 23.9] },
 ];
 
 /** 统计汇总（供地图墙统计条使用） */
