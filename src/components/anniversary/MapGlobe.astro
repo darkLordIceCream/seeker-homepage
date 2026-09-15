@@ -1,0 +1,652 @@
+---
+/**
+ * 【七周年 · 地图墙】实时晨昏线地球仪（画布优先沉浸式）。
+ *
+ * 渲染：d3-geo 正交投影 + Canvas 2D，逐帧按需重绘。
+ * 分层：深空星野（静态）→ 海洋/大气 → 大陆 → 经纬网 → 晨昏线（实时昼夜）
+ *       → 中国省界（聚焦模式）→ 成员标记（金色光点，仅绘朝向观察者半球）。
+ *
+ * 交互：拖拽旋转 · 空闲缓慢自转 · 「聚焦中国」旋转+放大显示省界 ·
+ *       晨昏线随真实时间每 60s 刷新。
+ * 数据：src/data/anniversary/map-points.ts（当前为占位数据，见该文件头注释）；
+ *       边界数据构建期序列化为 JSON script 标签传入组件脚本。
+ */
+import { geoCentroid } from 'd3-geo';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
+import worldRaw from '../../data/anniversary/geo/world-countries.json';
+import chinaRaw from '../../data/anniversary/geo/china-provinces.json';
+import { COUNTRY_POINTS, MAP_STATS, PROVINCE_POINTS } from '../../data/anniversary/map-points';
+
+type WorldFc = FeatureCollection<Geometry, { name?: string }>;
+type ChinaFc = FeatureCollection<Geometry, { name?: string }>;
+const worldFc = worldRaw as unknown as WorldFc;
+const chinaFc = chinaRaw as unknown as ChinaFc;
+
+interface GlobeMarker {
+  name: string;
+  coords: [number, number];
+  count: number;
+  kind: 'country' | 'province';
+}
+
+/** 取要素中面积最大的多边形环并反绕（DataV 外环为 RFC7946 逆时针，
+ * d3 球面质心按顺时针积分，直接算会得到「球面其余部分」的质心） */
+function mainlandCentroid(feature: Feature<Geometry>): [number, number] {
+  const geom = feature.geometry as Polygon | MultiPolygon;
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+  let best = polys[0]!;
+  let bestArea = 0;
+  for (const poly of polys) {
+    const ring = poly[0] as [number, number][];
+    let area = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+      area += ring[i]![0] * ring[i + 1]![1] - ring[i + 1]![0] * ring[i]![1];
+    }
+    if (Math.abs(area) > bestArea) {
+      bestArea = Math.abs(area);
+      best = poly;
+    }
+  }
+  return geoCentroid({
+    type: 'Polygon',
+    coordinates: [best.slice().reverse()],
+  } as unknown as Polygon);
+}
+
+/** 国家标记：worldName 匹配世界图取质心，小国用 lngLat 手工标注 */
+const countryMarkers: GlobeMarker[] = COUNTRY_POINTS.map((c): GlobeMarker | null => {
+  const feature = c.worldName
+    ? worldFc.features.find((f) => f.properties?.name === c.worldName)
+    : undefined;
+  const centroid = feature
+    ? (geoCentroid(feature as Feature<Geometry>) as [number, number])
+    : c.lngLat;
+  if (!centroid) {
+    return null;
+  }
+  return { name: c.name, coords: centroid, count: c.count, kind: 'country' };
+}).filter((m): m is GlobeMarker => m !== null);
+
+/** 中国省级标记：最大环质心（甩开南海飞地） */
+const provinceMarkers: GlobeMarker[] = PROVINCE_POINTS.map((p): GlobeMarker | null => {
+  const feature = chinaFc.features.find((f) => f.properties?.name === p.name);
+  if (!feature) {
+    return null;
+  }
+  return { name: p.name, coords: mainlandCentroid(feature), count: p.count, kind: 'province' };
+}).filter((m): m is GlobeMarker => m !== null);
+
+const stats = MAP_STATS;
+const markerJson = JSON.stringify([...countryMarkers, ...provinceMarkers]);
+const statsJson = JSON.stringify(stats);
+---
+
+<div class="globe-page" data-globe>
+  <canvas aria-hidden="true" class="globe-stars" data-stars></canvas>
+  <canvas
+    aria-label={`成员分布地球仪：${String(stats.members)} 位成员遍布${String(stats.countries)} 个国家和${String(stats.provinces)} 个省级行政区`}
+    class="globe-canvas"
+    data-canvas
+    role="img"
+  ></canvas>
+
+  <div class="globe-panel">
+    <p class="globe-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
+    <h1 class="globe-title">追光者的地图墙</h1>
+    <p class="globe-stats">
+      <b>{String(stats.members)}</b> 位成员
+      <i>·</i> <b>{String(stats.countries)}</b> 个国家
+      <i>·</i> <b>{String(stats.provinces)}</b> 个省级行政区
+    </p>
+  </div>
+
+  <button aria-pressed="false" class="globe-focus" id="globe-focus" type="button">
+    聚焦中国
+  </button>
+
+  <div class="globe-hint">
+    <span>拖拽旋转地球 · 晨昏线为实时昼夜</span>
+    <a href="/7th/watermark/">生成你的七周年纪念海报 →</a>
+  </div>
+
+  <script data-globe-markers set:html={markerJson} type="application/json" />
+  <script data-globe-stats set:html={statsJson} type="application/json" />
+</div>
+
+<style>
+  .globe-page {
+    position: relative;
+    height: calc(100dvh - 70px); /* 导航以下整屏 */
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 78% 8%, rgba(38, 70, 120, 0.28), transparent 55%),
+      radial-gradient(100% 80% at 15% 90%, rgba(24, 42, 84, 0.3), transparent 60%),
+      #020206;
+  }
+
+  .globe-stars,
+  .globe-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .globe-panel {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.1rem;
+    z-index: 20;
+    padding: 0.85rem 1.1rem 0.75rem;
+    background: rgba(10, 14, 26, 0.55);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+    color: #fafafa;
+    pointer-events: none;
+  }
+
+  .globe-eyebrow {
+    margin: 0 0 0.3rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: rgba(250, 250, 250, 0.5);
+  }
+
+  .globe-title {
+    margin: 0 0 0.3rem;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .globe-stats {
+    margin: 0;
+    font-size: 0.78rem;
+    color: rgba(250, 250, 250, 0.68);
+  }
+
+  .globe-stats b {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    color: #f5c542;
+  }
+
+  .globe-stats i {
+    font-style: normal;
+    margin: 0 0.35rem;
+    opacity: 0.4;
+  }
+
+  .globe-focus {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.1rem;
+    z-index: 20;
+    padding: 0.55rem 1.1rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0a0e1a;
+    background: linear-gradient(45deg, #ffe9a8, #f5c542);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(245, 197, 66, 0.25);
+  }
+
+  .globe-focus:hover {
+    filter: brightness(1.06);
+  }
+
+  .globe-focus[aria-pressed='true'] {
+    background: rgba(10, 14, 26, 0.6);
+    color: #f5c542;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(245, 197, 66, 0.5);
+  }
+
+  .globe-hint {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem 1.2rem;
+    width: max-content;
+    max-width: 92vw;
+    font-size: 0.78rem;
+    color: rgba(250, 250, 250, 0.55);
+    text-align: center;
+  }
+
+  .globe-hint a {
+    color: #f5c542;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .globe-hint a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 40rem) {
+    .globe-page {
+      height: calc(100dvh - 62px);
+    }
+
+    .globe-panel {
+      top: 0.7rem;
+      left: 0.7rem;
+      padding: 0.65rem 0.85rem 0.55rem;
+    }
+
+    .globe-title {
+      font-size: 1.02rem;
+    }
+
+    .globe-stats {
+      font-size: 0.7rem;
+    }
+
+    .globe-focus {
+      top: 0.8rem;
+      right: 0.7rem;
+    }
+  }
+</style>
+
+<script>
+  import {
+    geoCircle,
+    geoDistance,
+    geoGraticule10,
+    geoOrthographic,
+    geoPath,
+  } from 'd3-geo';
+  import type { Feature, FeatureCollection, Geometry } from 'geojson';
+
+  type WorldFc = FeatureCollection<Geometry, { name?: string }>;
+  type ChinaFc = FeatureCollection<Geometry, { name?: string }>;
+
+  interface Marker {
+    name: string;
+    coords: [number, number];
+    count: number;
+    kind: 'country' | 'province';
+  }
+
+  const wrap = document.querySelector<HTMLElement>('[data-globe]')!;
+  const starsCanvas = document.querySelector<HTMLCanvasElement>('[data-stars]')!;
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-canvas]')!;
+  const ctx = canvas.getContext('2d')!;
+  const focusBtn = document.getElementById('globe-focus')!;
+  const markerData = JSON.parse(
+    document.querySelector('[data-globe-markers]')!.textContent!,
+  ) as Marker[];
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const autoRotate = !reduceMotion;
+
+  let W = 320;
+  let H = 320;
+  let ready = false;
+  let needsRender = true;
+  let dragging = false;
+  let lastUser = 0;
+
+  /** [λ, φ]（d3 rotate 约定），初始对准东亚 */
+  const rotation: [number, number] = [-100, -30];
+  const GLOBAL_SCALE = 1;
+  const FOCUS_SCALE = 2.15;
+  let scaleFactor = GLOBAL_SCALE;
+  let focused = false;
+  interface FocusTween {
+    from: [number, number];
+    to: [number, number];
+    fromScale: number;
+    toScale: number;
+    start: number;
+    dur: number;
+  }
+  let focusTween: FocusTween | null = null;
+
+  const projection = geoOrthographic().clipAngle(90);
+  const pathGen = geoPath(projection, ctx);
+
+  const worldFeatures: Feature<Geometry, { name?: string }>[] = [];
+  const chinaFeatures: Feature<Geometry, { name?: string }>[] = [];
+
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+  /** 当前太阳直射点（近似）：赤纬 + 直射经度 */
+  function sunPoint(date = new Date()): [number, number] {
+    const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+    const day = (date.getTime() - start) / 86400000;
+    const lat = -23.44 * Math.cos((2 * Math.PI) / 365.24 * (day + 10));
+    const utc = date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600;
+    let lng = -15 * (utc - 12);
+    lng = ((lng + 540) % 360) - 180;
+    return [lng, lat];
+  }
+
+  function baseRadius(): number {
+    return Math.min(W, H) / 2 - Math.min(W, H) * 0.055;
+  }
+
+  /** 静态星野（种子随机，resize 时重绘） */
+  function drawStars(): void {
+    const sctx = starsCanvas.getContext('2d')!;
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sctx.clearRect(0, 0, W, H);
+    let seed = 20260915;
+    const rand = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    const count = Math.floor((W * H) / 4200);
+    for (let i = 0; i < count; i++) {
+      const x = rand() * W;
+      const y = rand() * H;
+      const r = 0.3 + rand() * 1.1;
+      const a = 0.12 + rand() * 0.7;
+      sctx.globalAlpha = a;
+      sctx.fillStyle = rand() > 0.92 ? '#bcd4ff' : '#ffffff';
+      sctx.beginPath();
+      sctx.arc(x, y, r, 0, Math.PI * 2);
+      sctx.fill();
+    }
+    sctx.globalAlpha = 1;
+  }
+
+  function resize(): void {
+    const rect = wrap.getBoundingClientRect();
+    W = Math.max(320, Math.floor(rect.width));
+    H = Math.max(320, Math.floor(rect.height));
+    for (const c of [starsCanvas, canvas]) {
+      c.width = Math.floor(W * dpr);
+      c.height = Math.floor(H * dpr);
+    }
+    starsCanvas.style.width = `${W}px`;
+    starsCanvas.style.height = `${H}px`;
+    canvas.style.width = `${W}px`;
+    canvas.style.height = `${H}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawStars();
+    needsRender = true;
+  }
+
+  function render(): void {
+    if (!ready) {
+      return;
+    }
+    projection.rotate(rotation);
+    projection.scale(baseRadius() * scaleFactor);
+    ctx.clearRect(0, 0, W, H);
+
+    const cx = W / 2;
+    const cy = H / 2 + H * 0.02;
+    const R = projection.scale();
+
+    // 大气层边缘光晕
+    const glow = ctx.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.14);
+    glow.addColorStop(0, 'rgba(96, 165, 250, 0.3)');
+    glow.addColorStop(1, 'rgba(96, 165, 250, 0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 1.14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 海洋球体（径向渐变模拟球面光照）
+    const ocean = ctx.createRadialGradient(
+      cx - R * 0.28,
+      cy - R * 0.32,
+      R * 0.1,
+      cx,
+      cy,
+      R,
+    );
+    ocean.addColorStop(0, '#2f6ea8');
+    ocean.addColorStop(0.55, '#173a5e');
+    ocean.addColorStop(1, '#0a1a30');
+    ctx.fillStyle = ocean;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 经纬网（极淡）
+    ctx.beginPath();
+    pathGen(geoGraticule10());
+    ctx.strokeStyle = 'rgba(160, 200, 255, 0.07)';
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+
+    // 大陆（正交投影自动裁剪背面）
+    ctx.beginPath();
+    for (const f of worldFeatures) {
+      pathGen(f);
+    }
+    const landGrad = ctx.createLinearGradient(0, cy - R, 0, cy + R);
+    landGrad.addColorStop(0, '#4a7a58');
+    landGrad.addColorStop(0.5, '#39604a');
+    landGrad.addColorStop(1, '#2f4f45');
+    ctx.fillStyle = landGrad;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(220, 240, 220, 0.35)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // 实时晨昏线：夜半球遮罩 + 羽化过渡（多层圆逼近柔和边界）
+    const sun = sunPoint(new Date());
+    const antiLng = sun[0] + 180 > 180 ? sun[0] - 180 : sun[0] + 180;
+    const anti: [number, number] = [antiLng, -sun[1]];
+    for (const [radiusDeg, alpha] of [
+      [100, 0.16],
+      [94, 0.22],
+      [90, 0.34],
+    ] as const) {
+      ctx.beginPath();
+      pathGen(geoCircle().center(anti).radius(radiusDeg)());
+      ctx.fillStyle = `rgba(3, 7, 22, ${alpha})`;
+      ctx.fill();
+    }
+
+    // 聚焦中国：省界描边
+    if (focused) {
+      ctx.beginPath();
+      for (const f of chinaFeatures) {
+        pathGen(f);
+      }
+      ctx.strokeStyle = 'rgba(245, 197, 66, 0.55)';
+      ctx.lineWidth = 0.9;
+      ctx.stroke();
+    }
+
+    // 成员标记（仅朝向观察者半球）
+    const center: [number, number] = [-rotation[0], -rotation[1]];
+    const labelR = (m: Marker) => (2.6 + Math.sqrt(m.count) * 1.15) * (focused && m.kind === 'province' ? 1.15 : 1);
+    const visible = markerData.filter((m) => geoDistance(m.coords, center) < 1.45);
+    for (const m of visible) {
+      const p = projection(m.coords);
+      if (!p) {
+        continue;
+      }
+      const r = labelR(m);
+      ctx.globalAlpha = 0.2;
+      ctx.fillStyle = '#f5c542';
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], r * 2.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#ffd76a';
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], r * 0.62, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(10, 14, 26, 0.7)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // 大额分布文字标签（全球 Top3 国家）
+    const topWorld = [...markerData.filter((m) => m.kind === 'country')]
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+    for (const m of visible) {
+      if (m.kind !== 'country' || !topWorld.includes(m)) {
+        continue;
+      }
+      const p = projection(m.coords);
+      if (!p) {
+        continue;
+      }
+      const r = labelR(m);
+      ctx.globalAlpha = 0.92;
+      ctx.fillStyle = '#fafafa';
+      ctx.font = `600 ${Math.max(11, Math.round(R * 0.045))}px Archivo, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = 'rgba(3, 7, 22, 0.75)';
+      ctx.lineWidth = 3;
+      ctx.strokeText(`${m.name} ${m.count}`, p[0], p[1] - r - 8);
+      ctx.fillText(`${m.name} ${m.count}`, p[0], p[1] - r - 8);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  /** 主循环：仅在有变化时重绘（自转/补间/交互/晨昏线刷新） */
+  function tick(now: number): void {
+    const idle = now - lastUser > 2000;
+    if (autoRotate && idle && !focused && !focusTween && !dragging) {
+      rotation[0] += 0.045;
+      if (rotation[0] > 180) {
+        rotation[0] -= 360;
+      }
+      needsRender = true;
+    }
+    if (focusTween) {
+      const t = clamp((now - focusTween.start) / focusTween.dur, 0, 1);
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      rotation[0] = focusTween.from[0] + (focusTween.to[0] - focusTween.from[0]) * e;
+      rotation[1] = focusTween.from[1] + (focusTween.to[1] - focusTween.from[1]) * e;
+      scaleFactor = focusTween.fromScale + (focusTween.toScale - focusTween.fromScale) * e;
+      needsRender = true;
+      if (t >= 1) {
+        focusTween = null;
+      }
+    }
+    if (needsRender) {
+      needsRender = false;
+      render();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /** 聚焦中国 / 返回全球（旋转 + 缩放补间；reduced-motion 直接终态） */
+  function setFocus(focus: boolean): void {
+    focused = focus;
+    focusBtn.setAttribute('aria-pressed', String(focus));
+    focusBtn.textContent = focus ? '全球视图' : '聚焦中国';
+    const toRot: [number, number] = focus ? [-104, -34] : [-100, -30];
+    const toScale = focus ? FOCUS_SCALE : GLOBAL_SCALE;
+    if (reduceMotion) {
+      rotation[0] = toRot[0];
+      rotation[1] = toRot[1];
+      scaleFactor = toScale;
+      needsRender = true;
+      return;
+    }
+    const normFrom = ((rotation[0] + 540) % 360) - 180;
+    let dLng = toRot[0] - normFrom;
+    if (dLng > 180) {
+      dLng -= 360;
+    } else if (dLng < -180) {
+      dLng += 360;
+    }
+    focusTween = {
+      from: [normFrom, rotation[1]],
+      to: [normFrom + dLng, toRot[1]],
+      fromScale: scaleFactor,
+      toScale,
+      start: performance.now(),
+      dur: 850,
+    };
+    lastUser = performance.now();
+  }
+
+  focusBtn.addEventListener('click', () => {
+    setFocus(!focused);
+  });
+
+  /* ---- 拖拽旋转 ---- */
+  let lastX = 0;
+  let lastY = 0;
+
+  canvas.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    focusTween = null;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    lastUser = performance.now();
+    canvas.setPointerCapture(e.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) {
+      return;
+    }
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    const k = 0.22 / scaleFactor;
+    rotation[0] += dx * k;
+    rotation[1] = clamp(rotation[1] - dy * k, -90, 90);
+    lastUser = performance.now();
+    needsRender = true;
+  });
+
+  canvas.addEventListener('pointerup', () => {
+    dragging = false;
+    lastUser = performance.now();
+  });
+
+  /* ---- 晨昏线每 60s 刷新（真实时间） ---- */
+  window.setInterval(() => {
+    if (ready) {
+      needsRender = true;
+    }
+  }, 60000);
+
+  function onResize(): void {
+    resize();
+  }
+  window.addEventListener('resize', onResize);
+
+  /* ---- 初始化：尺寸 → 数据 → 首绘 + 自转 ---- */
+  void (async () => {
+    resize();
+    requestAnimationFrame(tick);
+    try {
+      const [world, china] = await Promise.all([
+        fetch('/geo/world-countries.json').then((r) => r.json()),
+        fetch('/geo/china-provinces.json').then((r) => r.json()),
+      ]);
+      worldFeatures.push(...(world as WorldFc).features);
+      chinaFeatures.push(...(china as ChinaFc).features);
+      ready = true;
+      needsRender = true;
+    } catch {
+      focusBtn.textContent = '加载失败，请刷新';
+    }
+  })();
+</script>
