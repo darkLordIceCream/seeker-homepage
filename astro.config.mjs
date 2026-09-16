@@ -13,15 +13,22 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 4321,
-    allowedHosts: ['python-elderly-spectrum-loop.trycloudflare.com'],
+    allowedHosts: ['homework-essentially-rarely-installing.trycloudflare.com'],
   },
 
   preview: {
-    allowedHosts: ['python-elderly-spectrum-loop.trycloudflare.com'],
+    allowedHosts: ['homework-essentially-rarely-installing.trycloudflare.com'],
   },
 
   vite: {
     plugins: [tailwindcss()],
+    // MapLibre GL 的 Web Worker 需要 ESM 格式；且 dev 预打包会破坏其内部 worker 解析
+    worker: {
+      format: 'es',
+    },
+    optimizeDeps: {
+      exclude: ['maplibre-gl'],
+    },
   },
 
   integrations: [react()],

@@ -1,173 +1,198 @@
 ---
 /**
- * /7th/map — 【七周年板块 · 地图墙】成员分布可视化 · ECharts 版。
- * 结构：紧凑页头（标题 + 统计）→ 世界地图全宽屏 → 中国省域全宽屏 → 说明与入口。
- * 地图本体为 MapWall 组件（ECharts 懒加载）；数据见 map-points.ts（当前为占位数据）。
+ * /7th/map — 【SEEKER 07 · WHERE WE ARE】成员分布地图。
+ * 黑暗中的光点：MapLibre + 单一融合 GeoJSON（世界国家 + 中国省域）。
+ * 数据：map-points.ts（占位）→ build-map-geo.mjs 注入 → anniv-world.json。
  */
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
 import MapWall from '../../components/anniversary/MapWall.astro';
 import { MAP_STATS } from '../../data/anniversary/map-points';
 ---
 
 <Layout
-  description="七年，我们把快门声带到了世界的各个角落。看看 Seeker 追光者的成员遍布哪些国家和省份。"   title="Seeker 七周年 · 地图墙"
+  title="Seeker 七周年 · WHERE WE ARE"
+  description="每一个光点，都是一个追光者。SEEKER 追光者七年间的成员分布：825 位追光者，15 个国家，34 个省级行政区。"
 >
   <Navigation />
-  <main class="map-page" id="main-content">
-    <header class="map-hero">
-      <p class="map-eyebrow">SEEKER · 7TH ANNIVERSARY</p>
-      <h1 class="map-title">追光者的地图墙</h1>
-      <dl class="map-stats">
-        <div class="map-stat">
-          <dd>{MAP_STATS.countries}</dd>
-          <dt>国家</dt>
+  <main class="ww-page" id="main-content">
+    <header class="ww-hero">
+      <p class="ww-eyebrow">SEEKER 07 / WHERE WE ARE</p>
+      <h1 class="ww-title">每一个光点，<br />都是一个追光者。</h1>
+      <dl class="ww-stats" data-countup>
+        <div class="ww-stat">
+          <dd data-count-to={MAP_STATS.members}>0</dd>
+          <dt>SEEKERS</dt>
         </div>
-        <div class="map-stat">
-          <dd>{MAP_STATS.provinces}</dd>
-          <dt>省级行政区</dt>
+        <div class="ww-stat">
+          <dd data-count-to={MAP_STATS.countries}>0</dd>
+          <dt>COUNTRIES</dt>
         </div>
-        <div class="map-stat">
-          <dd>{MAP_STATS.members}</dd>
-          <dt>位成员</dt>
+        <div class="ww-stat">
+          <dd data-count-to={MAP_STATS.provinces}>0</dd>
+          <dt>REGIONS</dt>
         </div>
       </dl>
     </header>
 
     <MapWall />
 
-    <section aria-label="板块导航" class="map-footer">
-      <p class="map-note">成员分布持续更新中 · 追光七载，把光赠予远方</p>
-      <div class="map-links">
-        <a class="map-cta" href="/7th/watermark/">去做一张七周年水印海报 →</a>
-        <a class="map-back" href="/7th/">← 返回七周年板块</a>
-      </div>
+    <section class="ww-outro" aria-label="板块导航">
+      <a class="ww-cta" href="/7th/watermark/">留下你的痕迹 →</a>
+      <a class="ww-back" href="/7th/">← 七周年档案</a>
     </section>
   </main>
+  <Footer />
 </Layout>
 
-<style>
-  /* 暗色沉浸展示页：显式深色值，不随主题切换 */
-  .map-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100dvh;
-    padding-top: 70px; /* 固定导航高度预留 */
-    background:
-      radial-gradient(120% 55% at 50% 0%, rgba(245, 197, 66, 0.07), transparent 60%),
-      #050507;
-    color: #fafafa;
-  }
-
-  .map-hero {
-    max-width: 68rem;
-    margin-inline: auto;
-    padding: 2.5rem 1.5rem 1.75rem;
-    text-align: center;
-  }
-
-  .map-eyebrow {
-    margin: 0 0 0.75rem;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.35em;
-    color: rgba(250, 250, 250, 0.5);
-  }
-
-  @media (max-width: 30rem) {
-    .map-eyebrow {
-      font-size: 0.66rem;
-      letter-spacing: 0.2em;
+<script>
+  // Count Up（与 /7th/ 同一模式）
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nums = document.querySelectorAll<HTMLElement>('[data-countup] [data-count-to]');
+  const animate = (node: HTMLElement) => {
+    const target = Number(node.dataset.countTo ?? '0');
+    if (REDUCED) {
+      node.textContent = String(target);
+      return;
     }
+    const start = performance.now();
+    const DUR = 900;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / DUR, 1);
+      node.textContent = String(Math.round(target * (1 - (1 - t) ** 3)));
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver(
+    entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          animate(entry.target as HTMLElement);
+          io.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.4 },
+  );
+  nums.forEach(n => io.observe(n));
+</script>
+
+<style>
+  .ww-page {
+    min-height: 100dvh;
+    padding-top: 70px;
+    background: var(--anniv-bg);
+    color: var(--anniv-fg);
   }
 
-  .map-title {
-    margin: 0 0 1rem;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-    font-size: clamp(1.9rem, 5vw, 2.8rem);
-    font-weight: 700;
-    color: #fafafa;
-  }
-
-  .map-stats {
+  .ww-hero {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4.5rem) 1.5rem clamp(1.5rem, 4vw, 2.5rem);
     display: flex;
-    justify-content: center;
-    gap: clamp(1.5rem, 5vw, 4rem);
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .ww-eyebrow {
+    margin: 0 0 1rem;
+    width: 100%;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    color: var(--anniv-accent);
+  }
+
+  .ww-title {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+  }
+
+  .ww-stats {
+    display: flex;
+    gap: clamp(1.6rem, 4vw, 3.5rem);
     margin: 0;
   }
 
-  .map-stat {
+  .ww-stat {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    text-align: right;
   }
 
-  .map-stat dd {
+  .ww-stat dd {
     order: -1;
     margin: 0;
     font-family: 'Archivo', sans-serif;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
     font-weight: 700;
-    background: linear-gradient(135deg, #ffe9a8, #f5c542 55%, #d20f39);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    line-height: 1;
   }
 
-  .map-stat dt {
-    font-size: 0.84rem;
-    color: rgba(250, 250, 250, 0.6);
+  .ww-stat dt {
+    margin-top: 0.5rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    color: var(--anniv-muted);
   }
 
-  .map-wall {
-    flex: 1;
-  }
-
-  .map-footer {
-    max-width: 68rem;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 3rem;
-    text-align: center;
-  }
-
-  .map-note {
-    margin: 0 0 1.3rem;
-    font-size: 0.84rem;
-    letter-spacing: 0.12em;
-    color: rgba(250, 250, 250, 0.45);
-  }
-
-  .map-links {
+  .ww-outro {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
-    gap: 1rem 1.75rem;
+    justify-content: center;
+    gap: 1rem 2rem;
+    padding: clamp(2.5rem, 6vw, 4rem) 1.5rem clamp(3.5rem, 8vw, 5.5rem);
   }
 
-  .map-cta {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.7rem 1.35rem;
+  .ww-cta {
+    padding: 0.85rem 2rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.84rem;
     font-weight: 600;
-    color: #0a0a0c;
-    background: linear-gradient(135deg, #ffe9a8, #f5c542);
-    border-radius: 999px;
+    letter-spacing: 0.24em;
+    color: var(--anniv-bg);
+    background: var(--anniv-accent);
     text-decoration: none;
   }
 
-  .map-cta:hover {
-    filter: brightness(1.05);
+  .ww-cta:hover {
+    filter: brightness(1.08);
   }
 
-  .map-back {
-    color: rgba(250, 250, 250, 0.65);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+  .ww-back {
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--anniv-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
   }
 
-  .map-back:hover {
-    color: #fafafa;
+  .ww-back:hover {
+    color: var(--anniv-fg);
+    border-color: var(--anniv-muted);
+  }
+
+  @media (max-width: 48rem) {
+    .ww-hero {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .ww-stat {
+      text-align: left;
+    }
   }
 </style>

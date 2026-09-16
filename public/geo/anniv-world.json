@@ -62,7 +62,7 @@
           ]
         ]
       },
-      "properties": { "name": "Somalia", "childNum": 1 }
+      "properties": { "name": "Somalia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -79,7 +79,7 @@
           ]
         ]
       },
-      "properties": { "name": "Liechtenstein", "childNum": 1 }
+      "properties": { "name": "Liechtenstein", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -143,7 +143,7 @@
           ]
         ]
       },
-      "properties": { "name": "Morocco", "childNum": 1 }
+      "properties": { "name": "Morocco", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -181,7 +181,7 @@
           ]
         ]
       },
-      "properties": { "name": "W. Sahara", "childNum": 2 }
+      "properties": { "name": "W. Sahara", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -249,7 +249,7 @@
           ]
         ]
       },
-      "properties": { "name": "Serbia", "childNum": 1 }
+      "properties": { "name": "Serbia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -369,7 +369,7 @@
           ]
         ]
       },
-      "properties": { "name": "Afghanistan", "childNum": 1 }
+      "properties": { "name": "Afghanistan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -467,7 +467,7 @@
           ]
         ]
       },
-      "properties": { "name": "Angola", "childNum": 2 }
+      "properties": { "name": "Angola", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -503,7 +503,7 @@
           ]
         ]
       },
-      "properties": { "name": "Albania", "childNum": 1 }
+      "properties": { "name": "Albania", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -522,7 +522,7 @@
           ]
         ]
       },
-      "properties": { "name": "Aland", "childNum": 2 }
+      "properties": { "name": "Aland", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -538,7 +538,7 @@
           ]
         ]
       },
-      "properties": { "name": "Andorra", "childNum": 1 }
+      "properties": { "name": "Andorra", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -594,7 +594,12 @@
           ]
         ]
       },
-      "properties": { "name": "United Arab Emirates", "childNum": 3 }
+      "properties": {
+        "name": "United Arab Emirates",
+        "childNum": 3,
+        "nameZh": "阿联酋",
+        "memberCount": 1
+      }
     },
     {
       "geometry": {
@@ -859,7 +864,7 @@
           ]
         ]
       },
-      "properties": { "name": "Argentina", "childNum": 3 }
+      "properties": { "name": "Argentina", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -902,11 +907,11 @@
           ]
         ]
       },
-      "properties": { "name": "Armenia", "childNum": 1 }
+      "properties": { "name": "Armenia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": { "type": "MultiPolygon", "coordinates": [] },
-      "properties": { "name": "American Samoa", "childNum": 1 }
+      "properties": { "name": "American Samoa", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -956,7 +961,7 @@
           ]
         ]
       },
-      "properties": { "name": "Fr. S. Antarctic Lands", "childNum": 3 }
+      "properties": { "name": "Fr. S. Antarctic Lands", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -972,7 +977,7 @@
           ]
         ]
       },
-      "properties": { "name": "Antigua and Barb.", "childNum": 1 }
+      "properties": { "name": "Antigua and Barb.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1607,7 +1612,7 @@
           ]
         ]
       },
-      "properties": { "name": "Australia", "childNum": 30 }
+      "properties": { "name": "Australia", "childNum": 30, "nameZh": "澳大利亚", "memberCount": 9 }
     },
     {
       "geometry": {
@@ -1673,7 +1678,7 @@
           ]
         ]
       },
-      "properties": { "name": "Austria", "childNum": 1 }
+      "properties": { "name": "Austria", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1745,7 +1750,7 @@
           ]
         ]
       },
-      "properties": { "name": "Azerbaijan", "childNum": 2 }
+      "properties": { "name": "Azerbaijan", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1778,7 +1783,7 @@
           ]
         ]
       },
-      "properties": { "name": "Burundi", "childNum": 1 }
+      "properties": { "name": "Burundi", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1817,7 +1822,7 @@
           ]
         ]
       },
-      "properties": { "name": "Belgium", "childNum": 1 }
+      "properties": { "name": "Belgium", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1861,7 +1866,7 @@
           ]
         ]
       },
-      "properties": { "name": "Benin", "childNum": 1 }
+      "properties": { "name": "Benin", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -1932,7 +1937,7 @@
           ]
         ]
       },
-      "properties": { "name": "Burkina Faso", "childNum": 1 }
+      "properties": { "name": "Burkina Faso", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2066,7 +2071,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bangladesh", "childNum": 6 }
+      "properties": { "name": "Bangladesh", "childNum": 6, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2127,7 +2132,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bulgaria", "childNum": 1 }
+      "properties": { "name": "Bulgaria", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2145,7 +2150,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bahrain", "childNum": 1 }
+      "properties": { "name": "Bahrain", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2291,7 +2296,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bahamas", "childNum": 14 }
+      "properties": { "name": "Bahamas", "childNum": 14, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2332,7 +2337,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bosnia and Herz.", "childNum": 1 }
+      "properties": { "name": "Bosnia and Herz.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2426,7 +2431,7 @@
           ]
         ]
       },
-      "properties": { "name": "Belarus", "childNum": 1 }
+      "properties": { "name": "Belarus", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2460,7 +2465,7 @@
           ]
         ]
       },
-      "properties": { "name": "Belize", "childNum": 2 }
+      "properties": { "name": "Belize", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2476,7 +2481,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bermuda", "childNum": 1 }
+      "properties": { "name": "Bermuda", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -2596,7 +2601,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bolivia", "childNum": 1 }
+      "properties": { "name": "Bolivia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3146,7 +3151,7 @@
           ]
         ]
       },
-      "properties": { "name": "Brazil", "childNum": 17 }
+      "properties": { "name": "Brazil", "childNum": 17, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3163,7 +3168,7 @@
           ]
         ]
       },
-      "properties": { "name": "Barbados", "childNum": 1 }
+      "properties": { "name": "Barbados", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3192,7 +3197,7 @@
           ]
         ]
       },
-      "properties": { "name": "Brunei", "childNum": 2 }
+      "properties": { "name": "Brunei", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3235,7 +3240,7 @@
           ]
         ]
       },
-      "properties": { "name": "Bhutan", "childNum": 1 }
+      "properties": { "name": "Bhutan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3299,7 +3304,7 @@
           ]
         ]
       },
-      "properties": { "name": "Botswana", "childNum": 1 }
+      "properties": { "name": "Botswana", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -3373,7 +3378,7 @@
           ]
         ]
       },
-      "properties": { "name": "Central African Rep.", "childNum": 1 }
+      "properties": { "name": "Central African Rep.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -6098,7 +6103,7 @@
           ]
         ]
       },
-      "properties": { "name": "Canada", "childNum": 110 }
+      "properties": { "name": "Canada", "childNum": 110, "nameZh": "加拿大", "memberCount": 6 }
     },
     {
       "geometry": {
@@ -6155,7 +6160,7 @@
           ]
         ]
       },
-      "properties": { "name": "Switzerland", "childNum": 1 }
+      "properties": { "name": "Switzerland", "childNum": 1, "nameZh": "瑞士", "memberCount": 1 }
     },
     {
       "geometry": {
@@ -6759,7 +6764,7 @@
           ]
         ]
       },
-      "properties": { "name": "Chile", "childNum": 26 }
+      "properties": { "name": "Chile", "childNum": 26, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -6843,7 +6848,7 @@
           ]
         ]
       },
-      "properties": { "name": "Côte d'Ivoire", "childNum": 1 }
+      "properties": { "name": "Côte d'Ivoire", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -6937,7 +6942,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cameroon", "childNum": 1 }
+      "properties": { "name": "Cameroon", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7088,7 +7093,7 @@
           ]
         ]
       },
-      "properties": { "name": "Dem. Rep. Congo", "childNum": 1 }
+      "properties": { "name": "Dem. Rep. Congo", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7168,7 +7173,7 @@
           ]
         ]
       },
-      "properties": { "name": "Congo", "childNum": 1 }
+      "properties": { "name": "Congo", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7312,7 +7317,7 @@
           ]
         ]
       },
-      "properties": { "name": "Colombia", "childNum": 1 }
+      "properties": { "name": "Colombia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7346,7 +7351,7 @@
           ]
         ]
       },
-      "properties": { "name": "Comoros", "childNum": 3 }
+      "properties": { "name": "Comoros", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7425,7 +7430,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cape Verde", "childNum": 8 }
+      "properties": { "name": "Cape Verde", "childNum": 8, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7474,7 +7479,7 @@
           ]
         ]
       },
-      "properties": { "name": "Costa Rica", "childNum": 1 }
+      "properties": { "name": "Costa Rica", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7569,7 +7574,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cuba", "childNum": 4 }
+      "properties": { "name": "Cuba", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7585,7 +7590,7 @@
           ]
         ]
       },
-      "properties": { "name": "Curaçao", "childNum": 1 }
+      "properties": { "name": "Curaçao", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7601,7 +7606,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cayman Is.", "childNum": 2 }
+      "properties": { "name": "Cayman Is.", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7624,7 +7629,7 @@
           ]
         ]
       },
-      "properties": { "name": "N. Cyprus", "childNum": 1 }
+      "properties": { "name": "N. Cyprus", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7648,7 +7653,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cyprus", "childNum": 1 }
+      "properties": { "name": "Cyprus", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7702,7 +7707,7 @@
           ]
         ]
       },
-      "properties": { "name": "Czech Rep.", "childNum": 1 }
+      "properties": { "name": "Czech Rep.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7847,7 +7852,7 @@
           ]
         ]
       },
-      "properties": { "name": "Germany", "childNum": 4 }
+      "properties": { "name": "Germany", "childNum": 4, "nameZh": "德国", "memberCount": 4 }
     },
     {
       "geometry": {
@@ -7876,7 +7881,7 @@
           ]
         ]
       },
-      "properties": { "name": "Djibouti", "childNum": 1 }
+      "properties": { "name": "Djibouti", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -7893,7 +7898,7 @@
           ]
         ]
       },
-      "properties": { "name": "Dominica", "childNum": 1 }
+      "properties": { "name": "Dominica", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8025,7 +8030,12 @@
           ]
         ]
       },
-      "properties": { "name": "Denmark", "childNum": 10, "cp": [10.2768332, 56.1773879] }
+      "properties": {
+        "name": "Denmark",
+        "childNum": 10,
+        "cp": [10.2768332, 56.1773879],
+        "memberCount": 0
+      }
     },
     {
       "geometry": {
@@ -8068,7 +8078,7 @@
           ]
         ]
       },
-      "properties": { "name": "Dominican Rep.", "childNum": 1 }
+      "properties": { "name": "Dominican Rep.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8164,7 +8174,7 @@
           ]
         ]
       },
-      "properties": { "name": "Algeria", "childNum": 1 }
+      "properties": { "name": "Algeria", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8291,7 +8301,7 @@
           ]
         ]
       },
-      "properties": { "name": "Ecuador", "childNum": 9 }
+      "properties": { "name": "Ecuador", "childNum": 9, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8359,7 +8369,7 @@
           ]
         ]
       },
-      "properties": { "name": "Egypt", "childNum": 1 }
+      "properties": { "name": "Egypt", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8432,7 +8442,7 @@
           ]
         ]
       },
-      "properties": { "name": "Eritrea", "childNum": 3 }
+      "properties": { "name": "Eritrea", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8632,7 +8642,12 @@
           ]
         ]
       },
-      "properties": { "name": "Spain", "childNum": 12, "cp": [-2.9366964, 40.3438963] }
+      "properties": {
+        "name": "Spain",
+        "childNum": 12,
+        "cp": [-2.9366964, 40.3438963],
+        "memberCount": 0
+      }
     },
     {
       "geometry": {
@@ -8703,7 +8718,7 @@
           ]
         ]
       },
-      "properties": { "name": "Estonia", "childNum": 4 }
+      "properties": { "name": "Estonia", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8788,7 +8803,7 @@
           ]
         ]
       },
-      "properties": { "name": "Ethiopia", "childNum": 1 }
+      "properties": { "name": "Ethiopia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8911,7 +8926,7 @@
           ]
         ]
       },
-      "properties": { "name": "Finland", "childNum": 5 }
+      "properties": { "name": "Finland", "childNum": 5, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -8983,7 +8998,7 @@
           ]
         ]
       },
-      "properties": { "name": "Fiji", "childNum": 7 }
+      "properties": { "name": "Fiji", "childNum": 7, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9049,7 +9064,7 @@
           ]
         ]
       },
-      "properties": { "name": "Falkland Is.", "childNum": 4 }
+      "properties": { "name": "Falkland Is.", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9282,7 +9297,13 @@
           ]
         ]
       },
-      "properties": { "name": "France", "childNum": 10, "cp": [2.8719426, 46.8222422] }
+      "properties": {
+        "name": "France",
+        "childNum": 10,
+        "cp": [2.8719426, 46.8222422],
+        "nameZh": "法国",
+        "memberCount": 3
+      }
     },
     {
       "geometry": {
@@ -9316,7 +9337,7 @@
           ]
         ]
       },
-      "properties": { "name": "Faeroe Is.", "childNum": 3 }
+      "properties": { "name": "Faeroe Is.", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9333,7 +9354,7 @@
           ]
         ]
       },
-      "properties": { "name": "Micronesia", "childNum": 2 }
+      "properties": { "name": "Micronesia", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9411,7 +9432,7 @@
           ]
         ]
       },
-      "properties": { "name": "Gabon", "childNum": 1 }
+      "properties": { "name": "Gabon", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9690,7 +9711,13 @@
           ]
         ]
       },
-      "properties": { "name": "United Kingdom", "childNum": 14, "cp": [-2.5830348, 54.4598409] }
+      "properties": {
+        "name": "United Kingdom",
+        "childNum": 14,
+        "cp": [-2.5830348, 54.4598409],
+        "nameZh": "英国",
+        "memberCount": 5
+      }
     },
     {
       "geometry": {
@@ -9745,7 +9772,7 @@
           ]
         ]
       },
-      "properties": { "name": "Georgia", "childNum": 1 }
+      "properties": { "name": "Georgia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9796,7 +9823,7 @@
           ]
         ]
       },
-      "properties": { "name": "Ghana", "childNum": 1 }
+      "properties": { "name": "Ghana", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9898,7 +9925,7 @@
           ]
         ]
       },
-      "properties": { "name": "Guinea", "childNum": 1 }
+      "properties": { "name": "Guinea", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -9931,7 +9958,7 @@
           ]
         ]
       },
-      "properties": { "name": "Gambia", "childNum": 1 }
+      "properties": { "name": "Gambia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10002,7 +10029,7 @@
           ]
         ]
       },
-      "properties": { "name": "Guinea-Bissau", "childNum": 5 }
+      "properties": { "name": "Guinea-Bissau", "childNum": 5, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10036,7 +10063,7 @@
           ]
         ]
       },
-      "properties": { "name": "Eq. Guinea", "childNum": 2 }
+      "properties": { "name": "Eq. Guinea", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10385,7 +10412,7 @@
           ]
         ]
       },
-      "properties": { "name": "Greece", "childNum": 29 }
+      "properties": { "name": "Greece", "childNum": 29, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10401,7 +10428,7 @@
           ]
         ]
       },
-      "properties": { "name": "Grenada", "childNum": 1 }
+      "properties": { "name": "Grenada", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10936,7 +10963,7 @@
           ]
         ]
       },
-      "properties": { "name": "Greenland", "childNum": 14 }
+      "properties": { "name": "Greenland", "childNum": 14, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10979,7 +11006,7 @@
           ]
         ]
       },
-      "properties": { "name": "Guatemala", "childNum": 1 }
+      "properties": { "name": "Guatemala", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -10996,7 +11023,7 @@
           ]
         ]
       },
-      "properties": { "name": "Guam", "childNum": 1 }
+      "properties": { "name": "Guam", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11071,7 +11098,7 @@
           ]
         ]
       },
-      "properties": { "name": "Guyana", "childNum": 1 }
+      "properties": { "name": "Guyana", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11088,7 +11115,7 @@
           ]
         ]
       },
-      "properties": { "name": "Heard I. and McDonald Is.", "childNum": 1 }
+      "properties": { "name": "Heard I. and McDonald Is.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11152,7 +11179,7 @@
           ]
         ]
       },
-      "properties": { "name": "Honduras", "childNum": 1 }
+      "properties": { "name": "Honduras", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11269,7 +11296,7 @@
           ]
         ]
       },
-      "properties": { "name": "Croatia", "childNum": 8 }
+      "properties": { "name": "Croatia", "childNum": 8, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11318,7 +11345,7 @@
           ]
         ]
       },
-      "properties": { "name": "Haiti", "childNum": 2 }
+      "properties": { "name": "Haiti", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -11367,7 +11394,7 @@
           ]
         ]
       },
-      "properties": { "name": "Hungary", "childNum": 1 }
+      "properties": { "name": "Hungary", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -12789,7 +12816,7 @@
           ]
         ]
       },
-      "properties": { "name": "Indonesia", "childNum": 107 }
+      "properties": { "name": "Indonesia", "childNum": 107, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -12805,7 +12832,7 @@
           ]
         ]
       },
-      "properties": { "name": "Isle of Man", "childNum": 1 }
+      "properties": { "name": "Isle of Man", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13145,7 +13172,7 @@
           ]
         ]
       },
-      "properties": { "name": "India", "childNum": 1 }
+      "properties": { "name": "India", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13161,7 +13188,7 @@
           ]
         ]
       },
-      "properties": { "name": "Br. Indian Ocean Ter.", "childNum": 1 }
+      "properties": { "name": "Br. Indian Ocean Ter.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13241,7 +13268,7 @@
           ]
         ]
       },
-      "properties": { "name": "Ireland", "childNum": 2 }
+      "properties": { "name": "Ireland", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13416,7 +13443,7 @@
           ]
         ]
       },
-      "properties": { "name": "Iran", "childNum": 2 }
+      "properties": { "name": "Iran", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13496,7 +13523,7 @@
           ]
         ]
       },
-      "properties": { "name": "Iraq", "childNum": 1 }
+      "properties": { "name": "Iraq", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13594,7 +13621,7 @@
           ]
         ]
       },
-      "properties": { "name": "Iceland", "childNum": 1 }
+      "properties": { "name": "Iceland", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13630,7 +13657,7 @@
           ]
         ]
       },
-      "properties": { "name": "Israel", "childNum": 1 }
+      "properties": { "name": "Israel", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13798,7 +13825,7 @@
           ]
         ]
       },
-      "properties": { "name": "Italy", "childNum": 6 }
+      "properties": { "name": "Italy", "childNum": 6, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13825,7 +13852,7 @@
           ]
         ]
       },
-      "properties": { "name": "Jamaica", "childNum": 1 }
+      "properties": { "name": "Jamaica", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13841,7 +13868,7 @@
           ]
         ]
       },
-      "properties": { "name": "Jersey", "childNum": 1 }
+      "properties": { "name": "Jersey", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -13879,7 +13906,7 @@
           ]
         ]
       },
-      "properties": { "name": "Jordan", "childNum": 1 }
+      "properties": { "name": "Jordan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14297,7 +14324,7 @@
           ]
         ]
       },
-      "properties": { "name": "Japan", "childNum": 28 }
+      "properties": { "name": "Japan", "childNum": 28, "nameZh": "日本", "memberCount": 11 }
     },
     {
       "geometry": {
@@ -14315,7 +14342,7 @@
           ]
         ]
       },
-      "properties": { "name": "Siachen Glacier", "childNum": 1 }
+      "properties": { "name": "Siachen Glacier", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14528,7 +14555,7 @@
           ]
         ]
       },
-      "properties": { "name": "Kazakhstan", "childNum": 2 }
+      "properties": { "name": "Kazakhstan", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14592,7 +14619,7 @@
           ]
         ]
       },
-      "properties": { "name": "Kenya", "childNum": 1 }
+      "properties": { "name": "Kenya", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14710,7 +14737,7 @@
           ]
         ]
       },
-      "properties": { "name": "Kyrgyzstan", "childNum": 3 }
+      "properties": { "name": "Kyrgyzstan", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14780,7 +14807,7 @@
           ]
         ]
       },
-      "properties": { "name": "Cambodia", "childNum": 1 }
+      "properties": { "name": "Cambodia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14804,7 +14831,7 @@
           ]
         ]
       },
-      "properties": { "name": "Kiribati", "childNum": 2 }
+      "properties": { "name": "Kiribati", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -14909,7 +14936,7 @@
           ]
         ]
       },
-      "properties": { "name": "Korea", "childNum": 7 }
+      "properties": { "name": "Korea", "childNum": 7, "nameZh": "韩国", "memberCount": 3 }
     },
     {
       "geometry": {
@@ -14946,7 +14973,7 @@
           ]
         ]
       },
-      "properties": { "name": "Kuwait", "childNum": 2 }
+      "properties": { "name": "Kuwait", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15068,7 +15095,7 @@
           ]
         ]
       },
-      "properties": { "name": "Lao PDR", "childNum": 1 }
+      "properties": { "name": "Lao PDR", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15094,7 +15121,7 @@
           ]
         ]
       },
-      "properties": { "name": "Lebanon", "childNum": 1 }
+      "properties": { "name": "Lebanon", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15139,7 +15166,7 @@
           ]
         ]
       },
-      "properties": { "name": "Liberia", "childNum": 1 }
+      "properties": { "name": "Liberia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15210,7 +15237,7 @@
           ]
         ]
       },
-      "properties": { "name": "Libya", "childNum": 1 }
+      "properties": { "name": "Libya", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15227,7 +15254,7 @@
           ]
         ]
       },
-      "properties": { "name": "Saint Lucia", "childNum": 1 }
+      "properties": { "name": "Saint Lucia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15261,7 +15288,7 @@
           ]
         ]
       },
-      "properties": { "name": "Sri Lanka", "childNum": 2 }
+      "properties": { "name": "Sri Lanka", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15291,7 +15318,7 @@
           ]
         ]
       },
-      "properties": { "name": "Lesotho", "childNum": 1 }
+      "properties": { "name": "Lesotho", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15354,7 +15381,7 @@
           ]
         ]
       },
-      "properties": { "name": "Lithuania", "childNum": 2 }
+      "properties": { "name": "Lithuania", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15375,7 +15402,7 @@
           ]
         ]
       },
-      "properties": { "name": "Luxembourg", "childNum": 1 }
+      "properties": { "name": "Luxembourg", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15424,7 +15451,7 @@
           ]
         ]
       },
-      "properties": { "name": "Latvia", "childNum": 1 }
+      "properties": { "name": "Latvia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15467,7 +15494,7 @@
           ]
         ]
       },
-      "properties": { "name": "Moldova", "childNum": 1 }
+      "properties": { "name": "Moldova", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15551,7 +15578,7 @@
           ]
         ]
       },
-      "properties": { "name": "Madagascar", "childNum": 3 }
+      "properties": { "name": "Madagascar", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15839,7 +15866,7 @@
           ]
         ]
       },
-      "properties": { "name": "Mexico", "childNum": 10 }
+      "properties": { "name": "Mexico", "childNum": 10, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15873,7 +15900,7 @@
           ]
         ]
       },
-      "properties": { "name": "Macedonia", "childNum": 1 }
+      "properties": { "name": "Macedonia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -15984,7 +16011,7 @@
           ]
         ]
       },
-      "properties": { "name": "Mali", "childNum": 1 }
+      "properties": { "name": "Mali", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16000,7 +16027,7 @@
           ]
         ]
       },
-      "properties": { "name": "Malta", "childNum": 1 }
+      "properties": { "name": "Malta", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16251,7 +16278,7 @@
           ]
         ]
       },
-      "properties": { "name": "Myanmar", "childNum": 15 }
+      "properties": { "name": "Myanmar", "childNum": 15, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16283,7 +16310,7 @@
           ]
         ]
       },
-      "properties": { "name": "Montenegro", "childNum": 1 }
+      "properties": { "name": "Montenegro", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16485,7 +16512,7 @@
           ]
         ]
       },
-      "properties": { "name": "Mongolia", "childNum": 1 }
+      "properties": { "name": "Mongolia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16501,7 +16528,7 @@
           ]
         ]
       },
-      "properties": { "name": "N. Mariana Is.", "childNum": 1 }
+      "properties": { "name": "N. Mariana Is.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16625,7 +16652,7 @@
           ]
         ]
       },
-      "properties": { "name": "Mozambique", "childNum": 1 }
+      "properties": { "name": "Mozambique", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16700,11 +16727,11 @@
           ]
         ]
       },
-      "properties": { "name": "Mauritania", "childNum": 2 }
+      "properties": { "name": "Mauritania", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": { "type": "MultiPolygon", "coordinates": [] },
-      "properties": { "name": "Montserrat", "childNum": 1 }
+      "properties": { "name": "Montserrat", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16722,7 +16749,7 @@
           ]
         ]
       },
-      "properties": { "name": "Mauritius", "childNum": 1 }
+      "properties": { "name": "Mauritius", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16789,7 +16816,7 @@
           ]
         ]
       },
-      "properties": { "name": "Malawi", "childNum": 1 }
+      "properties": { "name": "Malawi", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -16968,7 +16995,7 @@
           ]
         ]
       },
-      "properties": { "name": "Malaysia", "childNum": 8 }
+      "properties": { "name": "Malaysia", "childNum": 8, "nameZh": "马来西亚", "memberCount": 3 }
     },
     {
       "geometry": {
@@ -17030,7 +17057,7 @@
           ]
         ]
       },
-      "properties": { "name": "Namibia", "childNum": 1 }
+      "properties": { "name": "Namibia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17084,7 +17111,7 @@
           ]
         ]
       },
-      "properties": { "name": "New Caledonia", "childNum": 4 }
+      "properties": { "name": "New Caledonia", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17161,7 +17188,7 @@
           ]
         ]
       },
-      "properties": { "name": "Niger", "childNum": 1 }
+      "properties": { "name": "Niger", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17287,7 +17314,7 @@
           ]
         ]
       },
-      "properties": { "name": "Nigeria", "childNum": 2 }
+      "properties": { "name": "Nigeria", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17344,7 +17371,7 @@
           ]
         ]
       },
-      "properties": { "name": "Nicaragua", "childNum": 1 }
+      "properties": { "name": "Nicaragua", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17360,7 +17387,7 @@
           ]
         ]
       },
-      "properties": { "name": "Niue", "childNum": 1 }
+      "properties": { "name": "Niue", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -17436,7 +17463,13 @@
           ]
         ]
       },
-      "properties": { "name": "Netherlands", "childNum": 6, "cp": [5.0752777, 52.358465] }
+      "properties": {
+        "name": "Netherlands",
+        "childNum": 6,
+        "cp": [5.0752777, 52.358465],
+        "nameZh": "荷兰",
+        "memberCount": 2
+      }
     },
     {
       "geometry": {
@@ -17983,7 +18016,7 @@
           ]
         ]
       },
-      "properties": { "name": "Norway", "childNum": 27 }
+      "properties": { "name": "Norway", "childNum": 27, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -18054,7 +18087,7 @@
           ]
         ]
       },
-      "properties": { "name": "Nepal", "childNum": 1 }
+      "properties": { "name": "Nepal", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -18281,7 +18314,7 @@
           ]
         ]
       },
-      "properties": { "name": "New Zealand", "childNum": 9 }
+      "properties": { "name": "New Zealand", "childNum": 9, "nameZh": "新西兰", "memberCount": 4 }
     },
     {
       "geometry": {
@@ -18351,7 +18384,7 @@
           ]
         ]
       },
-      "properties": { "name": "Oman", "childNum": 3 }
+      "properties": { "name": "Oman", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -18487,7 +18520,7 @@
           ]
         ]
       },
-      "properties": { "name": "Pakistan", "childNum": 1 }
+      "properties": { "name": "Pakistan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -18573,7 +18606,7 @@
           ]
         ]
       },
-      "properties": { "name": "Panama", "childNum": 3 }
+      "properties": { "name": "Panama", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -18723,7 +18756,7 @@
           ]
         ]
       },
-      "properties": { "name": "Peru", "childNum": 1 }
+      "properties": { "name": "Peru", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19183,7 +19216,7 @@
           ]
         ]
       },
-      "properties": { "name": "Philippines", "childNum": 37 }
+      "properties": { "name": "Philippines", "childNum": 37, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19199,7 +19232,7 @@
           ]
         ]
       },
-      "properties": { "name": "Palau", "childNum": 1 }
+      "properties": { "name": "Palau", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19476,7 +19509,7 @@
           ]
         ]
       },
-      "properties": { "name": "Papua New Guinea", "childNum": 21 }
+      "properties": { "name": "Papua New Guinea", "childNum": 21, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19562,7 +19595,7 @@
           ]
         ]
       },
-      "properties": { "name": "Poland", "childNum": 1 }
+      "properties": { "name": "Poland", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19582,7 +19615,7 @@
           ]
         ]
       },
-      "properties": { "name": "Puerto Rico", "childNum": 2 }
+      "properties": { "name": "Puerto Rico", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19639,7 +19672,7 @@
           ]
         ]
       },
-      "properties": { "name": "Dem. Rep. Korea", "childNum": 1 }
+      "properties": { "name": "Dem. Rep. Korea", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19744,7 +19777,12 @@
           ]
         ]
       },
-      "properties": { "name": "Portugal", "childNum": 7, "cp": [-8.7440694, 39.9251454] }
+      "properties": {
+        "name": "Portugal",
+        "childNum": 7,
+        "cp": [-8.7440694, 39.9251454],
+        "memberCount": 0
+      }
     },
     {
       "geometry": {
@@ -19811,7 +19849,7 @@
           ]
         ]
       },
-      "properties": { "name": "Paraguay", "childNum": 1 }
+      "properties": { "name": "Paraguay", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19844,7 +19882,7 @@
           ]
         ]
       },
-      "properties": { "name": "Palestine", "childNum": 2 }
+      "properties": { "name": "Palestine", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19881,7 +19919,7 @@
           ]
         ]
       },
-      "properties": { "name": "Fr. Polynesia", "childNum": 5 }
+      "properties": { "name": "Fr. Polynesia", "childNum": 5, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19905,7 +19943,7 @@
           ]
         ]
       },
-      "properties": { "name": "Qatar", "childNum": 1 }
+      "properties": { "name": "Qatar", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -19976,7 +20014,7 @@
           ]
         ]
       },
-      "properties": { "name": "Romania", "childNum": 1 }
+      "properties": { "name": "Romania", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -21933,7 +21971,7 @@
           ]
         ]
       },
-      "properties": { "name": "Russia", "childNum": 73 }
+      "properties": { "name": "Russia", "childNum": 73, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -21969,7 +22007,7 @@
           ]
         ]
       },
-      "properties": { "name": "Rwanda", "childNum": 1 }
+      "properties": { "name": "Rwanda", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22074,7 +22112,7 @@
           ]
         ]
       },
-      "properties": { "name": "Saudi Arabia", "childNum": 2 }
+      "properties": { "name": "Saudi Arabia", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22172,7 +22210,7 @@
           ]
         ]
       },
-      "properties": { "name": "Sudan", "childNum": 1 }
+      "properties": { "name": "Sudan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22255,7 +22293,7 @@
           ]
         ]
       },
-      "properties": { "name": "S. Sudan", "childNum": 1 }
+      "properties": { "name": "S. Sudan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22326,7 +22364,7 @@
           ]
         ]
       },
-      "properties": { "name": "Senegal", "childNum": 1 }
+      "properties": { "name": "Senegal", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22342,7 +22380,7 @@
           ]
         ]
       },
-      "properties": { "name": "Singapore", "childNum": 1 }
+      "properties": { "name": "Singapore", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22364,11 +22402,11 @@
           ]
         ]
       },
-      "properties": { "name": "S. Geo. and S. Sandw. Is.", "childNum": 1 }
+      "properties": { "name": "S. Geo. and S. Sandw. Is.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": { "type": "MultiPolygon", "coordinates": [] },
-      "properties": { "name": "Saint Helena", "childNum": 1 }
+      "properties": { "name": "Saint Helena", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22535,7 +22573,7 @@
           ]
         ]
       },
-      "properties": { "name": "Solomon Is.", "childNum": 16 }
+      "properties": { "name": "Solomon Is.", "childNum": 16, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22593,7 +22631,7 @@
           ]
         ]
       },
-      "properties": { "name": "Sierra Leone", "childNum": 2 }
+      "properties": { "name": "Sierra Leone", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22622,7 +22660,7 @@
           ]
         ]
       },
-      "properties": { "name": "El Salvador", "childNum": 1 }
+      "properties": { "name": "El Salvador", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22638,7 +22676,7 @@
           ]
         ]
       },
-      "properties": { "name": "St. Pierre and Miquelon", "childNum": 1 }
+      "properties": { "name": "St. Pierre and Miquelon", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22664,7 +22702,7 @@
           ]
         ]
       },
-      "properties": { "name": "São Tomé and Principe", "childNum": 2 }
+      "properties": { "name": "São Tomé and Principe", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22715,7 +22753,7 @@
           ]
         ]
       },
-      "properties": { "name": "Suriname", "childNum": 1 }
+      "properties": { "name": "Suriname", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22759,7 +22797,7 @@
           ]
         ]
       },
-      "properties": { "name": "Slovakia", "childNum": 1 }
+      "properties": { "name": "Slovakia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22802,7 +22840,7 @@
           ]
         ]
       },
-      "properties": { "name": "Slovenia", "childNum": 1 }
+      "properties": { "name": "Slovenia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22937,7 +22975,7 @@
           ]
         ]
       },
-      "properties": { "name": "Sweden", "childNum": 4 }
+      "properties": { "name": "Sweden", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22966,7 +23004,7 @@
           ]
         ]
       },
-      "properties": { "name": "Swaziland", "childNum": 1 }
+      "properties": { "name": "Swaziland", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -22983,7 +23021,7 @@
           ]
         ]
       },
-      "properties": { "name": "Seychelles", "childNum": 1 }
+      "properties": { "name": "Seychelles", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23039,7 +23077,7 @@
           ]
         ]
       },
-      "properties": { "name": "Syria", "childNum": 1 }
+      "properties": { "name": "Syria", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23055,7 +23093,7 @@
           ]
         ]
       },
-      "properties": { "name": "Turks and Caicos Is.", "childNum": 1 }
+      "properties": { "name": "Turks and Caicos Is.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23127,7 +23165,7 @@
           ]
         ]
       },
-      "properties": { "name": "Chad", "childNum": 1 }
+      "properties": { "name": "Chad", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23166,7 +23204,7 @@
           ]
         ]
       },
-      "properties": { "name": "Togo", "childNum": 1 }
+      "properties": { "name": "Togo", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23335,7 +23373,7 @@
           ]
         ]
       },
-      "properties": { "name": "Thailand", "childNum": 4 }
+      "properties": { "name": "Thailand", "childNum": 4, "nameZh": "泰国", "memberCount": 2 }
     },
     {
       "geometry": {
@@ -23431,7 +23469,7 @@
           ]
         ]
       },
-      "properties": { "name": "Tajikistan", "childNum": 2 }
+      "properties": { "name": "Tajikistan", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23538,7 +23576,7 @@
           ]
         ]
       },
-      "properties": { "name": "Turkmenistan", "childNum": 1 }
+      "properties": { "name": "Turkmenistan", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23580,7 +23618,7 @@
           ]
         ]
       },
-      "properties": { "name": "Timor-Leste", "childNum": 3 }
+      "properties": { "name": "Timor-Leste", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23596,7 +23634,7 @@
           ]
         ]
       },
-      "properties": { "name": "Tonga", "childNum": 2 }
+      "properties": { "name": "Tonga", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23616,7 +23654,7 @@
           ]
         ]
       },
-      "properties": { "name": "Trinidad and Tobago", "childNum": 1 }
+      "properties": { "name": "Trinidad and Tobago", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23691,7 +23729,7 @@
           ]
         ]
       },
-      "properties": { "name": "Tunisia", "childNum": 3 }
+      "properties": { "name": "Tunisia", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23866,7 +23904,7 @@
           ]
         ]
       },
-      "properties": { "name": "Turkey", "childNum": 3 }
+      "properties": { "name": "Turkey", "childNum": 3, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -23979,7 +24017,7 @@
           ]
         ]
       },
-      "properties": { "name": "Tanzania", "childNum": 4 }
+      "properties": { "name": "Tanzania", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -24031,7 +24069,7 @@
           ]
         ]
       },
-      "properties": { "name": "Uganda", "childNum": 1 }
+      "properties": { "name": "Uganda", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -24205,7 +24243,7 @@
           ]
         ]
       },
-      "properties": { "name": "Ukraine", "childNum": 2 }
+      "properties": { "name": "Ukraine", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -24260,7 +24298,7 @@
           ]
         ]
       },
-      "properties": { "name": "Uruguay", "childNum": 1 }
+      "properties": { "name": "Uruguay", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -25789,7 +25827,7 @@
           ]
         ]
       },
-      "properties": { "name": "United States", "childNum": 76 }
+      "properties": { "name": "United States", "childNum": 76, "nameZh": "美国", "memberCount": 14 }
     },
     {
       "geometry": {
@@ -25912,7 +25950,7 @@
           ]
         ]
       },
-      "properties": { "name": "Uzbekistan", "childNum": 2 }
+      "properties": { "name": "Uzbekistan", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -25928,7 +25966,7 @@
           ]
         ]
       },
-      "properties": { "name": "St. Vin. and Gren.", "childNum": 1 }
+      "properties": { "name": "St. Vin. and Gren.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26086,7 +26124,7 @@
           ]
         ]
       },
-      "properties": { "name": "Venezuela", "childNum": 4 }
+      "properties": { "name": "Venezuela", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26102,7 +26140,7 @@
           ]
         ]
       },
-      "properties": { "name": "U.S. Virgin Is.", "childNum": 1 }
+      "properties": { "name": "U.S. Virgin Is.", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26272,7 +26310,7 @@
           ]
         ]
       },
-      "properties": { "name": "Vietnam", "childNum": 4 }
+      "properties": { "name": "Vietnam", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26374,7 +26412,7 @@
           ]
         ]
       },
-      "properties": { "name": "Vanuatu", "childNum": 10 }
+      "properties": { "name": "Vanuatu", "childNum": 10, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26401,7 +26439,7 @@
           ]
         ]
       },
-      "properties": { "name": "Samoa", "childNum": 2 }
+      "properties": { "name": "Samoa", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26466,7 +26504,7 @@
           ]
         ]
       },
-      "properties": { "name": "Yemen", "childNum": 4 }
+      "properties": { "name": "Yemen", "childNum": 4, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26609,7 +26647,7 @@
           ]
         ]
       },
-      "properties": { "name": "South Africa", "childNum": 2 }
+      "properties": { "name": "South Africa", "childNum": 2, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26702,7 +26740,7 @@
           ]
         ]
       },
-      "properties": { "name": "Zambia", "childNum": 1 }
+      "properties": { "name": "Zambia", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26758,7 +26796,7 @@
           ]
         ]
       },
-      "properties": { "name": "Zimbabwe", "childNum": 1 }
+      "properties": { "name": "Zimbabwe", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26808,7 +26846,7 @@
           ]
         ]
       },
-      "properties": { "name": "", "childNum": 1 }
+      "properties": { "name": "", "childNum": 1, "memberCount": 0 }
     },
     {
       "geometry": {
@@ -26867,7 +26905,7 @@
           ]
         ]
       },
-      "properties": { "name": "", "childNum": 1 }
+      "properties": { "name": "", "childNum": 1, "memberCount": 0 }
     },
     {
       "type": "Feature",
@@ -26922,7 +26960,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 0,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "北京市",
+        "memberCount": 88
       }
     },
     {
@@ -26969,7 +27009,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 1,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "天津市",
+        "memberCount": 10
       }
     },
     {
@@ -27162,7 +27204,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 2,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "河北省",
+        "memberCount": 21
       }
     },
     {
@@ -27270,7 +27314,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 3,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "山西省",
+        "memberCount": 12
       }
     },
     {
@@ -27724,7 +27770,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 4,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "内蒙古自治区",
+        "memberCount": 7
       }
     },
     {
@@ -27853,7 +27901,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 5,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "辽宁省",
+        "memberCount": 16
       }
     },
     {
@@ -28024,7 +28074,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 6,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "吉林省",
+        "memberCount": 8
       }
     },
     {
@@ -28289,7 +28341,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 7,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "黑龙江省",
+        "memberCount": 9
       }
     },
     {
@@ -28339,7 +28393,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 8,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "上海市",
+        "memberCount": 76
       }
     },
     {
@@ -28458,7 +28514,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 9,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "江苏省",
+        "memberCount": 45
       }
     },
     {
@@ -28568,7 +28626,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 10,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "浙江省",
+        "memberCount": 52
       }
     },
     {
@@ -28710,7 +28770,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 11,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "安徽省",
+        "memberCount": 22
       }
     },
     {
@@ -28842,7 +28904,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 12,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "福建省",
+        "memberCount": 24
       }
     },
     {
@@ -28975,7 +29039,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 13,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "江西省",
+        "memberCount": 13
       }
     },
     {
@@ -29109,7 +29175,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 14,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "山东省",
+        "memberCount": 29
       }
     },
     {
@@ -29245,7 +29313,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 15,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "河南省",
+        "memberCount": 27
       }
     },
     {
@@ -29401,7 +29471,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 16,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "湖北省",
+        "memberCount": 25
       }
     },
     {
@@ -29552,7 +29624,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 17,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "湖南省",
+        "memberCount": 31
       }
     },
     {
@@ -29719,7 +29793,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 18,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "广东省",
+        "memberCount": 68
       }
     },
     {
@@ -29878,7 +29954,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 19,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "广西壮族自治区",
+        "memberCount": 14
       }
     },
     {
@@ -29947,7 +30025,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 20,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "海南省",
+        "memberCount": 8
       }
     },
     {
@@ -30076,7 +30156,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 21,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "重庆市",
+        "memberCount": 20
       }
     },
     {
@@ -30335,7 +30417,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 22,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "四川省",
+        "memberCount": 33
       }
     },
     {
@@ -30483,7 +30567,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 23,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "贵州省",
+        "memberCount": 11
       }
     },
     {
@@ -30726,7 +30812,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 24,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "云南省",
+        "memberCount": 15
       }
     },
     {
@@ -31061,7 +31149,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 25,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "西藏自治区",
+        "memberCount": 5
       }
     },
     {
@@ -31236,7 +31326,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 26,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "陕西省",
+        "memberCount": 18
       }
     },
     {
@@ -31546,7 +31638,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 27,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "甘肃省",
+        "memberCount": 6
       }
     },
     {
@@ -31806,7 +31900,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 28,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "青海省",
+        "memberCount": 3
       }
     },
     {
@@ -31898,7 +31994,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 29,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "宁夏回族自治区",
+        "memberCount": 4
       }
     },
     {
@@ -32254,7 +32352,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 30,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "新疆维吾尔自治区",
+        "memberCount": 6
       }
     },
     {
@@ -32309,7 +32409,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 31,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "台湾省",
+        "memberCount": 12
       }
     },
     {
@@ -32341,7 +32443,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 32,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "香港特别行政区",
+        "memberCount": 9
       }
     },
     {
@@ -32356,7 +32460,9 @@
         "level": "province",
         "parent": { "adcode": 100000 },
         "subFeatureIndex": 33,
-        "acroutes": [100000]
+        "acroutes": [100000],
+        "nameZh": "澳门特别行政区",
+        "memberCount": 3
       }
     },
     {
@@ -32437,7 +32543,7 @@
           ]
         ]
       },
-      "properties": { "name": "", "adchar": "JD", "adcode": "100000_JD" }
+      "properties": { "name": "", "adchar": "JD", "adcode": "100000_JD", "memberCount": 0 }
     }
   ]
 }

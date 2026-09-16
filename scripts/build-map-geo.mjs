@@ -170,6 +170,40 @@ for (const f of china.features) {
 }
 console.log(`合并后要素: ${world.features.length}`);
 
+// —— 注入成员数据（nameZh / memberCount），统计与地图同源 ——
+// Node 26 原生支持 TS 类型剥离，可直接 import map-points.ts（失败则报错停止）
+const { PROVINCE_POINTS, COUNTRY_POINTS } = await import('../src/data/anniversary/map-points.ts');
+const zhByFeatureName = new Map();
+for (const p of PROVINCE_POINTS) {
+  zhByFeatureName.set(p.name, p.name);
+}
+for (const c of COUNTRY_POINTS) {
+  if (c.worldName) {
+    zhByFeatureName.set(c.worldName, c.name);
+  }
+}
+const countByFeatureName = new Map();
+for (const p of PROVINCE_POINTS) {
+  countByFeatureName.set(p.name, p.count);
+}
+for (const c of COUNTRY_POINTS) {
+  if (c.worldName) {
+    countByFeatureName.set(c.worldName, c.count);
+  }
+}
+let enriched = 0;
+for (const f of world.features) {
+  const key = f.properties?.name;
+  if (key && zhByFeatureName.has(key)) {
+    f.properties.nameZh = zhByFeatureName.get(key);
+    f.properties.memberCount = countByFeatureName.get(key) ?? 0;
+    enriched++;
+  } else {
+    f.properties.memberCount = 0;
+  }
+}
+console.log(`注入成员数据: ${enriched} 个地区`);
+
 const out = JSON.stringify(world);
 fs.mkdirSync('public/geo', { recursive: true });
 fs.writeFileSync(OUT, out);
