@@ -44,15 +44,6 @@ const events: Act[] = [
     dy: '18px',
     g: 'radial-gradient(circle at 80% 30%, rgba(251,146,60,0.40), transparent 55%), radial-gradient(circle at 15% 75%, rgba(56,189,248,0.32), transparent 52%), linear-gradient(100deg, #242028 0%, #120f16 100%)',
   },
-  {
-    name: '七周年 · 追光七载',
-    desc: '水印工坊 · 成员地图墙 · 七周年手记',
-    tag: '七周年',
-    href: '/7th/',
-    rot: '2.6deg',
-    dy: '14px',
-    g: "url('/templates/seeker-7th-portrait.webp') center 22% / cover no-repeat, linear-gradient(100deg, #0a0a0c 0%, #17171b 100%)",
-  },
 ];
 ---
 
@@ -86,6 +77,17 @@ const events: Act[] = [
       </a>
     ))}
   </div>
+
+  {/* 七周年特殊入口：Activities 中的非普通活动（理性入口），区别于右下角感性入口 */}
+  <a class="acts-anniv" href="/7th/" aria-label="七周年纪念册：光影七载，看见彼此">
+    <span class="acts-anniv-rule" aria-hidden="true"></span>
+    <span class="acts-anniv-no">07 / SEVEN YEARS</span>
+    <span class="acts-anniv-body">
+      <strong class="acts-anniv-title">七周年 · 光影七载，看见彼此。</strong>
+      <span class="acts-anniv-range">2019 — 2026 · SEEKER 七年影像与故事档案</span>
+    </span>
+    <span class="acts-anniv-cta">ENTER ARCHIVE →</span>
+  </a>
 </section>
 
 <script>
@@ -258,6 +260,79 @@ const events: Act[] = [
   .stack-meta small {
     font-size: 11px;
     color: var(--paper-sub);
+    white-space: nowrap;
+  }
+
+  /* —— 七周年特殊块：暗房底片风格的编辑排版条，非普通活动卡 —— */
+  .acts-anniv {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.9rem 1.6rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 26px auto 0;
+    padding: 1.4rem 1.5rem 1.5rem;
+    background:
+      radial-gradient(120% 200% at 85% -50%, rgba(232, 199, 102, 0.14), transparent 55%),
+      var(--anniv-bg);
+    border: 1px solid var(--anniv-border);
+    text-decoration: none;
+    transition: border-color 0.25s ease;
+  }
+
+  .acts-anniv:hover {
+    border-color: rgba(232, 199, 102, 0.55);
+  }
+
+  .acts-anniv-rule {
+    position: absolute;
+    top: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(232, 199, 102, 0.6), transparent 70%);
+  }
+
+  .acts-anniv-no {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: #e8c766;
+  }
+
+  .acts-anniv-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 1.2rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .acts-anniv-title {
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'SimSun', serif;
+    font-size: clamp(1.02rem, 2.4vw, 1.3rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--anniv-fg);
+  }
+
+  .acts-anniv-range {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: rgba(242, 240, 235, 0.55);
+  }
+
+  .acts-anniv-cta {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: #e8c766;
     white-space: nowrap;
   }
 
