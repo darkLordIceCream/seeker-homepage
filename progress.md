@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-15 凌晨 **Branch:**
+**Last Updated:** 2026-09-17 凌晨 **Branch:**
 feat/7th-anniversary（由 feat/photo-watermark 改名，未合并）**Active Feature:**
-feat-025 七周年板块（Hub + 周年角卡 + 地图墙 + 水印工坊重设计）—— 通宵开发完成待晨间复核
+feat-026 七周年第二版「光影七载，看见彼此」数字摄影纪念册（独立双主题 + 七章叙事 + 数据底座）—— 已完成待复核
 
 ## Status
 
@@ -1115,3 +1115,117 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
   375px 断言；judge 第二轮 hub/地图双 pass
 - 晨间复核清单（不变）+ 新增：① Safari/iOS 真机测试（本环境无法覆盖）②
   PMTiles/Protomaps 为未来选项 ③ 角卡曝光行为已按设计稿改为「常驻收起+定点展开」（此前为每次弹出）
+
+## 会话记录（七周年第二版重构「光影七载，看见彼此」，2026-09-16 深夜 → 09-17 凌晨）
+
+### 背景
+
+用户转来高手第二版设计规范（SEEKER 07 · Digital Photobook / Anniversary
+Archive）：把 /7th/ 从「功能页」升级为「可在网页中阅读的摄影纪念册」，七章叙事 +
+独立深/浅双主题 + 首页双入口重定位。三个决策已与用户确认：①版式全建 +
+优雅占位（数据文件带 published 开关）②独立双主题（默认深色、☼/☾ 切换、
+seeker-7th-theme localStorage、与主站无关）③水印保留 JPEG q0.92（规范写
+PNG，但 2084×3705 的 PNG 约 8-15MB/张 vs JPEG 0.3MB，按「不为重构重写可用
+逻辑」原则保留 JPEG，差异已在此注明）。
+
+### What's Done（feat-026，9 个 commit）
+
+- **93620b6 数据底座 + 双主题令牌**：src/data/anniversary/ 新增 stats.json
+  （825/15/34 唯一权威源）+ interviews/partners/merchandise/thanks.json
+  （published 开关 + schema 注释，禁止伪造内容）；--anniv-* 令牌升级双主题集
+  （默认深色暗房 + html[data-theme='light'] 暖纸印刷感，新增 surface-soft /
+  fg-secondary / border-strong / accent-soft / error / map-bg·land·border·point·point-halo）；
+  MapWall / WatermarkGenerator / AnniversaryCard 硬编码 hex 全部令牌化
+  （color-mix 表达透明度变体）；统计 0 闪烁修复（HTML 直出终值，JS 仅在进入
+  视口后从 0 增强——规范 #7 的「0 SEEKERS」即此 bug）；水印页统计改读 stats.json
+- **62f96e7 独立主题系统 + 纪念册页头页脚**：AnniversaryHeader（← SEEKER /
+  SEEKER 07 YEARS OF LIGHT 字标 / ☼☾ 小切换，写 localStorage + 派发
+  anniv-theme-change）+ AnniversaryFooter（光影七载，看见彼此。/ 2019 — 2026 /
+  拍一张照片，交一个朋友。/ © 2026 SEEKER）；三页替换主站 Navigation/Footer，
+  Layout head slot 注入防闪烁 inline 脚本（默认 dark）；color-scheme 联动
+- **516f2ba 七章骨架 + 首页双入口**：/7th/ 重写为 HERO → 01-07 → LEAVE YOUR
+  FRAME → WITH THANKS 骨架（SectionHead 编号/中文大字/英文辅助 + AwaitNote
+  「AWAITING ARCHIVE 空相框」优雅占位组件）；Hero 主文案换「光影七载，看见
+  彼此。」（旧标语降级为 Ending 辅助行）；ActsSection 删第四张拍立得卡，改为
+  栈下「07 / SEVEN YEARS」暗房特殊块（理性入口）；AnniversaryCard 重写为
+  「藏着一张照片」感性入口——构建期从 ACTIVITY_IMAGE_META 抽样 28 张真实成员
+  照片池（过滤封面/组委会图），define:vars 注入客户端每次加载随机取一张，
+  桌面 hover 轻展开（SEEKER 07 / 光影七载，看见彼此。/ ENTER →，无弹跳），
+  移动端 6.4rem 图块直达
+- **8eedea8 01 七年序章**：ContactSheet 胶片接触印样墙——构建期从 activities
+  集合每两期抽一帧（真实照片 + 真实作者署名 + 期数，跨 2021→2026），统一
+  3:2 印样画幅（object-fit cover）+ FRAME 编号 + 1px 细线网格；地图静态预览：
+  scripts/build-map-preview.mjs 从 anniv-world.json 生成 145KB 简化 SVG
+  （equirectangular + 0.6° 量化 + 共线去除），以 CSS mask 呈现、fill 走
+  --anniv-map-* 令牌（双主题自适应、零 JS）
+- **e8a21a6 02 + 03**：FounderNote（真实主理人肖像 astro:assets 优化 +
+  Editorial 版式 + 寄语占位 + 真实 bio/署名）；VoicesSection +
+  InterviewStory（大幅肖像/字框占位 + 姓名/身份 + Q/A 版式，问题数不写死，
+  interviews.json 就绪前渲染占位）
+- **ff6c349 04 + 05**：ProjectTimeline 真实时间线——activities 64 期按年分组
+  （年份大字 + 期数标签 + 当年最新一期真实封面 + 阅读链接）+ 3 篇公益项目
+  （标题/摘要/封面/链接全真实）；时间线主轴深色光轨/浅色墨线（纯令牌）；
+  SharedRoad 十字关系网（品牌/社区─SEEKER─高校/地方分部 editorial 细线
+  节点，非 Logo Wall），partners.json 就绪前展示骨架 + 占位
+- **6b1b41a 06 + WITH THANKS**：ObjectsSection 展示真实设计物（七周年纪念框
+  正/横版 webp = 水印工坊线上同款，OBJ.01/02 档案编号图注）+ 周边占位；
+  Thanks 分组鸣谢版式（角色金标 + 衬线人名，名单未确认前占位）
+- **2caa394 地图双主题**：src/lib/anniversary/mapStyle.ts 生成深色（暗房
+  光点）/浅色（纸面墨点）两套 StyleSpecification；MapWall 监听
+  anniv-theme-change 调 map.setStyle() 实时切换（generateId 保证
+  feature-state 稳定）；入场渐亮动画透明度收敛为 POINT_OPACITY 常量
+- **23c53f1 关键修复批次**（回归中发现，见排障记录）：光点改区域代表点源；
+  生产包补齐 MapLibre worker；SharedRoad 移动端溢出修复；印样墙统一画幅
+
+### 排障记录（本会话重点）
+
+1. **生产环境地图静默卡死（严重，自 feat-025 MapLibre 迁移起就存在，此前
+   仅验证过 dev）**：astro preview 下地图 canvas 已创建但 load 永不触发、
+   无任何报错。定位过程：Blob Worker 探针正常 → agent-browser --init-script
+   劫持 Worker 构造器抓到 `WORKER-ERROR` 指向 `/_astro/maplibre-gl-worker.mjs`
+   → 该文件 404。根因：maplibre-gl v6 为原生 ESM 分包（入口 + shared +
+   worker），入口运行期 `new Worker(new URL('...worker.mjs', import.meta.url),
+   {type:'module'})`，Vite 把 URL 写进产物但 Astro 构建管线不发射该文件。
+   修复：scripts/copy-maplibre-worker.mjs 构建后把 worker + shared 两个 .mjs
+   原样补进 dist/_astro/（文件名未 hash，同名拷贝即可），package.json build
+   串联（Cloudflare Pages 同样生效）
+2. **circle 图层作用于多边形按顶点渲染**：member-glow/point 原挂在边界
+   GeoJSON（MultiPolygon）上，光点沿全部国界线密布。修复：build-map-geo.mjs
+   新增光点源生成——每个有成员区域取「最大外环顶点均值」代表点
+   （lngLat 手工标注优先，如美国/新加坡/澳洲），输出 public/geo/anniv-points.json
+   （49 点），member 图层改挂 anniv-points 源。附带修复：澳门多边形因过小被
+   简化清空 → 简化结果为空时保留原始环
+3. **成员明细数据源迁移**：map-points 数据抽到 map-points.json（脚本与 TS
+   共用单一数据源），map-points.ts 改为类型化转出（Node ESM 读 JSON 需导入
+   属性，脚本改 fs 直读绕开）
+4. **SharedRoad 十字网格 375px 溢出（559px）**：节点英文后缀 nowrap 撑破；
+   英文包 .sr-en span 小屏隐藏 + 节点内边距收紧，四断点（375/390/430/768）
+   全页滚动复测零溢出
+5. **eslint ↔ prettier 尾逗号之争**（历史遗留再现）：eslint comma-dangle
+   always-multiline vs prettier trailingComma es5 在多行函数实参上互斥，
+   仓库既有提交本就以 eslint 为准（format:check 非必检项），处理原则：
+   eslint --fix 后不再对 .astro script 跑 prettier --write
+6. **教训**：`pnpm run type-check | tail` 会吞掉非零退出码——关键验证必须
+   显式 echo $?
+
+### 验证
+
+- init.sh 全绿（type-check 0 错误、lint 0 错误 22 警告、75 页构建 + worker
+  补齐日志）
+- 浏览器回归（agent-browser，生产 preview 4322）：/7th/ 七章深浅双主题截图
+  逐章验证；统计直出 825/15/34；印样墙/时间线/关系网/设计物真实数据渲染；
+  主题切换 ☼☾ + localStorage 持久 + 地图 setStyle 实时切换（暗房光点 ↔
+  纸面墨点）；地图 hover tooltip、点击中国 flyTo 省级视野 + BACK TO WORLD；
+  水印示例 → 自动识别 → 编辑 → MAKE MY FRAME → FRAME READY 0.3MB →
+  seeker-sample_seeker_7th_watermark.jpg；首页角卡随机真实照片 + 桌面 hover
+  展开文案 + 移动端小图块；07/SEVEN YEARS 特殊块；375/390/430/768 四断点
+  全页零横向溢出
+
+### 遗留 / 待办
+
+- 内容缺口（版式已就绪，数据 published 置 true 即上线）：寄语全文、成员采访
+  （interviews.json）、合作伙伴（partners.json）、周边实物（merchandise.json）、
+  鸣谢名单（thanks.json）——均禁止伪造，待用户提供
+- 825/15/34 与地图分布仍为占位（stats.json + map-points.json 两处同步替换）
+- 水印导出为 JPEG q0.92（规范写 PNG 的差异及理由见本记录开头）
+- Safari/iOS 真机、成员头像墙未来扩展（当前印样墙用活动照片混排，规范允许）
