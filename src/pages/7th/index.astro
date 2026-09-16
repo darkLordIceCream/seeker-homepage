@@ -83,37 +83,43 @@ const heroPhoto = heroPick
     </header>
 
     <div class="arc-body" id="archive">
-      <!-- 01 / 七年序章：看见我们（印样墙 + 统计 + 地图导语） -->
-      <section aria-labelledby="sec-intro" class="arc-sec">
-        <SectionHead en="SEVEN YEARS, MANY FRAMES" no="01" zh="七年序章" />
-        <div class="arc-sec-body">
-          <p class="arc-copy-lead">
-            七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
-          </p>
-          <AvatarWall />
-          <dl class="arc-stats" data-countup>
-            <div class="arc-stat">
-              <dd data-count-to={stats.members}>{stats.members}</dd>
-              <dt>SEEKERS</dt>
+      <!-- 01 / 七年序章：sticky 舞台（文字 → 头像墙停留 → 统计依序），地图在轨道后正常流 -->
+      <section aria-labelledby="sec-intro" class="arc-sec arc-sec--intro">
+        <div class="intro-track" data-story-scene="intro">
+          <div class="intro-stage">
+            <div data-intro-head>
+              <SectionHead en="SEVEN YEARS, MANY FRAMES" no="01" zh="七年序章" />
             </div>
-            <div class="arc-stat">
-              <dd data-count-to={stats.countries}>{stats.countries}</dd>
-              <dt>COUNTRIES</dt>
+            <p class="arc-copy-lead" data-intro-lead>
+              七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
+            </p>
+            <div data-intro-wall>
+              <AvatarWall stage />
             </div>
-            <div class="arc-stat">
-              <dd data-count-to={stats.regions}>{stats.regions}</dd>
-              <dt>REGIONS</dt>
-            </div>
-          </dl>
-          <a aria-label="查看成员分布地图 WHERE WE ARE" class="arc-map" href="/7th/map/">
-            <span aria-hidden="true" class="arc-map-land"></span>
-            <span class="arc-map-cap">
-              <span class="arc-map-cap-en">WHERE WE ARE</span>
-              <span class="arc-map-cap-zh">每一个光点，都是一个追光者。</span>
-            </span>
-            <span class="arc-map-link">EXPLORE THE MAP →</span>
-          </a>
+            <dl class="arc-stats" data-intro-stats data-countup>
+              <div class="arc-stat" data-intro-stat>
+                <dd data-count-to={stats.members}>{stats.members}</dd>
+                <dt>SEEKERS</dt>
+              </div>
+              <div class="arc-stat" data-intro-stat>
+                <dd data-count-to={stats.countries}>{stats.countries}</dd>
+                <dt>COUNTRIES</dt>
+              </div>
+              <div class="arc-stat" data-intro-stat>
+                <dd data-count-to={stats.regions}>{stats.regions}</dd>
+                <dt>REGIONS</dt>
+              </div>
+            </dl>
+          </div>
         </div>
+        <a aria-label="查看成员分布地图 WHERE WE ARE" class="arc-map" data-reveal href="/7th/map/">
+          <span aria-hidden="true" class="arc-map-land"></span>
+          <span class="arc-map-cap">
+            <span class="arc-map-cap-en">WHERE WE ARE</span>
+            <span class="arc-map-cap-zh">每一个光点，都是一个追光者。</span>
+          </span>
+          <span class="arc-map-link">EXPLORE THE MAP →</span>
+        </a>
       </section>
 
       <!-- 02 / 光影札记：主理人寄语 -->
@@ -380,6 +386,41 @@ const heroPhoto = heroPick
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+  }
+
+  /* —— 01 七年序章：sticky 舞台 —— */
+  .story-on .intro-track {
+    height: 260vh; /* 桌面叙事时长 */
+  }
+
+  .story-on .arc-sec--intro {
+    padding-top: 0; /* 轨道自带节奏，避免额外空档 */
+  }
+
+  @media (max-width: 48rem) {
+    .story-on .intro-track {
+      height: 190vh;
+    }
+  }
+
+  .intro-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.4rem;
+    padding: calc(64px + 1.5rem) 0 1.5rem;
+    overflow: hidden;
+  }
+
+  .intro-stage .arc-copy-lead {
+    margin: 0;
+  }
+
+  .arc-sec--intro > .arc-map.reveal:not(.in-view) {
+    transform: scale(0.98); /* 地图预览以轻微缩放浮现（替代位移） */
   }
 
   .arc-copy-lead {

@@ -65,6 +65,45 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     };
   },
+
+  /** 01 七年序章：眉题引言 → 头像墙进入/停留/离场 → 统计依序出现 */
+  intro: track => {
+    const head = track.querySelector<HTMLElement>('[data-intro-head]');
+    const lead = track.querySelector<HTMLElement>('[data-intro-lead]');
+    const wall = track.querySelector<HTMLElement>('[data-intro-wall]');
+    const statsBox = track.querySelector<HTMLElement>('[data-intro-stats]');
+    const stats = Array.from(track.querySelectorAll<HTMLElement>('[data-intro-stat]'));
+    const statStarts = [0.78, 0.85, 0.92];
+    return ({ progress: p }) => {
+      if (head) {
+        const t = ramp(p, 0, 0.1);
+        head.style.opacity = t.toFixed(3);
+        head.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (lead) {
+        const t = ramp(p, 0.06, 0.16);
+        lead.style.opacity = t.toFixed(3);
+        lead.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (wall) {
+        const enter = ramp(p, 0.18, 0.38);
+        const exit = ramp(p, 0.62, 0.78);
+        wall.style.opacity = (enter * (1 - exit)).toFixed(3);
+        wall.style.transform = `translateY(${((1 - enter) * 50 - exit * 44).toFixed(1)}px) scale(${(0.97 + 0.03 * enter - 0.02 * exit).toFixed(4)})`;
+        // 统计容器随墙离场上移，填住空出的视觉位（仅 transform，无布局改动）
+        if (statsBox) {
+          const slide = exit > 0 ? (wall.offsetHeight + 22) * exit : 0;
+          statsBox.style.transform = `translateY(${(-slide).toFixed(1)}px)`;
+        }
+      }
+      stats.forEach((el, i) => {
+        const start = statStarts[i] ?? 0.92;
+        const t = ramp(p, start, start + 0.06);
+        el.style.opacity = t.toFixed(3);
+        el.style.transform = `translateY(${(14 * (1 - t)).toFixed(1)}px)`;
+      });
+    };
+  },
 };
 
 /**
