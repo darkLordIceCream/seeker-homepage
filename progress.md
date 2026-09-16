@@ -1065,3 +1065,53 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
      set viewport（设备仿真）
   3. agent-browser 长会话后 screenshot 稳定 EAGAIN——pkill 重启守护可解
 - 提交：8b99d1b（地球仪 + 修复）、前置若干
+
+## 会话记录（七周年「摄影档案」UI/UX 重构，2026-09-15 晨）
+
+- 用户晨间反馈：手搓地球仪太简陋，要求找开源方案或改为平铺全屏世界地图；后批准设计稿（「SEEKER
+  07 摄影档案」UI/UX 重构任务清单），按 MapLibre + 摄影档案架构执行
+- **Phase
+  A 设计令牌**：global.css 追加 --anniv-* 令牌组（bg/surface/fg/muted/border/accent
+  - motion tokens fast 150ms/normal 300ms/slow 700ms +
+    ease-enter/exit），仅作用于 7th 板块
+- **Phase B 档案馆首页**：/7th/ 重写——Hero（SEEKER + 07 巨字 + YEARS OF LIGHT +
+  2019—2026
+  - 追光七载 slogan + ENTER ARCHIVE）→ 01
+    ANNIVERSARY（水印工坊 editorial 入口 + 相框视觉）→ 02 PEOPLE（地图墙入口 +
+    count-up 统计）→ 03 MEMORY（THE ARCHIVE / 七年的故事还没有结束 / THE STORY
+    CONTINUES）→ Ending（2019 WE STARTED → 7 → 2026 THE NEXT FRAME IS YOURS
+  - 拍一张照片，交一个朋友）；去 Bento 卡片化，非对称 editorial 排版
+- **Phase C 水印 DARKROOM**：未上传态（editorial 大标题 MAKE YOUR ANNIVERSARY
+  FRAME + 把这一刻留在七周年 + 选择照片按钮 + 示例）；编辑态（大尺寸照片为第一主体、控制区移到照片下方 FORMAT/NAME/SCALE 三分区、FORMAT 比例可视化选择器、SAFE
+  AREA 虚线热区就地编辑）；生成动画（光线扫过 850ms + YOUR FRAME IS
+  READY 完成态 + 下载海报/再做一张）；自动识别横竖版保留；功能保护清单 Task
+  9 全项浏览器回归通过
+- **Phase D MapLibre 地图**：pnpm remove echarts / pnpm add
+  maplibre-gl@6.10；组件重写为 MapLibre
+  GL（cooperativeGestures 滚动穿透 + 底部 +/- 控件）；单一融合 GeoJSON（anniv-world.json：世界国家 + 中国省域 +
+  nameZh/memberCount 注入）；图层：bg →
+  region-fill（按 memberCount 金色深浅 choropleth）→ region-border →
+  member-glow（circle-blur 辉光）→ member-point（亮核）；hover
+  feature-state 高亮 + tooltip（GUANGDONG / 87
+  SEEKERS）；点击中国 flyTo 下钻省域 + Back to
+  World；进入时光点 0.9s 渐亮（reduced-motion 直接显示）；ECharts 依赖移除
+- **Phase E 主站入口**：导航金胶囊「7周年」→「✦
+  7TH」（Archivo 细描边 + 极轻 glow，不抢主导航不闪烁，Permanent
+  Navigation）；右下角卡重写为小型摄影卡：默认收起（⑦ SEEKER 小方卡）→
+  hover 展开（海报艺术条 + SEEKER 07 + 追光七载 + ENTER
+  →）→ 滚动到 #activities 展开一次（IntersectionObserver）；⚠️ 行为变更：此前「每次打开首页都弹」改为「常驻收起 + 定点展开」
+- **排障记录**：
+  - MapLibre dev 模式 worker 卡死：Vite dev 预打包的 maplibre-gl
+    worker 与 ESM 格式不兼容，astro.config.mjs 加 worker.format:'es' +
+    optimizeDeps.exclude:['maplibre-gl'] 修复（仅影响 dev，生产构建不受影响）
+  - headless
+    Chrome 最小窗口宽度 ~500px：--window-size=375 会被钳制到 500 再裁切截图，导致 judge「移动端溢出」误报——真实验证用 agent-browser
+    set viewport 375 812
+  - ECharts GeoJSON dateline 环在切换 MapLibre 后已无关（MapLibre/MapLibre GL
+    JS 支持跨日界线多边形）——但 public/geo/world-countries.json 仍保留日界线切割版（436KB→117KB
+    12% 简化版），供未来非 ECharts 场景复用
+- 验证：init.sh 全绿；浏览器回归：水印 Task
+  9 全项 + 地图 hover/flyTo/back + 角卡行为 +
+  375px 断言；judge 第二轮 hub/地图双 pass
+- 晨间复核清单（不变）+ 新增：① Safari/iOS 真机测试（本环境无法覆盖）②
+  PMTiles/Protomaps 为未来选项 ③ 角卡曝光行为已按设计稿改为「常驻收起+定点展开」（此前为每次弹出）
