@@ -11,7 +11,7 @@ import Layout from '../../layouts/Layout.astro';
 import AnniversaryHeader from '../../components/anniversary/AnniversaryHeader.astro';
 import AnniversaryFooter from '../../components/anniversary/AnniversaryFooter.astro';
 import SectionHead from '../../components/anniversary/SectionHead.astro';
-import ContactSheet from '../../components/anniversary/ContactSheet.astro';
+import AvatarWall from '../../components/anniversary/AvatarWall.astro';
 import FounderNote from '../../components/anniversary/FounderNote.astro';
 import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import ProjectTimeline from '../../components/anniversary/ProjectTimeline.astro';
@@ -54,7 +54,7 @@ import stats from '../../data/anniversary/stats.json';
           <p class="arc-copy-lead">
             七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
           </p>
-          <ContactSheet />
+          <AvatarWall />
           <dl class="arc-stats" data-countup>
             <div class="arc-stat">
               <dd data-count-to={stats.members}>{stats.members}</dd>

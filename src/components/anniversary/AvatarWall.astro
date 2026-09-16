@@ -1,0 +1,63 @@
+---
+/**
+ * 【01 七年序章 · AvatarWall】成员头像墙（单图）。
+ * 复用主站 #about 的头像墙图（R2 about/team-photo.png，1500×2500 竖版）；
+ * 后续替换横屏版时仅需更换 src 与宽高。
+ */
+const AVATAR_WALL_URL = 'https://r2.xn--seeker-ng2jm403afb4a.club/about/team-photo.png';
+---
+
+<figure class="aw">
+  <img
+    src={AVATAR_WALL_URL}
+    alt="SEEKER 成员头像墙"
+    width={1500}
+    height={2500}
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption class="aw-cap">
+    <span class="aw-cap-zh">成员头像墙</span>
+    <span class="aw-cap-en">THE MEMBER WALL</span>
+  </figcaption>
+</figure>
+
+<style>
+  .aw {
+    margin: 0;
+    width: min(100%, 22rem);
+  }
+
+  .aw img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--anniv-border);
+    background: var(--anniv-surface);
+  }
+
+  .aw-cap {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--anniv-border);
+    margin-top: 0.55rem;
+  }
+
+  .aw-cap-zh {
+    font-family: var(--anniv-serif);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--anniv-fg-secondary);
+  }
+
+  .aw-cap-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.24em;
+    color: var(--anniv-faint);
+  }
+</style>
