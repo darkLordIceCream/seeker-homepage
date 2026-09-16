@@ -1,0 +1,131 @@
+---
+/**
+ * 【02 光影札记 · FounderNote】主理人寄语——Editorial Portrait 版式。
+ * 人物叙事而非商业身份展示：真实主理人肖像 + 简介；寄语全文待内容就绪
+ * （占位标记），数据来自 src/content/members/ 真实条目，不伪造文案。
+ */
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import AwaitNote from './AwaitNote.astro';
+
+const founder = await getEntry('members', '倾斜的地平线');
+if (!founder) {
+  throw new Error('缺少成员条目：倾斜的地平线（src/content/members/）');
+}
+const { name, role, title, avatar, bio } = founder.data;
+---
+
+<div class="fn">
+  <figure class="fn-portrait">
+    <Image
+      alt={`${name} · ${role}`}       decoding="async"       densities={[1, 1.5, 2]}       loading="lazy"       src={avatar}       width={720}
+    />
+    <figcaption class="fn-cred">
+      <span class="fn-cred-name">{name}</span>
+      <span class="fn-cred-role">{role} · {title}</span>
+    </figcaption>
+  </figure>
+  <div class="fn-body">
+    <p class="fn-kicker">A NOTE FROM SEEKER</p>
+    <p class="fn-bio">{bio}</p>
+    <AwaitNote />
+    <p class="fn-sign">— {name}</p>
+  </div>
+</div>
+
+<style>
+  .fn {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .fn-portrait {
+    margin: 0;
+    max-width: 26rem;
+  }
+
+  .fn-portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .fn-cred {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--anniv-border);
+  }
+
+  .fn-cred-name {
+    font-family: var(--anniv-serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--anniv-fg);
+  }
+
+  .fn-cred-role {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--anniv-muted);
+  }
+
+  .fn-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .fn-kicker {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.38em;
+    color: var(--anniv-accent);
+  }
+
+  .fn-bio {
+    margin: 0;
+    max-width: 30em;
+    font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    line-height: 1.9;
+    color: var(--anniv-fg);
+  }
+
+  .fn-body :global(.await) {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .fn-sign {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: 0.92rem;
+    letter-spacing: 0.16em;
+    color: var(--anniv-muted);
+  }
+
+  @media (min-width: 56rem) {
+    .fn {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 4rem;
+    }
+
+    .fn-portrait {
+      flex: 2;
+      max-width: none;
+    }
+
+    .fn-body {
+      flex: 3;
+      padding-top: 1.5rem;
+    }
+  }
+</style>

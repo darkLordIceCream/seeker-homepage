@@ -1,0 +1,40 @@
+---
+/**
+ * 【03 他们的声音 · VoicesSection】成员采访章节体。
+ * 数据：src/data/anniversary/interviews.json（published=false 或列表为空时
+ * 渲染「采访待归档」占位——禁止伪造人物与内容，见规范数据原则）。
+ */
+import AwaitNote from './AwaitNote.astro';
+import InterviewStory from './InterviewStory.astro';
+import interviewsData from '../../data/anniversary/interviews.json';
+
+interface InterviewItem {
+  name: string;
+  role: string;
+  portrait?: string;
+  intro?: string;
+  interview: { question: string; answer: string }[];
+}
+
+const data = interviewsData as { published: boolean; interviews: InterviewItem[] };
+const stories = data.published ? data.interviews : [];
+---
+
+{stories.length > 0 ? stories.map(story => <InterviewStory {...story} />) : <AwaitNote />}
+<p class="vs-note">
+  {
+    stories.length > 0
+      ? `${stories.length} 位成员的讲述，持续收录中。`
+      : '我们正在记录成员与 SEEKER 的故事。'
+  }
+</p>
+
+<style>
+  .vs-note {
+    margin: 1.6rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    color: var(--anniv-faint);
+  }
+</style>

@@ -46,14 +46,9 @@ for (let i = 0; i < issues.length; i += 2) {
 <div class="cs">
   {frames.map((f, i) => (
     <figure class="cs-cell">
-      <span class="cs-no" aria-hidden="true">FRAME {String(i + 1).padStart(3, '0')}</span>
+      <span aria-hidden="true" class="cs-no">FRAME {String(i + 1).padStart(3, '0')}</span>
       <img
-        src={f.url}
-        alt={`《时间的故事》成员作品 · ${f.author}`}
-        width={f.w}
-        height={f.h}
-        loading="lazy"
-        decoding="async"
+        alt={`《时间的故事》成员作品 · ${f.author}`}         decoding="async"         height={f.h}         loading="lazy"         src={f.url}         width={f.w}
       />
       <figcaption class="cs-cap">
         <span class="cs-author">{f.author}</span>

@@ -13,6 +13,8 @@ import AnniversaryFooter from '../../components/anniversary/AnniversaryFooter.as
 import SectionHead from '../../components/anniversary/SectionHead.astro';
 import AwaitNote from '../../components/anniversary/AwaitNote.astro';
 import ContactSheet from '../../components/anniversary/ContactSheet.astro';
+import FounderNote from '../../components/anniversary/FounderNote.astro';
+import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
@@ -44,7 +46,7 @@ import stats from '../../data/anniversary/stats.json';
     <div class="arc-body" id="archive">
       <!-- 01 / 七年序章：看见我们（印样墙 + 统计 + 地图导语） -->
       <section aria-labelledby="sec-intro" class="arc-sec">
-        <SectionHead no="01" zh="七年序章" en="SEVEN YEARS, MANY FRAMES" />
+        <SectionHead en="SEVEN YEARS, MANY FRAMES" no="01" zh="七年序章" />
         <div class="arc-sec-body">
           <p class="arc-copy-lead">
             七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
@@ -64,8 +66,8 @@ import stats from '../../data/anniversary/stats.json';
               <dt>REGIONS</dt>
             </div>
           </dl>
-          <a class="arc-map" href="/7th/map/" aria-label="查看成员分布地图 WHERE WE ARE">
-            <span class="arc-map-land" aria-hidden="true"></span>
+          <a aria-label="查看成员分布地图 WHERE WE ARE" class="arc-map" href="/7th/map/">
+            <span aria-hidden="true" class="arc-map-land"></span>
             <span class="arc-map-cap">
               <span class="arc-map-cap-en">WHERE WE ARE</span>
               <span class="arc-map-cap-zh">每一个光点，都是一个追光者。</span>
@@ -77,23 +79,19 @@ import stats from '../../data/anniversary/stats.json';
 
       <!-- 02 / 光影札记：主理人寄语 -->
       <section aria-labelledby="sec-note" class="arc-sec">
-        <SectionHead no="02" zh="光影札记" en="A NOTE FROM SEEKER" />
-        <div class="arc-sec-body">
-          <AwaitNote />
-        </div>
+        <SectionHead en="A NOTE FROM SEEKER" no="02" zh="光影札记" />
+        <FounderNote />
       </section>
 
       <!-- 03 / 他们的声音：成员采访 -->
       <section aria-labelledby="sec-voices" class="arc-sec">
-        <SectionHead no="03" zh="他们的声音" en="THEIR VOICES" />
-        <div class="arc-sec-body">
-          <AwaitNote />
-        </div>
+        <SectionHead en="THEIR VOICES" no="03" zh="他们的声音" />
+        <VoicesSection />
       </section>
 
       <!-- 04 / 追光印记：项目时间线 -->
       <section aria-labelledby="sec-projects" class="arc-sec">
-        <SectionHead no="04" zh="追光印记" en="WHAT WE HAVE MADE" />
+        <SectionHead en="WHAT WE HAVE MADE" no="04" zh="追光印记" />
         <div class="arc-sec-body">
           <AwaitNote />
         </div>
@@ -101,7 +99,7 @@ import stats from '../../data/anniversary/stats.json';
 
       <!-- 05 / 同行之路：合作关系 -->
       <section aria-labelledby="sec-road" class="arc-sec">
-        <SectionHead no="05" zh="同行之路" en="THE PEOPLE WHO WALKED WITH US" />
+        <SectionHead en="THE PEOPLE WHO WALKED WITH US" no="05" zh="同行之路" />
         <div class="arc-sec-body">
           <AwaitNote />
         </div>
@@ -116,7 +114,7 @@ import stats from '../../data/anniversary/stats.json';
 
       <!-- 06 / 留光成物：Logo 与周边 -->
       <section aria-labelledby="sec-objects" class="arc-sec">
-        <SectionHead no="06" zh="留光成物" en="A FRAME TO KEEP" />
+        <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
         <div class="arc-sec-body">
           <AwaitNote />
         </div>
@@ -124,7 +122,7 @@ import stats from '../../data/anniversary/stats.json';
 
       <!-- 07 / 光影七载：Ending -->
       <section aria-labelledby="sec-ending" class="arc-ending">
-        <SectionHead no="07" zh="光影七载" en="SEVEN YEARS LATER" />
+        <SectionHead en="SEVEN YEARS LATER" no="07" zh="光影七载" />
         <div class="arc-ending-line">
           <span class="arc-ending-year">2019</span>
           <span class="arc-ending-cap">WE STARTED</span>
