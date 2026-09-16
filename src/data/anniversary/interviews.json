@@ -1,0 +1,5 @@
+{
+  "published": false,
+  "_note": "【占位】「他们的声音」成员采访。禁止伪造内容：真实采访就绪后逐条追加并置 published=true。schema：interviews[] = { id, name, role, portrait(R2 URL 或空), intro, interview: [{ question, answer }] }；问题数量不限（短/中/长采访均适配版式）。",
+  "interviews": []
+}

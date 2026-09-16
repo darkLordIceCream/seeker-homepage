@@ -1,0 +1,14 @@
+{
+  "published": false,
+  "_note": "【占位】WITH THANKS 七周年项目组鸣谢名单。禁止伪造内容：名单确认后逐组填入并置 published=true。groups[].role 固定分组，people 为姓名数组。",
+  "project": "七周年项目组",
+  "groups": [
+    { "role": "项目负责人", "people": [] },
+    { "role": "设计", "people": [] },
+    { "role": "开发", "people": [] },
+    { "role": "摄影", "people": [] },
+    { "role": "内容", "people": [] },
+    { "role": "采访", "people": [] },
+    { "role": "地图", "people": [] }
+  ]
+}

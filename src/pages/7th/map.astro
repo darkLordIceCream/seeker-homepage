@@ -8,7 +8,7 @@ import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import Footer from '../../components/Footer.astro';
 import MapWall from '../../components/anniversary/MapWall.astro';
-import { MAP_STATS } from '../../data/anniversary/map-points';
+import stats from '../../data/anniversary/stats.json';
 ---
 
 <Layout
@@ -22,15 +22,15 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
       <h1 class="ww-title">每一个光点，<br />都是一个追光者。</h1>
       <dl class="ww-stats" data-countup>
         <div class="ww-stat">
-          <dd data-count-to={MAP_STATS.members}>0</dd>
+          <dd data-count-to={stats.members}>{stats.members}</dd>
           <dt>SEEKERS</dt>
         </div>
         <div class="ww-stat">
-          <dd data-count-to={MAP_STATS.countries}>0</dd>
+          <dd data-count-to={stats.countries}>{stats.countries}</dd>
           <dt>COUNTRIES</dt>
         </div>
         <div class="ww-stat">
-          <dd data-count-to={MAP_STATS.provinces}>0</dd>
+          <dd data-count-to={stats.regions}>{stats.regions}</dd>
           <dt>REGIONS</dt>
         </div>
       </dl>
@@ -47,15 +47,15 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 </Layout>
 
 <script>
-  // Count Up（与 /7th/ 同一模式）
+  // Count Up（与 /7th/ 同一模式：直出终值，进入视口才从 0 增强）
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nums = document.querySelectorAll<HTMLElement>('[data-countup] [data-count-to]');
   const animate = (node: HTMLElement) => {
     const target = Number(node.dataset.countTo ?? '0');
     if (REDUCED) {
-      node.textContent = String(target);
       return;
     }
+    node.textContent = '0';
     const start = performance.now();
     const DUR = 900;
     const tick = (now: number) => {
@@ -76,7 +76,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
         }
       }
     },
-    { threshold: 0.4 },
+    { threshold: 0.4 }
   );
   nums.forEach(n => io.observe(n));
 </script>

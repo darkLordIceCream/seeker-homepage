@@ -35,8 +35,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     width: 100%;
     height: clamp(460px, 82vh, 860px);
     border: 1px solid var(--anniv-border);
-    background: #060607;
+    background: var(--anniv-map-bg);
     overflow: hidden;
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
   }
 
   .ww-map {
@@ -45,7 +48,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
   }
 
   :global(.ww-frame .maplibregl-ctrl-group) {
-    background: rgba(14, 14, 17, 0.9);
+    background: color-mix(in srgb, var(--anniv-surface) 90%, transparent);
     border: 1px solid var(--anniv-border);
     border-radius: 0;
   }
@@ -55,7 +58,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
   }
 
   :global(.ww-frame .maplibregl-ctrl-group button:hover) {
-    background: rgba(242, 240, 235, 0.08);
+    background: color-mix(in srgb, var(--anniv-fg) 8%, transparent);
   }
 
   :global(.ww-frame .maplibregl-ctrl-group button + button) {
@@ -66,13 +69,18 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     filter: invert(0.92);
   }
 
+  /* 浅色（纸面）主题：控件图标不再反白 */
+  :global(html[data-theme='light'] .ww-frame .maplibregl-ctrl-group button span) {
+    filter: none;
+  }
+
   .ww-skeleton {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #060607;
+    background: var(--anniv-map-bg);
     z-index: 2;
     transition: opacity var(--dur-normal) ease;
   }
@@ -112,10 +120,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     font-weight: 600;
     letter-spacing: 0.22em;
     color: var(--anniv-fg);
-    background: rgba(14, 14, 17, 0.88);
+    background: color-mix(in srgb, var(--anniv-surface) 88%, transparent);
     border: 1px solid var(--anniv-border);
     cursor: pointer;
-    transition: border-color var(--dur-fast) ease;
+    transition:
+      border-color var(--dur-fast) ease,
+      background-color var(--dur-normal) ease;
   }
 
   .ww-back:hover {
@@ -127,7 +137,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     z-index: 4;
     pointer-events: none;
     padding: 0.45rem 0.8rem;
-    background: rgba(14, 14, 17, 0.94);
+    background: color-mix(in srgb, var(--anniv-surface) 94%, transparent);
     border: 1px solid var(--anniv-accent);
     color: var(--anniv-fg);
     font-family: 'Archivo', sans-serif;
@@ -336,8 +346,18 @@ import 'maplibre-gl/dist/maplibre-gl.css';
         return;
       }
       const nameZh = (f.properties as { nameZh?: string }).nameZh ?? '';
-      if (nameZh.endsWith('省') || nameZh.endsWith('市') || nameZh.includes('自治区') || nameZh.includes('特别行政区')) {
-        map.flyTo({ center: [104.5, 35.5], zoom: 3.6, duration: REDUCED ? 0 : 1600, essential: true });
+      if (
+        nameZh.endsWith('省') ||
+        nameZh.endsWith('市') ||
+        nameZh.includes('自治区') ||
+        nameZh.includes('特别行政区')
+      ) {
+        map.flyTo({
+          center: [104.5, 35.5],
+          zoom: 3.6,
+          duration: REDUCED ? 0 : 1600,
+          essential: true,
+        });
         backBtn.hidden = false;
       }
     });

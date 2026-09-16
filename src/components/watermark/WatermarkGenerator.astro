@@ -13,7 +13,7 @@
  * 逻辑层：render.ts / gestures.ts / template.ts（零改动）。
  */
 import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
-import { MAP_STATS } from '../../data/anniversary/map-points';
+import stats from '../../data/anniversary/stats.json';
 ---
 
 <div class="dr" data-darkroom>
@@ -49,8 +49,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
           data-tip="SAFE AREA · 点击修改昵称"
           hidden
           id="wm-nick-hit"
-          type="button"
-        ></button>
+          type="button"></button>
         <!-- 光线扫过动画层 -->
         <div aria-hidden="true" class="dr-sweep" id="dr-sweep"></div>
       </div>
@@ -95,9 +94,20 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
         <span class="dr-ctrl-label">SCALE</span>
         <div class="dr-scale-row">
           <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
-          <input aria-label="缩放照片" disabled id="wm-zoom" max="4" min="1" step="0.01" type="range" value="1" />
+          <input
+            aria-label="缩放照片"
+            disabled
+            id="wm-zoom"
+            max="4"
+            min="1"
+            step="0.01"
+            type="range"
+            value="1"
+          />
           <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
-          <button aria-label="重置位置与缩放" class="dr-reset" disabled id="wm-reset" type="button">↺</button>
+          <button aria-label="重置位置与缩放" class="dr-reset" disabled id="wm-reset" type="button"
+            >↺</button
+          >
         </div>
       </div>
     </div>
@@ -117,7 +127,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
     </div>
 
     <p class="dr-note">
-      与 {MAP_STATS.members} 位追光者一起，把光赠予远方 · 照片仅在本地处理，不会上传
+      与 {stats.members} 位追光者一起，把光赠予远方 · 照片仅在本地处理，不会上传
     </p>
   </section>
 
@@ -197,7 +207,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   const popInput = required('wm-pop-input', HTMLInputElement);
   const popCount = required('wm-pop-count', HTMLElement);
   const tplButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]'),
+    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]')
   );
 
   let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
@@ -250,7 +260,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const scale = Math.max(
         Math.min((cssWidth * dpr) / currentTemplate.width, 1600 / currentTemplate.width),
-        0.2,
+        0.2
       );
       renderComposition(canvas, {
         template: currentTemplate,
@@ -354,14 +364,14 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
         requestRender();
       }
       setStatus(
-        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`,
+        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`
       );
     } catch (error) {
       setStatus(
         error instanceof PhotoDecodeError
           ? '这张照片无法在浏览器中解码，请改用 JPG / PNG 格式（iPhone 可在「设置 → 相机 → 格式」选「兼容性最佳」后重新保存）。'
           : '照片读取失败，请重试。',
-        true,
+        true
       );
     }
   }
@@ -462,7 +472,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
     const n = currentTemplate.nickname;
     const estWidth = Math.min(
       n.maxWidth,
-      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2,
+      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2
     );
     nickHit.style.left = `${((n.x - estWidth / 2 - 14) / currentTemplate.width) * 100}%`;
     nickHit.style.top = `${((n.y - n.fontSize * 1.5 - 10) / currentTemplate.height) * 100}%`;
@@ -810,7 +820,10 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   .dr-stage {
     position: relative;
     border: 1px solid var(--anniv-border);
-    background: #030304;
+    background: var(--anniv-surface-soft);
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
   }
 
   .dr-stage.is-dragover {
@@ -834,7 +847,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   .dr-safe {
     position: absolute;
     background: transparent;
-    border: 1px dashed rgba(232, 199, 102, 0.55);
+    border: 1px dashed color-mix(in srgb, var(--anniv-accent) 55%, transparent);
     border-radius: 2px;
     cursor: text;
     opacity: 0;
@@ -844,7 +857,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   .dr-safe:hover,
   .dr-safe:focus-visible {
     opacity: 1;
-    background: rgba(232, 199, 102, 0.06);
+    background: color-mix(in srgb, var(--anniv-accent) 6%, transparent);
     outline: none;
   }
 
@@ -939,7 +952,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 
   .dr-format[aria-pressed='true'] {
     border-color: var(--anniv-accent);
-    background: rgba(232, 199, 102, 0.06);
+    background: color-mix(in srgb, var(--anniv-accent) 6%, transparent);
   }
 
   .dr-format-box {
@@ -960,7 +973,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 
   .dr-format[aria-pressed='true'] .dr-format-box {
     color: var(--anniv-accent);
-    background: rgba(232, 199, 102, 0.18);
+    background: color-mix(in srgb, var(--anniv-accent) 18%, transparent);
   }
 
   .dr-format-name {
@@ -1162,8 +1175,8 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
   }
 
   .dr-toast.is-error {
-    color: #e88080;
-    border-color: rgba(232, 128, 128, 0.4);
+    color: var(--anniv-error);
+    border-color: color-mix(in srgb, var(--anniv-error) 40%, transparent);
   }
 
   [hidden] {

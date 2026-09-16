@@ -1,0 +1,6 @@
+{
+  "members": 825,
+  "countries": 15,
+  "regions": 34,
+  "_note": "【占位数据】七周年头部统计唯一权威源（/7th/ 与 /7th/map/ 共用，禁止在组件里硬编码）。上线前替换为真实统计。regions = 中国省级行政区数；三个数字需与 map-points.ts 的明细分布（PROVINCE_POINTS / COUNTRY_POINTS）保持一致——更新明细时请同步本文件。"
+}

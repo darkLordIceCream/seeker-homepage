@@ -9,11 +9,12 @@
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import Footer from '../../components/Footer.astro';
-import { MAP_STATS } from '../../data/anniversary/map-points';
+import stats from '../../data/anniversary/stats.json';
 ---
 
 <Layout
-  description="SEEKER 07 · YEARS OF LIGHT · 2019—2026。追光七载，把光赠予远方——七年摄影档案：水印工坊、成员地图墙、七周年手记。"   title="Seeker 七周年"
+  description="SEEKER 07 · YEARS OF LIGHT · 2019—2026。追光七载，把光赠予远方——七年摄影档案：水印工坊、成员地图墙、七周年手记。"
+  title="Seeker 七周年"
 >
   <Navigation />
   <main class="arc" id="main-content">
@@ -32,7 +33,9 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
       <section aria-labelledby="sec-anniversary" class="arc-sec">
         <div class="arc-sec-head">
           <span class="arc-sec-no">01</span>
-          <h2 class="arc-sec-title" id="sec-anniversary">ANNIVERSARY<span class="arc-sec-zh">纪念</span></h2>
+          <h2 class="arc-sec-title" id="sec-anniversary">
+            ANNIVERSARY<span class="arc-sec-zh">纪念</span>
+          </h2>
         </div>
         <div class="arc-sec-body arc-sec-body--tilt">
           <div class="arc-copy">
@@ -53,21 +56,23 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
       <section aria-labelledby="sec-people" class="arc-sec">
         <div class="arc-sec-head">
           <span class="arc-sec-no">02</span>
-          <h2 class="arc-sec-title" id="sec-people">PEOPLE<span class="arc-sec-zh">追光者</span></h2>
+          <h2 class="arc-sec-title" id="sec-people">
+            PEOPLE<span class="arc-sec-zh">追光者</span>
+          </h2>
         </div>
         <div class="arc-sec-body">
           <p class="arc-copy-lead">每一个光点，都是一个追光者。</p>
           <dl class="arc-stats" data-countup>
             <div class="arc-stat">
-              <dd data-count-to={MAP_STATS.members}>0</dd>
+              <dd data-count-to={stats.members}>{stats.members}</dd>
               <dt>SEEKERS</dt>
             </div>
             <div class="arc-stat">
-              <dd data-count-to={MAP_STATS.countries}>0</dd>
+              <dd data-count-to={stats.countries}>{stats.countries}</dd>
               <dt>COUNTRIES</dt>
             </div>
             <div class="arc-stat">
-              <dd data-count-to={MAP_STATS.provinces}>0</dd>
+              <dd data-count-to={stats.regions}>{stats.regions}</dd>
               <dt>REGIONS</dt>
             </div>
           </dl>
@@ -111,15 +116,16 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
 </Layout>
 
 <script>
-  // Count Up：统计数字进入视口后从 0 滚动到终值（reduced-motion 直接显示终值）
+  // Count Up：HTML 直出终值（no-JS / 未进入视口恒显真实数字），JS 增强仅在
+  // 元素进入视口后从 0 滚动到终值（reduced-motion 不做动画，保持直出值）
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nums = document.querySelectorAll<HTMLElement>('[data-countup] [data-count-to]');
   const animate = (el: HTMLElement) => {
     const target = Number(el.dataset.countTo ?? '0');
     if (REDUCED) {
-      el.textContent = String(target);
       return;
     }
+    el.textContent = '0';
     const start = performance.now();
     const DUR = 900;
     const tick = (now: number) => {
@@ -141,7 +147,7 @@ import { MAP_STATS } from '../../data/anniversary/map-points';
         }
       }
     },
-    { threshold: 0.4 },
+    { threshold: 0.4 }
   );
   nums.forEach(n => io.observe(n));
 </script>

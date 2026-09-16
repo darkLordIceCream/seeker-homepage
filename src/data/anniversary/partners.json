@@ -1,0 +1,5 @@
+{
+  "published": false,
+  "_note": "【占位】「同行之路」长期合作关系（品牌 / 摄影社区 / 地方分部 / 高校摄影联盟）。禁止伪造内容：就绪后逐条追加并置 published=true。schema：partners[] = { id, name, kind: 'brand' | 'community' | 'chapter' | 'university', blurb, story? }。",
+  "partners": []
+}
