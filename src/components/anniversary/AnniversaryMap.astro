@@ -1,0 +1,363 @@
+---
+/**
+ * 【01 七年序章 · WHERE WE ARE】嵌入式地图章节。
+ * 取代旧的静态地图预览与 /7th/map/ 独立页：地图成为章节本身。
+ *
+ * 滚动五阶段（进度由 scroll-story 引擎派发，本组件只消费）：
+ *   World（安静出现）→ First Light（成员多的点先亮）→ Seven Years（全部点亮）
+ *   → People（hover/click 省份 tooltip）→ Exit（WE WERE HERE. 收尾）。
+ *
+ * 性能：懒加载——挂载点接近视口（rootMargin 800px）才动态 import maplibre
+ * 并拉取 GeoJSON；reduced-motion / 无进度事件时地图直接呈现完整点亮状态。
+ * 复用：mapStyle.ts 双主题风格、anniv-world 数据、anniv-theme-change 主题联动、
+ * anniv-you-are-here 事件（暗房 ✦ YOU ARE HERE 标注，会话内展示不落库）。
+ */
+import 'maplibre-gl/dist/maplibre-gl.css';
+---
+
+<div class="am" id="where-we-are" data-story-scene="map">
+  <div class="am-stage">
+    <p class="am-eyebrow" data-map-eyebrow>WHERE WE ARE</p>
+    <div class="am-mount" data-map-mount>
+      <div class="am-skeleton" data-map-skeleton>
+        <span class="am-skeleton-hint">WHERE WE ARE…</span>
+      </div>
+    </div>
+    <div class="am-exit" data-map-exit>
+      <p class="am-exit-en">WE WERE HERE.<br />AND WE ARE STILL LOOKING.</p>
+      <p class="am-exit-zh">七年来，我们走到了世界各地。</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .am {
+    text-align: center;
+  }
+
+  /* 滚动轨道：钉住舞台的地图叙事时长（story-on 由引擎加在 main 上，跨组件用 :global） */
+  :global(.story-on) .am {
+    height: 260vh;
+  }
+
+  @media (max-width: 48rem) {
+    :global(.story-on) .am {
+      height: 200vh;
+    }
+
+    .am-mount {
+      height: min(56vh, 480px);
+    }
+  }
+
+  .am-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  :global(.story-on) .am-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    justify-content: center;
+    padding: calc(64px + 2rem) 0 2rem;
+    overflow: hidden;
+  }
+
+  .am-eyebrow {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    color: var(--anniv-accent);
+  }
+
+  .am-mount {
+    position: relative;
+    width: 100%;
+    height: clamp(420px, 74vh, 780px);
+    border: 1px solid var(--anniv-border);
+    background: var(--anniv-map-bg);
+    overflow: hidden;
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+
+  .am-skeleton {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: opacity var(--dur-normal) ease;
+  }
+
+  .am-skeleton-hint {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: var(--anniv-faint);
+    animation: am-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes am-pulse {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .am-skeleton-hint {
+      animation: none;
+    }
+  }
+
+  .am-exit {
+    margin: 0 auto;
+  }
+
+  .am-exit-en {
+    margin: 0 0 0.7rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    line-height: 1.7;
+    color: var(--anniv-fg);
+  }
+
+  .am-exit-zh {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: 0.9rem;
+    letter-spacing: 0.16em;
+    color: var(--anniv-muted);
+  }
+
+  /* YOU ARE HERE 标注（MapLibre Marker 自定义元素，规避 symbol 文本的 glyphs 依赖） */
+  .am :global(.am-you) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    pointer-events: none;
+  }
+
+  .am :global(.am-you-star) {
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--anniv-accent);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--anniv-accent) 80%, transparent);
+  }
+
+  .am :global(.am-you-label) {
+    padding: 0.3rem 0.7rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    white-space: nowrap;
+    color: var(--anniv-bg);
+    background: var(--anniv-accent);
+  }
+
+  .am :global(.am-tip) {
+    position: absolute;
+    z-index: 4;
+    pointer-events: none;
+    padding: 0.45rem 0.8rem;
+    background: color-mix(in srgb, var(--anniv-surface) 94%, transparent);
+    border: 1px solid var(--anniv-accent);
+    color: var(--anniv-fg);
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+  }
+
+  .am :global(.am-tip-count) {
+    color: var(--anniv-accent);
+    margin-left: 0.6em;
+  }
+</style>
+
+<script>
+  import { POINT_OPACITY } from '../../lib/anniversary/mapStyle';
+  import type { Marker } from 'maplibre-gl';
+  import type { GeoJSON } from 'geojson';
+
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const track = document.querySelector<HTMLElement>('[data-story-scene=map]');
+  const mount = document.querySelector<HTMLElement>('[data-map-mount]');
+  const skeleton = document.querySelector<HTMLElement>('[data-map-skeleton]');
+
+  const currentTheme = () =>
+    document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+
+  async function initMap(): Promise<void> {
+    if (!mount) {
+      return;
+    }
+    const [maplibregl, geo, style] = await Promise.all([
+      import('maplibre-gl'),
+      fetch('/geo/anniv-world.json').then(r => {
+        if (!r.ok) {
+          throw new Error(`地图数据加载失败：HTTP ${r.status}`);
+        }
+        return r.json() as Promise<GeoJSON>;
+      }),
+      import('../../lib/anniversary/mapStyle'),
+    ]);
+
+    const map = new maplibregl.Map({
+      container: mount,
+      style: style.buildMapStyle(currentTheme(), geo),
+      center: [30, 26],
+      zoom: 1.15,
+      minZoom: 0.8,
+      maxZoom: 7,
+      cooperativeGestures: true,
+      attributionControl: false,
+    });
+    map.on('error', e => {
+      console.warn('[anniv-map]', e.error?.message ?? e.error);
+    });
+    map.touchZoomRotate.disableRotation();
+
+    // 主题联动
+    window.addEventListener('anniv-theme-change', event => {
+      const { detail } = event as CustomEvent<{ theme: 'dark' | 'light' }>;
+      map.setStyle(style.buildMapStyle(detail?.theme === 'light' ? 'light' : 'dark', geo));
+    });
+
+    map.on('load', () => {
+      if (skeleton) {
+        skeleton.style.opacity = '0';
+        window.setTimeout(() => {
+          skeleton.style.display = 'none';
+        }, 350);
+      }
+      if (!REDUCED) {
+        // 滚动叙事接管透明度：先熄灭，等进度事件分阶段点亮
+        map.setPaintProperty('member-glow', 'circle-opacity', 0);
+        map.setPaintProperty('member-point', 'circle-opacity', 0);
+      }
+    });
+
+    // 滚动进度 → 灯光阶段（引擎派发；reduced-motion 下引擎不存在，保持全亮）
+    let last = -1;
+    window.addEventListener('anniv-map-progress', event => {
+      const { detail } = event as CustomEvent<{ progress: number }>;
+      const p = detail?.progress ?? 1;
+      if (REDUCED || Math.abs(p - last) < 0.004) {
+        return;
+      }
+      last = p;
+      const full = Math.min(1, Math.max(0, (p - 0.15) / 0.3)); // First Light → Seven Years
+      try {
+        map.setPaintProperty('member-glow', 'circle-opacity', POINT_OPACITY.glow * full);
+        map.setPaintProperty('member-point', 'circle-opacity', POINT_OPACITY.point * full);
+      } catch {
+        /* 图层未就绪时忽略（load 前不会收到进度事件） */
+      }
+    });
+
+    // YOU ARE HERE：暗房位置确认后点亮 ✦（会话内展示，不落库不保存）
+    let youMarker: Marker | null = null;
+    window.addEventListener('anniv-you-are-here', event => {
+      const { detail } = event as CustomEvent<{ lngLat: [number, number] }>;
+      if (!detail?.lngLat) {
+        return;
+      }
+      const el = document.createElement('div');
+      el.className = 'am-you';
+      const star = document.createElement('div');
+      star.className = 'am-you-star';
+      star.textContent = '✦';
+      const label = document.createElement('div');
+      label.className = 'am-you-label';
+      label.textContent = 'YOU ARE HERE';
+      el.append(star, label);
+      if (youMarker) {
+        youMarker.setLngLat(detail.lngLat);
+      } else {
+        youMarker = new maplibregl.Marker({ element: el, anchor: 'center' })
+          .setLngLat(detail.lngLat)
+          .addTo(map);
+      }
+      map.easeTo({ center: detail.lngLat, zoom: 3.2, duration: REDUCED ? 0 : 1400, essential: true });
+    });
+
+    // People 阶段：hover 高亮 + tooltip（真实数据，不虚构）
+    const tip = document.createElement('div');
+    tip.className = 'am-tip';
+    tip.hidden = true;
+    mount.appendChild(tip);
+    const hovered: { id?: number | string } = { id: undefined };
+
+    map.on('mousemove', 'region-fill', e => {
+      map.getCanvas().style.cursor = 'pointer';
+      const f = e.features?.[0];
+      if (!f) {
+        return;
+      }
+      if (hovered.id !== undefined) {
+        map.setFeatureState({ source: 'anniv', id: hovered.id }, { hover: false });
+      }
+      hovered.id = f.id;
+      if (hovered.id !== undefined) {
+        map.setFeatureState({ source: 'anniv', id: hovered.id }, { hover: true });
+      }
+      const props = f.properties as { nameZh?: string; memberCount?: number; name?: string };
+      const count = props.memberCount ?? 0;
+      const name = props.nameZh ?? props.name ?? '';
+      tip.innerHTML = `${(name as string).toUpperCase()}<span class="am-tip-count">${count} SEEKERS</span>`;
+      tip.hidden = false;
+    });
+
+    map.on('mousemove', e => {
+      if (tip.hidden) {
+        return;
+      }
+      tip.style.left = `${e.point.x + 14}px`;
+      tip.style.top = `${e.point.y + 12}px`;
+    });
+
+    map.on('mouseleave', 'region-fill', () => {
+      map.getCanvas().style.cursor = '';
+      tip.hidden = true;
+      if (hovered.id !== undefined) {
+        map.setFeatureState({ source: 'anniv', id: hovered.id }, { hover: false });
+        hovered.id = undefined;
+      }
+    });
+  }
+
+  // 懒加载：接近视口（含余量）才初始化地图
+  if (track && mount) {
+    const io = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          io.disconnect();
+          initMap().catch(() => {
+            const hint = skeleton?.querySelector('.am-skeleton-hint');
+            if (hint) {
+              hint.textContent = '地图加载失败，请刷新重试';
+            }
+          });
+        }
+      },
+      { rootMargin: '800px 0px' },
+    );
+    io.observe(track);
+  }
+</script>

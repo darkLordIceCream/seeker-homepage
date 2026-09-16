@@ -245,6 +245,34 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     };
   },
+
+  /**
+   * 地图章节（WHERE WE ARE）：眉题浮现 → 灯光阶段 → Exit 收尾文案。
+   * 进度本身以事件派发给 AnniversaryMap（地图实例在其内部，懒加载）。
+   */
+  map: track => {
+    const eyebrow = track.querySelector<HTMLElement>('[data-map-eyebrow]');
+    const exit = track.querySelector<HTMLElement>('[data-map-exit]');
+    let last = -1;
+    return ({ progress: p }) => {
+      if (eyebrow) {
+        const t = ramp(p, 0, 0.12);
+        eyebrow.style.opacity = t.toFixed(3);
+        eyebrow.style.transform = `translateY(${(14 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (exit) {
+        const t = ramp(p, 0.82, 0.96);
+        exit.style.opacity = t.toFixed(3);
+        exit.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (Math.abs(p - last) >= 0.004) {
+        last = p;
+        window.dispatchEvent(
+          new CustomEvent('anniv-map-progress', { detail: { progress: p } }),
+        );
+      }
+    };
+  },
 };
 
 /**
