@@ -1121,111 +1121,95 @@ token 与 refresh_token 均已过期（原过期时间 2026-07-09），wrangler 
 ### 背景
 
 用户转来高手第二版设计规范（SEEKER 07 · Digital Photobook / Anniversary
-Archive）：把 /7th/ 从「功能页」升级为「可在网页中阅读的摄影纪念册」，七章叙事 +
-独立深/浅双主题 + 首页双入口重定位。三个决策已与用户确认：①版式全建 +
-优雅占位（数据文件带 published 开关）②独立双主题（默认深色、☼/☾ 切换、
-seeker-7th-theme localStorage、与主站无关）③水印保留 JPEG q0.92（规范写
-PNG，但 2084×3705 的 PNG 约 8-15MB/张 vs JPEG 0.3MB，按「不为重构重写可用
-逻辑」原则保留 JPEG，差异已在此注明）。
+Archive）：把 /7th/ 从「功能页」升级为「可在网页中阅读的摄影纪念册」，七章叙事 + 独立深/浅双主题 + 首页双入口重定位。三个决策已与用户确认：①版式全建 + 优雅占位（数据文件带 published 开关）②独立双主题（默认深色、☼/☾ 切换、seeker-7th-theme
+localStorage、与主站无关）③水印保留 JPEG
+q0.92（规范写 PNG，但 2084×3705 的 PNG 约 8-15MB/张 vs JPEG
+0.3MB，按「不为重构重写可用逻辑」原则保留 JPEG，差异已在此注明）。
 
 ### What's Done（feat-026，9 个 commit）
 
-- **93620b6 数据底座 + 双主题令牌**：src/data/anniversary/ 新增 stats.json
-  （825/15/34 唯一权威源）+ interviews/partners/merchandise/thanks.json
-  （published 开关 + schema 注释，禁止伪造内容）；--anniv-* 令牌升级双主题集
-  （默认深色暗房 + html[data-theme='light'] 暖纸印刷感，新增 surface-soft /
-  fg-secondary / border-strong / accent-soft / error / map-bg·land·border·point·point-halo）；
-  MapWall / WatermarkGenerator / AnniversaryCard 硬编码 hex 全部令牌化
-  （color-mix 表达透明度变体）；统计 0 闪烁修复（HTML 直出终值，JS 仅在进入
-  视口后从 0 增强——规范 #7 的「0 SEEKERS」即此 bug）；水印页统计改读 stats.json
+- **93620b6 数据底座 + 双主题令牌**：src/data/anniversary/ 新增 stats.json（825/15/34 唯一权威源）+
+  interviews/partners/merchandise/thanks.json（published 开关 +
+  schema 注释，禁止伪造内容）；--anniv-* 令牌升级双主题集（默认深色暗房 +
+  html[data-theme='light'] 暖纸印刷感，新增 surface-soft / fg-secondary /
+  border-strong / accent-soft / error /
+  map-bg·land·border·point·point-halo）；MapWall / WatermarkGenerator /
+  AnniversaryCard 硬编码 hex 全部令牌化（color-mix 表达透明度变体）；统计 0 闪烁修复（HTML 直出终值，JS 仅在进入视口后从 0 增强——规范 #7 的「0
+  SEEKERS」即此 bug）；水印页统计改读 stats.json
 - **62f96e7 独立主题系统 + 纪念册页头页脚**：AnniversaryHeader（← SEEKER /
-  SEEKER 07 YEARS OF LIGHT 字标 / ☼☾ 小切换，写 localStorage + 派发
-  anniv-theme-change）+ AnniversaryFooter（光影七载，看见彼此。/ 2019 — 2026 /
-  拍一张照片，交一个朋友。/ © 2026 SEEKER）；三页替换主站 Navigation/Footer，
-  Layout head slot 注入防闪烁 inline 脚本（默认 dark）；color-scheme 联动
+  SEEKER 07 YEARS OF LIGHT 字标 /
+  ☼☾ 小切换，写 localStorage + 派发 anniv-theme-change）+
+  AnniversaryFooter（光影七载，看见彼此。/ 2019 — 2026
+  / 拍一张照片，交一个朋友。/ © 2026
+  SEEKER）；三页替换主站 Navigation/Footer，Layout head
+  slot 注入防闪烁 inline 脚本（默认 dark）；color-scheme 联动
 - **516f2ba 七章骨架 + 首页双入口**：/7th/ 重写为 HERO → 01-07 → LEAVE YOUR
-  FRAME → WITH THANKS 骨架（SectionHead 编号/中文大字/英文辅助 + AwaitNote
-  「AWAITING ARCHIVE 空相框」优雅占位组件）；Hero 主文案换「光影七载，看见
-  彼此。」（旧标语降级为 Ending 辅助行）；ActsSection 删第四张拍立得卡，改为
-  栈下「07 / SEVEN YEARS」暗房特殊块（理性入口）；AnniversaryCard 重写为
-  「藏着一张照片」感性入口——构建期从 ACTIVITY_IMAGE_META 抽样 28 张真实成员
-  照片池（过滤封面/组委会图），define:vars 注入客户端每次加载随机取一张，
-  桌面 hover 轻展开（SEEKER 07 / 光影七载，看见彼此。/ ENTER →，无弹跳），
-  移动端 6.4rem 图块直达
-- **8eedea8 01 七年序章**：ContactSheet 胶片接触印样墙——构建期从 activities
-  集合每两期抽一帧（真实照片 + 真实作者署名 + 期数，跨 2021→2026），统一
-  3:2 印样画幅（object-fit cover）+ FRAME 编号 + 1px 细线网格；地图静态预览：
-  scripts/build-map-preview.mjs 从 anniv-world.json 生成 145KB 简化 SVG
-  （equirectangular + 0.6° 量化 + 共线去除），以 CSS mask 呈现、fill 走
-  --anniv-map-* 令牌（双主题自适应、零 JS）
+  FRAME → WITH THANKS 骨架（SectionHead 编号/中文大字/英文辅助 +
+  AwaitNote「AWAITING
+  ARCHIVE 空相框」优雅占位组件）；Hero 主文案换「光影七载，看见彼此。」（旧标语降级为 Ending 辅助行）；ActsSection 删第四张拍立得卡，改为栈下「07
+  / SEVEN
+  YEARS」暗房特殊块（理性入口）；AnniversaryCard 重写为「藏着一张照片」感性入口——构建期从 ACTIVITY_IMAGE_META 抽样 28 张真实成员照片池（过滤封面/组委会图），define:vars 注入客户端每次加载随机取一张，桌面 hover 轻展开（SEEKER
+  07 / 光影七载，看见彼此。/ ENTER →，无弹跳），移动端 6.4rem 图块直达
+- **8eedea8
+  01 七年序章**：ContactSheet 胶片接触印样墙——构建期从 activities 集合每两期抽一帧（真实照片 + 真实作者署名 + 期数，跨 2021→2026），统一 3:2 印样画幅（object-fit
+  cover）+ FRAME 编号 +
+  1px 细线网格；地图静态预览：scripts/build-map-preview.mjs 从 anniv-world.json 生成 145KB 简化 SVG（equirectangular +
+  0.6° 量化 + 共线去除），以 CSS
+  mask 呈现、fill 走 --anniv-map-* 令牌（双主题自适应、零 JS）
 - **e8a21a6 02 + 03**：FounderNote（真实主理人肖像 astro:assets 优化 +
   Editorial 版式 + 寄语占位 + 真实 bio/署名）；VoicesSection +
-  InterviewStory（大幅肖像/字框占位 + 姓名/身份 + Q/A 版式，问题数不写死，
-  interviews.json 就绪前渲染占位）
-- **ff6c349 04 + 05**：ProjectTimeline 真实时间线——activities 64 期按年分组
-  （年份大字 + 期数标签 + 当年最新一期真实封面 + 阅读链接）+ 3 篇公益项目
-  （标题/摘要/封面/链接全真实）；时间线主轴深色光轨/浅色墨线（纯令牌）；
-  SharedRoad 十字关系网（品牌/社区─SEEKER─高校/地方分部 editorial 细线
-  节点，非 Logo Wall），partners.json 就绪前展示骨架 + 占位
-- **6b1b41a 06 + WITH THANKS**：ObjectsSection 展示真实设计物（七周年纪念框
-  正/横版 webp = 水印工坊线上同款，OBJ.01/02 档案编号图注）+ 周边占位；
-  Thanks 分组鸣谢版式（角色金标 + 衬线人名，名单未确认前占位）
-- **2caa394 地图双主题**：src/lib/anniversary/mapStyle.ts 生成深色（暗房
-  光点）/浅色（纸面墨点）两套 StyleSpecification；MapWall 监听
-  anniv-theme-change 调 map.setStyle() 实时切换（generateId 保证
-  feature-state 稳定）；入场渐亮动画透明度收敛为 POINT_OPACITY 常量
-- **23c53f1 关键修复批次**（回归中发现，见排障记录）：光点改区域代表点源；
-  生产包补齐 MapLibre worker；SharedRoad 移动端溢出修复；印样墙统一画幅
+  InterviewStory（大幅肖像/字框占位 + 姓名/身份 +
+  Q/A 版式，问题数不写死，interviews.json 就绪前渲染占位）
+- **ff6c349 04 + 05**：ProjectTimeline 真实时间线——activities
+  64 期按年分组（年份大字 + 期数标签 + 当年最新一期真实封面 + 阅读链接）+
+  3 篇公益项目（标题/摘要/封面/链接全真实）；时间线主轴深色光轨/浅色墨线（纯令牌）；SharedRoad 十字关系网（品牌/社区─SEEKER─高校/地方分部 editorial 细线节点，非 Logo
+  Wall），partners.json 就绪前展示骨架 + 占位
+- **6b1b41a 06 + WITH
+  THANKS**：ObjectsSection 展示真实设计物（七周年纪念框正/横版 webp
+  = 水印工坊线上同款，OBJ.01/02 档案编号图注）+ 周边占位；Thanks 分组鸣谢版式（角色金标 + 衬线人名，名单未确认前占位）
+- **2caa394 地图双主题**：src/lib/anniversary/mapStyle.ts 生成深色（暗房光点）/浅色（纸面墨点）两套 StyleSpecification；MapWall 监听 anniv-theme-change 调 map.setStyle() 实时切换（generateId 保证 feature-state 稳定）；入场渐亮动画透明度收敛为 POINT_OPACITY 常量
+- **23c53f1 关键修复批次**（回归中发现，见排障记录）：光点改区域代表点源；生产包补齐 MapLibre
+  worker；SharedRoad 移动端溢出修复；印样墙统一画幅
 
 ### 排障记录（本会话重点）
 
-1. **生产环境地图静默卡死（严重，自 feat-025 MapLibre 迁移起就存在，此前
-   仅验证过 dev）**：astro preview 下地图 canvas 已创建但 load 永不触发、
-   无任何报错。定位过程：Blob Worker 探针正常 → agent-browser --init-script
-   劫持 Worker 构造器抓到 `WORKER-ERROR` 指向 `/_astro/maplibre-gl-worker.mjs`
+1. **生产环境地图静默卡死（严重，自 feat-025
+   MapLibre 迁移起就存在，此前仅验证过 dev）**：astro
+   preview 下地图 canvas 已创建但 load 永不触发、无任何报错。定位过程：Blob
+   Worker 探针正常 → agent-browser --init-script 劫持 Worker 构造器抓到
+   `WORKER-ERROR` 指向 `/_astro/maplibre-gl-worker.mjs`
    → 该文件 404。根因：maplibre-gl v6 为原生 ESM 分包（入口 + shared +
-   worker），入口运行期 `new Worker(new URL('...worker.mjs', import.meta.url),
-   {type:'module'})`，Vite 把 URL 写进产物但 Astro 构建管线不发射该文件。
-   修复：scripts/copy-maplibre-worker.mjs 构建后把 worker + shared 两个 .mjs
-   原样补进 dist/_astro/（文件名未 hash，同名拷贝即可），package.json build
-   串联（Cloudflare Pages 同样生效）
-2. **circle 图层作用于多边形按顶点渲染**：member-glow/point 原挂在边界
-   GeoJSON（MultiPolygon）上，光点沿全部国界线密布。修复：build-map-geo.mjs
-   新增光点源生成——每个有成员区域取「最大外环顶点均值」代表点
-   （lngLat 手工标注优先，如美国/新加坡/澳洲），输出 public/geo/anniv-points.json
-   （49 点），member 图层改挂 anniv-points 源。附带修复：澳门多边形因过小被
-   简化清空 → 简化结果为空时保留原始环
-3. **成员明细数据源迁移**：map-points 数据抽到 map-points.json（脚本与 TS
-   共用单一数据源），map-points.ts 改为类型化转出（Node ESM 读 JSON 需导入
-   属性，脚本改 fs 直读绕开）
-4. **SharedRoad 十字网格 375px 溢出（559px）**：节点英文后缀 nowrap 撑破；
-   英文包 .sr-en span 小屏隐藏 + 节点内边距收紧，四断点（375/390/430/768）
-   全页滚动复测零溢出
+   worker），入口运行期
+   `new Worker(new URL('...worker.mjs', import.meta.url), {type:'module'})`，Vite 把 URL 写进产物但 Astro 构建管线不发射该文件。修复：scripts/copy-maplibre-worker.mjs 构建后把 worker +
+   shared 两个 .mjs 原样补进 dist/_astro/（文件名未 hash，同名拷贝即可），package.json
+   build 串联（Cloudflare Pages 同样生效）
+2. **circle 图层作用于多边形按顶点渲染**：member-glow/point 原挂在边界 GeoJSON（MultiPolygon）上，光点沿全部国界线密布。修复：build-map-geo.mjs 新增光点源生成——每个有成员区域取「最大外环顶点均值」代表点（lngLat 手工标注优先，如美国/新加坡/澳洲），输出 public/geo/anniv-points.json（49 点），member 图层改挂 anniv-points 源。附带修复：澳门多边形因过小被简化清空 → 简化结果为空时保留原始环
+3. **成员明细数据源迁移**：map-points 数据抽到 map-points.json（脚本与 TS 共用单一数据源），map-points.ts 改为类型化转出（Node
+   ESM 读 JSON 需导入属性，脚本改 fs 直读绕开）
+4. **SharedRoad 十字网格 375px 溢出（559px）**：节点英文后缀 nowrap 撑破；英文包 .sr-en
+   span 小屏隐藏 + 节点内边距收紧，四断点（375/390/430/768）全页滚动复测零溢出
 5. **eslint ↔ prettier 尾逗号之争**（历史遗留再现）：eslint comma-dangle
-   always-multiline vs prettier trailingComma es5 在多行函数实参上互斥，
-   仓库既有提交本就以 eslint 为准（format:check 非必检项），处理原则：
-   eslint --fix 后不再对 .astro script 跑 prettier --write
-6. **教训**：`pnpm run type-check | tail` 会吞掉非零退出码——关键验证必须
-   显式 echo $?
+   always-multiline vs prettier trailingComma
+   es5 在多行函数实参上互斥，仓库既有提交本就以 eslint 为准（format:check 非必检项），处理原则：eslint
+   --fix 后不再对 .astro script 跑 prettier --write
+6. **教训**：`pnpm run type-check | tail`
+   会吞掉非零退出码——关键验证必须显式 echo $?
 
 ### 验证
 
-- init.sh 全绿（type-check 0 错误、lint 0 错误 22 警告、75 页构建 + worker
-  补齐日志）
-- 浏览器回归（agent-browser，生产 preview 4322）：/7th/ 七章深浅双主题截图
-  逐章验证；统计直出 825/15/34；印样墙/时间线/关系网/设计物真实数据渲染；
-  主题切换 ☼☾ + localStorage 持久 + 地图 setStyle 实时切换（暗房光点 ↔
-  纸面墨点）；地图 hover tooltip、点击中国 flyTo 省级视野 + BACK TO WORLD；
-  水印示例 → 自动识别 → 编辑 → MAKE MY FRAME → FRAME READY 0.3MB →
-  seeker-sample_seeker_7th_watermark.jpg；首页角卡随机真实照片 + 桌面 hover
-  展开文案 + 移动端小图块；07/SEVEN YEARS 特殊块；375/390/430/768 四断点
-  全页零横向溢出
+- init.sh 全绿（type-check 0 错误、lint 0 错误 22 警告、75 页构建 +
+  worker 补齐日志）
+- 浏览器回归（agent-browser，生产 preview
+  4322）：/7th/ 七章深浅双主题截图逐章验证；统计直出 825/15/34；印样墙/时间线/关系网/设计物真实数据渲染；主题切换 ☼☾ +
+  localStorage 持久 + 地图 setStyle 实时切换（暗房光点 ↔ 纸面墨点）；地图 hover
+  tooltip、点击中国 flyTo 省级视野 + BACK TO WORLD；水印示例 → 自动识别 → 编辑 →
+  MAKE MY FRAME → FRAME READY 0.3MB →
+  seeker-sample_seeker_7th_watermark.jpg；首页角卡随机真实照片 + 桌面 hover 展开文案 + 移动端小图块；07/SEVEN
+  YEARS 特殊块；375/390/430/768 四断点全页零横向溢出
 
 ### 遗留 / 待办
 
-- 内容缺口（版式已就绪，数据 published 置 true 即上线）：寄语全文、成员采访
-  （interviews.json）、合作伙伴（partners.json）、周边实物（merchandise.json）、
-  鸣谢名单（thanks.json）——均禁止伪造，待用户提供
+- 内容缺口（版式已就绪，数据 published 置 true 即上线）：寄语全文、成员采访（interviews.json）、合作伙伴（partners.json）、周边实物（merchandise.json）、鸣谢名单（thanks.json）——均禁止伪造，待用户提供
 - 825/15/34 与地图分布仍为占位（stats.json + map-points.json 两处同步替换）
 - 水印导出为 JPEG q0.92（规范写 PNG 的差异及理由见本记录开头）
 - Safari/iOS 真机、成员头像墙未来扩展（当前印样墙用活动照片混排，规范允许）
@@ -1234,57 +1218,51 @@ PNG，但 2084×3705 的 PNG 约 8-15MB/张 vs JPEG 0.3MB，按「不为重构�
 
 ### 背景
 
-用户转来高手第二份规范（当前仓库版）：把 /7th/ 升级为 Apple 式滚动叙事的数字
-摄影纪念册。与旧版规范的关键差异已按用户决定固化：01 七年序章**只有一张头像墙**，
-禁止恢复任何 Frame / 多图 crossfade / Hero Frame；04 追光印记保持空状态。
-用户确认计划（AskUserQuestion 曾就素材冲突提问，用户以新规范回复替代选择）。
+用户转来高手第二份规范（当前仓库版）：把 /7th/ 升级为 Apple 式滚动叙事的数字摄影纪念册。与旧版规范的关键差异已按用户决定固化：01 七年序章**只有一张头像墙**，禁止恢复任何 Frame
+/ 多图 crossfade / Hero
+Frame；04 追光印记保持空状态。用户确认计划（AskUserQuestion 曾就素材冲突提问，用户以新规范回复替代选择）。
 
 ### 技术决策：不引入 GSAP
 
-规范优先级阶梯 CSS → IO → GSAP。盘点全部场景后判定：所需效果全部可由
-CSS position:sticky（免费的 pin）+ 自研 ~100 行 rAF 进度引擎覆盖，
-零新增依赖，符合规范 #32「不要为了证明用了 GSAP 而增加动画」。
-引擎接口按可替换设计，未来场景超出能力再评估 GSAP。
+规范优先级阶梯 CSS → IO → GSAP。盘点全部场景后判定：所需效果全部可由 CSS
+position:sticky（免费的 pin）+ 自研 ~100 行 rAF 进度引擎覆盖，零新增依赖，符合规范 #32「不要为了证明用了 GSAP 而增加动画」。引擎接口按可替换设计，未来场景超出能力再评估 GSAP。
 
 ### What's Done（feat-027，6 个 commit）
 
-- **C1 引擎 + HERO**：src/lib/anniversary/scroll-story.ts——场景注册表
-  （data-story-scene → 映射工厂）、rAF 进度计算（几何仅 measure 时读取：
-  init/resize/load/根 RO；滚动帧只置 dirty）、reduced-motion 守卫
-  （引擎不初始化=静态页）、initReveals（[data-reveal] → global.css
-  .reveal/.in-view 约定 + --reveal-delay 错峰）。渐进增强契约：init 时给
-  main 加 .story-on 并同步首帧 apply，无闪烁窗口。HERO 舞台（180vh/150vh
-  轨道）：07 scale 1→1.03 → 真实活动照片淡入（构建期确定性抽取横幅图）→
-  品牌组退场 →「光影七载，看见彼此。」压照片浮现（text-shadow 保可读）
-- **C2 01 七年序章**（260vh/190vh 轨道）：眉题引言（0-0.16）→ 头像墙进入
-  （0.18-0.38，translateY 50→0 + scale 0.97→1）→ 停留（0.38-0.62）→
-  离场（0.62-0.78，上浮淡出）→ 统计容器上滑补位 + 825/15/34 依序浮现
-  （0.78-0.98）；地图预览在轨道后正常流（data-reveal + scale 0.98 变体）。
-  AvatarWall 增加 stage 变体（视口限高 48vh）
-- **C3 02 + 06 + 07**：02 光影札记（250vh/180vh）：暗场 → 肖像 0.18-0.4
-  淡入 → 0.48-0.62 scale 1→1.04 → 0.62-0.78 寄语浮现 → 0.8+ 肖像轻微退后
-  文字成为焦点；06 留光成物（280vh/200vh）：新增 MemoryObject 分层舞台
-  （真实活动竖幅照片 → 相框 mat 显影 → @你的昵称 → SEEKER 07 金标 →
-  2019 — 2026 依序成形），OBJ.01/02 真实设计物档案保留在舞台后；
-  07 光影七载（300vh/200vh 全页最慢）：2019/WE STARTED → 7 scale 0.92→1
-  → YEARS LATER（新增元素）→ 2026 THE NEXT FRAME IS YOURS. → 主题句
-- **C4/C5 03 + 05 + 呼吸段 + 04**：03 采访按 肖像→姓名→身份→简介→Q/A
-  stagger reveal（240ms 起每题 +120ms）；05 同行之路 view 模式（不钉住，
-  进度=区块穿越视口）——SEEKER 先现 → 连线 scaleX/Y 从 SEEKER 向外生长 →
-  社区/高校 → 品牌/地方分部；LEAVE YOUR FRAME / WITH THANKS / 04 AwaitNote
-  挂 data-reveal（呼吸段），04 保持空状态并预留 PROJECT 图文插入结构
-- **C6 统一回归**：全断点零溢出；主题切换（pinned 中 ☼☾）无损；引擎初始化
-  模拟 reduced-motion（init-script 劫持 matchMedia）确认 story-on=false；
-  console 零错误
+- **C1 引擎 +
+  HERO**：src/lib/anniversary/scroll-story.ts——场景注册表（data-story-scene
+  → 映射工厂）、rAF 进度计算（几何仅 measure 时读取：init/resize/load/根 RO；滚动帧只置 dirty）、reduced-motion 守卫（引擎不初始化=静态页）、initReveals（[data-reveal]
+  → global.css .reveal/.in-view 约定 +
+  --reveal-delay 错峰）。渐进增强契约：init 时给 main 加 .story-on 并同步首帧 apply，无闪烁窗口。HERO 舞台（180vh/150vh 轨道）：07
+  scale 1→1.03
+  → 真实活动照片淡入（构建期确定性抽取横幅图）→ 品牌组退场 →「光影七载，看见彼此。」压照片浮现（text-shadow 保可读）
+- **C2
+  01 七年序章**（260vh/190vh 轨道）：眉题引言（0-0.16）→ 头像墙进入（0.18-0.38，translateY
+  50→0 + scale
+  0.97→1）→ 停留（0.38-0.62）→ 离场（0.62-0.78，上浮淡出）→ 统计容器上滑补位 +
+  825/15/34 依序浮现（0.78-0.98）；地图预览在轨道后正常流（data-reveal + scale
+  0.98 变体）。AvatarWall 增加 stage 变体（视口限高 48vh）
+- **C3 02 + 06 + 07**：02 光影札记（250vh/180vh）：暗场 → 肖像 0.18-0.4 淡入 →
+  0.48-0.62 scale 1→1.04 → 0.62-0.78 寄语浮现 →
+  0.8+ 肖像轻微退后文字成为焦点；06 留光成物（280vh/200vh）：新增 MemoryObject 分层舞台（真实活动竖幅照片 → 相框 mat 显影 →
+  @你的昵称 → SEEKER 07 金标 → 2019 —
+  2026 依序成形），OBJ.01/02 真实设计物档案保留在舞台后；07 光影七载（300vh/200vh 全页最慢）：2019/WE
+  STARTED → 7 scale 0.92→1 → YEARS LATER（新增元素）→ 2026 THE NEXT FRAME IS
+  YOURS. → 主题句
+- **C4/C5 03 + 05 + 呼吸段 + 04**：03 采访按 肖像→姓名→身份→简介→Q/A stagger
+  reveal（240ms 起每题 +120ms）；05 同行之路 view 模式（不钉住，进度=区块穿越视口）——SEEKER 先现 → 连线 scaleX/Y 从 SEEKER 向外生长 → 社区/高校 → 品牌/地方分部；LEAVE
+  YOUR FRAME / WITH THANKS / 04
+  AwaitNote 挂 data-reveal（呼吸段），04 保持空状态并预留 PROJECT 图文插入结构
+- **C6 统一回归**：全断点零溢出；主题切换（pinned 中 ☼☾）无损；引擎初始化模拟 reduced-motion（init-script 劫持 matchMedia）确认 story-on=false；console 零错误
 
 ### 排障记录
 
-- eslint prefer-destructuring / prettier 无冲突点均即时修复；
-  统计容器上滑方向首次写反（+slide → 应为 -slide），浏览器截图复验发现即改
-- AvatarWall 舞台限高被基础 `.aw img` 规则覆盖（同特异性后定义胜出），
-  提升变体特异性 `.aw.aw--stage img` 修复
-- 验证 reduced-motion：本版 agent-browser 无 reduced-motion 子命令，
-  改用 --init-script 劫持 window.matchMedia 模拟
+- eslint prefer-destructuring /
+  prettier 无冲突点均即时修复；统计容器上滑方向首次写反（+slide
+  → 应为 -slide），浏览器截图复验发现即改
+- AvatarWall 舞台限高被基础 `.aw img`
+  规则覆盖（同特异性后定义胜出），提升变体特异性 `.aw.aw--stage img` 修复
+- 验证 reduced-motion：本版 agent-browser 无 reduced-motion 子命令，改用 --init-script 劫持 window.matchMedia 模拟
 
 ### 遗留 / 待办
 
@@ -1297,62 +1275,102 @@ CSS position:sticky（免费的 pin）+ 自研 ~100 行 rAF 进度引擎覆盖�
 
 ### 背景
 
-用户转来第三份规范（当前仓库版 Implementation Spec）：地图与暗房不再拥有独立
-页面，收编为 /7th/ 章节并形成「WHERE WE ARE → WHERE ARE YOU? → YOU ARE HERE」
-叙事闭环。两个决策已确认：保留 06 留光成物（规范结构清单未列它，但内容为真实
-设计物，不删）；删两页 + public/_redirects 重定向（旧链接不 404）。
+用户转来第三份规范（当前仓库版 Implementation
+Spec）：地图与暗房不再拥有独立页面，收编为 /7th/ 章节并形成「WHERE WE ARE →
+WHERE ARE YOU? → YOU ARE
+HERE」叙事闭环。两个决策已确认：保留 06 留光成物（规范结构清单未列它，但内容为真实设计物，不删）；删两页 +
+public/_redirects 重定向（旧链接不 404）。
 
 ### What's Done（feat-028，4 个 commit）
 
-- **地图章节（WHERE WE ARE）**：新增 AnniversaryMap.astro 嵌入 01 后段
-  （替代静态 SVG 预览 + EXPLORE THE MAP 旧入口）。懒加载：挂载点接近视口
-  800px 才动态 import maplibre + 拉取 GeoJSON。滚动五阶段由引擎 map 场景
-  派发进度事件驱动：World 安静出现 → First Light → Seven Years（灯光
-  随进度点亮，point/glow opacity 乘 ramp）→ People（hover/click tooltip
-  「SHANGHAI / 03 SEEKERS」，真实数据）→ Exit（地图变淡 + 「WE WERE HERE.
-  AND WE ARE STILL LOOKING.」+ 中文副题）。无年份数据 → 不做假年份。
-- **暗房章节（WHERE ARE YOU?）**：LEAVE YOUR FRAME 重写为暗房章节——
-  开场（LEAVE YOUR FRAME / WHERE ARE YOU? / A PLACE FOR YOUR LIGHT 编辑
-  排版）+ WatermarkGenerator 迁入。脚本整体抽离为
-  src/lib/watermark/darkroom.ts 的 initDarkroom()（render/gestures/template
-  管线零改动），组件只留 IO 懒加载器（rootMargin 600px，页面初始零处理
-  成本）。文案舞台化：A PLACE FOR YOUR LIGHT →「BRING YOUR LIGHT.」+
-  [+ ADD YOUR PHOTO] → 选片后 DEVELOPING… 显影动画（canvas filter
-  brightness/contrast/saturate 1.6s 过渡，reduced-motion 跳过）→
-  WHO ARE YOU? 昵称 → YOUR FRAME 完成
-- **✦ YOU ARE HERE 闭环**：完成态新增 WHERE ARE YOU? 位置确认——下拉复用
-  anniv-points.json 49 个省/国代表点坐标（构建期 readFileSync 注入
-  data-locations，与地图同源），确认后派发 anniv-you-are-here 事件：
-  AnniversaryMap 用 Marker 自定义 ✦ 元素点亮（规避 symbol 文本的 glyphs
-  依赖）+ easeTo 推近 + 页面平滑滚回地图章节。仅会话内展示，不落库
-  （规范未要求持久化，已在 UI 注明）
-- **删除与清理**：删 src/pages/7th/map.astro、watermark.astro、旧
-  MapWall.astro；public/_redirects 四条 302（/7th/map|/、/7th/watermark|/
-  → /7th/#where-we-are / #leave-your-frame）；AnniversaryFooter 链接改
-  章节锚点；grep 确认无「EXPLORE THE MAP/进入水印工坊」类旧入口残留
+- **地图章节（WHERE WE
+  ARE）**：新增 AnniversaryMap.astro 嵌入 01 后段（替代静态 SVG 预览 + EXPLORE
+  THE MAP 旧入口）。懒加载：挂载点接近视口 800px 才动态 import
+  maplibre + 拉取 GeoJSON。滚动五阶段由引擎 map 场景派发进度事件驱动：World 安静出现 →
+  First Light → Seven Years（灯光随进度点亮，point/glow opacity 乘 ramp）→
+  People（hover/click tooltip「SHANGHAI / 03 SEEKERS」，真实数据）→
+  Exit（地图变淡 + 「WE WERE HERE. AND WE ARE STILL
+  LOOKING.」+ 中文副题）。无年份数据 → 不做假年份。
+- **暗房章节（WHERE ARE YOU?）**：LEAVE YOUR FRAME 重写为暗房章节——开场（LEAVE
+  YOUR FRAME / WHERE ARE YOU? / A PLACE FOR YOUR LIGHT 编辑排版）+
+  WatermarkGenerator 迁入。脚本整体抽离为 src/lib/watermark/darkroom.ts 的 initDarkroom()（render/gestures/template 管线零改动），组件只留 IO 懒加载器（rootMargin
+  600px，页面初始零处理成本）。文案舞台化：A PLACE FOR YOUR LIGHT →「BRING YOUR
+  LIGHT.」+ [+ ADD YOUR PHOTO] → 选片后 DEVELOPING… 显影动画（canvas filter
+  brightness/contrast/saturate 1.6s 过渡，reduced-motion 跳过）→ WHO ARE
+  YOU? 昵称 → YOUR FRAME 完成
+- **✦ YOU ARE HERE 闭环**：完成态新增 WHERE ARE
+  YOU? 位置确认——下拉复用 anniv-points.json
+  49 个省/国代表点坐标（构建期 readFileSync 注入 data-locations，与地图同源），确认后派发 anniv-you-are-here 事件：AnniversaryMap 用 Marker 自定义 ✦ 元素点亮（规避 symbol 文本的 glyphs 依赖）+
+  easeTo 推近 + 页面平滑滚回地图章节。仅会话内展示，不落库（规范未要求持久化，已在 UI 注明）
+- **删除与清理**：删 src/pages/7th/map.astro、watermark.astro、旧 MapWall.astro；public/_redirects 四条 302（/7th/map|/、/7th/watermark|/
+  → /7th/#where-we-are /
+  #leave-your-frame）；AnniversaryFooter 链接改章节锚点；grep 确认无「EXPLORE
+  THE MAP/进入水印工坊」类旧入口残留
 
 ### 排障记录
 
 - 跨组件 story-on 选择器：AnniversaryMap 的 `.story-on .am` 被 Astro
   scoped 样式限制在本组件，main 上的 story-on 匹配不到 → 改
   `:global(.story-on) .am`；index.astro 内的同名规则无需改
-- darkroom.ts 抽离时 frontmatter 变量（stats）不随迁：确认脚本体未引用；
-  位置数据用 readFileSync('public/geo/anniv-points.json') 构建期读取
-  （new URL 方案在构建渲染期解析到 dist，弃用）
+- darkroom.ts 抽离时 frontmatter 变量（stats）不随迁：确认脚本体未引用；位置数据用 readFileSync('public/geo/anniv-points.json') 构建期读取（new
+  URL 方案在构建渲染期解析到 dist，弃用）
 - 完成态标题 YOUR FRAME IS READY. → YOUR FRAME.（规范 Stage 05）
 
 ### 验证
 
 - init.sh 全绿（73 页 = 75 - 删除的 2 个二级页）
-- 浏览器：地图懒加载（canvas 出现 + skeleton 隐藏）、五阶段点亮截图、
-  hover tooltip、暗房全流程（示例→DEVELOPING→昵称→生成→YOUR FRAME→
-  位置下拉 49 项→点亮）、✦ YOU ARE HERE 推近地图、pinned 中 ☼☾ 切主题
-  地图 restyle 正常、375 移动端暗房全流程 + 地图可用 + 零横向溢出、
-  reduced-motion 引擎不初始化地图全亮可用、console 零错误
+- 浏览器：地图懒加载（canvas 出现 + skeleton 隐藏）、五阶段点亮截图、hover
+  tooltip、暗房全流程（示例→DEVELOPING→昵称→生成→YOUR
+  FRAME→ 位置下拉 49 项→点亮）、✦ YOU ARE
+  HERE 推近地图、pinned 中 ☼☾ 切主题地图 restyle 正常、375 移动端暗房全流程 + 地图可用 + 零横向溢出、reduced-motion 引擎不初始化地图全亮可用、console 零错误
 
 ### 遗留 / 待办
 
-- YOU ARE HERE 为会话内展示（规范未要求持久化）；若未来要「真的留下位置」
-  需后端/存储方案（R2/CF D1 等），属新产品决策
+- YOU ARE
+  HERE 为会话内展示（规范未要求持久化）；若未来要「真的留下位置」需后端/存储方案（R2/CF
+  D1 等），属新产品决策
 - 04 等真实项目内容；头像墙等横屏版；Safari 真机
 - 水印导出维持 JPEG q0.92（规范写 PNG 的既有决定）
+
+---
+
+## 2026-09-17 会话：首页作品区重构为编辑式摄影展墙（feat-016，分支 feat/7th-anniversary）
+
+按用户提供的 Gallery 重构计划（"不要模拟摄影，直接展示摄影"）执行；对该计划的 4 处代码现实修正：① 现 WorksSection 本就是纯渐变占位帧（无真图），本次为从零填充选图；②
+activities entries 有真实 author 署名可诚实标注；③
+ACTIVITY_IMAGE_META 提供构建期 w/h，可精确分型与防裁剪；④ 计划漏了首页 scroll-snap
+/ #works 锚点 / scrollspy 等硬约束（均已保留）。
+
+### 实现
+
+- **src/data/gallery.ts（新增）**：唯一换图入口。主图池 3（立青《渡光》、钪钇国王峰冰川、魔法药《留白待雪》）+ 竖幅 3（迅雷疾风《霞染申城》、日行性猫猫《暮日之城》、源Dream 贡嘎彗星）+ 方幅 3（屋顶数星星《从"头"开始》、白纸《我与我》、柯达拍什么《一瞬与永恒》）。9 位作者无重复，author/title 摘自 activities
+  entries，alt 按真实画面撰写，排除带第三方水印图（如 OPPO 水印猫）。选图方法：脚本联查 65 期 entries
+  × 元数据得 1590 合格候选 → 浏览器 contact sheet 视觉挑选 42 → 逐张放大核对
+- **WorksSection.astro（重写）**：删除胶片带/齿孔/伪 EXIF/No.XX 全部系统；新结构 =
+  4fr+2fr×3 主图行（crossfade 主图 + 3 竖幅）+ 62% 宽居中方幅行。主图位纯 CSS
+  crossfade（27s 循环、负 delay 交叠淡入淡出、hover 暂停），署名随图轮换（同 keyframes 同 delay 的叠放 span，置于图下）；辅图 loading=lazy +
+  width/height 防CLS + hover scale 1.02；入场复用全局 .reveal +
+  --reveal-delay 错峰。断点：≤900 主图+1竖幅+方幅整行、≤640 主图通栏+2竖幅（方幅行隐藏）。CTA「查看全部」按用户决定暂不渲染（原指向 /under-construction 死链）
+
+### 排障记录
+
+- `.wall-row img`（0,1,1）的 height:auto 压过 `.hero-img`（0,1,0）的 height:100%
+  → 主图不充满框、框底露出 --muted 横带；改选择器为 `.wall-item img` 收窄作用域
+- hero 署名最初叠图左下，白字在《留白待雪》雪面上不可读 → 改图下署名（与辅图一致）；首次改 CSS 时未同步移 DOM，credit 仍嵌在 .hero-frame 内被 aspect-ratio 顶到框顶，已移出为兄弟节点
+- 全仓 `pnpm format`（prettier --write .）会重排 49 个存量未格式化文件，已 git
+  checkout 还原，仅保留本 feature 两个文件；仓库本非 prettier 全量干净，勿在无关 feature 里跑全局 format
+
+### 验证
+
+- init.sh 全绿：astro check 0 错误、eslint
+  0 错误（39 条 warning 全为其他文件存量）、build 73 页通过
+- 浏览器（agent-browser）：Desktop 1440×900 Light/Dark、Laptop
+  1280×800（max-height 44vh/24vh 生效贴合）、Tablet 834、Mobile
+  390×844 一屏收纳；reduced-motion 模拟下仅首图静态、动画全 none、reveal 直显；crossfade 实测轮换（三张主图先后出现）；performance
+  entries 确认 Gallery 恰好 9 张 R2 请求无重复；scrollspy「作品展示」高亮正常
+- 验收对照重构计划 §27：胶片系统与伪参数全删、单屏 9 张内真实照片、R2 只读零改动、「时间的故事」未出现在文案、无新页面、其他 section 未动
+
+### 遗留 / 待办
+
+- 图单为首版机器辅助挑选，正式上线前建议成员人工过目一轮（换图只改 src/data/gallery.ts）
+- 主图池 3 张 crossfade 中《留白待雪》为高调白图，与暗色主题相邻屏的衔接观感可在真机再确认

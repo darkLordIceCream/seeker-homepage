@@ -1,61 +1,114 @@
 ---
-// 首页第2层「画廊」：35mm 胶片带——上下齿孔 + 帧线 + 自动匀速轮播（hover 暂停）
-// 真实作品就位后逐帧替换背景（feat-016 画廊数据源可复用此结构）
-const PLACEHOLDER_HREF = '/under-construction';
+/**
+ * 首页第 2 屏「作品 Gallery」：编辑式摄影展墙（feat-016）。
+ * 设计原则：不模拟摄影，直接展示摄影——照片是唯一视觉主体，UI 极少。
+ * 数据来自 src/data/gallery.ts（换作品只改那个文件）；R2 只读。
+ * 主图位以纯 CSS 慢速 crossfade 轮换主图池（hover 暂停）；
+ * reduced-motion 下全部静态。入场复用全局 .reveal 机制（--reveal-delay 错峰）。
+ */
+import {
+  type GalleryImage,
+  GALLERY_HERO,
+  GALLERY_SUPPORT_SQUARE,
+  GALLERY_SUPPORT_TALL,
+} from '@/data/gallery';
 
-const frames = [
-  { no: '01', exif: '35mm · f/1.8 · 1/500 · ISO100', g: 'radial-gradient(circle at 28% 30%, rgba(45,212,191,0.20), transparent 52%), radial-gradient(circle at 78% 72%, rgba(129,140,248,0.15), transparent 55%), linear-gradient(160deg, #171a26, #0b0d14)' },
-  { no: '02', exif: '85mm · f/2.0 · 1/250 · ISO400', g: 'radial-gradient(circle at 72% 28%, rgba(244,114,182,0.16), transparent 55%), radial-gradient(circle at 20% 80%, rgba(251,191,36,0.10), transparent 45%), linear-gradient(160deg, #1a1420, #0e0a12)' },
-  { no: '03', exif: '24mm · f/8 · 1/125 · ISO200', g: 'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.16), transparent 50%), linear-gradient(160deg, #101823, #0a0f16)' },
-  { no: '04', exif: '50mm · f/1.4 · 1/1000 · ISO64', g: 'radial-gradient(circle at 40% 70%, rgba(74,222,128,0.13), transparent 50%), linear-gradient(160deg, #121a16, #0a100d)' },
-  { no: '05', exif: '28mm · f/5.6 · 1/60 · ISO1600', g: 'radial-gradient(circle at 30% 65%, rgba(251,146,60,0.16), transparent 50%), linear-gradient(160deg, #1b1512, #100c0a)' },
-  { no: '06', exif: '135mm · f/4 · 1/320 · ISO800', g: 'radial-gradient(circle at 65% 35%, rgba(232,121,249,0.14), transparent 52%), linear-gradient(160deg, #171223, #0d0a14)' },
-  { no: '07', exif: '40mm · f/2.8 · 1/200 · ISO500', g: 'radial-gradient(circle at 25% 40%, rgba(94,234,212,0.15), transparent 50%), radial-gradient(circle at 80% 60%, rgba(252,165,165,0.10), transparent 48%), linear-gradient(160deg, #12171d, #0a0d11)' },
-] as const;
+/** 入场错峰延迟 */
+const delay = (i: number) => `--reveal-delay:${80 + i * 70}ms`;
 
-// 渲染两份实现无缝循环轮播
-const loop = [...frames, ...frames];
+/** 图注：有作品名带名，无题只署名 */
+const credit = (img: GalleryImage) =>
+  img.title ? `@${img.author}《${img.title}》` : `@${img.author}`;
+
+/** 主图池图的无障碍描述附署名（视觉署名随 crossfade 轮换，读屏走 alt） */
+const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 ---
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
-  <header class="gallery-head">
+  <header class="gallery-head reveal">
     <h2 class="gallery-title" id="works-title">
-      画廊 <span class="gallery-en">Gallery</span>
+      作品 <span class="gallery-en">Gallery</span>
     </h2>
-    <a class="gallery-link" href={PLACEHOLDER_HREF}>查看全部 →</a>
   </header>
 
-  <div class="film-strip">
-    <div class="film-track">
-      {loop.map((frame, index) => (
-        <a
-          aria-label={`画廊作品 No.${frame.no}（${frame.exif}），建设中`}
-          class="film-frame ph-tile"
-          href={PLACEHOLDER_HREF}
-          style={`background:${frame.g}`}
-        >
-          <span class="frame-no">No.{frame.no}{index >= frames.length ? '·R' : ''}</span>
-          <span class="frame-exif">{frame.exif}</span>
-        </a>
-      ))}
+  <div class="gallery-wall">
+    {/* 主视觉 + 竖幅一排 */}
+    <div class="wall-row wall-row--hero">
+      <div class="wall-hero reveal" style={delay(0)}>
+        <div class="hero-frame">
+          {
+            GALLERY_HERO.map((img, i) => (
+              <img
+                alt={heroAlt(img)}
+                class:list={['hero-img', `hero-img--${i}`]}
+                decoding="async"
+                height={img.h}
+                loading="lazy"
+                src={img.src}
+                width={img.w}
+              />
+            ))
+          }
+        </div>
+        <div class="hero-credit">
+          {
+            GALLERY_HERO.map((img, i) => (
+              <span class:list={[`hero-credit-name`, `hero-credit-name--${i}`]}>
+                {credit(img)}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+      {
+        GALLERY_SUPPORT_TALL.map((img, i) => (
+          <div class="wall-item reveal" style={delay(i + 1)}>
+            <img
+              alt={img.alt}
+              decoding="async"
+              height={img.h}
+              loading="lazy"
+              src={img.src}
+              width={img.w}
+            />
+            <p class="wall-credit">{credit(img)}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    {/* 方幅一排 */}
+    <div class="wall-row wall-row--square">
+      {
+        GALLERY_SUPPORT_SQUARE.map((img, i) => (
+          <div class="wall-item reveal" style={delay(i + 4)}>
+            <img
+              alt={img.alt}
+              decoding="async"
+              height={img.h}
+              loading="lazy"
+              src={img.src}
+              width={img.w}
+            />
+            <p class="wall-credit">{credit(img)}</p>
+          </div>
+        ))
+      }
     </div>
   </div>
 
-  <p class="gallery-note">胶片自动放映中 · 悬停暂停 · 点击画面进入画廊（建设中）</p>
+  <p class="gallery-note reveal" style={delay(7)}>小组成员摄影作品 · @ 为作者署名</p>
 </section>
 
 <style>
   .gallery-section {
     background: var(--background);
     padding-top: 88px;
-    padding-bottom: 44px;
+    padding-bottom: 32px;
   }
 
   .gallery-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    max-width: 1360px;
+    max-width: 1280px;
     width: 100%;
     margin: 0 auto 22px;
   }
@@ -78,168 +131,233 @@ const loop = [...frames, ...frames];
     margin-left: 6px;
   }
 
-  .gallery-link {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--grad-a);
-    text-decoration: none;
-  }
-
-  .gallery-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .gallery-link:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-
-  /* —— 35mm 胶片带 —— */
-  .film-strip {
-    position: relative;
+  /* —— 编辑式展墙 —— */
+  .gallery-wall {
     flex: 1;
-    width: 100%;
-    max-width: 1360px;
-    margin: 0 auto;
     min-height: 0;
-    background: #101218;
-    border-radius: 18px;
-    box-shadow: 0 18px 50px rgba(76, 79, 105, 0.28);
-    overflow: hidden;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(14px, 2vh, 20px);
   }
 
-  /* 上下齿孔（透出页面底色的方孔） */
-  .film-strip::before,
-  .film-strip::after {
-    content: '';
+  .wall-row {
+    display: grid;
+    gap: clamp(12px, 1.5vw, 18px);
+    align-items: start;
+    min-width: 0;
+  }
+
+  /* 主图（4 份宽）+ 三张 2:3 竖幅（各 2 份宽）→ 同行等高 */
+  .wall-row--hero {
+    grid-template-columns: 4fr 2fr 2fr 2fr;
+  }
+
+  /* 方幅一排收窄居中，留出展墙呼吸感 */
+  .wall-row--square {
+    grid-template-columns: repeat(3, 1fr);
+    width: 62%;
+    margin: 0 auto;
+  }
+
+  .wall-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+    background: var(--muted);
+  }
+
+  .wall-item img {
+    aspect-ratio: 2 / 3;
+    max-height: 44vh;
+  }
+
+  .wall-row--square .wall-item img {
+    aspect-ratio: 1 / 1;
+    max-height: 24vh;
+  }
+
+  .wall-credit {
+    margin: 8px 2px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* —— 主图位：慢速 crossfade（27s 循环，每张约 9s，淡入淡出交叠约 1s） —— */
+  .hero-frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    max-height: 44vh;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--muted);
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: gallery-hero-fade 27s linear infinite;
+  }
+
+  .hero-img--0 {
+    animation-delay: 0s;
+  }
+
+  .hero-img--1 {
+    animation-delay: -18s;
+  }
+
+  .hero-img--2 {
+    animation-delay: -9s;
+  }
+
+  @keyframes gallery-hero-fade {
+    0% {
+      opacity: 0;
+    }
+
+    3.7% {
+      opacity: 1;
+    }
+
+    31.5% {
+      opacity: 1;
+    }
+
+    35.2% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* 主图署名随图轮换（与 hero-img 同一组 delay），置于图下与其他图注一致 */
+  .hero-credit {
+    position: relative;
+    height: 1.4em;
+    margin: 8px 2px 0;
+  }
+
+  .hero-credit-name {
     position: absolute;
     left: 0;
-    right: 0;
-    height: 12px;
-    z-index: 2;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--background) 0 12px,
-      transparent 12px 30px
-    );
-    animation: film-teeth 0.9s linear infinite;
+    top: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    opacity: 0;
+    animation: gallery-hero-fade 27s linear infinite;
   }
 
-  .film-strip::before {
-    top: 8px;
+  .hero-credit-name--0 {
+    animation-delay: 0s;
   }
 
-  .film-strip::after {
-    bottom: 8px;
+  .hero-credit-name--1 {
+    animation-delay: -18s;
   }
 
-  /* 齿孔随胶片走带横向移动 */
-  @keyframes film-teeth {
-    to {
-      background-position: 30px 0;
+  .hero-credit-name--2 {
+    animation-delay: -9s;
+  }
+
+  /* —— 克制的 hover：图片轻微 scale，仅 opacity/transform —— */
+  @media (hover: hover) {
+    .wall-item img,
+    .hero-frame .hero-img {
+      transition: transform 0.5s ease;
+    }
+
+    .wall-item:hover img {
+      transform: scale(1.02);
+    }
+
+    .wall-hero:hover .hero-img {
+      transform: scale(1.015);
     }
   }
 
-  .film-track {
-    display: flex;
-    width: max-content;
-    animation: film-play 42s linear infinite;
-  }
-
-  /* 无缝循环：内容渲染两份，位移一份宽度 */
-  @keyframes film-play {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  /* 悬停暂停放映，方便看帧 */
-  .film-strip:hover .film-track,
-  .film-strip:focus-within .film-track {
+  /* 悬停主图时暂停轮换，方便看画 */
+  .wall-hero:hover .hero-img,
+  .wall-hero:hover .hero-credit-name,
+  .wall-hero:focus-within .hero-img,
+  .wall-hero:focus-within .hero-credit-name {
     animation-play-state: paused;
   }
 
-  .film-frame {
-    position: relative;
-    display: block;
-    width: 340px;
-    height: min(52vh, 430px);
-    flex-shrink: 0;
-    margin-right: 10px;
-    border-radius: 4px;
-    transition: filter 0.3s ease;
-  }
-
-  .film-frame:hover {
-    filter: brightness(1.18);
-  }
-
-  .film-frame:focus-visible {
-    outline: 2px solid var(--grad-a);
-    outline-offset: -4px;
-  }
-
-  .frame-no {
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .frame-exif {
-    position: absolute;
-    left: 12px;
-    bottom: 10px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.75);
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-
-  .film-frame:hover .frame-exif,
-  .film-frame:focus-visible .frame-exif {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .gallery-note {
-    max-width: 1360px;
-    width: 100%;
-    margin: 14px auto 0;
-    font-size: 12px;
-    color: var(--muted-foreground);
-    opacity: 0.85;
-  }
-
+  /* —— reduced-motion：全部静态，只显示第一张主图 —— */
   @media (prefers-reduced-motion: reduce) {
-    .film-track {
+    .hero-img,
+    .hero-credit-name {
       animation: none;
     }
 
-    .film-strip {
-      overflow-x: auto;
-    }
-
-    .film-strip::before,
-    .film-strip::after {
-      animation: none;
+    .hero-img--0,
+    .hero-credit-name--0 {
+      opacity: 1;
     }
   }
 
-  @media (max-width: 768px) {
-    .film-frame {
-      width: 240px;
-      height: 300px;
+  /* —— 响应式 —— */
+  @media (max-width: 900px) {
+    /* 主图 + 一张竖幅；方幅一排放开到整行宽 */
+    .wall-row--hero {
+      grid-template-columns: 2fr 1fr;
+    }
+
+    .wall-row--hero .wall-item:nth-child(3),
+    .wall-row--hero .wall-item:nth-child(4) {
+      display: none;
+    }
+
+    .wall-row--square {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .gallery-head {
+      margin-bottom: 16px;
+    }
+
+    .gallery-section {
+      padding-top: 72px;
+      padding-bottom: 24px;
+    }
+
+    /* 主图通栏 + 两张竖幅并排，收敛在一屏之内（方幅一排让位） */
+    .wall-row--square {
+      display: none;
+    }
+
+    .wall-row--hero {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .wall-hero {
+      grid-column: 1 / -1;
+    }
+
+    .wall-row--hero .wall-item:nth-child(4) {
+      display: block;
     }
   }
 </style>
