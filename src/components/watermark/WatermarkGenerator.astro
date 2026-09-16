@@ -12,26 +12,51 @@
  * 就地编辑）、拖动/双指缩放 + 滑杆双通道。照片仅在浏览器本地处理。
  * 逻辑层：render.ts / gestures.ts / template.ts（零改动）。
  */
+import { readFileSync } from 'node:fs';
 import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
 import stats from '../../data/anniversary/stats.json';
+
+// 位置选择数据：来自构建脚本生成的区域代表点（与地图同源，坐标现成）
+interface LocOption {
+  value: string;
+  name: string;
+  lngLat: [number, number];
+}
+interface LocGroup {
+  label: string;
+  options: LocOption[];
+}
+
+const points = JSON.parse(
+  readFileSync('public/geo/anniv-points.json', 'utf8'),
+) as {
+  features: { geometry: { coordinates: [number, number] }; properties: { nameZh: string; kind: string } }[];
+};
+
+const locations: LocGroup[] = [
+  {
+    label: '中国省级行政区',
+    options: points.features
+      .filter(f => f.properties.kind === 'province')
+      .map(f => ({ value: `p:${f.properties.nameZh}`, name: f.properties.nameZh, lngLat: f.geometry.coordinates })),
+  },
+  {
+    label: '海外',
+    options: points.features
+      .filter(f => f.properties.kind === 'country')
+      .map(f => ({ value: `c:${f.properties.nameZh}`, name: f.properties.nameZh, lngLat: f.geometry.coordinates })),
+  },
+];
 ---
 
-<div class="dr" data-darkroom>
-  <!-- 工具页眉：页头字标由 AnniversaryHeader 承担，这里只留暗房身份与返回 -->
-  <header class="dr-head">
-    <a class="dr-back" href="/7th/">← 七周年纪念册</a>
-    <p class="dr-eyebrow">DARKROOM</p>
-    <p class="dr-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
-      完全在浏览器本地处理
-    </p>
-  </header>
-
-  <!-- 未上传态：editorial 上传块 -->
+<div class="dr" data-darkroom data-darkroom-root data-locations={JSON.stringify(locations)}>
+  <!-- 未上传态：BRING YOUR LIGHT 上传块 -->
   <section class="dr-empty" id="dr-empty">
-    <h1 class="dr-empty-title">MAKE YOUR<br />ANNIVERSARY FRAME</h1>
+    <p class="dr-empty-eyebrow">A PLACE FOR YOUR LIGHT</p>
+    <h2 class="dr-empty-title">BRING YOUR LIGHT.</h2>
     <p class="dr-empty-sub">把这一刻，留在七周年。</p>
-    <button class="dr-upload-btn" id="wm-dropzone" type="button">选择照片</button>
-    <p class="dr-empty-hint">或将照片拖入 / 粘贴到此处 · JPG · PNG · WEBP</p>
+    <button class="dr-upload-btn" id="wm-dropzone" type="button">+ ADD YOUR PHOTO</button>
+    <p class="dr-empty-hint">或将照片拖入 / 粘贴到此处 · JPG · PNG · WEBP · 完全在浏览器本地处理</p>
     <button class="dr-sample" id="wm-sample" type="button">没有照片？用示例试试 →</button>
   </section>
 
@@ -80,6 +105,7 @@ import stats from '../../data/anniversary/stats.json';
       </div>
 
       <div class="dr-ctrl dr-ctrl--name">
+        <span class="dr-ctrl-eyebrow">WHO ARE YOU?</span>
         <label class="dr-ctrl-label" for="wm-nickname">NAME</label>
         <input
           autocomplete="off"
@@ -119,10 +145,31 @@ import stats from '../../data/anniversary/stats.json';
 
     <!-- 完成态 -->
     <div class="dr-ready" hidden id="dr-ready">
-      <p class="dr-ready-title">YOUR FRAME<br />IS READY.</p>
+      <p class="dr-ready-title">YOUR FRAME.</p>
       <div class="dr-ready-actions">
         <a class="dr-make dr-make--ready" download hidden id="wm-download">下载海报</a>
         <button class="dr-swap" id="dr-again" type="button">再做一张</button>
+      </div>
+      <div class="dr-loc" data-darkroom-loc hidden>
+        <p class="dr-loc-title">WHERE ARE YOU?</p>
+        <p class="dr-loc-sub">选择你最常出没的地区，把你的光点到地图上（仅在本页展示，不会被上传或保存）。</p>
+        <div class="dr-loc-row">
+          <select aria-label="选择你的位置" class="dr-loc-select" id="wm-loc-select">
+            {
+              locations.map(group => (
+                <optgroup label={group.label}>
+                  {group.options.map(o => (
+                    <option value={o.value}>{o.name}</option>
+                  ))}
+                </optgroup>
+              ))
+            }
+          </select>
+          <button class="dr-make" data-loc-confirm type="button">点亮我的位置 →</button>
+        </div>
+        <p class="dr-loc-done" data-loc-done hidden>
+          ✦ YOU ARE HERE —— 你的光已经点亮，地图正在等你。
+        </p>
       </div>
     </div>
 
@@ -146,580 +193,29 @@ import stats from '../../data/anniversary/stats.json';
 </div>
 
 <script>
-  import { attachGestures } from '../../lib/watermark/gestures';
-  import {
-    buildFileName,
-    clampTransform,
-    ensureFonts,
-    exportImage,
-    initialTransform,
-    loadPhoto,
-    loadTemplate,
-    PhotoDecodeError,
-    renderComposition,
-    zoomAtTransform,
-    type LoadedPhoto,
-    type PhotoTransform,
-  } from '../../lib/watermark/render';
-  import {
-    DEFAULT_WATERMARK_TEMPLATE,
-    NICKNAME_MAX_LENGTH,
-    WATERMARK_TEMPLATES,
-    type WatermarkTemplate,
-  } from '../../lib/watermark/template';
-
-  const MIN_SCALE = 1;
-  const MAX_SCALE = 4;
-  const ZOOM_STEP = 1.25;
-  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function required<T extends HTMLElement>(id: string, ctor: new () => T): T {
-    const node = document.getElementById(id);
-    if (!(node instanceof ctor)) {
-      throw new Error(`暗房缺少元素 #${id}`);
-    }
-    return node;
-  }
-
-  const emptySec = required('dr-empty', HTMLElement);
-  const editorSec = required('dr-editor', HTMLElement);
-  const stage = required('wm-stage', HTMLElement);
-  const canvas = required('wm-canvas', HTMLCanvasElement);
-  const dropzone = required('wm-dropzone', HTMLButtonElement);
-  const fileInput = required('wm-file', HTMLInputElement);
-  const nickHit = required('wm-nick-hit', HTMLButtonElement);
-  const sweepEl = required('dr-sweep', HTMLElement);
-  const toastEl = required('wm-toast', HTMLElement);
-  const sampleBtn = required('wm-sample', HTMLButtonElement);
-  const nicknameInput = required('wm-nickname', HTMLInputElement);
-  const zoomSlider = required('wm-zoom', HTMLInputElement);
-  const zoomInBtn = required('wm-zoom-in', HTMLButtonElement);
-  const zoomOutBtn = required('wm-zoom-out', HTMLButtonElement);
-  const resetBtn = required('wm-reset', HTMLButtonElement);
-  const generateBtn = required('wm-generate', HTMLButtonElement);
-  const downloadLink = required('wm-download', HTMLAnchorElement);
-  const changeBtn = required('wm-change', HTMLButtonElement);
-  const againBtn = required('dr-again', HTMLButtonElement);
-  const controlsEl = required('dr-controls', HTMLElement);
-  const actionsEl = required('dr-actions', HTMLElement);
-  const readyEl = required('dr-ready', HTMLElement);
-  const popEl = required('wm-pop', HTMLElement);
-  const popInput = required('wm-pop-input', HTMLInputElement);
-  const popCount = required('wm-pop-count', HTMLElement);
-  const tplButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]'),
-);
-
-  let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
-  let templateBitmap: ImageBitmap | null = null;
-  const overlayCache = new Map<string, ImageBitmap>();
-  let photo: LoadedPhoto | null = null;
-  let transform: PhotoTransform = initialTransform();
-  let downloadUrl: string | null = null;
-  let renderQueued = false;
-  let sourceFileName = '';
-  let toastTimer = 0;
-
-  const areaCenter = { x: 0, y: 0 };
-
-  function syncAreaCenter(): void {
-    areaCenter.x = currentTemplate.photoArea.x + currentTemplate.photoArea.width / 2;
-    areaCenter.y = currentTemplate.photoArea.y + currentTemplate.photoArea.height / 2;
-  }
-
-  function setStatus(message: string, isError = false, sticky = false): void {
-    toastEl.textContent = message;
-    toastEl.classList.toggle('is-error', isError);
-    toastEl.hidden = !message;
-    if (toastTimer) {
-      window.clearTimeout(toastTimer);
-    }
-    if (message && !sticky) {
-      toastTimer = window.setTimeout(() => {
-        toastEl.hidden = true;
-      }, 2800);
-    }
-  }
-
-  function showEditor(show: boolean): void {
-    emptySec.hidden = show;
-    editorSec.hidden = !show;
-  }
-
-  function requestRender(): void {
-    if (renderQueued || !templateBitmap) {
-      return;
-    }
-    renderQueued = true;
-    requestAnimationFrame(() => {
-      renderQueued = false;
-      if (!templateBitmap) {
-        return;
-      }
-      const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const scale = Math.max(
-        Math.min((cssWidth * dpr) / currentTemplate.width, 1600 / currentTemplate.width),
-        0.2,
+  // 暗房懒加载：接近章节才载入图片处理逻辑（页面初始加载零处理成本）
+  const root = document.querySelector('[data-darkroom-root]');
+  if (root) {
+    const io = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          io.disconnect();
+          import('../../lib/watermark/darkroom').then(m => m.initDarkroom());
+        }
+      },
+      { rootMargin: '600px 0px' },
     );
-      renderComposition(canvas, {
-        template: currentTemplate,
-        templateImage: templateBitmap,
-        photo,
-        transform,
-        nickname: nicknameInput.value,
-        scale,
-      });
-    });
+    io.observe(root);
   }
-
-  const normalize = (t: PhotoTransform): PhotoTransform =>
-    photo ? clampTransform({ template: currentTemplate, photo, transform: t }) : t;
-
-  function syncTplButtons(): void {
-    for (const btn of tplButtons) {
-      btn.setAttribute('aria-pressed', String(btn.dataset.templateId === currentTemplate.id));
-    }
-  }
-
-  function syncControls(): void {
-    const hasPhoto = photo !== null;
-    zoomSlider.value = String(transform.scale);
-    zoomSlider.disabled = !hasPhoto;
-    zoomInBtn.disabled = !hasPhoto;
-    zoomOutBtn.disabled = !hasPhoto;
-    resetBtn.disabled = !hasPhoto;
-    generateBtn.disabled = !hasPhoto;
-    changeBtn.hidden = !hasPhoto;
-  }
-
-  function resetToReady(showReady: boolean): void {
-    controlsEl.hidden = showReady;
-    actionsEl.hidden = showReady;
-    readyEl.hidden = !showReady;
-  }
-
-  function zoomBy(factor: number): void {
-    transform = zoomAtTransform({
-      template: currentTemplate,
-      photo,
-      transform,
-      px: areaCenter.x,
-      py: areaCenter.y,
-      factor,
-      minScale: MIN_SCALE,
-      maxScale: MAX_SCALE,
-    });
-    syncControls();
-    requestRender();
-  }
-
-  function releaseDownload(): void {
-    if (downloadUrl) {
-      URL.revokeObjectURL(downloadUrl);
-      downloadUrl = null;
-    }
-    downloadLink.hidden = true;
-  }
-
-  /** 再做一张：回到上传态 */
-  function backToEmpty(): void {
-    photo?.close();
-    photo = null;
-    transform = initialTransform();
-    releaseDownload();
-    resetToReady(false);
-    showEditor(false);
-    setStatus('');
-  }
-
-  async function handleFile(file: File | null | undefined): Promise<void> {
-    if (!file) {
-      return;
-    }
-    if (!file.type.startsWith('image/')) {
-      setStatus('请选择图片文件（JPG / PNG / WebP）', true);
-      return;
-    }
-    setStatus('正在读取照片…');
-    try {
-      const loaded = await loadPhoto(file);
-      photo?.close();
-      photo = loaded;
-      sourceFileName = file.name;
-      transform = initialTransform();
-      releaseDownload();
-      resetToReady(false);
-      showEditor(true);
-
-      // 自动识别横竖版：宽 ≥ 高 → 横版
-      const detected =
-        loaded.width >= loaded.height
-          ? WATERMARK_TEMPLATES.find(t => t.fit.base === 'width')
-          : WATERMARK_TEMPLATES.find(t => t.fit.base === 'height');
-      if (detected && detected.id !== currentTemplate.id) {
-        await switchTemplate(detected, true);
-      } else {
-        syncControls();
-        requestRender();
-      }
-      setStatus(
-        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`,
-    );
-    } catch (error) {
-      setStatus(
-        error instanceof PhotoDecodeError
-          ? '这张照片无法在浏览器中解码，请改用 JPG / PNG 格式（iPhone 可在「设置 → 相机 → 格式」选「兼容性最佳」后重新保存）。'
-          : '照片读取失败，请重试。',
-        true,
-    );
-    }
-  }
-
-  function playSweep(): Promise<void> {
-    if (REDUCED) {
-      return Promise.resolve();
-    }
-    return new Promise(resolve => {
-      sweepEl.classList.add('is-sweeping');
-      window.setTimeout(() => {
-        sweepEl.classList.remove('is-sweeping');
-        resolve();
-      }, 850);
-    });
-  }
-
-  async function generate(): Promise<void> {
-    if (!templateBitmap || !photo) {
-      return;
-    }
-    generateBtn.disabled = true;
-    generateBtn.textContent = 'PRINTING…';
-    setStatus('');
-    const sweep = playSweep();
-    try {
-      const out = document.createElement('canvas');
-      renderComposition(out, {
-        template: currentTemplate,
-        templateImage: templateBitmap,
-        photo,
-        transform,
-        nickname: nicknameInput.value,
-      });
-      const blob = await exportImage(out, currentTemplate.output);
-      releaseDownload();
-      downloadUrl = URL.createObjectURL(blob);
-      downloadLink.href = downloadUrl;
-      downloadLink.download = buildFileName(currentTemplate.output, sourceFileName);
-      await sweep;
-      downloadLink.hidden = false;
-      resetToReady(true);
-      setStatus(`FRAME READY · ${(blob.size / 1024 / 1024).toFixed(1)} MB`);
-    } catch {
-      await sweep;
-      setStatus('生成失败，请重试。', true);
-    } finally {
-      generateBtn.disabled = false;
-      generateBtn.textContent = 'MAKE MY FRAME';
-    }
-  }
-
-  async function switchTemplate(template: WatermarkTemplate, silent = false): Promise<void> {
-    if (template.id === currentTemplate.id && templateBitmap) {
-      return;
-    }
-    if (!silent) {
-      setStatus('版式切换中…');
-    }
-    try {
-      let bitmap = overlayCache.get(template.id);
-      if (!bitmap) {
-        bitmap = await loadTemplate(template.src);
-        overlayCache.set(template.id, bitmap);
-      }
-      currentTemplate = template;
-      templateBitmap = bitmap;
-      transform = initialTransform();
-      releaseDownload();
-      canvas.style.aspectRatio = `${template.width} / ${template.height}`;
-      layoutStage();
-      syncAreaCenter();
-      syncTplButtons();
-      updateNickHit();
-      syncControls();
-      requestRender();
-      if (!silent) {
-        setStatus('');
-      }
-    } catch {
-      setStatus('模板加载失败，请检查网络后刷新重试。', true);
-    }
-  }
-
-  /** 舞台尺寸：编辑态下按剩余视口高度最大化 */
-  function layoutStage(): void {
-    const aspect = currentTemplate.width / currentTemplate.height;
-    const availW = Math.min(window.innerWidth - 32, 920);
-    const headH = 56;
-    const reserve = window.innerWidth < 768 ? 340 : 220;
-    const availH = Math.max(window.innerHeight - headH - reserve, 280);
-    const w = Math.min(availW, availH * aspect);
-    stage.style.width = `${Math.round(w)}px`;
-  }
-
-  /** SAFE AREA 热区定位（模板昵称坐标 → 舞台百分比） */
-  function updateNickHit(): void {
-    const n = currentTemplate.nickname;
-    const estWidth = Math.min(
-      n.maxWidth,
-      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2,
-  );
-    nickHit.style.left = `${((n.x - estWidth / 2 - 14) / currentTemplate.width) * 100}%`;
-    nickHit.style.top = `${((n.y - n.fontSize * 1.5 - 10) / currentTemplate.height) * 100}%`;
-    nickHit.style.width = `${((estWidth + 28) / currentTemplate.width) * 100}%`;
-    nickHit.style.height = `${((n.fontSize * 2.1 + 20) / currentTemplate.height) * 100}%`;
-  }
-
-  /* —— 昵称就地编辑 —— */
-  function showPop(): void {
-    const hit = nickHit.getBoundingClientRect();
-    popEl.hidden = false;
-    const popW = 240;
-    let left = hit.left + hit.width / 2 - popW / 2;
-    left = Math.max(8, Math.min(left, window.innerWidth - popW - 8));
-    const top = hit.top - popEl.offsetHeight - 10;
-    popEl.style.left = `${Math.round(left)}px`;
-    popEl.style.top = `${Math.round(Math.max(8, top))}px`;
-    popInput.value = nicknameInput.value;
-    popCount.textContent = `${nicknameInput.value.length} / ${NICKNAME_MAX_LENGTH}`;
-    window.setTimeout(() => popInput.focus(), 0);
-  }
-
-  function hidePop(): void {
-    popEl.hidden = true;
-  }
-
-  nickHit.addEventListener('click', () => {
-    if (popEl.hidden) {
-      showPop();
-    } else {
-      hidePop();
-    }
-  });
-
-  popInput.addEventListener('input', () => {
-    nicknameInput.value = popInput.value;
-    popCount.textContent = `${popInput.value.length} / ${NICKNAME_MAX_LENGTH}`;
-    requestRender();
-  });
-
-  popInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === 'Escape') {
-      hidePop();
-      requestRender();
-    }
-  });
-
-  document.addEventListener('pointerdown', e => {
-    if (popEl.hidden) {
-      return;
-    }
-    const t = e.target as Element;
-    if (!popEl.contains(t) && t !== nickHit && !nickHit.contains(t)) {
-      hidePop();
-    }
-  });
-
-  /* —— 事件绑定 —— */
-  for (const btn of tplButtons) {
-    const tpl = WATERMARK_TEMPLATES.find(t => t.id === btn.dataset.templateId);
-    btn.addEventListener('click', () => {
-      if (tpl) {
-        void switchTemplate(tpl);
-      }
-    });
-  }
-
-  dropzone.addEventListener('click', () => fileInput.click());
-  changeBtn.addEventListener('click', () => fileInput.click());
-  againBtn.addEventListener('click', backToEmpty);
-
-  const SAMPLE_SOURCES: Record<string, string> = {
-    'seeker-7th-portrait': '/samples/seeker-sample-portrait.jpg',
-    'seeker-7th-landscape': '/samples/seeker-sample-landscape.jpg',
-  };
-  sampleBtn.addEventListener('click', () => {
-    const src =
-      SAMPLE_SOURCES[currentTemplate.id] ??
-      SAMPLE_SOURCES['seeker-7th-portrait'] ??
-      '/samples/seeker-sample-portrait.jpg';
-    void (async () => {
-      sampleBtn.disabled = true;
-      setStatus('正在加载示例照片…');
-      try {
-        const resp = await fetch(src);
-        const blob = await resp.blob();
-        await handleFile(new File([blob], 'seeker-sample.jpg', { type: 'image/jpeg' }));
-      } catch {
-        setStatus('示例照片加载失败，请直接选择本地照片。', true);
-      } finally {
-        sampleBtn.disabled = false;
-      }
-    })();
-  });
-
-  fileInput.addEventListener('change', () => {
-    void handleFile(fileInput.files?.[0]);
-    fileInput.value = '';
-  });
-
-  document.addEventListener('dragover', e => {
-    e.preventDefault();
-    if (!editorSec.hidden) {
-      stage.classList.add('is-dragover');
-    }
-  });
-  document.addEventListener('dragleave', () => stage.classList.remove('is-dragover'));
-  document.addEventListener('drop', e => {
-    e.preventDefault();
-    stage.classList.remove('is-dragover');
-    void handleFile(e.dataTransfer?.files?.[0]);
-  });
-  document.addEventListener('paste', e => {
-    void handleFile(e.clipboardData?.files?.[0]);
-  });
-
-  nicknameInput.addEventListener('input', () => {
-    popInput.value = nicknameInput.value;
-    requestRender();
-  });
-
-  zoomSlider.addEventListener('input', () => {
-    const scale = Number.parseFloat(zoomSlider.value);
-    if (!Number.isFinite(scale)) {
-      return;
-    }
-    transform = zoomAtTransform({
-      template: currentTemplate,
-      photo,
-      transform,
-      px: areaCenter.x,
-      py: areaCenter.y,
-      factor: scale / transform.scale,
-      minScale: MIN_SCALE,
-      maxScale: MAX_SCALE,
-    });
-    requestRender();
-  });
-
-  zoomInBtn.addEventListener('click', () => zoomBy(ZOOM_STEP));
-  zoomOutBtn.addEventListener('click', () => zoomBy(1 / ZOOM_STEP));
-  resetBtn.addEventListener('click', () => {
-    transform = initialTransform();
-    syncControls();
-    requestRender();
-  });
-  generateBtn.addEventListener('click', () => void generate());
-
-  attachGestures(canvas, {
-    cssToTemplate: () => currentTemplate.width / (canvas.clientWidth || 1),
-    drag: (dx, dy) => {
-      transform = normalize({ ...transform, x: transform.x + dx, y: transform.y + dy });
-      zoomSlider.value = String(transform.scale);
-      requestRender();
-    },
-    zoomAt: (px, py, factor) => {
-      transform = zoomAtTransform({
-        template: currentTemplate,
-        photo,
-        transform,
-        px,
-        py,
-        factor,
-        minScale: MIN_SCALE,
-        maxScale: MAX_SCALE,
-      });
-      zoomSlider.value = String(transform.scale);
-      requestRender();
-    },
-  });
-
-  const resizeObserver = new ResizeObserver(() => requestRender());
-  resizeObserver.observe(stage);
-  window.addEventListener('resize', () => {
-    layoutStage();
-  });
-  document.fonts.ready.then(() => {
-    layoutStage();
-    requestRender();
-  });
-
-  /* —— 初始化：模板常驻预载，进入编辑态零等待 —— */
-  void (async () => {
-    try {
-      await ensureFonts(currentTemplate.fonts);
-      templateBitmap = await loadTemplate(currentTemplate.src);
-      overlayCache.set(currentTemplate.id, templateBitmap);
-      canvas.style.aspectRatio = `${currentTemplate.width} / ${currentTemplate.height}`;
-      layoutStage();
-      syncAreaCenter();
-      syncTplButtons();
-      syncControls();
-      updateNickHit();
-      requestRender();
-    } catch {
-      setStatus('模板加载失败，请检查网络后刷新重试。', true, true);
-    }
-  })();
 </script>
 
 <style>
   .dr {
-    min-height: calc(100dvh - 70px);
+    min-height: 60svh;
     display: flex;
     flex-direction: column;
     background: var(--anniv-bg);
     color: var(--anniv-fg);
-  }
-
-  /* —— 页眉 —— */
-  .dr-head {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    max-width: 72rem;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0.8rem 1.25rem;
-    border-bottom: 1px solid var(--anniv-border);
-  }
-
-  .dr-back {
-    font-size: 0.8rem;
-    color: var(--anniv-muted);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-  }
-
-  .dr-back:hover {
-    color: var(--anniv-accent);
-  }
-
-  .dr-eyebrow {
-    margin: 0;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.34em;
-    color: var(--anniv-accent);
-  }
-
-  .dr-privacy {
-    margin-left: auto;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    color: var(--anniv-faint);
-    cursor: help;
   }
 
   /* —— 未上传态 —— */
@@ -737,6 +233,16 @@ import stats from '../../data/anniversary/stats.json';
 
   .dr-empty.is-dragover {
     border-color: var(--anniv-accent);
+  }
+
+  .dr-empty-eyebrow {
+    margin: 0 0 1.1rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.38em;
+    text-indent: 0.38em;
+    color: var(--anniv-accent);
   }
 
   .dr-empty-title {
@@ -824,6 +330,34 @@ import stats from '../../data/anniversary/stats.json';
     transition:
       background-color var(--dur-normal) ease,
       border-color var(--dur-normal) ease;
+  }
+
+  .dr-stage.is-developing {
+    outline: 2px dashed var(--anniv-accent);
+    outline-offset: -6px;
+  }
+
+  /* DEVELOPING：暗房显影（黑 → 灰 → 轮廓 → 完整），reduced-motion 跳过 */
+  .dr-stage.is-developing #wm-canvas {
+    animation: dr-develop 1.6s var(--ease-enter) both;
+  }
+
+  @keyframes dr-develop {
+    0% {
+      filter: brightness(0.04) contrast(1.4);
+    }
+    55% {
+      filter: brightness(0.45) contrast(1.15) saturate(0.4);
+    }
+    100% {
+      filter: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dr-stage.is-developing #wm-canvas {
+      animation: none;
+    }
   }
 
   .dr-stage.is-dragover {
@@ -924,6 +458,14 @@ import stats from '../../data/anniversary/stats.json';
     font-weight: 600;
     letter-spacing: 0.3em;
     color: var(--anniv-faint);
+  }
+
+  .dr-ctrl-eyebrow {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    color: var(--anniv-accent);
   }
 
   /* FORMAT 比例选择器 */
@@ -1106,6 +648,66 @@ import stats from '../../data/anniversary/stats.json';
     display: flex;
     align-items: center;
     gap: 1.4rem;
+  }
+
+  /* —— WHERE ARE YOU? 位置确认（会话内展示，不落库） —— */
+  .dr-loc {
+    margin-top: 2.2rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--anniv-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .dr-loc-title {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.38em;
+    text-indent: 0.38em;
+    color: var(--anniv-accent);
+  }
+
+  .dr-loc-sub {
+    margin: 0;
+    max-width: 30em;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: var(--anniv-muted);
+  }
+
+  .dr-loc-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .dr-loc-select {
+    min-width: 12rem;
+    padding: 0.55rem 0.8rem;
+    font: inherit;
+    font-size: 0.86rem;
+    color: var(--anniv-fg);
+    background: var(--anniv-bg);
+    border: 1px solid var(--anniv-border-strong);
+  }
+
+  .dr-loc-select:focus-visible {
+    outline: 1px solid var(--anniv-accent);
+    outline-offset: 2px;
+  }
+
+  .dr-loc-done {
+    margin: 0.4rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--anniv-accent);
   }
 
   .dr-note {

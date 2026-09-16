@@ -19,6 +19,7 @@ import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import SharedRoad from '../../components/anniversary/SharedRoad.astro';
 import MemoryObject from '../../components/anniversary/MemoryObject.astro';
 import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
+import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.astro';
 import Thanks from '../../components/anniversary/Thanks.astro';
 import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
 import stats from '../../data/anniversary/stats.json';
@@ -147,11 +148,16 @@ const heroPhoto = heroPick
         <SharedRoad />
       </section>
 
-      <!-- LEAVE YOUR FRAME：参与入口（呼吸段；CTA 常驻可点） -->
-      <section aria-labelledby="sec-frame" class="arc-cta" data-reveal>
-        <p class="arc-cta-en" id="sec-frame">LEAVE YOUR FRAME</p>
-        <p class="arc-cta-zh">光影七载，<br />当然也应该有你的一帧。</p>
-        <a class="arc-cta-btn" href="/7th/watermark/">进入七周年暗房 →</a>
+      <!-- LEAVE YOUR FRAME：WHERE ARE YOU? 暗房章节（上传→显影→昵称→生成→位置→✦） -->
+      <section aria-labelledby="sec-frame" class="arc-darkroom" id="leave-your-frame">
+        <div class="drk-opening" data-reveal>
+          <p class="drk-eyebrow" id="sec-frame">LEAVE YOUR FRAME</p>
+          <h2 class="drk-title">WHERE ARE YOU?</h2>
+          <p class="drk-sub">
+            光影七载，当然也应该有你的一帧。<br />留下你的照片、你的名字，和你的位置。
+          </p>
+        </div>
+        <WatermarkGenerator />
       </section>
 
       <!-- 06 / 留光成物：纪念物成形舞台 + 真实设计物档案 -->
@@ -537,20 +543,24 @@ const heroPhoto = heroPick
     color: var(--anniv-muted);
   }
 
-  /* —— LEAVE YOUR FRAME CTA —— */
-  .arc-cta {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: clamp(4rem, 10vw, 7.5rem) 1.5rem;
+  /* —— LEAVE YOUR FRAME · WHERE ARE YOU? 暗房章节开场 —— */
+  .arc-darkroom {
     border-bottom: 1px solid var(--anniv-border);
+    padding-top: clamp(3rem, 8vw, 6rem);
+  }
+
+  .drk-opening {
+    max-width: 72rem;
+    margin: 0 auto clamp(2.5rem, 6vw, 4.5rem);
+    padding: 0 1.5rem;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.6rem;
+    gap: 1.3rem;
   }
 
-  .arc-cta-en {
+  .drk-eyebrow {
     margin: 0;
     font-family: 'Archivo', sans-serif;
     font-size: 0.78rem;
@@ -560,30 +570,21 @@ const heroPhoto = heroPick
     color: var(--anniv-accent);
   }
 
-  .arc-cta-zh {
+  .drk-title {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.9rem, 5.5vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .drk-sub {
     margin: 0;
     font-family: var(--anniv-serif);
-    font-size: clamp(1.5rem, 4vw, 2.4rem);
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0.1em;
-  }
-
-  .arc-cta-btn {
-    margin-top: 0.8rem;
-    padding: 0.9rem 2.4rem;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    color: var(--anniv-bg);
-    background: var(--anniv-accent);
-    text-decoration: none;
-    transition: filter var(--dur-fast) ease;
-  }
-
-  .arc-cta-btn:hover {
-    filter: brightness(1.08);
+    font-size: clamp(0.98rem, 2.2vw, 1.2rem);
+    line-height: 1.9;
+    letter-spacing: 0.12em;
+    color: var(--anniv-muted);
   }
 
   /* —— Ending —— */
