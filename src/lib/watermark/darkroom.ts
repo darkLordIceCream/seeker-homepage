@@ -287,7 +287,7 @@ export function initDarkroom(): void {
       return;
     }
     generateBtn.disabled = true;
-    generateBtn.textContent = 'PRINTING…';
+    generateBtn.textContent = '冲印中…';
     setStatus('');
     const sweep = playSweep();
     try {
@@ -307,13 +307,13 @@ export function initDarkroom(): void {
       await sweep;
       downloadLink.hidden = false;
       resetToReady(true);
-      setStatus(`FRAME READY · ${(blob.size / 1024 / 1024).toFixed(1)} MB`);
+      setStatus(`纪念帧完成 · ${(blob.size / 1024 / 1024).toFixed(1)} MB`);
     } catch {
       await sweep;
       setStatus('生成失败，请重试。', true);
     } finally {
       generateBtn.disabled = false;
-      generateBtn.textContent = 'MAKE MY FRAME';
+      generateBtn.textContent = '生成纪念帧';
     }
   }
 

@@ -50,12 +50,13 @@ const locations: LocGroup[] = [
 ---
 
 <div class="dr" data-darkroom data-darkroom-root data-locations={JSON.stringify(locations)}>
-  <!-- 未上传态：BRING YOUR LIGHT 上传块 -->
+  <!-- 未上传态：带上你的光（上传块） -->
   <section class="dr-empty" id="dr-empty">
-    <p class="dr-empty-eyebrow">A PLACE FOR YOUR LIGHT</p>
-    <h2 class="dr-empty-title">BRING YOUR LIGHT.</h2>
+    <p class="dr-empty-eyebrow">留下你的光 · A PLACE FOR YOUR LIGHT</p>
+    <h2 class="dr-empty-title">带上你的光。</h2>
+    <p class="dr-empty-title-en">BRING YOUR LIGHT.</p>
     <p class="dr-empty-sub">把这一刻，留在七周年。</p>
-    <button class="dr-upload-btn" id="wm-dropzone" type="button">+ ADD YOUR PHOTO</button>
+    <button class="dr-upload-btn" id="wm-dropzone" type="button">＋ 添加照片</button>
     <p class="dr-empty-hint">或将照片拖入 / 粘贴到此处 · JPG · PNG · WEBP · 完全在浏览器本地处理</p>
     <button class="dr-sample" id="wm-sample" type="button">没有照片？用示例试试 →</button>
   </section>
@@ -139,19 +140,21 @@ const locations: LocGroup[] = [
     </div>
 
     <div class="dr-actions" id="dr-actions">
-      <button class="dr-make" disabled id="wm-generate" type="button">MAKE MY FRAME</button>
+      <button class="dr-make" disabled id="wm-generate" type="button">生成纪念帧</button>
       <button class="dr-swap" hidden id="wm-change" type="button">换一张照片</button>
     </div>
 
     <!-- 完成态 -->
     <div class="dr-ready" hidden id="dr-ready">
-      <p class="dr-ready-title">YOUR FRAME.</p>
+      <p class="dr-ready-title">你的纪念帧。</p>
+      <p class="dr-ready-title-en">YOUR FRAME.</p>
       <div class="dr-ready-actions">
         <a class="dr-make dr-make--ready" download hidden id="wm-download">下载海报</a>
         <button class="dr-swap" id="dr-again" type="button">再做一张</button>
       </div>
       <div class="dr-loc" data-darkroom-loc hidden>
-        <p class="dr-loc-title">WHERE ARE YOU?</p>
+        <p class="dr-loc-title">你在哪里？</p>
+        <p class="dr-loc-title-en">WHERE ARE YOU?</p>
         <p class="dr-loc-sub">选择你最常出没的地区，把你的光点到地图上（仅在本页展示，不会被上传或保存）。</p>
         <div class="dr-loc-row">
           <select aria-label="选择你的位置" class="dr-loc-select" id="wm-loc-select">
@@ -168,7 +171,7 @@ const locations: LocGroup[] = [
           <button class="dr-make" data-loc-confirm type="button">点亮我的位置 →</button>
         </div>
         <p class="dr-loc-done" data-loc-done hidden>
-          ✦ YOU ARE HERE —— 你的光已经点亮，地图正在等你。
+          ✦ 你在这里 —— 你的光已经点亮，地图正在等你。
         </p>
       </div>
     </div>
@@ -247,12 +250,22 @@ const locations: LocGroup[] = [
 
   .dr-empty-title {
     margin: 0;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--anniv-serif);
     font-size: clamp(2rem, 6.5vw, 4.2rem);
     font-weight: 700;
     line-height: 1.08;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.1em;
     color: var(--anniv-fg);
+  }
+
+  .dr-empty-title-en {
+    margin: 0.7rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    color: var(--anniv-faint);
   }
 
   .dr-empty-sub {
@@ -636,12 +649,22 @@ const locations: LocGroup[] = [
 
   .dr-ready-title {
     margin: 0;
-    font-family: 'Archivo', sans-serif;
-    font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.5rem, 3.4vw, 2.3rem);
     font-weight: 700;
     line-height: 1.15;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
     color: var(--anniv-accent);
+  }
+
+  .dr-ready-title-en {
+    margin: 0.5rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.38em;
+    text-indent: 0.38em;
+    color: var(--anniv-faint);
   }
 
   .dr-ready-actions {
@@ -663,12 +686,21 @@ const locations: LocGroup[] = [
 
   .dr-loc-title {
     margin: 0;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.78rem;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.1rem, 2.4vw, 1.4rem);
     font-weight: 700;
-    letter-spacing: 0.38em;
-    text-indent: 0.38em;
-    color: var(--anniv-accent);
+    letter-spacing: 0.16em;
+    color: var(--anniv-fg);
+  }
+
+  .dr-loc-title-en {
+    margin: -0.4rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    color: var(--anniv-faint);
   }
 
   .dr-loc-sub {
