@@ -42,7 +42,12 @@ const SOURCES = [
     src: 'scripts/assets/watermark/seeker-7th-landscape-src.png',
     flatSrc: 'scripts/assets/watermark/seeker-7th-landscape.jpg',
     out: `${OUT_DIR}/seeker-7th-landscape.webp`,
-    eraseRects: [],
+    /**
+     * 2026-09-17 版导出（透明度调整）烙入了昵称层「@肖默」：
+     * 文字 bbox ≈ (848-922, 1002-1030)，右侧 22px 外即书法「方」尾笔画，
+     * 擦除矩形四边留 6-8px 余量且不触碰笔画。该位置由 Canvas 绘制用户昵称。
+     */
+    eraseRects: [{ x: 840, y: 996, width: 88, height: 38 }],
     cardWindow: { x0: 2050, x1: 2499, y0: 1280, y1: 1558 },
     minRun: 100,
   },
