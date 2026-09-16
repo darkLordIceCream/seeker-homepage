@@ -268,6 +268,16 @@
       ],
       "status": "done",
       "evidence": "./init.sh 全绿（type-check 0 错误、lint 0 错误、75 页构建 + worker 补齐）；浏览器回归：七章深浅双主题截图验证、印样墙/地图预览/时间线/关系网真实数据渲染、统计直出 825/15/34、地图 setStyle 实时切换（暗房光点↔纸面墨点）、点击中国 flyTo 下钻 + BACK TO WORLD、水印示例→生成→下载（FRAME READY 0.3MB JPEG seeker-sample_seeker_7th_watermark.jpg）、首页角卡随机真实照片 + 桌面 hover 展开 + 移动端小图块、375/390/430/768 四断点全页零横向溢出（修复 SharedRoad 十字网格溢出）；遗留：采访/合作/周边/鸣谢/寄语真实内容待补（published 置 true 即上）、825/15/34 为占位、Safari 真机待测"
+    },
+    {
+      "id": "feat-027",
+      "name": "七周年 Scroll Story 滚动叙事（HERO/01/02/06/07 Cinematic + 编辑段 reveal + 进度引擎）",
+      "description": "将 /7th/ 从普通长页升级为 Apple 式 scroll-driven storytelling 的数字摄影纪念册：自研轻量进度引擎（src/lib/anniversary/scroll-story.ts，CSS sticky 钉住 + rAF 进度计算 + IO reveal，零新依赖、不引 GSAP）+ 三种滚动模式（Cinematic Sticky：HERO/01/02/06/07；Editorial Scroll：03/04/05；Breathing：LEAVE YOUR FRAME/WITH THANKS）。HERO：07 轻微放大→真实活动照片浮现→品牌组退场→主题句压照片出现；01：眉题引言→头像墙进入/停留/离场（统计容器上滑补位）→825/15/34 依序出现→地图 reveal（单图头像墙方案，零 Frame）；02：暗场→主理人肖像淡入→scale 1→1.04→寄语浮现→文字成为焦点；06：纪念物分层成形（照片→相框→@昵称→SEEKER 07→年份，MemoryObject 分层舞台）；07：2019→WE STARTED→7→YEARS LATER→2026→主题句，全页最慢收尾；05：关系网随进度展开（view 模式，连线 scaleX/Y 生长）；03/04/呼吸段 IO reveal stagger。渐进增强契约：reduced-motion/no-JS 时引擎不初始化，页面保持静态形态；仅写 transform/opacity；双主题动画零接触。",
+      "dependencies": [
+        "feat-026"
+      ],
+      "status": "done",
+      "evidence": "./init.sh 全绿（75 页构建）；浏览器逐进度点截图验证五场景时间轴（HERO p0/0.5/0.9、01 p0.3/0.52/0.97、02 p0.55、06 p0.95、07 p0.5、05 p0.85）；init-script 模拟 reduced-motion 确认引擎不初始化（story-on=false、内容完整）；pinned 中 ☼☾ 切主题无损；375px 全页零溢出；console 零错误"
     }
   ]
 }

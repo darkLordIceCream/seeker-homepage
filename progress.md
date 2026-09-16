@@ -1229,3 +1229,66 @@ PNG，但 2084×3705 的 PNG 约 8-15MB/张 vs JPEG 0.3MB，按「不为重构�
 - 825/15/34 与地图分布仍为占位（stats.json + map-points.json 两处同步替换）
 - 水印导出为 JPEG q0.92（规范写 PNG 的差异及理由见本记录开头）
 - Safari/iOS 真机、成员头像墙未来扩展（当前印样墙用活动照片混排，规范允许）
+
+## 会话记录（Scroll Story 滚动叙事，2026-09-17）
+
+### 背景
+
+用户转来高手第二份规范（当前仓库版）：把 /7th/ 升级为 Apple 式滚动叙事的数字
+摄影纪念册。与旧版规范的关键差异已按用户决定固化：01 七年序章**只有一张头像墙**，
+禁止恢复任何 Frame / 多图 crossfade / Hero Frame；04 追光印记保持空状态。
+用户确认计划（AskUserQuestion 曾就素材冲突提问，用户以新规范回复替代选择）。
+
+### 技术决策：不引入 GSAP
+
+规范优先级阶梯 CSS → IO → GSAP。盘点全部场景后判定：所需效果全部可由
+CSS position:sticky（免费的 pin）+ 自研 ~100 行 rAF 进度引擎覆盖，
+零新增依赖，符合规范 #32「不要为了证明用了 GSAP 而增加动画」。
+引擎接口按可替换设计，未来场景超出能力再评估 GSAP。
+
+### What's Done（feat-027，6 个 commit）
+
+- **C1 引擎 + HERO**：src/lib/anniversary/scroll-story.ts——场景注册表
+  （data-story-scene → 映射工厂）、rAF 进度计算（几何仅 measure 时读取：
+  init/resize/load/根 RO；滚动帧只置 dirty）、reduced-motion 守卫
+  （引擎不初始化=静态页）、initReveals（[data-reveal] → global.css
+  .reveal/.in-view 约定 + --reveal-delay 错峰）。渐进增强契约：init 时给
+  main 加 .story-on 并同步首帧 apply，无闪烁窗口。HERO 舞台（180vh/150vh
+  轨道）：07 scale 1→1.03 → 真实活动照片淡入（构建期确定性抽取横幅图）→
+  品牌组退场 →「光影七载，看见彼此。」压照片浮现（text-shadow 保可读）
+- **C2 01 七年序章**（260vh/190vh 轨道）：眉题引言（0-0.16）→ 头像墙进入
+  （0.18-0.38，translateY 50→0 + scale 0.97→1）→ 停留（0.38-0.62）→
+  离场（0.62-0.78，上浮淡出）→ 统计容器上滑补位 + 825/15/34 依序浮现
+  （0.78-0.98）；地图预览在轨道后正常流（data-reveal + scale 0.98 变体）。
+  AvatarWall 增加 stage 变体（视口限高 48vh）
+- **C3 02 + 06 + 07**：02 光影札记（250vh/180vh）：暗场 → 肖像 0.18-0.4
+  淡入 → 0.48-0.62 scale 1→1.04 → 0.62-0.78 寄语浮现 → 0.8+ 肖像轻微退后
+  文字成为焦点；06 留光成物（280vh/200vh）：新增 MemoryObject 分层舞台
+  （真实活动竖幅照片 → 相框 mat 显影 → @你的昵称 → SEEKER 07 金标 →
+  2019 — 2026 依序成形），OBJ.01/02 真实设计物档案保留在舞台后；
+  07 光影七载（300vh/200vh 全页最慢）：2019/WE STARTED → 7 scale 0.92→1
+  → YEARS LATER（新增元素）→ 2026 THE NEXT FRAME IS YOURS. → 主题句
+- **C4/C5 03 + 05 + 呼吸段 + 04**：03 采访按 肖像→姓名→身份→简介→Q/A
+  stagger reveal（240ms 起每题 +120ms）；05 同行之路 view 模式（不钉住，
+  进度=区块穿越视口）——SEEKER 先现 → 连线 scaleX/Y 从 SEEKER 向外生长 →
+  社区/高校 → 品牌/地方分部；LEAVE YOUR FRAME / WITH THANKS / 04 AwaitNote
+  挂 data-reveal（呼吸段），04 保持空状态并预留 PROJECT 图文插入结构
+- **C6 统一回归**：全断点零溢出；主题切换（pinned 中 ☼☾）无损；引擎初始化
+  模拟 reduced-motion（init-script 劫持 matchMedia）确认 story-on=false；
+  console 零错误
+
+### 排障记录
+
+- eslint prefer-destructuring / prettier 无冲突点均即时修复；
+  统计容器上滑方向首次写反（+slide → 应为 -slide），浏览器截图复验发现即改
+- AvatarWall 舞台限高被基础 `.aw img` 规则覆盖（同特异性后定义胜出），
+  提升变体特异性 `.aw.aw--stage img` 修复
+- 验证 reduced-motion：本版 agent-browser 无 reduced-motion 子命令，
+  改用 --init-script 劫持 window.matchMedia 模拟
+
+### 遗留 / 待办
+
+- 04 内容就绪后在 AwaitNote 位置插入 PROJECT 图文（结构已预留）
+- 横屏版头像墙到位后替换 AvatarWall src 与宽高
+- Safari/iOS 真机滚动性能（本环境仅 Chrome 模拟）
+- reduced-motion 用 init-script 模拟验证（非系统级真机验证）
