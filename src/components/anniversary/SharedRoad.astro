@@ -1,0 +1,205 @@
+---
+/**
+ * 【05 同行之路 · SharedRoad】SEEKER 的关系网络——品牌 / 社区 / 地方分部 / 高校。
+ * 版式：十字节点网络（editorial 细线 + 小节点），不做 Logo Wall。
+ * 数据：src/data/anniversary/partners.json（published=false 时展示网络骨架 +
+ * 待归档占位——节点类型是结构标签，不虚构具体品牌/机构）。
+ */
+import AwaitNote from './AwaitNote.astro';
+import partnersData from '../../data/anniversary/partners.json';
+
+interface Partner {
+  name: string;
+  kind: 'brand' | 'community' | 'chapter' | 'university';
+  blurb: string;
+  story?: string;
+}
+
+const KIND_LABEL: Record<Partner['kind'], string> = {
+  brand: '品牌',
+  community: '摄影社区',
+  chapter: '地方分部',
+  university: '高校',
+};
+
+const data = partnersData as { published: boolean; partners: Partner[] };
+const partners = data.published ? data.partners : [];
+const groups = ['brand', 'community', 'chapter', 'university'].map(kind => ({
+  kind,
+  label: KIND_LABEL[kind as Partner['kind']],
+  items: partners.filter(p => p.kind === kind),
+}));
+const hasContent = partners.length > 0;
+---
+
+<div class="sr">
+  <div aria-hidden={hasContent ? 'true' : undefined} class="sr-net">
+    <span class="sr-node sr-node--top">品牌 BRANDS</span>
+    <span class="sr-line sr-line--v1"></span>
+    <span class="sr-node sr-node--left">社区 COMMUNITIES</span>
+    <span class="sr-line sr-line--h1"></span>
+    <span class="sr-node sr-node--center">SEEKER</span>
+    <span class="sr-line sr-line--h2"></span>
+    <span class="sr-node sr-node--right">高校 UNIVERSITIES</span>
+    <span class="sr-line sr-line--v2"></span>
+    <span class="sr-node sr-node--bottom">地方分部 CHAPTERS</span>
+  </div>
+
+  {
+    hasContent ? (
+      groups
+        .filter(g => g.items.length > 0)
+        .map(g => (
+          <div class="sr-group">
+            <p class="sr-group-label">{g.label}</p>
+            {g.items.map(p => (
+              <div class="sr-partner">
+                <p class="sr-partner-name">{p.name}</p>
+                <p class="sr-partner-blurb">{p.blurb}</p>
+                {p.story && <p class="sr-partner-story">{p.story}</p>}
+              </div>
+            ))}
+          </div>
+        ))
+    ) : (
+      <AwaitNote />
+    )
+  }
+</div>
+
+<style>
+  .sr {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* 十字关系网：细线连接（品牌在上、社区 ─ SEEKER ─ 高校、地方分部在下） */
+  .sr-net {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    grid-template-areas:
+      '. . top . .'
+      '. . v1 . .'
+      'left h1 center h2 right'
+      '. . v2 . .'
+      '. . bottom . .';
+    place-items: center;
+    gap: 0.9rem 0;
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+    width: 100%;
+  }
+
+  .sr-node {
+    padding: 0.55rem 1.1rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    white-space: nowrap;
+    color: var(--anniv-muted);
+    border: 1px solid var(--anniv-border);
+    transition:
+      color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+
+  .sr-node--center {
+    grid-area: center;
+    padding: 0.85rem 1.6rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    color: var(--anniv-accent);
+    border-color: var(--anniv-border-strong);
+  }
+
+  .sr-node--top {
+    grid-area: top;
+  }
+
+  .sr-node--bottom {
+    grid-area: bottom;
+  }
+
+  .sr-node--left {
+    grid-area: left;
+  }
+
+  .sr-node--right {
+    grid-area: right;
+  }
+
+  .sr-line {
+    background: var(--anniv-border);
+  }
+
+  .sr-line--v1 {
+    grid-area: v1;
+    width: 1px;
+    height: clamp(1.8rem, 5vw, 3rem);
+  }
+
+  .sr-line--v2 {
+    grid-area: v2;
+    width: 1px;
+    height: clamp(1.8rem, 5vw, 3rem);
+  }
+
+  .sr-line--h1 {
+    grid-area: h1;
+    width: clamp(1.6rem, 5vw, 3rem);
+    height: 1px;
+  }
+
+  .sr-line--h2 {
+    grid-area: h2;
+    width: clamp(1.6rem, 5vw, 3rem);
+    height: 1px;
+  }
+
+  .sr-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--anniv-border);
+  }
+
+  .sr-group-label {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--anniv-accent);
+  }
+
+  .sr-partner-name {
+    margin: 0 0 0.3rem;
+    font-family: var(--anniv-serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--anniv-fg);
+  }
+
+  .sr-partner-blurb {
+    margin: 0;
+    max-width: 40em;
+    font-size: 0.86rem;
+    line-height: 1.9;
+    color: var(--anniv-muted);
+  }
+
+  .sr-partner-story {
+    margin: 0.4rem 0 0;
+    max-width: 40em;
+    font-size: 0.86rem;
+    line-height: 2;
+    color: var(--anniv-fg-secondary);
+  }
+</style>

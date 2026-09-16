@@ -15,6 +15,8 @@ import AwaitNote from '../../components/anniversary/AwaitNote.astro';
 import ContactSheet from '../../components/anniversary/ContactSheet.astro';
 import FounderNote from '../../components/anniversary/FounderNote.astro';
 import VoicesSection from '../../components/anniversary/VoicesSection.astro';
+import ProjectTimeline from '../../components/anniversary/ProjectTimeline.astro';
+import SharedRoad from '../../components/anniversary/SharedRoad.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
@@ -92,17 +94,13 @@ import stats from '../../data/anniversary/stats.json';
       <!-- 04 / 追光印记：项目时间线 -->
       <section aria-labelledby="sec-projects" class="arc-sec">
         <SectionHead en="WHAT WE HAVE MADE" no="04" zh="追光印记" />
-        <div class="arc-sec-body">
-          <AwaitNote />
-        </div>
+        <ProjectTimeline />
       </section>
 
       <!-- 05 / 同行之路：合作关系 -->
       <section aria-labelledby="sec-road" class="arc-sec">
         <SectionHead en="THE PEOPLE WHO WALKED WITH US" no="05" zh="同行之路" />
-        <div class="arc-sec-body">
-          <AwaitNote />
-        </div>
+        <SharedRoad />
       </section>
 
       <!-- LEAVE YOUR FRAME：参与入口（水印工坊 CTA） -->
