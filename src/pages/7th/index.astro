@@ -18,7 +18,23 @@ import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import SharedRoad from '../../components/anniversary/SharedRoad.astro';
 import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
 import Thanks from '../../components/anniversary/Thanks.astro';
+import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
 import stats from '../../data/anniversary/stats.json';
+
+// HERO 首帧摄影作品：从真实活动图池确定性抽一张横幅图（不随构建随机跳动）
+const heroPool = Object.entries(ACTIVITY_IMAGE_META).filter(([key, dim]) => {
+  return (
+    !key.includes('cover') &&
+    !key.includes('committee') &&
+    dim.w >= 960 &&
+    dim.h >= 640 &&
+    dim.w > dim.h
+  );
+});
+const heroPick = heroPool[Math.floor(heroPool.length / 2)];
+const heroPhoto = heroPick
+  ? { url: `https://r2.xn--seeker-ng2jm403afb4a.club/${heroPick[0]}`, w: heroPick[1].w, h: heroPick[1].h }
+  : null;
 ---
 
 <Layout
@@ -35,15 +51,35 @@ import stats from '../../data/anniversary/stats.json';
     }
   </script>
   <AnniversaryHeader />
-  <main class="arc" id="main-content">
-    <!-- HERO：SEEKER 07 主视觉 -->
-    <header class="arc-hero">
-      <p class="arc-hero-brand">SEEKER</p>
-      <p aria-hidden="true" class="arc-hero-num">07</p>
-      <p class="arc-hero-years">YEARS OF LIGHT</p>
-      <p class="arc-hero-range">2019 — 2026</p>
-      <h1 class="arc-hero-slogan">光影七载，看见彼此。</h1>
-      <a class="arc-enter" href="#archive">ENTER ARCHIVE ↓</a>
+  <main class="arc" id="main-content" data-story-root>
+    <!-- HERO：滚动叙事舞台（sticky），滚动即时间轴 -->
+    <header class="arc-hero" data-story-scene="hero">
+      <div class="arc-hero-stage">
+        <div class="arc-hero-photo" data-hero-photo aria-hidden="true">
+          {
+            heroPhoto && (
+              <img
+                src={heroPhoto.url}
+                alt=""
+                width={heroPhoto.w}
+                height={heroPhoto.h}
+                loading="lazy"
+                decoding="async"
+              />
+            )
+          }
+        </div>
+        <div class="arc-hero-core" data-hero-core>
+          <p class="arc-hero-brand">SEEKER</p>
+          <p aria-hidden="true" class="arc-hero-num" data-hero-num>
+            07
+          </p>
+          <p class="arc-hero-years">YEARS OF LIGHT</p>
+          <p class="arc-hero-range">2019 — 2026</p>
+        </div>
+        <h1 class="arc-hero-slogan" data-hero-slogan>光影七载，看见彼此。</h1>
+        <a class="arc-enter" href="#archive">ENTER ARCHIVE ↓</a>
+      </div>
     </header>
 
     <div class="arc-body" id="archive">
@@ -181,6 +217,11 @@ import stats from '../../data/anniversary/stats.json';
     { threshold: 0.4 },
   );
   nums.forEach(n => io.observe(n));
+
+  // Scroll Story：reduced-motion 时不初始化，页面保持静态形态
+  if (!REDUCED) {
+    import('../../lib/anniversary/scroll-story').then(({ initScrollStory }) => initScrollStory());
+  }
 </script>
 
 <style>
@@ -192,15 +233,67 @@ import stats from '../../data/anniversary/stats.json';
       color var(--dur-normal) ease;
   }
 
-  /* —— HERO：07 为主视觉，纯编辑排版 —— */
+  /* —— HERO：track + sticky 舞台（滚动叙事；无 JS 时为普通首屏） —— */
   .arc-hero {
+    min-height: calc(100svh - 64px);
+    text-align: center;
+  }
+
+  .story-on .arc-hero {
+    height: 180vh; /* 滚动轨道：钉住舞台的叙事时长 */
+  }
+
+  @media (max-width: 48rem) {
+    .story-on .arc-hero {
+      height: 150vh; /* 移动端缩短钉住时长 */
+    }
+  }
+
+  .arc-hero-stage {
+    position: sticky;
+    top: 0;
     min-height: calc(100svh - 64px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 3rem 1.5rem;
+    padding: calc(64px + 2rem) 1.5rem 2.5rem;
+    overflow: hidden;
+  }
+
+  /* 首帧摄影作品：装饰层，基础态隐藏（仅滚动叙事引擎揭示） */
+  .arc-hero-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .arc-hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 压暗层保证文字可读（UI 层，非照片 filter） */
+  .arc-hero-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--anniv-bg) 52%, transparent);
+  }
+
+  .arc-hero-core,
+  .arc-hero-slogan,
+  .arc-enter {
+    position: relative;
+    z-index: 1;
+  }
+
+  .story-on .arc-hero-slogan {
+    opacity: 0; /* 初始隐藏，由引擎在进度后段浮现（内联样式接管） */
+    text-shadow: 0 1px 28px rgba(0, 0, 0, 0.5); /* 压在照片上时的可读性 */
   }
 
   .arc-hero-brand {
