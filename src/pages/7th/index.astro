@@ -16,6 +16,7 @@ import AvatarWall from '../../components/anniversary/AvatarWall.astro';
 import FounderNote from '../../components/anniversary/FounderNote.astro';
 import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import SharedRoad from '../../components/anniversary/SharedRoad.astro';
+import MemoryObject from '../../components/anniversary/MemoryObject.astro';
 import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
 import Thanks from '../../components/anniversary/Thanks.astro';
 import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
@@ -122,10 +123,14 @@ const heroPhoto = heroPick
         </a>
       </section>
 
-      <!-- 02 / 光影札记：主理人寄语 -->
+      <!-- 02 / 光影札记：主理人寄语（Cinematic：暗场 → 肖像 → 寄语） -->
       <section aria-labelledby="sec-note" class="arc-sec">
-        <SectionHead en="A NOTE FROM SEEKER" no="02" zh="光影札记" />
-        <FounderNote />
+        <div class="story-track story-track--founder" data-story-scene="founder">
+          <div class="story-stage">
+            <SectionHead en="A NOTE FROM SEEKER" no="02" zh="光影札记" />
+            <FounderNote />
+          </div>
+        </div>
       </section>
 
       <!-- 03 / 他们的声音：成员采访 -->
@@ -153,27 +158,41 @@ const heroPhoto = heroPick
         <a class="arc-cta-btn" href="/7th/watermark/">进入七周年暗房 →</a>
       </section>
 
-      <!-- 06 / 留光成物：Logo 与周边 -->
+      <!-- 06 / 留光成物：纪念物成形舞台 + 真实设计物档案 -->
       <section aria-labelledby="sec-objects" class="arc-sec">
-        <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
+        <div class="story-track story-track--memory" data-story-scene="memory">
+          <div class="story-stage">
+            <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
+            <MemoryObject />
+          </div>
+        </div>
         <ObjectsSection />
       </section>
 
-      <!-- 07 / 光影七载：Ending -->
+      <!-- 07 / 光影七载：Ending（全页最慢的滚动收尾） -->
       <section aria-labelledby="sec-ending" class="arc-ending">
-        <SectionHead en="SEVEN YEARS LATER" no="07" zh="光影七载" />
-        <div class="arc-ending-line">
-          <span class="arc-ending-year">2019</span>
-          <span class="arc-ending-cap">WE STARTED</span>
-        </div>
-        <p aria-hidden="true" class="arc-ending-seven">7</p>
-        <div class="arc-ending-line">
-          <span class="arc-ending-year">2026</span>
-          <span class="arc-ending-cap">THE NEXT FRAME IS YOURS.</span>
-        </div>
-        <div class="arc-ending-brand">
-          <p class="arc-ending-slogan">光影七载，看见彼此。</p>
-          <p class="arc-ending-sub">追光七载，把光赠予远方</p>
+        <div class="story-track story-track--ending" data-story-scene="ending">
+          <div class="story-stage">
+            <div data-ending-head>
+              <SectionHead en="SEVEN YEARS LATER" no="07" zh="光影七载" />
+            </div>
+            <div class="arc-ending-line" data-ending-line1>
+              <span class="arc-ending-year">2019</span>
+              <span class="arc-ending-cap">WE STARTED</span>
+            </div>
+            <div data-ending-seven>
+              <p aria-hidden="true" class="arc-ending-seven">7</p>
+              <p class="arc-ending-later">YEARS LATER</p>
+            </div>
+            <div class="arc-ending-line" data-ending-line2>
+              <span class="arc-ending-year">2026</span>
+              <span class="arc-ending-cap">THE NEXT FRAME IS YOURS.</span>
+            </div>
+            <div class="arc-ending-brand" data-ending-brand>
+              <p class="arc-ending-slogan">光影七载，看见彼此。</p>
+              <p class="arc-ending-sub">追光七载，把光赠予远方</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -421,6 +440,54 @@ const heroPhoto = heroPick
 
   .arc-sec--intro > .arc-map.reveal:not(.in-view) {
     transform: scale(0.98); /* 地图预览以轻微缩放浮现（替代位移） */
+  }
+
+  /* —— 滚动叙事通用舞台（sticky 钉住，track 高度按场景区分） —— */
+  .story-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.6rem;
+    padding: calc(64px + 2rem) 0 2rem;
+    overflow: hidden;
+  }
+
+  .story-on .story-track--founder {
+    height: 250vh;
+  }
+
+  .story-on .story-track--memory {
+    height: 280vh;
+  }
+
+  .story-on .story-track--ending {
+    height: 300vh; /* 收尾最慢 */
+  }
+
+  @media (max-width: 48rem) {
+    .story-on .story-track--founder {
+      height: 180vh;
+    }
+
+    .story-on .story-track--memory {
+      height: 200vh;
+    }
+
+    .story-on .story-track--ending {
+      height: 200vh;
+    }
+  }
+
+  .arc-ending-later {
+    margin: 0.6rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    color: var(--anniv-muted);
   }
 
   .arc-copy-lead {

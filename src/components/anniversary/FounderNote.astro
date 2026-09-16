@@ -16,7 +16,7 @@ const { name, role, title, avatar, bio } = founder.data;
 ---
 
 <div class="fn">
-  <figure class="fn-portrait">
+  <figure class="fn-portrait" data-founder-portrait>
     <Image
       alt={`${name} · ${role}`}       decoding="async"       densities={[1, 1.5, 2]}       loading="lazy"       src={avatar}       width={720}
     />
@@ -25,7 +25,7 @@ const { name, role, title, avatar, bio } = founder.data;
       <span class="fn-cred-role">{role} · {title}</span>
     </figcaption>
   </figure>
-  <div class="fn-body">
+  <div class="fn-body" data-founder-text>
     <p class="fn-kicker">A NOTE FROM SEEKER</p>
     <p class="fn-bio">{bio}</p>
     <AwaitNote />
@@ -49,6 +49,10 @@ const { name, role, title, avatar, bio } = founder.data;
     display: block;
     width: 100%;
     height: auto;
+    /* 滚动舞台内限高，保证肖像 + 寄语同屏 */
+    max-height: 52vh;
+    width: auto;
+    max-width: 100%;
   }
 
   .fn-cred {

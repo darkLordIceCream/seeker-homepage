@@ -104,6 +104,96 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       });
     };
   },
+
+  /** 02 光影札记：暗场 → 肖像淡入 → 轻微放大 → 寄语浮现 → 文字成为焦点 */
+  founder: track => {
+    const portrait = track.querySelector<HTMLElement>('[data-founder-portrait]');
+    const text = track.querySelector<HTMLElement>('[data-founder-text]');
+    return ({ progress: p }) => {
+      if (portrait) {
+        const t = ramp(p, 0.18, 0.4);
+        const zoom = ramp(p, 0.48, 0.62);
+        const recede = ramp(p, 0.8, 1);
+        portrait.style.opacity = t.toFixed(3);
+        portrait.style.transform = `scale(${(1 + 0.04 * zoom - 0.02 * recede).toFixed(4)})`;
+      }
+      if (text) {
+        const t = ramp(p, 0.62, 0.78);
+        text.style.opacity = t.toFixed(3);
+        text.style.transform = `translateY(${(20 * (1 - t)).toFixed(1)}px)`;
+      }
+    };
+  },
+
+  /** 06 留光成物：照片 → 相框 → @昵称 → SEEKER 07 → 年份 → 完整纪念物 */
+  memory: track => {
+    const photo = track.querySelector<HTMLElement>('[data-memory-photo]');
+    const frame = track.querySelector<HTMLElement>('[data-memory-frame]');
+    const nick = track.querySelector<HTMLElement>('[data-memory-nick]');
+    const badge = track.querySelector<HTMLElement>('[data-memory-badge]');
+    const years = track.querySelector<HTMLElement>('[data-memory-years]');
+    return ({ progress: p }) => {
+      if (photo) {
+        const t = ramp(p, 0.15, 0.35);
+        photo.style.opacity = t.toFixed(3);
+        photo.style.transform = `scale(${(1.05 - 0.05 * t).toFixed(4)})`;
+      }
+      if (frame) {
+        frame.style.opacity = ramp(p, 0.35, 0.5).toFixed(3);
+      }
+      if (nick) {
+        const t = ramp(p, 0.5, 0.62);
+        nick.style.opacity = t.toFixed(3);
+        nick.style.transform = `translateY(${(10 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (badge) {
+        badge.style.opacity = ramp(p, 0.62, 0.76).toFixed(3);
+      }
+      if (years) {
+        years.style.opacity = ramp(p, 0.76, 0.9).toFixed(3);
+      }
+    };
+  },
+
+  /** 07 光影七载：2019 → WE STARTED → 7 → YEARS LATER → 2026 → 主题句（全页最慢） */
+  ending: track => {
+    const head = track.querySelector<HTMLElement>('[data-ending-head]');
+    const line1 = track.querySelector<HTMLElement>('[data-ending-line1]');
+    const seven = track.querySelector<HTMLElement>('[data-ending-seven]');
+    const later = track.querySelector<HTMLElement>('[data-ending-later]');
+    const line2 = track.querySelector<HTMLElement>('[data-ending-line2]');
+    const brand = track.querySelector<HTMLElement>('[data-ending-brand]');
+    return ({ progress: p }) => {
+      if (head) {
+        const t = ramp(p, 0, 0.08);
+        head.style.opacity = t.toFixed(3);
+      }
+      if (line1) {
+        const t = ramp(p, 0.05, 0.18);
+        line1.style.opacity = t.toFixed(3);
+        line1.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (seven) {
+        const t = ramp(p, 0.22, 0.4);
+        seven.style.opacity = t.toFixed(3);
+        seven.style.transform = `scale(${(0.92 + 0.08 * t).toFixed(4)})`;
+      }
+      if (later) {
+        const t = ramp(p, 0.4, 0.52);
+        later.style.opacity = t.toFixed(3);
+      }
+      if (line2) {
+        const t = ramp(p, 0.58, 0.74);
+        line2.style.opacity = t.toFixed(3);
+        line2.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (brand) {
+        const t = ramp(p, 0.78, 0.94);
+        brand.style.opacity = t.toFixed(3);
+        brand.style.transform = `translateY(${(18 * (1 - t)).toFixed(1)}px)`;
+      }
+    };
+  },
 };
 
 /**
