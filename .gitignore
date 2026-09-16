@@ -40,3 +40,7 @@ Thumbs.db
 .temp/
 .wrangler/
 __pycache__/
+
+# local agent tooling
+.sisyphus/
+.zcode/
