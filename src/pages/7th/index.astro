@@ -17,6 +17,8 @@ import FounderNote from '../../components/anniversary/FounderNote.astro';
 import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import ProjectTimeline from '../../components/anniversary/ProjectTimeline.astro';
 import SharedRoad from '../../components/anniversary/SharedRoad.astro';
+import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
+import Thanks from '../../components/anniversary/Thanks.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
@@ -113,9 +115,7 @@ import stats from '../../data/anniversary/stats.json';
       <!-- 06 / 留光成物：Logo 与周边 -->
       <section aria-labelledby="sec-objects" class="arc-sec">
         <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
-        <div class="arc-sec-body">
-          <AwaitNote />
-        </div>
+        <ObjectsSection />
       </section>
 
       <!-- 07 / 光影七载：Ending -->
@@ -140,7 +140,7 @@ import stats from '../../data/anniversary/stats.json';
       <section aria-labelledby="sec-thanks" class="arc-thanks">
         <p class="arc-thanks-en" id="sec-thanks">WITH THANKS</p>
         <p class="arc-thanks-zh">七周年项目组</p>
-        <AwaitNote />
+        <Thanks />
       </section>
     </div>
   </main>
