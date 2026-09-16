@@ -32,37 +32,41 @@ const groups = ['brand', 'community', 'chapter', 'university'].map(kind => ({
 const hasContent = partners.length > 0;
 ---
 
-<div class="sr">
+<div class="sr" data-story-scene="road" data-story-mode="view">
   <div aria-hidden={hasContent ? 'true' : undefined} class="sr-net">
-    <span class="sr-node sr-node--top">品牌<span class="sr-en"> BRANDS</span></span>
-    <span class="sr-line sr-line--v1"></span>
-    <span class="sr-node sr-node--left">社区<span class="sr-en"> COMMUNITIES</span></span>
-    <span class="sr-line sr-line--h1"></span>
-    <span class="sr-node sr-node--center">SEEKER</span>
-    <span class="sr-line sr-line--h2"></span>
-    <span class="sr-node sr-node--right">高校<span class="sr-en"> UNIVERSITIES</span></span>
-    <span class="sr-line sr-line--v2"></span>
-    <span class="sr-node sr-node--bottom">地方分部<span class="sr-en"> CHAPTERS</span></span>
+    <span class="sr-node sr-node--top" data-road-top>品牌<span class="sr-en"> BRANDS</span></span>
+    <span aria-hidden="true" class="sr-line sr-line--v1" data-road-v1></span>
+    <span class="sr-node sr-node--left" data-road-left>社区<span class="sr-en"> COMMUNITIES</span></span>
+    <span aria-hidden="true" class="sr-line sr-line--h1" data-road-h1></span>
+    <span class="sr-node sr-node--center" data-road-center>SEEKER</span>
+    <span aria-hidden="true" class="sr-line sr-line--h2" data-road-h2></span>
+    <span class="sr-node sr-node--right" data-road-right>高校<span class="sr-en"> UNIVERSITIES</span></span>
+    <span aria-hidden="true" class="sr-line sr-line--v2" data-road-v2></span>
+    <span class="sr-node sr-node--bottom" data-road-bottom>地方分部<span class="sr-en"> CHAPTERS</span></span>
   </div>
 
   {
     hasContent ? (
-      groups
-        .filter(g => g.items.length > 0)
-        .map(g => (
-          <div class="sr-group">
-            <p class="sr-group-label">{g.label}</p>
-            {g.items.map(p => (
-              <div class="sr-partner">
-                <p class="sr-partner-name">{p.name}</p>
-                <p class="sr-partner-blurb">{p.blurb}</p>
-                {p.story && <p class="sr-partner-story">{p.story}</p>}
-              </div>
-            ))}
-          </div>
-        ))
+      <div data-reveal>
+        {groups
+          .filter(g => g.items.length > 0)
+          .map(g => (
+            <div class="sr-group">
+              <p class="sr-group-label">{g.label}</p>
+              {g.items.map(p => (
+                <div class="sr-partner">
+                  <p class="sr-partner-name">{p.name}</p>
+                  <p class="sr-partner-blurb">{p.blurb}</p>
+                  {p.story && <p class="sr-partner-story">{p.story}</p>}
+                </div>
+              ))}
+            </div>
+          ))}
+      </div>
     ) : (
-      <AwaitNote />
+      <div data-reveal>
+        <AwaitNote />
+      </div>
     )
   }
 </div>
@@ -147,6 +151,23 @@ const hasContent = partners.length > 0;
 
   .sr-line {
     background: var(--anniv-border);
+  }
+
+  /* 连线从 SEEKER 一侧向外生长 */
+  .sr-line--h1 {
+    transform-origin: right center;
+  }
+
+  .sr-line--h2 {
+    transform-origin: left center;
+  }
+
+  .sr-line--v1 {
+    transform-origin: center bottom;
+  }
+
+  .sr-line--v2 {
+    transform-origin: center top;
   }
 
   .sr-line--v1 {

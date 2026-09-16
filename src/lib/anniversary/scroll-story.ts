@@ -194,6 +194,57 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     };
   },
+
+  /**
+   * 05 同行之路：关系逐渐展开（view 模式——不钉住，进度=区块穿越视口）。
+   * SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长。
+   */
+  road: track => {
+    const center = track.querySelector<HTMLElement>('[data-road-center]');
+    const h1 = track.querySelector<HTMLElement>('[data-road-h1]');
+    const left = track.querySelector<HTMLElement>('[data-road-left]');
+    const h2 = track.querySelector<HTMLElement>('[data-road-h2]');
+    const right = track.querySelector<HTMLElement>('[data-road-right]');
+    const v1 = track.querySelector<HTMLElement>('[data-road-v1]');
+    const top = track.querySelector<HTMLElement>('[data-road-top]');
+    const v2 = track.querySelector<HTMLElement>('[data-road-v2]');
+    const bottom = track.querySelector<HTMLElement>('[data-road-bottom]');
+    return ({ progress: p }) => {
+      if (center) {
+        const t = ramp(p, 0.02, 0.12);
+        center.style.opacity = t.toFixed(3);
+        center.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (h1) {
+        h1.style.opacity = '1';
+        h1.style.transform = `scaleX(${ramp(p, 0.12, 0.26).toFixed(3)})`;
+      }
+      if (left) {
+        left.style.opacity = ramp(p, 0.26, 0.36).toFixed(3);
+      }
+      if (h2) {
+        h2.style.opacity = '1';
+        h2.style.transform = `scaleX(${ramp(p, 0.14, 0.28).toFixed(3)})`;
+      }
+      if (right) {
+        right.style.opacity = ramp(p, 0.28, 0.38).toFixed(3);
+      }
+      if (v1) {
+        v1.style.opacity = '1';
+        v1.style.transform = `scaleY(${ramp(p, 0.38, 0.48).toFixed(3)})`;
+      }
+      if (top) {
+        top.style.opacity = ramp(p, 0.48, 0.56).toFixed(3);
+      }
+      if (v2) {
+        v2.style.opacity = '1';
+        v2.style.transform = `scaleY(${ramp(p, 0.4, 0.5).toFixed(3)})`;
+      }
+      if (bottom) {
+        bottom.style.opacity = ramp(p, 0.5, 0.58).toFixed(3);
+      }
+    };
+  },
 };
 
 /**
@@ -211,12 +262,24 @@ export function initScrollStory(): void {
   initReveals(root);
 
   const mq = window.matchMedia('(min-width: 48rem)');
-  const scenes: { track: HTMLElement; top: number; range: number; apply: SceneApply }[] = [];
+  const scenes: {
+    track: HTMLElement;
+    top: number;
+    range: number;
+    apply: SceneApply;
+    view: boolean;
+  }[] = [];
   root.querySelectorAll<HTMLElement>('[data-story-scene]').forEach(track => {
-    const { storyScene: name } = track.dataset;
+    const { storyScene: name, storyMode } = track.dataset;
     const factory = name ? SCENE_FACTORIES[name] : undefined;
     if (factory) {
-      scenes.push({ track, top: 0, range: 1, apply: factory(track) });
+      scenes.push({
+        track,
+        top: 0,
+        range: 1,
+        apply: factory(track),
+        view: storyMode === 'view',
+      });
     }
   });
   if (scenes.length === 0) {
@@ -226,8 +289,15 @@ export function initScrollStory(): void {
   const measure = () => {
     const { scrollY } = window;
     for (const s of scenes) {
-      s.top = s.track.getBoundingClientRect().top + scrollY;
-      s.range = Math.max(1, s.track.offsetHeight - window.innerHeight);
+      if (s.view) {
+        // view 模式：区块顶端触到视口底 → 0；区块底端离开视口顶 → 1
+        const rect = s.track.getBoundingClientRect();
+        s.top = rect.top + scrollY - window.innerHeight;
+        s.range = Math.max(1, window.innerHeight + rect.height);
+      } else {
+        s.top = s.track.getBoundingClientRect().top + scrollY;
+        s.range = Math.max(1, s.track.offsetHeight - window.innerHeight);
+      }
     }
   };
   const invalidate = () => {

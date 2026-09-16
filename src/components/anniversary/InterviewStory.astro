@@ -22,7 +22,7 @@ const { name, role, portrait, intro, interview } = Astro.props;
 
 <article class="iv">
   <div class="iv-side">
-    <div class="iv-photo">
+    <div class="iv-photo" data-reveal>
       {
         portrait ? (
           <img alt={`${name} 肖像`} decoding="async" loading="lazy" src={portrait} />
@@ -33,14 +33,14 @@ const { name, role, portrait, intro, interview } = Astro.props;
         )
       }
     </div>
-    <p class="iv-name">{name}</p>
-    <p class="iv-role">{role}</p>
-    {intro && <p class="iv-intro">{intro}</p>}
+    <p class="iv-name" data-reveal data-reveal-delay="90ms">{name}</p>
+    <p class="iv-role" data-reveal data-reveal-delay="150ms">{role}</p>
+    {intro && <p class="iv-intro" data-reveal data-reveal-delay="210ms">{intro}</p>}
   </div>
   <div class="iv-qa">
     {
-      interview.map(item => (
-        <div class="iv-item">
+      interview.map((item, i) => (
+        <div class="iv-item" data-reveal data-reveal-delay={`${240 + i * 120}ms`}>
           <p class="iv-q">
             <span aria-hidden="true" class="iv-q-mark">Q</span>
             {item.question}
