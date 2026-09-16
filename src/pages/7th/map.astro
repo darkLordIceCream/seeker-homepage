@@ -5,17 +5,25 @@
  * 数据：map-points.ts（占位）→ build-map-geo.mjs 注入 → anniv-world.json。
  */
 import Layout from '../../layouts/Layout.astro';
-import Navigation from '../../components/Navigation.astro';
-import Footer from '../../components/Footer.astro';
+import AnniversaryHeader from '../../components/anniversary/AnniversaryHeader.astro';
+import AnniversaryFooter from '../../components/anniversary/AnniversaryFooter.astro';
 import MapWall from '../../components/anniversary/MapWall.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
 <Layout
-  title="Seeker 七周年 · WHERE WE ARE"
-  description="每一个光点，都是一个追光者。SEEKER 追光者七年间的成员分布：825 位追光者，15 个国家，34 个省级行政区。"
+  description="每一个光点，都是一个追光者。SEEKER 追光者七年间的成员分布：825 位追光者，15 个国家，34 个省级行政区。"   title="Seeker 七周年 · WHERE WE ARE"
 >
-  <Navigation />
+  <!-- 7th 独立主题防闪烁：渲染前落 data-theme（默认 dark），与主站主题无关 -->
+  <script is:inline slot="head">
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem('seeker-7th-theme') === 'light' ? 'light' : 'dark';
+    } catch {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <AnniversaryHeader />
   <main class="ww-page" id="main-content">
     <header class="ww-hero">
       <p class="ww-eyebrow">SEEKER 07 / WHERE WE ARE</p>
@@ -38,12 +46,12 @@ import stats from '../../data/anniversary/stats.json';
 
     <MapWall />
 
-    <section class="ww-outro" aria-label="板块导航">
+    <section aria-label="板块导航" class="ww-outro">
       <a class="ww-cta" href="/7th/watermark/">留下你的痕迹 →</a>
       <a class="ww-back" href="/7th/">← 七周年档案</a>
     </section>
   </main>
-  <Footer />
+  <AnniversaryFooter />
 </Layout>
 
 <script>
@@ -76,17 +84,19 @@ import stats from '../../data/anniversary/stats.json';
         }
       }
     },
-    { threshold: 0.4 }
-  );
+    { threshold: 0.4 },
+);
   nums.forEach(n => io.observe(n));
 </script>
 
 <style>
   .ww-page {
     min-height: 100dvh;
-    padding-top: 70px;
     background: var(--anniv-bg);
     color: var(--anniv-fg);
+    transition:
+      background-color var(--dur-normal) ease,
+      color var(--dur-normal) ease;
   }
 
   .ww-hero {

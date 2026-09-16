@@ -1,0 +1,148 @@
+---
+/**
+ * 【SEEKER 07 · 纪念册页头】独立出版物式 Header（不使用主站 Navigation）。
+ * ← SEEKER 返回主站 ｜ SEEKER 07 · YEARS OF LIGHT 字标 ｜ ☼/☾ 独立主题切换。
+ *
+ * 主题系统：7th 板块独立于主站——html[data-theme='dark' | 'light']，默认 dark；
+ * 偏好在 localStorage['seeker-7th-theme']，防闪烁脚本由各 7th 页面经 Layout
+ * head slot 注入（渲染前执行）。切换时派发 anniv-theme-change 事件供地图监听。
+ */
+---
+
+<header class="ah">
+  <a class="ah-back" href="/">← SEEKER</a>
+  <p class="ah-mark">SEEKER 07 <span class="ah-mark-sub">YEARS OF LIGHT</span></p>
+  <button class="ah-toggle" id="ah-theme-toggle" type="button" aria-label="切换浅色主题">
+    <span class="ah-toggle-icon" aria-hidden="true">☼</span><span class="ah-toggle-text">LIGHT</span
+    >
+  </button>
+</header>
+
+<style>
+  .ah {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 64px;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+    background: color-mix(in srgb, var(--anniv-bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--anniv-border);
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+
+  .ah-back {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--anniv-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) ease;
+  }
+
+  .ah-back:hover {
+    color: var(--anniv-fg);
+  }
+
+  .ah-mark {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    color: var(--anniv-fg);
+    white-space: nowrap;
+  }
+
+  .ah-mark-sub {
+    margin-left: 0.9em;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: var(--anniv-faint);
+  }
+
+  .ah-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.42rem 0.85rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--anniv-muted);
+    background: transparent;
+    border: 1px solid var(--anniv-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      color var(--dur-fast) ease,
+      border-color var(--dur-fast) ease;
+  }
+
+  .ah-toggle:hover {
+    color: var(--anniv-accent);
+    border-color: var(--anniv-accent);
+  }
+
+  .ah-toggle:focus-visible {
+    outline: 1px solid var(--anniv-accent);
+    outline-offset: 2px;
+  }
+
+  .ah-toggle-icon {
+    font-size: 0.85rem;
+    letter-spacing: 0;
+  }
+
+  @media (max-width: 30rem) {
+    .ah-mark-sub {
+      display: none;
+    }
+
+    .ah-toggle-text {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // 独立主题切换：dark（默认）↔ light；写 localStorage 并广播给地图等监听方
+  const toggle = document.getElementById('ah-theme-toggle');
+
+  function applyToggleState(theme: string): void {
+    if (!toggle) {
+      return;
+    }
+    const toLight = theme !== 'light';
+    toggle
+      .querySelector('.ah-toggle-icon')
+      ?.replaceChildren(document.createTextNode(toLight ? '☼' : '☾'));
+    toggle
+      .querySelector('.ah-toggle-text')
+      ?.replaceChildren(document.createTextNode(toLight ? 'LIGHT' : 'DARK'));
+    toggle.setAttribute('aria-label', toLight ? '切换浅色主题' : '切换深色主题');
+  }
+
+  applyToggleState(document.documentElement.dataset.theme ?? 'dark');
+
+  toggle?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem('seeker-7th-theme', next);
+    } catch {
+      /* 隐私模式等场景下静默降级（仅本次会话生效） */
+    }
+    applyToggleState(next);
+    window.dispatchEvent(new CustomEvent('anniv-theme-change', { detail: { theme: next } }));
+  });
+</script>

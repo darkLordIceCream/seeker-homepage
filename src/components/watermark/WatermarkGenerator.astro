@@ -17,10 +17,10 @@ import stats from '../../data/anniversary/stats.json';
 ---
 
 <div class="dr" data-darkroom>
-  <!-- 页眉：档案眉题 -->
+  <!-- 工具页眉：页头字标由 AnniversaryHeader 承担，这里只留暗房身份与返回 -->
   <header class="dr-head">
-    <a class="dr-back" href="/7th/">← 七周年档案</a>
-    <p class="dr-eyebrow">SEEKER 07 / DARKROOM</p>
+    <a class="dr-back" href="/7th/">← 七周年纪念册</a>
+    <p class="dr-eyebrow">DARKROOM</p>
     <p class="dr-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
       完全在浏览器本地处理
     </p>
@@ -207,8 +207,8 @@ import stats from '../../data/anniversary/stats.json';
   const popInput = required('wm-pop-input', HTMLInputElement);
   const popCount = required('wm-pop-count', HTMLElement);
   const tplButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]')
-  );
+    document.querySelectorAll<HTMLButtonElement>('.dr-format[data-template-id]'),
+);
 
   let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
   let templateBitmap: ImageBitmap | null = null;
@@ -260,8 +260,8 @@ import stats from '../../data/anniversary/stats.json';
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const scale = Math.max(
         Math.min((cssWidth * dpr) / currentTemplate.width, 1600 / currentTemplate.width),
-        0.2
-      );
+        0.2,
+    );
       renderComposition(canvas, {
         template: currentTemplate,
         templateImage: templateBitmap,
@@ -364,15 +364,15 @@ import stats from '../../data/anniversary/stats.json';
         requestRender();
       }
       setStatus(
-        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`
-      );
+        `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`,
+    );
     } catch (error) {
       setStatus(
         error instanceof PhotoDecodeError
           ? '这张照片无法在浏览器中解码，请改用 JPG / PNG 格式（iPhone 可在「设置 → 相机 → 格式」选「兼容性最佳」后重新保存）。'
           : '照片读取失败，请重试。',
-        true
-      );
+        true,
+    );
     }
   }
 
@@ -472,8 +472,8 @@ import stats from '../../data/anniversary/stats.json';
     const n = currentTemplate.nickname;
     const estWidth = Math.min(
       n.maxWidth,
-      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2
-    );
+      n.fontSize * 0.72 * 6 + n.letterSpacing * 5 + n.fontSize * 1.2,
+  );
     nickHit.style.left = `${((n.x - estWidth / 2 - 14) / currentTemplate.width) * 100}%`;
     nickHit.style.top = `${((n.y - n.fontSize * 1.5 - 10) / currentTemplate.height) * 100}%`;
     nickHit.style.width = `${((estWidth + 28) / currentTemplate.width) * 100}%`;

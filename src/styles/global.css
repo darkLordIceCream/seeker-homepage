@@ -410,3 +410,12 @@ html[data-theme='light'] {
   --anniv-map-point: #221d14;
   --anniv-map-point-halo: #7c6118;
 }
+
+/* 原生控件 / 滚动条跟随 7th 独立主题 */
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}

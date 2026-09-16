@@ -1,0 +1,101 @@
+---
+/**
+ * 【SEEKER 07 · 纪念册页脚】不复制主站 Footer——独立出版物的极简收尾。
+ * 光影七载，看见彼此。/ 2019 — 2026 / 拍一张照片，交一个朋友。/ © 2026 SEEKER
+ */
+---
+
+<footer class="af">
+  <div class="af-inner">
+    <p class="af-brand">SEEKER 追光者</p>
+    <p class="af-slogan">光影七载，看见彼此。</p>
+    <p class="af-range">2019 — 2026</p>
+    <p class="af-motto">拍一张照片，交一个朋友。</p>
+    <nav class="af-links" aria-label="纪念册导航">
+      <a href="/">← SEEKER 主站</a>
+      <a href="/7th/map/">WHERE WE ARE</a>
+      <a href="/7th/watermark/">DARKROOM</a>
+    </nav>
+    <p class="af-copy">© 2026 SEEKER</p>
+  </div>
+</footer>
+
+<style>
+  .af {
+    border-top: 1px solid var(--anniv-border);
+    background: var(--anniv-bg);
+    color: var(--anniv-fg);
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+
+  .af-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5rem) 1.5rem 2.2rem;
+    text-align: center;
+  }
+
+  .af-brand {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+  }
+
+  .af-slogan {
+    margin: 1.3rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+
+  .af-range {
+    margin: 0.9rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.3em;
+    color: var(--anniv-accent);
+  }
+
+  .af-motto {
+    margin: 1.6rem 0 0;
+    font-size: 0.84rem;
+    letter-spacing: 0.14em;
+    color: var(--anniv-muted);
+  }
+
+  .af-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem 2rem;
+    margin-top: 2.4rem;
+  }
+
+  .af-links a {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--anniv-faint);
+    text-decoration: none;
+    transition: color var(--dur-fast) ease;
+  }
+
+  .af-links a:hover {
+    color: var(--anniv-fg);
+  }
+
+  .af-copy {
+    margin: 2.2rem 0 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.26em;
+    color: var(--anniv-faint);
+  }
+</style>

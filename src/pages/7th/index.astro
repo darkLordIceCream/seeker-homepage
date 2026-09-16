@@ -7,16 +7,25 @@
  * 统计数字从 map-points.ts 派生（单一数据源），进入视口 Count Up。
  */
 import Layout from '../../layouts/Layout.astro';
-import Navigation from '../../components/Navigation.astro';
-import Footer from '../../components/Footer.astro';
+import AnniversaryHeader from '../../components/anniversary/AnniversaryHeader.astro';
+import AnniversaryFooter from '../../components/anniversary/AnniversaryFooter.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
 <Layout
-  description="SEEKER 07 · YEARS OF LIGHT · 2019—2026。追光七载，把光赠予远方——七年摄影档案：水印工坊、成员地图墙、七周年手记。"
-  title="Seeker 七周年"
+  description="SEEKER 07 · YEARS OF LIGHT · 2019—2026。光影七载，看见彼此——SEEKER 七年数字摄影纪念册：七年序章、光影札记、他们的声音、追光印记、同行之路、留光成物。"
+  title="Seeker 七周年 · 光影七载"
 >
-  <Navigation />
+  <!-- 7th 独立主题防闪烁：渲染前落 data-theme（默认 dark），与主站主题无关 -->
+  <script is:inline slot="head">
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem('seeker-7th-theme') === 'light' ? 'light' : 'dark';
+    } catch {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <AnniversaryHeader />
   <main class="arc" id="main-content">
     <!-- 档案 Hero -->
     <header class="arc-hero">
@@ -112,7 +121,7 @@ import stats from '../../data/anniversary/stats.json';
       </section>
     </div>
   </main>
-  <Footer />
+  <AnniversaryFooter />
 </Layout>
 
 <script>
@@ -147,21 +156,23 @@ import stats from '../../data/anniversary/stats.json';
         }
       }
     },
-    { threshold: 0.4 }
-  );
+    { threshold: 0.4 },
+);
   nums.forEach(n => io.observe(n));
 </script>
 
 <style>
   .arc {
-    padding-top: 70px; /* 固定导航高度预留 */
     background: var(--anniv-bg);
     color: var(--anniv-fg);
+    transition:
+      background-color var(--dur-normal) ease,
+      color var(--dur-normal) ease;
   }
 
   /* —— 档案 Hero：07 为主视觉，纯编辑排版 —— */
   .arc-hero {
-    min-height: calc(100svh - 70px);
+    min-height: calc(100svh - 64px);
     display: flex;
     flex-direction: column;
     align-items: center;
