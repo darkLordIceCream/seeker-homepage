@@ -1292,3 +1292,67 @@ CSS position:sticky（免费的 pin）+ 自研 ~100 行 rAF 进度引擎覆盖�
 - 横屏版头像墙到位后替换 AvatarWall src 与宽高
 - Safari/iOS 真机滚动性能（本环境仅 Chrome 模拟）
 - reduced-motion 用 init-script 模拟验证（非系统级真机验证）
+
+## 会话记录（地图与暗房叙事重构，2026-09-17）
+
+### 背景
+
+用户转来第三份规范（当前仓库版 Implementation Spec）：地图与暗房不再拥有独立
+页面，收编为 /7th/ 章节并形成「WHERE WE ARE → WHERE ARE YOU? → YOU ARE HERE」
+叙事闭环。两个决策已确认：保留 06 留光成物（规范结构清单未列它，但内容为真实
+设计物，不删）；删两页 + public/_redirects 重定向（旧链接不 404）。
+
+### What's Done（feat-028，4 个 commit）
+
+- **地图章节（WHERE WE ARE）**：新增 AnniversaryMap.astro 嵌入 01 后段
+  （替代静态 SVG 预览 + EXPLORE THE MAP 旧入口）。懒加载：挂载点接近视口
+  800px 才动态 import maplibre + 拉取 GeoJSON。滚动五阶段由引擎 map 场景
+  派发进度事件驱动：World 安静出现 → First Light → Seven Years（灯光
+  随进度点亮，point/glow opacity 乘 ramp）→ People（hover/click tooltip
+  「SHANGHAI / 03 SEEKERS」，真实数据）→ Exit（地图变淡 + 「WE WERE HERE.
+  AND WE ARE STILL LOOKING.」+ 中文副题）。无年份数据 → 不做假年份。
+- **暗房章节（WHERE ARE YOU?）**：LEAVE YOUR FRAME 重写为暗房章节——
+  开场（LEAVE YOUR FRAME / WHERE ARE YOU? / A PLACE FOR YOUR LIGHT 编辑
+  排版）+ WatermarkGenerator 迁入。脚本整体抽离为
+  src/lib/watermark/darkroom.ts 的 initDarkroom()（render/gestures/template
+  管线零改动），组件只留 IO 懒加载器（rootMargin 600px，页面初始零处理
+  成本）。文案舞台化：A PLACE FOR YOUR LIGHT →「BRING YOUR LIGHT.」+
+  [+ ADD YOUR PHOTO] → 选片后 DEVELOPING… 显影动画（canvas filter
+  brightness/contrast/saturate 1.6s 过渡，reduced-motion 跳过）→
+  WHO ARE YOU? 昵称 → YOUR FRAME 完成
+- **✦ YOU ARE HERE 闭环**：完成态新增 WHERE ARE YOU? 位置确认——下拉复用
+  anniv-points.json 49 个省/国代表点坐标（构建期 readFileSync 注入
+  data-locations，与地图同源），确认后派发 anniv-you-are-here 事件：
+  AnniversaryMap 用 Marker 自定义 ✦ 元素点亮（规避 symbol 文本的 glyphs
+  依赖）+ easeTo 推近 + 页面平滑滚回地图章节。仅会话内展示，不落库
+  （规范未要求持久化，已在 UI 注明）
+- **删除与清理**：删 src/pages/7th/map.astro、watermark.astro、旧
+  MapWall.astro；public/_redirects 四条 302（/7th/map|/、/7th/watermark|/
+  → /7th/#where-we-are / #leave-your-frame）；AnniversaryFooter 链接改
+  章节锚点；grep 确认无「EXPLORE THE MAP/进入水印工坊」类旧入口残留
+
+### 排障记录
+
+- 跨组件 story-on 选择器：AnniversaryMap 的 `.story-on .am` 被 Astro
+  scoped 样式限制在本组件，main 上的 story-on 匹配不到 → 改
+  `:global(.story-on) .am`；index.astro 内的同名规则无需改
+- darkroom.ts 抽离时 frontmatter 变量（stats）不随迁：确认脚本体未引用；
+  位置数据用 readFileSync('public/geo/anniv-points.json') 构建期读取
+  （new URL 方案在构建渲染期解析到 dist，弃用）
+- 完成态标题 YOUR FRAME IS READY. → YOUR FRAME.（规范 Stage 05）
+
+### 验证
+
+- init.sh 全绿（73 页 = 75 - 删除的 2 个二级页）
+- 浏览器：地图懒加载（canvas 出现 + skeleton 隐藏）、五阶段点亮截图、
+  hover tooltip、暗房全流程（示例→DEVELOPING→昵称→生成→YOUR FRAME→
+  位置下拉 49 项→点亮）、✦ YOU ARE HERE 推近地图、pinned 中 ☼☾ 切主题
+  地图 restyle 正常、375 移动端暗房全流程 + 地图可用 + 零横向溢出、
+  reduced-motion 引擎不初始化地图全亮可用、console 零错误
+
+### 遗留 / 待办
+
+- YOU ARE HERE 为会话内展示（规范未要求持久化）；若未来要「真的留下位置」
+  需后端/存储方案（R2/CF D1 等），属新产品决策
+- 04 等真实项目内容；头像墙等横屏版；Safari 真机
+- 水印导出维持 JPEG q0.92（规范写 PNG 的既有决定）

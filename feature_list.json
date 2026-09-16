@@ -278,6 +278,16 @@
       ],
       "status": "done",
       "evidence": "./init.sh 全绿（75 页构建）；浏览器逐进度点截图验证五场景时间轴（HERO p0/0.5/0.9、01 p0.3/0.52/0.97、02 p0.55、06 p0.95、07 p0.5、05 p0.85）；init-script 模拟 reduced-motion 确认引擎不初始化（story-on=false、内容完整）；pinned 中 ☼☾ 切主题无损；375px 全页零溢出；console 零错误"
+    },
+    {
+      "id": "feat-028",
+      "name": "地图与暗房叙事重构——WHERE WE ARE / WHERE ARE YOU? / YOU ARE HERE 闭环",
+      "description": "按第三份规范把地图与暗房从独立页面收编为 /7th/ 章节并形成叙事闭环：①新增 AnniversaryMap.astro 嵌入式地图章节（WHERE WE ARE），复用 mapStyle 双主题风格与 anniv-world/points 数据，懒加载（接近视口 800px 才 import maplibre），滚动五阶段 World→First Light→Seven Years→People→Exit（进度由引擎派发事件、地图消费点亮；无年份数据不做假年份，仅空间渐进点亮），hover/click 省份 tooltip；②LEAVE YOUR FRAME 变 WHERE ARE YOU? 暗房章节：WatermarkGenerator 脚本抽离为 src/lib/watermark/darkroom.ts 的 initDarkroom()（接近章节 600px 才加载，页面初始零处理成本），文案舞台化（A PLACE FOR YOUR LIGHT / BRING YOUR LIGHT. / [+ ADD YOUR PHOTO] / DEVELOPING 显影动画 / WHO ARE YOU? / YOUR FRAME），新增位置确认（下拉复用 anniv-points 49 省/国坐标，仅会话内展示不落库）→ ✦ YOU ARE HERE：派发事件回地图章节，MapLibre Marker 自定义 ✦ 元素点亮 + easeTo 推近，平滑滚回地图见证闭环；③删除 /7th/map/ 与 /7th/watermark/ 页面与旧 MapWall 组件，public/_redirects 重定向旧链接至对应章节锚点，footer 链接改锚点。水印核心（render/gestures/template）与图片处理本地化零改动。",
+      "dependencies": [
+        "feat-027"
+      ],
+      "status": "done",
+      "evidence": "./init.sh 全绿（73 页=删两页后）；浏览器验证：地图懒加载（滚动接近才 init）、五阶段点亮截图、hover tooltip、暗房全流程（示例→DEVELOPING→昵称→生成→YOUR FRAME→位置下拉→点亮）、✦ YOU ARE HERE 地图推近 + Marker 呈现、pinned 中 ☼☾ 切主题地图 restyle、375 暗房全流程与地图可用、reduced-motion 引擎不初始化地图全亮可用、console 零错误；遗留：YOU ARE HERE 为会话内展示（规范未要求持久化）、Safari 真机待测"
     }
   ]
 }
