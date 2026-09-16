@@ -24,6 +24,9 @@ interface SheetFrame {
 const frames: SheetFrame[] = [];
 for (let i = 0; i < issues.length; i += 2) {
   const issue = issues[i];
+  if (!issue) {
+    continue;
+  }
   const entry = issue.data.entries.find(e => {
     const first = e.images[0];
     return Boolean(first && activityImageDims(first));

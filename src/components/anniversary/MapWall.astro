@@ -161,9 +161,15 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 </style>
 
 <script>
-  /* MapLibre 初始化：懒加载 + 黑暗光点图层 + hover/click/flyTo。 */
+  /* MapLibre 初始化：懒加载 + 双主题风格（mapStyle.ts）+ hover/click/flyTo。 */
+  import { buildMapStyle, POINT_OPACITY } from '../../lib/anniversary/mapStyle';
+  import type { GeoJSON } from 'geojson';
+
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const GOLD = '#e8c766';
+
+  /** 7th 独立主题（html[data-theme]，默认 dark） */
+  const currentTheme = () =>
+    document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
 
   function el<T extends HTMLElement>(id: string): T {
     const node = document.getElementById(id);
@@ -185,109 +191,14 @@ import 'maplibre-gl/dist/maplibre-gl.css';
         if (!r.ok) {
           throw new Error(`地图数据加载失败：HTTP ${r.status}`);
         }
-        return r.json();
+        return r.json() as Promise<GeoJSON>;
       }),
     ]);
 
     const map = new maplibregl.Map({
       container: mapContainer,
-      // 内联 style：无外部瓦片服务，GeoJSON 单文件为唯一数据源
-      style: {
-        version: 8,
-        sources: {
-          anniv: {
-            type: 'geojson',
-            data: geo,
-            generateId: true,
-          },
-        },
-        layers: [
-          { id: 'bg', type: 'background', paint: { 'background-color': '#060607' } },
-          {
-            id: 'region-fill',
-            type: 'fill',
-            source: 'anniv',
-            paint: {
-              'fill-color': [
-                'case',
-                ['==', ['feature-state', 'hover'], true],
-                '#33322f',
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['get', 'memberCount'],
-                  0,
-                  '#141419',
-                  10,
-                  '#232017',
-                  88,
-                  '#4a3d1c',
-                ],
-              ],
-              'fill-opacity': 1,
-            },
-          },
-          {
-            id: 'region-border',
-            type: 'line',
-            source: 'anniv',
-            paint: {
-              'line-color': [
-                'case',
-                ['==', ['feature-state', 'hover'], true],
-                GOLD,
-                'rgba(242, 240, 235, 0.14)',
-              ],
-              'line-width': ['case', ['==', ['feature-state', 'hover'], true], 1.4, 0.6],
-            },
-          },
-          {
-            id: 'member-glow',
-            type: 'circle',
-            source: 'anniv',
-            filter: ['>', ['get', 'memberCount'], 0],
-            paint: {
-              'circle-color': GOLD,
-              'circle-opacity': 0.16,
-              'circle-blur': 1,
-              'circle-radius': [
-                'interpolate',
-                ['linear'],
-                ['get', 'memberCount'],
-                1,
-                10,
-                14,
-                16,
-                88,
-                26,
-              ],
-            },
-          },
-          {
-            id: 'member-point',
-            type: 'circle',
-            source: 'anniv',
-            filter: ['>', ['get', 'memberCount'], 0],
-            paint: {
-              'circle-color': '#f5e2a8',
-              'circle-opacity': 0.95,
-              'circle-radius': [
-                'interpolate',
-                ['linear'],
-                ['get', 'memberCount'],
-                1,
-                2.6,
-                14,
-                4.4,
-                88,
-                7,
-              ],
-              'circle-stroke-width': 0.6,
-              'circle-stroke-color': 'rgba(6, 6, 7, 0.8)',
-            },
-          },
-        ],
-      },
+      // 内联 style：无外部瓦片服务，GeoJSON 单文件为唯一数据源；深浅风格经 mapStyle.ts 生成
+      style: buildMapStyle(currentTheme(), geo),
       center: [30, 26],
       zoom: 1.15,
       minZoom: 0.8,
@@ -298,6 +209,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.on('error', e => {
       console.warn('[ww-map]', e.error?.message ?? e.error);
+    });
+
+    // 主题切换：整体换 style（source id 不变，generateId 保证 feature-state 稳定承接）
+    window.addEventListener('anniv-theme-change', event => {
+      const { detail } = event as CustomEvent<{ theme: 'dark' | 'light' }>;
+      map.setStyle(buildMapStyle(detail?.theme === 'light' ? 'light' : 'dark', geo));
     });
 
     const hovered: { id?: number | string } = { id: undefined };
@@ -382,8 +299,8 @@ import 'maplibre-gl/dist/maplibre-gl.css';
       const DUR = 900;
       const tick = (now: number) => {
         const t = Math.min((now - t0) / DUR, 1);
-        map.setPaintProperty('member-glow', 'circle-opacity', 0.16 * t);
-        map.setPaintProperty('member-point', 'circle-opacity', 0.95 * t);
+        map.setPaintProperty('member-glow', 'circle-opacity', POINT_OPACITY.glow * t);
+        map.setPaintProperty('member-point', 'circle-opacity', POINT_OPACITY.point * t);
         if (t < 1) {
           requestAnimationFrame(tick);
         }
