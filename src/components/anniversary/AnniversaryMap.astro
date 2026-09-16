@@ -143,6 +143,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     color: var(--anniv-muted);
   }
 
+  /* 隐藏协作手势提示浮层（"Use ⌘ + scroll to zoom"）：
+     行为保留——普通滚轮穿透页面滚动、⌘/Ctrl + 滚轮才缩放地图，提示不打断叙事 */
+  .am :global(.maplibregl-cooperative-gesture-screen) {
+    display: none !important;
+  }
+
   /* YOU ARE HERE 标注（MapLibre Marker 自定义元素，规避 symbol 文本的 glyphs 依赖） */
   .am :global(.am-you) {
     display: flex;
