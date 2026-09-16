@@ -12,6 +12,7 @@ import AnniversaryHeader from '../../components/anniversary/AnniversaryHeader.as
 import AnniversaryFooter from '../../components/anniversary/AnniversaryFooter.astro';
 import SectionHead from '../../components/anniversary/SectionHead.astro';
 import AwaitNote from '../../components/anniversary/AwaitNote.astro';
+import ContactSheet from '../../components/anniversary/ContactSheet.astro';
 import stats from '../../data/anniversary/stats.json';
 ---
 
@@ -48,8 +49,7 @@ import stats from '../../data/anniversary/stats.json';
           <p class="arc-copy-lead">
             七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
           </p>
-          <!-- ContactSheet 印样墙（真实活动照片 + 作者署名） -->
-          <!-- 地图导语 + 静态预览 -->
+          <ContactSheet />
           <dl class="arc-stats" data-countup>
             <div class="arc-stat">
               <dd data-count-to={stats.members}>{stats.members}</dd>
@@ -64,7 +64,14 @@ import stats from '../../data/anniversary/stats.json';
               <dt>REGIONS</dt>
             </div>
           </dl>
-          <a class="arc-link" href="/7th/map/">EXPLORE THE MAP →</a>
+          <a class="arc-map" href="/7th/map/" aria-label="查看成员分布地图 WHERE WE ARE">
+            <span class="arc-map-land" aria-hidden="true"></span>
+            <span class="arc-map-cap">
+              <span class="arc-map-cap-en">WHERE WE ARE</span>
+              <span class="arc-map-cap-zh">每一个光点，都是一个追光者。</span>
+            </span>
+            <span class="arc-map-link">EXPLORE THE MAP →</span>
+          </a>
         </div>
       </section>
 
@@ -340,6 +347,73 @@ import stats from '../../data/anniversary/stats.json';
     font-size: 0.78rem;
     letter-spacing: 0.32em;
     color: var(--anniv-muted);
+  }
+
+  /* 地图静态预览：SVG 作 mask，土地颜色跟随令牌（深色暗房 / 浅色纸面自适应） */
+  .arc-map {
+    position: relative;
+    display: block;
+    aspect-ratio: 1000 / 389;
+    background: var(--anniv-map-bg);
+    border: 1px solid var(--anniv-border);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+
+  .arc-map:hover {
+    border-color: var(--anniv-border-strong);
+  }
+
+  .arc-map-land {
+    position: absolute;
+    inset: 0;
+    background: var(--anniv-map-land);
+    -webkit-mask: url('/geo/map-preview.svg') center / contain no-repeat;
+    mask: url('/geo/map-preview.svg') center / contain no-repeat;
+    transition: background-color var(--dur-normal) ease;
+  }
+
+  .arc-map-cap {
+    position: absolute;
+    left: 1.2rem;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .arc-map-cap-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: var(--anniv-accent);
+  }
+
+  .arc-map-cap-zh {
+    font-family: var(--anniv-serif);
+    font-size: 0.92rem;
+    letter-spacing: 0.14em;
+    color: var(--anniv-fg-secondary);
+  }
+
+  .arc-map-link {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--anniv-muted);
+    transition: color var(--dur-fast) ease;
+  }
+
+  .arc-map:hover .arc-map-link {
+    color: var(--anniv-accent);
   }
 
   /* —— LEAVE YOUR FRAME CTA —— */
