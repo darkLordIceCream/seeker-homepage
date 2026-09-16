@@ -15,10 +15,16 @@ export const POINT_OPACITY = { glow: 0.16, point: 0.95 } as const;
 
 /**
  * 生成地图 StyleSpecification。
- * @param geo 已获取的 GeoJSON（推荐传入，切换主题时免去重复请求）；
+ * @param geo 已获取的边界 GeoJSON（推荐传入，切换主题时免去重复请求）；
  *            省略时 MapLibre 自行按 URL 拉取 /geo/anniv-world.json。
+ * @param points 已获取的光点 GeoJSON（区域代表点，build-map-geo.mjs 生成）；
+ *               省略时按 URL 拉取 /geo/anniv-points.json。
  */
-export function buildMapStyle(theme: AnniversaryTheme, geo?: GeoJSON): StyleSpecification {
+export function buildMapStyle(
+  theme: AnniversaryTheme,
+  geo?: GeoJSON,
+  points?: GeoJSON,
+): StyleSpecification {
   const dark = theme !== 'light';
   const accent = dark ? '#e8c766' : '#7c6118';
   return {
@@ -27,6 +33,11 @@ export function buildMapStyle(theme: AnniversaryTheme, geo?: GeoJSON): StyleSpec
       anniv: {
         type: 'geojson',
         data: geo ?? '/geo/anniv-world.json',
+        generateId: true,
+      },
+      'anniv-points': {
+        type: 'geojson',
+        data: points ?? '/geo/anniv-points.json',
         generateId: true,
       },
     },
@@ -77,7 +88,7 @@ export function buildMapStyle(theme: AnniversaryTheme, geo?: GeoJSON): StyleSpec
       {
         id: 'member-glow',
         type: 'circle',
-        source: 'anniv',
+        source: 'anniv-points',
         filter: ['>', ['get', 'memberCount'], 0],
         paint: {
           'circle-color': accent,
@@ -99,7 +110,7 @@ export function buildMapStyle(theme: AnniversaryTheme, geo?: GeoJSON): StyleSpec
       {
         id: 'member-point',
         type: 'circle',
-        source: 'anniv',
+        source: 'anniv-points',
         filter: ['>', ['get', 'memberCount'], 0],
         paint: {
           'circle-color': dark ? '#f5e2a8' : '#221d14',

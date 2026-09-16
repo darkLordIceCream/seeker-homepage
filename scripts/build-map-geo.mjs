@@ -161,8 +161,12 @@ for (const f of china.features) {
     const simplified = poly.map(simplifyRing).filter((r) => r.length >= 4);
     if (simplified.length === 1) {
       outPolys.push(simplified);
-    } else {
+    } else if (simplified.length > 1) {
       outPolys.push(...simplified.map((r) => [r]));
+    }
+    // simplified 为空（区域过小被简化清空，如澳门）时保留原始环，避免要素消失
+    if (simplified.length === 0 && poly[0] && poly[0].length >= 4) {
+      outPolys.push(poly);
     }
   }
   f.geometry = { type: 'MultiPolygon', coordinates: outPolys };
@@ -171,8 +175,12 @@ for (const f of china.features) {
 console.log(`合并后要素: ${world.features.length}`);
 
 // —— 注入成员数据（nameZh / memberCount），统计与地图同源 ——
-// Node 26 原生支持 TS 类型剥离，可直接 import map-points.ts（失败则报错停止）
-const { PROVINCE_POINTS, COUNTRY_POINTS } = await import('../src/data/anniversary/map-points.ts');
+// 直接读 map-points.json（与 map-points.ts 同一数据源；Node ESM 读 JSON 免导入属性）
+const POINTS_DATA = JSON.parse(
+  fs.readFileSync('src/data/anniversary/map-points.json', 'utf8'),
+);
+const PROVINCE_POINTS = POINTS_DATA.provinces;
+const COUNTRY_POINTS = POINTS_DATA.countries;
 const zhByFeatureName = new Map();
 for (const p of PROVINCE_POINTS) {
   zhByFeatureName.set(p.name, p.name);
@@ -203,6 +211,82 @@ for (const f of world.features) {
   }
 }
 console.log(`注入成员数据: ${enriched} 个地区`);
+
+// —— 生成光点源 anniv-points.json ——
+// 光点必须是 Point 要素：circle 图层作用在多边形上会按顶点渲染（光点沿边界密布）。
+// 取「最大外环顶点均值」为每个有成员的区域求代表点；手工标注 lngLat 的国家优先。
+function largestRingCentroid(geometry) {
+  const polys = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
+  let bestRing = null;
+  let bestArea = 0;
+  for (const poly of polys) {
+    const ring = poly[0];
+    let area = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+      area += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+    }
+    area = Math.abs(area / 2);
+    if (area > bestArea) {
+      bestArea = area;
+      bestRing = ring;
+    }
+  }
+  if (!bestRing) {
+    return null;
+  }
+  let sx = 0;
+  let sy = 0;
+  for (const p of bestRing) {
+    sx += p[0];
+    sy += p[1];
+  }
+  return [sx / bestRing.length, sy / bestRing.length];
+}
+
+const pointFeatures = [];
+for (const prov of PROVINCE_POINTS) {
+  const f = world.features.find((x) => x.properties?.name === prov.name);
+  const coord = f && largestRingCentroid(f.geometry);
+  if (!coord) {
+    console.warn(`⚠️ 省份未匹配边界：${prov.name}`);
+    continue;
+  }
+  pointFeatures.push({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: coord },
+    properties: { name: prov.name, nameZh: prov.name, memberCount: prov.count, kind: 'province' },
+  });
+}
+for (const country of COUNTRY_POINTS) {
+  let coord = country.lngLat ?? null;
+  if (!coord && country.worldName) {
+    const f = world.features.find((x) => x.properties?.name === country.worldName);
+    coord = f && largestRingCentroid(f.geometry);
+  }
+  if (!coord) {
+    console.warn(`⚠️ 国家未匹配边界：${country.name}`);
+    continue;
+  }
+  pointFeatures.push({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: coord },
+    properties: {
+      name: country.worldName ?? country.name,
+      nameZh: country.name,
+      memberCount: country.count,
+      kind: 'country',
+    },
+  });
+}
+
+const POINTS_OUT = 'public/geo/anniv-points.json';
+fs.writeFileSync(
+  POINTS_OUT,
+  JSON.stringify({ type: 'FeatureCollection', features: pointFeatures }),
+);
+console.log(
+  `光点源: ${pointFeatures.length} 点（省 ${PROVINCE_POINTS.length} + 国 ${COUNTRY_POINTS.length}）→ ${POINTS_OUT}`,
+);
 
 const out = JSON.stringify(world);
 fs.mkdirSync('public/geo', { recursive: true });

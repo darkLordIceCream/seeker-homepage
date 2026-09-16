@@ -34,15 +34,15 @@ const hasContent = partners.length > 0;
 
 <div class="sr">
   <div aria-hidden={hasContent ? 'true' : undefined} class="sr-net">
-    <span class="sr-node sr-node--top">品牌 BRANDS</span>
+    <span class="sr-node sr-node--top">品牌<span class="sr-en"> BRANDS</span></span>
     <span class="sr-line sr-line--v1"></span>
-    <span class="sr-node sr-node--left">社区 COMMUNITIES</span>
+    <span class="sr-node sr-node--left">社区<span class="sr-en"> COMMUNITIES</span></span>
     <span class="sr-line sr-line--h1"></span>
     <span class="sr-node sr-node--center">SEEKER</span>
     <span class="sr-line sr-line--h2"></span>
-    <span class="sr-node sr-node--right">高校 UNIVERSITIES</span>
+    <span class="sr-node sr-node--right">高校<span class="sr-en"> UNIVERSITIES</span></span>
     <span class="sr-line sr-line--v2"></span>
-    <span class="sr-node sr-node--bottom">地方分部 CHAPTERS</span>
+    <span class="sr-node sr-node--bottom">地方分部<span class="sr-en"> CHAPTERS</span></span>
   </div>
 
   {
@@ -104,6 +104,18 @@ const hasContent = partners.length > 0;
     transition:
       color var(--dur-normal) ease,
       border-color var(--dur-normal) ease;
+  }
+
+  /* 窄屏十字放不下英文后缀，只留中文节点名 */
+  @media (max-width: 40rem) {
+    .sr-en {
+      display: none;
+    }
+
+    .sr-node {
+      padding: 0.45rem 0.8rem;
+      letter-spacing: 0.14em;
+    }
   }
 
   .sr-node--center {

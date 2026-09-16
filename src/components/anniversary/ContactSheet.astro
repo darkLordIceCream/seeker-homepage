@@ -92,7 +92,9 @@ for (let i = 0; i < issues.length; i += 2) {
   .cs-cell img {
     display: block;
     width: 100%;
-    height: auto;
+    /* 统一印样画幅（真实 contact sheet 即等幅小格）：裁切展示，宽高属性仍防 CLS */
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
   }
 
   .cs-cap {
