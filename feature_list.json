@@ -20,7 +20,9 @@
       "id": "feat-003",
       "name": "团队成员页面",
       "description": "/team 路由，展示主理人信息卡片，支持头像、专长标签、社交媒体链接",
-      "dependencies": ["feat-002"],
+      "dependencies": [
+        "feat-002"
+      ],
       "status": "done",
       "evidence": "pnpm build 通过，使用 Content Collections 管理成员数据"
     },
@@ -44,7 +46,13 @@
       "id": "feat-006",
       "name": "依赖升级到 Astro 7",
       "description": "从 Astro 5.x 升级到 7.x，包括 TypeScript 6、ESLint 10 等所有依赖",
-      "dependencies": ["feat-001", "feat-002", "feat-003", "feat-004", "feat-005"],
+      "dependencies": [
+        "feat-001",
+        "feat-002",
+        "feat-003",
+        "feat-004",
+        "feat-005"
+      ],
       "status": "done",
       "evidence": "pnpm build/type-check/lint 通过，浏览器验证渲染正常"
     },
@@ -52,7 +60,9 @@
       "id": "feat-007",
       "name": "项目 Harness 工程",
       "description": "创建 AGENTS.md、feature_list.json、progress.md、init.sh 等 agent 工作环境文件",
-      "dependencies": ["feat-006"],
+      "dependencies": [
+        "feat-006"
+      ],
       "status": "done",
       "evidence": "harness 文件已创建并验证，init.sh 完整验证通过"
     },
@@ -60,7 +70,9 @@
       "id": "feat-008",
       "name": "项目结构优化",
       "description": "实施 Content Collections、组件拆分、图片优化、SEO、开发规范",
-      "dependencies": ["feat-007"],
+      "dependencies": [
+        "feat-007"
+      ],
       "status": "done",
       "evidence": "PR #2 已合并，Content Collections + Image 优化 + SEOHead 组件"
     },
@@ -68,7 +80,9 @@
       "id": "feat-009",
       "name": "可访问性修复",
       "description": "修复 Astro Dev Toolbar Audit 发现的可访问性问题：汉堡菜单、键盘导航、跳转链接、标题层级、对比度",
-      "dependencies": ["feat-008"],
+      "dependencies": [
+        "feat-008"
+      ],
       "status": "done",
       "evidence": "修复汉堡菜单(button+aria)、下拉菜单(focus-within)、skip-to-content、main 标记、标题层级、对比度"
     },
@@ -76,7 +90,9 @@
       "id": "feat-010",
       "name": "小红书图标修复",
       "description": "修复小红书 SVG 图标显示问题，替换为 Simple Icons 标准图标",
-      "dependencies": ["feat-005"],
+      "dependencies": [
+        "feat-005"
+      ],
       "status": "done",
       "evidence": "MemberSocial.astro 和 Footer.astro 已更新，图标正常显示"
     },
@@ -84,7 +100,9 @@
       "id": "feat-011",
       "name": "下拉菜单 Liquid Glass 效果",
       "description": "为导航栏下拉菜单添加 Apple 风格的毛玻璃效果，统一透明度",
-      "dependencies": ["feat-002"],
+      "dependencies": [
+        "feat-002"
+      ],
       "status": "done",
       "evidence": "backdrop-filter: blur(20px) saturate(200%)，统一透明度 0.5"
     },
@@ -92,7 +110,9 @@
       "id": "feat-012",
       "name": "导航栏字体优化",
       "description": "调小导航栏字体大小，Logo 24px→20px，链接 16px→14px",
-      "dependencies": ["feat-002"],
+      "dependencies": [
+        "feat-002"
+      ],
       "status": "done",
       "evidence": "Navigation.astro 字体已调整"
     },
@@ -100,7 +120,9 @@
       "id": "feat-013",
       "name": "Cloudflare Pages 部署",
       "description": "配置 Cloudflare Pages 自动部署，连接 GitHub 仓库",
-      "dependencies": ["feat-008"],
+      "dependencies": [
+        "feat-008"
+      ],
       "status": "done",
       "evidence": "已配置 GitHub 集成，推送到 main 分支自动部署"
     },
@@ -108,7 +130,9 @@
       "id": "feat-014",
       "name": "视频托管迁移到 R2",
       "description": "将视频文件从 Pages 直接托管迁移到 Cloudflare R2 对象存储，解决 25 MiB 文件大小限制",
-      "dependencies": ["feat-013"],
+      "dependencies": [
+        "feat-013"
+      ],
       "status": "done",
       "evidence": "R2 bucket 'seeker-homepage-assets' 已创建，视频已上传，公开访问已启用"
     },
@@ -116,7 +140,10 @@
       "id": "feat-015",
       "name": "施工中占位页面",
       "description": "统一 /under-construction 占位页面，摄影主题趣味风设计（SVG 相机/胶卷装饰 + 渐变文字 + fadeInUp 动画），noindex SEO，返回首页按钮，导航栏和页脚占位链接统一指向该页面",
-      "dependencies": ["feat-002", "feat-005"],
+      "dependencies": [
+        "feat-002",
+        "feat-005"
+      ],
       "status": "done",
       "evidence": "PR #7 已合并，F1-F4 验证全部通过，29 个链接指向 /under-construction，noindex 正确注入"
     },
@@ -124,7 +151,10 @@
       "id": "feat-016",
       "name": "作品展示画廊",
       "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
-      "dependencies": ["feat-001", "feat-008"],
+      "dependencies": [
+        "feat-001",
+        "feat-008"
+      ],
       "status": "done",
       "evidence": "首页 #works 重构为编辑式摄影展墙（1 主图池 5 张 + 3 竖幅格 ×3 + 3 方幅格 ×3，共 23 张真实作品）。图单 src/data/gallery.ts（作者/标题摘自 src/content/activities entries 真实署名，w/h 与 activity-image-meta 一致，R2 只读未动）；WorksSection.astro 删除全部胶片/伪 EXIF 系统，全部图位由小段原生 JS 以 3~6s/次的独立随机间隔轮换（各格节奏互不相同形成不对称感，MutationObserver 实测 7 格间隔均落在 3.1~6.0s），悬停暂停该格；hover 轻缩放、prefers-reduced-motion 脚本不启动全静态（同页 reload 实测 8s 零切换）、#works 锚点与 scrollspy 保留。init.sh 全绿（type-check 0 错误 / lint 0 错误 / build 通过）；浏览器验证 Desktop 1440×900、Laptop 1280×800、Tablet 834、Mobile 390 一屏收纳，Dark/Light 双主题正常，Network Gallery 恰好 23 张 R2 图无重复加载"
     },
@@ -132,7 +162,10 @@
       "id": "feat-017",
       "name": "小组简介内容",
       "description": "小组介绍、成员构成、地区分部等内容区块",
-      "dependencies": ["feat-002", "feat-008"],
+      "dependencies": [
+        "feat-002",
+        "feat-008"
+      ],
       "status": "not-started",
       "evidence": ""
     },
@@ -140,7 +173,10 @@
       "id": "feat-018",
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
-      "dependencies": ["feat-002", "feat-008"],
+      "dependencies": [
+        "feat-002",
+        "feat-008"
+      ],
       "status": "in-progress",
       "evidence": "《时间的故事》2021-2026 全部 64 期上线（分支 feat/story-of-time-2025）：/activities/story-of-time/ 活动主页（介绍 + 按年份分组入口卡：2026=8/2025=11/2024=10/2023=12/2022=12/2021=11）+ activities collection（image() 本地资产 schema，date/title 可选）+ GalleryStory 画廊模板（side/stack 分型、跨年期数分页、lightbox、进度条、reduced-motion）；1719+221 张展示图入 src/assets 同源 astro:assets 优化；62 期逐页断言条目数与原文一致、0 坏图；R2 绑定自定义域 r2.seeker追光者.club（welfare 等 363 个 URL 已切换）；init.sh 0 错 0 警（72 页）；分支内提交未合并（等用户晨起复核）；2026-09-10 修复 2021-2025 全部 56 期作者-图片错位（旧解析器按 2026 版式配对），补下载每期漏掉的末位作者照片 58 张，剔除 2021-06 混入的七月篇图片与 2022-08 重复段，重建 poem/team/committee/excerpt/正文（poem 原含「如何加入」等可见垃圾文本）；56 期页面作者序列与文章真值 56/56 一致，build/type-check/lint 通过"
     },
@@ -148,7 +184,10 @@
       "id": "feat-019",
       "name": "加入小组入口",
       "description": "加入小组的引导页面或联系方式展示",
-      "dependencies": ["feat-005", "feat-008"],
+      "dependencies": [
+        "feat-005",
+        "feat-008"
+      ],
       "status": "not-started",
       "evidence": ""
     },
@@ -156,7 +195,10 @@
       "id": "feat-020",
       "name": "首页整屏滚动改版",
       "description": "CSS scroll-snap 整屏吸附 + 4 个展示区块（关于/分部/活动/加入，玻璃卡风格）+ Topbar 玻璃态与 scrollspy + 右侧进度圆点 + 依赖升级 Astro 7.2.8",
-      "dependencies": ["feat-002", "feat-005"],
+      "dependencies": [
+        "feat-002",
+        "feat-005"
+      ],
       "status": "done",
       "evidence": "./init.sh 全部通过；构建产物 16 项结构检查通过，已随 PR #10 合入 main；#join 联系方式为占位待补"
     },
@@ -164,7 +206,10 @@
       "id": "feat-021",
       "name": "全站浅色主题（Catppuccin Latte）",
       "description": "shadcn 变量重映射为 Catppuccin Latte（浅色默认）/ Mocha（深色切换）；品牌渐变 #4ecdc4→#ff6b6b 换为 Latte Teal→Red；全部组件硬编码深色改读令牌；首屏视频区保持沉浸式深色；修复 ThemeToggle 双重绑定 bug 与非首页导航白字不可读问题",
-      "dependencies": ["feat-004", "feat-020"],
+      "dependencies": [
+        "feat-004",
+        "feat-020"
+      ],
       "status": "done",
       "evidence": "./init.sh 0 错误 0 警告；浏览器实测浅色首页五屏/团队页/深色切换均正常，已随 PR #10 合入 main"
     },
@@ -172,7 +217,10 @@
       "id": "feat-022",
       "name": "首页画册式改版（作品墙 + 活动照片堆）",
       "description": "去博客化的影像主导布局：作品满版错落拼贴墙（浅色底 + 白边相框 + 微旋转，底片风占位 + EXIF 悬浮字）+ 活动拍立得照片堆（3 张白框厚底卡错位叠放，hover 抽出转正，单一「全部活动」入口）+ 介绍页左文右图；全部内容层浅色化；翻屏次数 6→4",
-      "dependencies": ["feat-020", "feat-021"],
+      "dependencies": [
+        "feat-020",
+        "feat-021"
+      ],
       "status": "done",
       "evidence": "./init.sh 0 错误 0 警告；浏览器逐屏截图验证（作品墙/照片堆含 hover 抽出/介绍页）；scrollspy 与进度点 4 点联动正常，已随 PR #10 合入 main"
     },
@@ -180,7 +228,11 @@
       "id": "feat-023",
       "name": "公益项目板块「带上她的眼睛」",
       "description": "welfare Content Collection + 二级页 /welfare（项目介绍 + 图文手记拍立得堆叠卡片）+ 文章页 /welfare/[slug]（公众号风格排版：品牌语头、金句、居中章节标题、全宽照片、居中图注、鸣谢）；首页活动卡「一种关注」替换为「Seeker公益 · 带上她的眼睛」并直连 /welfare/；首篇文章为公众号原文《带上她的眼睛 | 在遥远的地方，我看到了什么》全文 38 图；第二篇文章《过春天》（哈苏式图集模板）；模板按 layout 字段分离（editorial 画册版 / hasselblad 图集版）",
-      "dependencies": ["feat-008", "feat-021", "feat-022"],
+      "dependencies": [
+        "feat-008",
+        "feat-021",
+        "feat-022"
+      ],
       "status": "done",
       "evidence": "三篇文章全部上线：《在遥远的地方，我看到了什么》(editorial)、《过春天》(hasselblad)、《带上她的眼睛 | 第三季》(magnum)，order 1/2/3 按发布时间，延伸阅读三模板互链（紧邻一篇）；三套模板组件 + schema layout 枚举；图片全部 R2 welfare/bring-her-eyes/<slug>/；type-check / lint / build（7 页）全过；已随 PR 17 合入 main"
     },
@@ -188,7 +240,10 @@
       "id": "feat-024",
       "name": "七周年水印海报生成器",
       "description": "浏览器本地 Canvas 合成：上传照片做海报背景（竖版上下对齐左右居中 / 横版底部和左右对齐）+ 昵称 → 套七周年真实模板（SEEKER 幽灵字母 + 手写体 + 二维码）→ 拖动/缩放微调 → 下载 JPEG，照片全程不上传服务器。页面 /7th/watermark/（为七周年板块留命名空间，入口暂隐藏 + noindex）。竖版/横版双模板切换，叠加层为设计师 PSD 导出 PNG 经脚本修补（擦烙入昵称 + 二维码垫白）的无损 WebP，模板参数全部在 src/lib/watermark/template.ts 配置化",
-      "dependencies": ["feat-008", "feat-021"],
+      "dependencies": [
+        "feat-008",
+        "feat-021"
+      ],
       "status": "done",
       "evidence": "./init.sh 全绿（astro check + tsc 0 错 0 警、eslint 0 错、73 页构建）；agent-browser 端到端实测：竖版/横版切换、适配规则（窄长图上下对齐左右黑边、宽幅全景底部对齐顶部黑边）、底锚缩放 3.32× 无露黑、昵称动态绘制与原海报位置一致、生成 JPEG（原文件名_seeker_7th_watermark.jpg）并目验成图、坏图友好报错、noindex 注入；叠加层脚本含擦除/垫白/透明度自动校验；待办：昵称 webfont 接入、七周年板块上线时去 noindex + 挂入口（见 progress.md）"
     },
@@ -196,7 +251,11 @@
       "id": "feat-025",
       "name": "七周年板块（摄影档案架构：档案馆首页 + MapLibre 地图墙 + DARKROOM 水印 + 主站入口）",
       "description": "七周年板块完整重构为「数字摄影档案」：/7th/ 档案馆首页（07 巨字 Hero + 01/02/03 章节体 + count-up 统计 + 叙事 Ending）；/7th/map/ WHERE WE ARE（MapLibre + 融合 GeoJSON：世界国家+中国省域单图、金色 choropleth 按成员数、光点辉光、cooperativeGestures 滚动穿透、hover 高亮、点击中国 flyTo 下钻省域 + Back to World）；水印工坊 DARKROOM 重设计（editorial 上传态、照片为主体的编辑态、FORMAT 比例可视化选择器、光线扫过生成动画、YOUR FRAME IS READY 完成态、SAFE AREA 就地编辑）；主站入口（导航 ✦ 7TH 胶囊 + 右下摄影角卡：收起/hover 展开/滚到活动区展开一次）。",
-      "dependencies": ["feat-024", "feat-008", "feat-021"],
+      "dependencies": [
+        "feat-024",
+        "feat-008",
+        "feat-021"
+      ],
       "status": "done",
       "evidence": "./init.sh 全绿（0 错误、75 页构建）；judge 视觉验收两轮（第一轮 3 项修复后第二轮 hub/地图双 pass）；MapLibre 协作手势（普通滚动穿透）、hover 高亮、flyTo 下钻已浏览器验证；水印全项功能回归通过（示例/自动识别/双模板/生成/下载）；375px DOM 断言零溢出；设计令牌跟随主题双模式；真实成员数据替换仍为独立待办（map-points.ts）"
     },
@@ -204,7 +263,9 @@
       "id": "feat-026",
       "name": "七周年第二版「光影七载，看见彼此」数字摄影纪念册（独立双主题 + 七章叙事 + 数据底座）",
       "description": "按第二版设计规范将 /7th/ 从功能页重构为可阅读的摄影纪念册：HERO（光影七载，看见彼此）→ 01 七年序章（ContactSheet 胶片印样墙·真实活动照片+作者署名、count-up 统计、mask 双主题地图静态预览）→ 02 光影札记（真实主理人 Editorial Portrait + 寄语占位）→ 03 他们的声音（Q/A 采访版式，长短自适应，interviews.json 待归档占位）→ 04 追光印记（真实时间线：64 期《时间的故事》按年分组 + 3 篇公益项目，封面/期数/负责人真实数据）→ 05 同行之路（十字关系网 editorial 版式，partners.json 待归档）→ LEAVE YOUR FRAME CTA → 06 留光成物（真实纪念框设计物 OBJ.01/02，周边占位）→ 07 光影七载 Ending → WITH THANKS（分组鸣谢占位）。独立双主题系统：html[data-theme] 默认深色暗房、html[data-theme=light] 暖纸印刷感，☼/☾ 切换 + seeker-7th-theme localStorage + head slot 防闪烁脚本，与主站主题互不影响；--anniv-* 令牌双主题集（新增 surface-soft/fg-secondary/border-strong/accent-soft/error/map-* 五组），7th 组件硬编码色全部令牌化，摄影作品零 filter。地图：mapStyle.ts 深色光点/浅色墨点双风格，anniv-theme-change 事件驱动 setStyle 实时切换；光点改为区域代表点源（anniv-points.json，build-map-geo.mjs 生成，修复 circle 作用于多边形按顶点渲染的缺陷）；生产构建补齐 MapLibre v6 ESM worker（scripts/copy-maplibre-worker.mjs，修复 astro build 后 worker 404 导致地图静默卡死）。首页双入口重定位：Activities 三张拍立得卡 + 07/SEVEN YEARS 暗房特殊块（理性入口）；右下角改「藏着一张照片」小卡（真实成员照片每次加载随机、桌面 hover 轻展开、移动端小图块直达，感性入口）。统计修复：HTML 直出终值（修复专家看到的 0 SEEKERS），JS 仅做进入视口后的增强动画。数据底座：src/data/anniversary/ 下 stats.json（唯一权威源）+ interviews/partners/merchandise/thanks.json（published 开关 + 归档风优雅占位，禁止伪造）。",
-      "dependencies": ["feat-025"],
+      "dependencies": [
+        "feat-025"
+      ],
       "status": "done",
       "evidence": "./init.sh 全绿（type-check 0 错误、lint 0 错误、75 页构建 + worker 补齐）；浏览器回归：七章深浅双主题截图验证、印样墙/地图预览/时间线/关系网真实数据渲染、统计直出 825/15/34、地图 setStyle 实时切换（暗房光点↔纸面墨点）、点击中国 flyTo 下钻 + BACK TO WORLD、水印示例→生成→下载（FRAME READY 0.3MB JPEG seeker-sample_seeker_7th_watermark.jpg）、首页角卡随机真实照片 + 桌面 hover 展开 + 移动端小图块、375/390/430/768 四断点全页零横向溢出（修复 SharedRoad 十字网格溢出）；遗留：采访/合作/周边/鸣谢/寄语真实内容待补（published 置 true 即上）、825/15/34 为占位、Safari 真机待测"
     },
@@ -212,7 +273,9 @@
       "id": "feat-027",
       "name": "七周年 Scroll Story 滚动叙事（HERO/01/02/06/07 Cinematic + 编辑段 reveal + 进度引擎）",
       "description": "将 /7th/ 从普通长页升级为 Apple 式 scroll-driven storytelling 的数字摄影纪念册：自研轻量进度引擎（src/lib/anniversary/scroll-story.ts，CSS sticky 钉住 + rAF 进度计算 + IO reveal，零新依赖、不引 GSAP）+ 三种滚动模式（Cinematic Sticky：HERO/01/02/06/07；Editorial Scroll：03/04/05；Breathing：LEAVE YOUR FRAME/WITH THANKS）。HERO：07 轻微放大→真实活动照片浮现→品牌组退场→主题句压照片出现；01：眉题引言→头像墙进入/停留/离场（统计容器上滑补位）→825/15/34 依序出现→地图 reveal（单图头像墙方案，零 Frame）；02：暗场→主理人肖像淡入→scale 1→1.04→寄语浮现→文字成为焦点；06：纪念物分层成形（照片→相框→@昵称→SEEKER 07→年份，MemoryObject 分层舞台）；07：2019→WE STARTED→7→YEARS LATER→2026→主题句，全页最慢收尾；05：关系网随进度展开（view 模式，连线 scaleX/Y 生长）；03/04/呼吸段 IO reveal stagger。渐进增强契约：reduced-motion/no-JS 时引擎不初始化，页面保持静态形态；仅写 transform/opacity；双主题动画零接触。",
-      "dependencies": ["feat-026"],
+      "dependencies": [
+        "feat-026"
+      ],
       "status": "done",
       "evidence": "./init.sh 全绿（75 页构建）；浏览器逐进度点截图验证五场景时间轴（HERO p0/0.5/0.9、01 p0.3/0.52/0.97、02 p0.55、06 p0.95、07 p0.5、05 p0.85）；init-script 模拟 reduced-motion 确认引擎不初始化（story-on=false、内容完整）；pinned 中 ☼☾ 切主题无损；375px 全页零溢出；console 零错误"
     },
@@ -220,9 +283,21 @@
       "id": "feat-028",
       "name": "地图与暗房叙事重构——WHERE WE ARE / WHERE ARE YOU? / YOU ARE HERE 闭环",
       "description": "按第三份规范把地图与暗房从独立页面收编为 /7th/ 章节并形成叙事闭环：①新增 AnniversaryMap.astro 嵌入式地图章节（WHERE WE ARE），复用 mapStyle 双主题风格与 anniv-world/points 数据，懒加载（接近视口 800px 才 import maplibre），滚动五阶段 World→First Light→Seven Years→People→Exit（进度由引擎派发事件、地图消费点亮；无年份数据不做假年份，仅空间渐进点亮），hover/click 省份 tooltip；②LEAVE YOUR FRAME 变 WHERE ARE YOU? 暗房章节：WatermarkGenerator 脚本抽离为 src/lib/watermark/darkroom.ts 的 initDarkroom()（接近章节 600px 才加载，页面初始零处理成本），文案舞台化（A PLACE FOR YOUR LIGHT / BRING YOUR LIGHT. / [+ ADD YOUR PHOTO] / DEVELOPING 显影动画 / WHO ARE YOU? / YOUR FRAME），新增位置确认（下拉复用 anniv-points 49 省/国坐标，仅会话内展示不落库）→ ✦ YOU ARE HERE：派发事件回地图章节，MapLibre Marker 自定义 ✦ 元素点亮 + easeTo 推近，平滑滚回地图见证闭环；③删除 /7th/map/ 与 /7th/watermark/ 页面与旧 MapWall 组件，public/_redirects 重定向旧链接至对应章节锚点，footer 链接改锚点。水印核心（render/gestures/template）与图片处理本地化零改动。",
-      "dependencies": ["feat-027"],
+      "dependencies": [
+        "feat-027"
+      ],
       "status": "done",
       "evidence": "./init.sh 全绿（73 页=删两页后）；浏览器验证：地图懒加载（滚动接近才 init）、五阶段点亮截图、hover tooltip、暗房全流程（示例→DEVELOPING→昵称→生成→YOUR FRAME→位置下拉→点亮）、✦ YOU ARE HERE 地图推近 + Marker 呈现、pinned 中 ☼☾ 切主题地图 restyle、375 暗房全流程与地图可用、reduced-motion 引擎不初始化地图全亮可用、console 零错误；遗留：YOU ARE HERE 为会话内展示（规范未要求持久化）、Safari 真机待测"
+    },
+    {
+      "id": "feat-029",
+      "name": "Seeker 品牌配色系统（藏蓝基底 + 蓝色标记 + 纸张/夜空双主题）",
+      "description": "按品牌配色规范将全站从 Catppuccin 青/红渐变体系迁移到 Seeker 品牌色：藏蓝 #08294A 基底、Seeker Blue #0750A8 结构强调、Sky #3A9DFF 光/交互。主站 Light = 冷蓝纸 #F7FAFD + 墨蓝 #14283D（纸张/墨水/蓝色编辑标记），Dark = 藏蓝夜空 #061A30 + 月光白 #EAF4FF（夜空/月光/蓝色光）。在现有 Catppuccin/shadcn 变量体系上直接换值（不另起第二套），新增 --seeker-navy/blue/sky/pale-blue 品牌基色；--grad-a/b 青红渐变 → 藏蓝→天蓝「一道蓝光」；glass/glow/divider/icon-tile/paper 全系换蓝。清理四处硬编码旧品牌色：Navigation 浮动 hover/7周年金胶囊、Banner 三色渐变标语与 focus ring、ActsSection Young Blood 卡橙青 radial、under-construction SVG 九处。7 周年 --anniv-* 同步继承品牌色：档案金 #e8c766 全系退役 → dark Sky #3A9DFF 光 / light Seeker Blue 墨，bg 换藏蓝黑 #04101E，mapStyle.ts 色板同步（蓝色光点/墨点），光扫渐变换蓝。R2 只读；水印核心/地图数据/组件架构零改动。",
+      "dependencies": [
+        "feat-028"
+      ],
+      "status": "done",
+      "evidence": "分阶段独立 commit：bc17f4b(tokens)/9b781af(home)/6cc811f(7th)；每步 lint/astro:check/build 全绿 + 浏览器双主题截图；C4 主题机制验证（主站 .dark+theme storage+系统偏好；7th 独立 data-theme+seeker-7th-theme+防闪烁；地图 pinned 中真实按钮切换 restyle 正常）；C5 画廊 photo-first 双主题核对（无 fake EXIF/无胶片视觉/图片为主体）；init.sh 全绿 73 页"
     }
   ]
 }

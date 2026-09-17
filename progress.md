@@ -1414,3 +1414,58 @@ ACTIVITY_IMAGE_META 提供构建期 w/h，可精确分型与防裁剪；④ 计�
 - 同前：图单建议成员人工过目一轮（只改 src/data/gallery.ts）
 - 23 张图全 lazy，但轮换池使首页图片请求从 9 →
   23；若未来要省流量，可把每格轮换列表收紧为 2 张（配置即可，无需改组件）
+
+## 会话记录（Seeker 品牌配色系统重构，2026-09-18）
+
+### 背景
+
+用户转来品牌配色规范：建立统一的 Seeker 品牌色系统（藏蓝基底 + 蓝色编辑标记 +
+蓝光识别），替代此前的 Catppuccin 青/红渐变体系，让首页、Gallery、活动页、
+7 周年在视觉上同属一个品牌（与 Logo 的藏蓝/电光蓝同源）。两处决策按规范执行：
+保留 06 留光成物；删两页 + 重定向。
+
+### 关键决策：不引入第二套变量体系
+
+审计（Explore 全量色值盘点）确认全站高度 token 驱动 → 在现有 Catppuccin/
+shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky/pale-blue
+四个品牌基色，组件零改动即整体换色；散落硬编码仅 14 个文件，品牌相关集中在
+Navigation/Banner/under-construction（青红）与 ActsSection/Watermark/mapStyle（金）。
+
+### What's Done（feat-029，分阶段 commit）
+
+- **bc17f4b tokens**：global.css :root/.dark 全量换值（Light 纸张 #F7FAFD +
+  墨蓝 #14283D + Blue #0750A8 强调 + Sky ring；Dark 藏蓝夜空 #061A30 + 月光白
+  #EAF4FF + Sky 光）+ 新增品牌基色 + grad/glow/glass/divider/icon-tile/paper
+  换蓝。组件零改动全站自动换色
+- **9b781af home**：Navigation 浮动 hover #4ecdc4→Sky、7周年金胶囊→Seeker Blue；
+  Banner 三色渐变标语→白→天蓝蓝光渐变、focus ring→Sky；ActsSection Young
+  Blood 卡橙/青 radial→藏蓝/Sky；7周年特殊块金字面量→--anniv-accent 令牌化；
+  under-construction SVG 九处→品牌蓝
+- **6cc811f 7th**：--anniv-* 双主题换血——dark：bg #04101E 藏蓝黑/surface
+  #08243F/#0C3155/fg 月光白 #EAF4FF/accent **#3A9DFF Sky 光**/map point
+  #A8D8FF+halo #3A9DFF；light：bg #F7FAFD 冷蓝纸/accent #0750A8 墨/map point
+  #14283D 墨点/halo #0750A8；mapStyle.ts 色板同步（bg/land 三阶/hover/point/
+  stroke/accent）；WatermarkGenerator 光扫渐变 金→蓝
+- **C4/C5 验证阶段**：主题机制审计（主站 .dark+theme storage+系统偏好；7th
+  独立 data-theme+seeker-7th-theme+防闪烁，均未改动）；地图 pinned 中真实
+  按钮切主题 restyle 正常；Gallery photo-first 双主题核对（无 fake EXIF/
+  胶片视觉/蓝底包围照片）
+
+### 排障记录
+
+- eval 直接改 data-theme 不派发 anniv-theme-change → 地图不 restyle，
+  属测试方法问题；真实按钮路径验证正常（第一次就踩过同款坑，第二次复现确认）
+- 跨组件 .story-on 选择器需 :global（AnniversaryMap），index.astro 内无需
+
+### 验证
+
+- 每阶段 lint/astro:check/build 全绿；init.sh 全绿 73 页
+- 浏览器：主站 Light/Dark 全页截图；7th dark（藏蓝黑+蓝色光点地图+月光白
+  统计）/light（冷蓝纸+墨点）截图；地图 pinned 中 ☼☾ 真实切换 restyle ✓
+
+### 遗留 / 待办
+
+- 7th 档案金 → 蓝色为规范 #16 明确要求（与 Logo 电光蓝同源）；若不满意可
+  git revert 6cc811f 单独回退 7th 配色
+- +7 .jpg（无作者 ID）未上传；横屏版头像墙待替换 AvatarWall
+- Safari 真机；YOU ARE HERE 会话内展示
