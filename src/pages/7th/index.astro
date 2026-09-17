@@ -400,13 +400,14 @@ const heroPhoto = heroPick
     gap: 2.5rem;
   }
 
-  /* —— 01 七年序章：sticky 舞台 —— */
-  .story-on .intro-track {
-    height: 260vh; /* 桌面叙事时长 */
+  /* —— 01 七年序章：sticky 舞台（全出血，头像墙铺满整屏） —— */
+  .story-on .arc-sec--intro {
+    max-width: none;
+    padding: 0; /* 叙事模式下解除容器限宽；文字内边距由舞台自带 */
   }
 
-  .story-on .arc-sec--intro {
-    padding-top: 0; /* 轨道自带节奏，避免额外空档 */
+  .story-on .intro-track {
+    height: 260vh; /* 桌面叙事时长 */
   }
 
   @media (max-width: 48rem) {
@@ -422,7 +423,7 @@ const heroPhoto = heroPick
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: calc(64px + 1.5rem) 0 1.5rem;
+    padding: calc(64px + 1.5rem) clamp(1rem, 3vw, 2rem) 1.5rem;
     overflow: hidden;
   }
 
