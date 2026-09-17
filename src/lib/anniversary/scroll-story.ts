@@ -69,6 +69,7 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   /**
    * 01 七年序章：引言 → 全屏头像墙淡入/停留/淡出（缓慢漂移）→ 统计依序出现。
    * 头像墙为舞台全屏底层（桌面横版/移动竖版由 <picture> 切换）。
+   * 节奏：墙尽早入场、退场只压暗到 28% 保留质感底，避免长黑屏打断。
    */
   intro: track => {
     const head = track.querySelector<HTMLElement>('[data-intro-head]');
@@ -76,33 +77,33 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     const wall = track.querySelector<HTMLElement>('[data-intro-wall]');
     const cap = track.querySelector<HTMLElement>('[data-wall-cap]');
     const stats = Array.from(track.querySelectorAll<HTMLElement>('[data-intro-stat]'));
-    const statStarts = [0.64, 0.72, 0.8];
+    const statStarts = [0.62, 0.7, 0.78];
     return ({ progress: p }) => {
       if (head) {
-        const t = ramp(p, 0, 0.1);
-        const out = ramp(p, 0.42, 0.56);
+        const t = ramp(p, 0, 0.08);
+        const out = ramp(p, 0.5, 0.62);
         head.style.opacity = (t * (1 - out)).toFixed(3);
         head.style.transform = `translateY(${(16 * (1 - t) - 12 * out).toFixed(1)}px)`;
       }
       if (lead) {
-        const t = ramp(p, 0.06, 0.16);
-        const out = ramp(p, 0.42, 0.56);
+        const t = ramp(p, 0.04, 0.12);
+        const out = ramp(p, 0.5, 0.62);
         lead.style.opacity = (t * (1 - out)).toFixed(3);
         lead.style.transform = `translateY(${(16 * (1 - t) - 12 * out).toFixed(1)}px)`;
       }
       if (wall) {
-        const enter = ramp(p, 0.14, 0.34);
-        const drift = ramp(p, 0.34, 0.62);
-        const exit = ramp(p, 0.62, 0.86);
-        wall.style.opacity = (enter * (1 - exit)).toFixed(3);
+        const enter = ramp(p, 0.04, 0.2);
+        const drift = ramp(p, 0.2, 0.6);
+        const dim = ramp(p, 0.66, 0.84);
+        wall.style.opacity = (enter * (1 - dim * 0.72)).toFixed(3); // 退场压暗至 28%，保留质感底
         wall.style.transform = `scale(${(1.055 - 0.055 * enter + 0.035 * drift).toFixed(4)})`;
       }
       if (cap) {
-        const t = ramp(p, 0.36, 0.48) * (1 - ramp(p, 0.56, 0.66));
+        const t = ramp(p, 0.24, 0.36) * (1 - ramp(p, 0.56, 0.68));
         cap.style.opacity = t.toFixed(3);
       }
       stats.forEach((el, i) => {
-        const start = statStarts[i] ?? 0.8;
+        const start = statStarts[i] ?? 0.78;
         const t = ramp(p, start, start + 0.07);
         el.style.opacity = t.toFixed(3);
         el.style.transform = `translateY(${(14 * (1 - t)).toFixed(1)}px)`;
