@@ -5,18 +5,12 @@
  * 照片取真实活动图池的一张竖幅（构建期确定性抽取）；分层为 HTML/CSS 复刻，
  * 与水印模板同一视觉语言（细框 + 金徽标 + 年份）——不是电商商品卡。
  */
-import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
+import { GALLERY_POOL } from '@/data/gallery';
 
-const R2_BASE = 'https://r2.xn--seeker-ng2jm403afb4a.club';
-const pool = Object.entries(ACTIVITY_IMAGE_META).filter(([key, dim]) => {
-  return (
-    !key.includes('cover') && !key.includes('committee') && dim.w >= 800 && dim.h >= 1000 && dim.h > dim.w
-  );
-});
-const pick = pool[Math.floor(pool.length / 2)];
-const photo = pick
-  ? { url: `${R2_BASE}/${pick[0]}`, w: pick[1].w, h: pick[1].h }
-  : null;
+// 纪念物照片：取成员收集池中的竖幅（确定性抽取，居中一张）
+const portraits = [...GALLERY_POOL].filter(img => img.h > img.w).sort((a, b) => a.author.localeCompare(b.author));
+const pick = portraits[Math.floor(portraits.length / 2)];
+const photo = pick ? { url: pick.src, w: pick.w, h: pick.h } : null;
 ---
 
 <div class="memory" data-memory-object>

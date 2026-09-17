@@ -21,22 +21,14 @@ import MemoryObject from '../../components/anniversary/MemoryObject.astro';
 import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
 import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.astro';
 import Thanks from '../../components/anniversary/Thanks.astro';
-import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
+import { GALLERY_POOL } from '@/data/gallery';
 import stats from '../../data/anniversary/stats.json';
 
-// HERO 首帧摄影作品：从真实活动图池确定性抽一张横幅图（不随构建随机跳动）
-const heroPool = Object.entries(ACTIVITY_IMAGE_META).filter(([key, dim]) => {
-  return (
-    !key.includes('cover') &&
-    !key.includes('committee') &&
-    dim.w >= 960 &&
-    dim.h >= 640 &&
-    dim.w > dim.h
-  );
-});
-const heroPick = heroPool[Math.floor(heroPool.length / 2)];
+// HERO 首帧摄影作品：取成员收集池中最宽的横幅（全幅背景，构建期确定）
+const heroCandidates = [...GALLERY_POOL].filter(i => i.w > i.h).sort((a, b) => b.w - a.w);
+const heroPick = heroCandidates[0];
 const heroPhoto = heroPick
-  ? { url: `https://r2.xn--seeker-ng2jm403afb4a.club/${heroPick[0]}`, w: heroPick[1].w, h: heroPick[1].h }
+  ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
   : null;
 ---
 

@@ -2,23 +2,14 @@
 /**
  * 【七周年 · 首页角落入口】感性入口——"网站角落里藏着一张照片"。
  * 默认：小幅成员摄影作品 + SEEKER 07；桌面 hover 轻展开（主题文案 + ENTER）；
- * 移动端保持小卡，点击直达 /7th/。照片每次加载从真实活动图池随机取一张
- * （构建期从 ACTIVITY_IMAGE_META 抽样，客户端随机；背景图不占布局、零 CLS）。
+ * 移动端保持小卡，点击直达 /7th/。照片每次加载从成员收集作品池随机取一张
+ * （构建期注入 GALLERY_POOL，客户端随机；背景图不占布局、零 CLS）。
  * 与 Activities 特殊块（理性入口）角色互补，不做弹窗广告感。
  */
-import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
+import { GALLERY_POOL } from '@/data/gallery';
 
-const R2_BASE = 'https://r2.xn--seeker-ng2jm403afb4a.club';
-
-// 抽样真实成员照片池：过滤封面/组委会图与过小图，跨期数均匀取 ~28 张
-const candidates = Object.entries(ACTIVITY_IMAGE_META).filter(([key, dim]) => {
-  return !key.includes('cover') && !key.includes('committee') && dim.w >= 960 && dim.h >= 640;
-});
-const step = Math.max(1, Math.floor(candidates.length / 28));
-const pool = candidates
-  .filter((_, i) => i % step === 0)
-  .slice(0, 28)
-  .map(([key]) => ({ url: `${R2_BASE}/${key}` }));
+// 角卡照片池：成员问卷收集的全量作品（客户端随机取一张）
+const pool = GALLERY_POOL.map(img => ({ url: img.src }));
 ---
 
 <aside aria-label="Seeker 七周年" class="anniv-corner" id="anniv-corner">
