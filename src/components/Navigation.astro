@@ -55,9 +55,9 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
      ============================================================ */
 
   .navigation {
-    /* 顶部悬浮态（深色视频上）：白字 + 亮青色 hover */
+    /* 顶部悬浮态（深色视频上）：白字 + 天蓝色 hover */
     --nav-fg: #ffffff;
-    --nav-hover: #4ecdc4;
+    --nav-hover: #3a9dff;
     --nav-pill-bg: rgba(255, 255, 255, 0.12);
     --nav-pill-border: rgba(255, 255, 255, 0.25);
 
@@ -183,8 +183,8 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
   .nav-link--anniv {
     padding: 6px 14px;
     font-weight: 600;
-    color: #f5c542;
-    border: 1px solid rgba(245, 197, 66, 0.65);
+    color: var(--seeker-blue, #0750a8);
+    border: 1px solid rgba(7, 80, 168, 0.55);
     border-radius: 999px;
     transition:
       color 0.3s ease,
@@ -197,8 +197,8 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
   }
 
   .nav-link--anniv:hover {
-    color: #f5c542;
-    background: rgba(245, 197, 66, 0.12);
+    color: var(--seeker-blue, #0750a8);
+    background: rgba(7, 80, 168, 0.08);
   }
 
   /* 渐变下划线：hover 滑入，scrollspy 当前区块常驻 */
