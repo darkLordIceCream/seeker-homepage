@@ -45,116 +45,122 @@
 :root {
   --radius: 0.625rem;
 
-  /* —— Catppuccin Latte（浅色主题基准）—— */
-  --background: #eff1f5; /* Base */
-  --foreground: #4c4f69; /* Text */
+  /* —— Seeker 品牌基色（与 Logo 藏蓝/电光蓝同源）—— */
+  --seeker-navy: #08294a;
+  --seeker-blue: #0750a8;
+  --seeker-sky: #3a9dff;
+  --seeker-pale-blue: #cdeafb;
+
+  /* —— Seeker Light（纸张 + 墨水 + 蓝色编辑标记）—— */
+  --background: #f7fafd; /* 冷蓝纸 */
+  --foreground: #14283d; /* 墨蓝灰，非纯黑 */
   --card: #ffffff;
-  --card-foreground: #4c4f69;
+  --card-foreground: #14283d;
   --popover: #ffffff;
-  --popover-foreground: #4c4f69;
-  --primary: #179299; /* Teal */
+  --popover-foreground: #14283d;
+  --primary: #0750a8; /* Seeker Blue：结构/强调 */
   --primary-foreground: #ffffff;
-  --secondary: #e6e9ef; /* Mantle */
-  --secondary-foreground: #4c4f69;
-  --muted: #e6e9ef; /* Mantle */
-  --muted-foreground: #6c6f85; /* Subtext0 */
-  --accent: #ccd0da; /* Surface0 */
-  --accent-foreground: #4c4f69;
-  --destructive: #d20f39; /* Red */
+  --secondary: #eef5fb;
+  --secondary-foreground: #14283d;
+  --muted: #eef5fb;
+  --muted-foreground: #4d6a86; /* 次级墨蓝灰 */
+  --accent: #eef5fb;
+  --accent-foreground: #14283d;
+  --destructive: #d20f39; /* 语义红保留 */
   --destructive-foreground: #ffffff;
-  --border: #ccd0da; /* Surface0 */
-  --input: #bcc0cc; /* Surface1 */
-  --ring: #179299; /* Teal */
-  --chart-1: #1e66f5; /* Blue */
-  --chart-2: #179299; /* Teal */
-  --chart-3: #40a02b; /* Green */
-  --chart-4: #df8e1d; /* Yellow */
-  --chart-5: #8839ef; /* Mauve */
-  --sidebar: #e6e9ef;
-  --sidebar-foreground: #4c4f69;
-  --sidebar-primary: #179299;
+  --border: #d8e4ef;
+  --input: #c9d9e8;
+  --ring: #3a9dff; /* Sky：交互/焦点 */
+  --chart-1: #0750a8;
+  --chart-2: #3a9dff;
+  --chart-3: #08294a;
+  --chart-4: #7fb8e8;
+  --chart-5: #cdeafb;
+  --sidebar: #eef5fb;
+  --sidebar-foreground: #14283d;
+  --sidebar-primary: #0750a8;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ccd0da;
-  --sidebar-accent-foreground: #4c4f69;
-  --sidebar-border: #ccd0da;
-  --sidebar-ring: #179299;
+  --sidebar-accent: #eef5fb;
+  --sidebar-accent-foreground: #14283d;
+  --sidebar-border: #d8e4ef;
+  --sidebar-ring: #3a9dff;
 
   /* —— 品牌与界面扩展令牌（浅色值）—— */
-  /* 品牌渐变：Latte Teal → Red（浅底上作大字 ≥3:1、作按钮底配白字 ≥4.5:1） */
-  --grad-a: #179299;
-  --grad-b: #d20f39;
+  /* 品牌渐变：藏蓝 → 天蓝（浅底上作大字 ≥3:1、作按钮底配白字 ≥4.5:1） */
+  --grad-a: #0750a8;
+  --grad-b: #3a9dff;
   --on-gradient: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(76, 79, 105, 0.14);
-  --glass-hover-border: rgba(23, 146, 153, 0.45);
-  --glass-shadow: 0 8px 30px rgba(76, 79, 105, 0.1);
-  --glass-hover-shadow: 0 12px 40px rgba(23, 146, 153, 0.16);
-  --divider: rgba(76, 79, 105, 0.16);
-  --glow-a: rgba(23, 146, 153, 0.09);
-  --glow-b: rgba(210, 15, 57, 0.05);
-  --icon-tile: rgba(23, 146, 153, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(20, 40, 61, 0.14);
+  --glass-hover-border: rgba(7, 80, 168, 0.4);
+  --glass-shadow: 0 8px 30px rgba(20, 40, 61, 0.1);
+  --glass-hover-shadow: 0 12px 40px rgba(7, 80, 168, 0.14);
+  --divider: rgba(20, 40, 61, 0.16);
+  --glow-a: rgba(7, 80, 168, 0.08);
+  --glow-b: rgba(58, 157, 255, 0.06);
+  --icon-tile: rgba(7, 80, 168, 0.1);
 
   /* 拍立得/白框相片卡（浅色 = 白相纸） */
   --paper-face: #ffffff;
-  --paper-ink: #3a3f55;
-  --paper-sub: #9093a8;
-  --paper-shadow: 0 14px 38px rgba(76, 79, 105, 0.3);
-  --paper-shadow-lift: 0 28px 60px rgba(76, 79, 105, 0.4);
+  --paper-ink: #14283d;
+  --paper-sub: #7e94a9;
+  --paper-shadow: 0 14px 38px rgba(20, 40, 61, 0.28);
+  --paper-shadow-lift: 0 28px 60px rgba(20, 40, 61, 0.38);
 }
 
 .dark {
-  /* —— Catppuccin Mocha（主题切换的配套深色）—— */
-  --background: #1e1e2e; /* Base */
-  --foreground: #cdd6f4; /* Text */
-  --card: #181825; /* Mantle */
-  --card-foreground: #cdd6f4;
-  --popover: #181825;
-  --popover-foreground: #cdd6f4;
-  --primary: #94e2d5; /* Teal */
-  --primary-foreground: #1e1e2e;
-  --secondary: #313244; /* Surface0 */
-  --secondary-foreground: #cdd6f4;
-  --muted: #313244;
-  --muted-foreground: #a6adc8; /* Subtext0 */
-  --accent: #45475a; /* Surface1 */
-  --accent-foreground: #cdd6f4;
-  --destructive: #f38ba8; /* Red */
-  --destructive-foreground: #1e1e2e;
-  --border: #313244;
-  --input: #45475a;
-  --ring: #94e2d5;
-  --chart-1: #89b4fa;
-  --chart-2: #94e2d5;
-  --chart-3: #a6e3a1;
-  --chart-4: #f9e2af;
-  --chart-5: #cba6f7;
-  --sidebar: #181825;
-  --sidebar-foreground: #cdd6f4;
-  --sidebar-primary: #94e2d5;
-  --sidebar-primary-foreground: #1e1e2e;
-  --sidebar-accent: #45475a;
-  --sidebar-accent-foreground: #cdd6f4;
-  --sidebar-border: #313244;
-  --sidebar-ring: #94e2d5;
+  /* —— Seeker Night（藏蓝夜空 + 月光 + 蓝色光）—— */
+  --background: #061a30; /* 藏蓝黑，非纯黑 */
+  --foreground: #eaf4ff; /* 月光白 */
+  --card: #08243f;
+  --card-foreground: #eaf4ff;
+  --popover: #08243f;
+  --popover-foreground: #eaf4ff;
+  --primary: #3a9dff; /* Sky：暗夜里的光 */
+  --primary-foreground: #061a30;
+  --secondary: #0c3155;
+  --secondary-foreground: #eaf4ff;
+  --muted: #0c3155;
+  --muted-foreground: #afc8df; /* 月光灰蓝 */
+  --accent: #0c3155;
+  --accent-foreground: #eaf4ff;
+  --destructive: #f38ba8; /* 语义红保留 */
+  --destructive-foreground: #061a30;
+  --border: #1c4266;
+  --input: #1c4266;
+  --ring: #3a9dff;
+  --chart-1: #3a9dff;
+  --chart-2: #8fc9ff;
+  --chart-3: #0750a8;
+  --chart-4: #cdeafb;
+  --chart-5: #afc8df;
+  --sidebar: #08243f;
+  --sidebar-foreground: #eaf4ff;
+  --sidebar-primary: #3a9dff;
+  --sidebar-primary-foreground: #061a30;
+  --sidebar-accent: #0c3155;
+  --sidebar-accent-foreground: #eaf4ff;
+  --sidebar-border: #1c4266;
+  --sidebar-ring: #3a9dff;
 
   /* —— 品牌与界面扩展令牌（深色值）—— */
-  --grad-a: #94e2d5;
-  --grad-b: #f38ba8;
-  --on-gradient: #1e1e2e;
-  --glass-bg: rgba(30, 30, 46, 0.55);
-  --glass-border: rgba(205, 214, 244, 0.12);
-  --glass-hover-border: rgba(148, 226, 213, 0.45);
-  --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  --glass-hover-shadow: 0 12px 40px rgba(148, 226, 213, 0.12);
-  --divider: rgba(205, 214, 244, 0.15);
-  --glow-a: rgba(148, 226, 213, 0.07);
-  --glow-b: rgba(243, 139, 168, 0.06);
-  --icon-tile: rgba(148, 226, 213, 0.12);
+  --grad-a: #3a9dff;
+  --grad-b: #8fc9ff;
+  --on-gradient: #061a30;
+  --glass-bg: rgba(8, 36, 63, 0.55);
+  --glass-border: rgba(175, 200, 223, 0.12);
+  --glass-hover-border: rgba(58, 157, 255, 0.45);
+  --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  --glass-hover-shadow: 0 12px 40px rgba(58, 157, 255, 0.14);
+  --divider: rgba(175, 200, 223, 0.15);
+  --glow-a: rgba(58, 157, 255, 0.08);
+  --glow-b: rgba(143, 201, 255, 0.05);
+  --icon-tile: rgba(58, 157, 255, 0.12);
 
-  /* 拍立得/白框相片卡（深色 = Mocha Surface0 相纸，不再刺眼） */
-  --paper-face: #313244; /* Surface0 */
-  --paper-ink: #cdd6f4; /* Text */
-  --paper-sub: #a6adc8; /* Subtext0 */
+  /* 拍立得/白框相片卡（深色 = 藏蓝 Surface 相纸，不再刺眼） */
+  --paper-face: #0c3155; /* Secondary Surface */
+  --paper-ink: #eaf4ff; /* 月光白 */
+  --paper-sub: #afc8df; /* 月光灰蓝 */
   --paper-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
   --paper-shadow-lift: 0 30px 64px rgba(0, 0, 0, 0.55);
 }
