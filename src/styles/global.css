@@ -359,33 +359,32 @@ html.js .reveal.in-view {
 }
 
 /* —— SEEKER 07 · 七周年「数字摄影纪念册」令牌 ——
-   设计语言：PHOTOBOOK / EDITORIAL / ARCHIVE / DARKROOM / PAPER
-   7th 板块独立双主题（与主站 .dark 机制互不影响）：
-   - 默认 DARKROOM：暖黑暗房、暖白文字、光作重点（7th 页面经 head slot 脚本
-     固定写 html[data-theme='dark' | 'light']，首页角卡等主站用法永远落在深色默认值）
-   - html[data-theme='light']：DAYLIGHT——暖纸底、墨色文字、印刷品感
-   规则：摄影作品不加任何主题 filter；主题只影响背景/文字/边框/UI/地图。 */
+   设计语言：PHOTOBOOK / EDITORIAL / ARCHIVE / DARKROOM / NIGHT
+   7th 独立双主题（与主站 .dark 机制互不影响），继承 Seeker 品牌色：
+   - 默认 NIGHT：藏蓝黑底、月光白文字、Sky 光作点缀（DARKROOM / NIGHT）
+   - html[data-theme='light']：PAPER 纸张 + 墨水 + Seeker Blue 编辑标记（DAYLIGHT / PRINT）
+   规则：摄影本体不加任何主题 filter；主题只影响背景/文字/边框/UI/地图。 */
 :root {
-  --anniv-bg: #060607;
-  --anniv-surface: #0e0e11;
-  --anniv-surface-soft: #141419;
-  --anniv-fg: #f2f0eb;
-  --anniv-fg-secondary: rgba(242, 240, 235, 0.78);
-  --anniv-muted: rgba(242, 240, 235, 0.55);
-  --anniv-faint: rgba(242, 240, 235, 0.32);
-  --anniv-border: rgba(242, 240, 235, 0.12);
-  --anniv-border-strong: rgba(242, 240, 235, 0.28);
-  --anniv-accent: #e8c766; /* 档案金：克制使用，仅点缀 */
-  --anniv-accent-soft: rgba(232, 199, 102, 0.14);
+  --anniv-bg: #04101e; /* 藏蓝黑（比主站 dark 更沉浸） */
+  --anniv-surface: #08243f;
+  --anniv-surface-soft: #0c3155;
+  --anniv-fg: #eaf4ff; /* 月光白 */
+  --anniv-fg-secondary: rgba(234, 244, 255, 0.78);
+  --anniv-muted: rgba(234, 244, 255, 0.55);
+  --anniv-faint: rgba(234, 244, 255, 0.32);
+  --anniv-border: rgba(234, 244, 255, 0.12);
+  --anniv-border-strong: rgba(234, 244, 255, 0.28);
+  --anniv-accent: #3a9dff; /* Sky 光：与 Logo 电光蓝同源 */
+  --anniv-accent-soft: rgba(58, 157, 255, 0.14);
   --anniv-error: #e88080;
   --anniv-serif: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
 
-  /* 地图（MapWall 深色暗房风 / 浅色纸面墨点风共用色点） */
-  --anniv-map-bg: #060607;
-  --anniv-map-land: #141419;
-  --anniv-map-border: rgba(242, 240, 235, 0.14);
-  --anniv-map-point: #f5e2a8;
-  --anniv-map-point-halo: #e8c766;
+  /* 地图（MapWall NIGHT 蓝色光点 / PAPER 墨点共用色点） */
+  --anniv-map-bg: #04101e;
+  --anniv-map-land: #0a2036;
+  --anniv-map-border: rgba(234, 244, 255, 0.12);
+  --anniv-map-point: #a8d8ff;
+  --anniv-map-point-halo: #3a9dff;
 
   /* motion tokens：慢、轻、克制 */
   --dur-fast: 150ms;
@@ -395,26 +394,26 @@ html.js .reveal.in-view {
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 }
 
-/* DAYLIGHT：暖纸 + 墨色（避免纯白/纯黑，保留印刷品感） */
+/* DAYLIGHT：纸张 + 墨水 + Seeker Blue 编辑标记（避免纯白/纯黑） */
 html[data-theme='light'] {
-  --anniv-bg: #f6f1e6;
-  --anniv-surface: #eee8d9;
-  --anniv-surface-soft: #e7dfcc;
-  --anniv-fg: #221d14;
-  --anniv-fg-secondary: rgba(34, 29, 20, 0.8);
-  --anniv-muted: rgba(34, 29, 20, 0.58);
-  --anniv-faint: rgba(34, 29, 20, 0.34);
-  --anniv-border: rgba(34, 29, 20, 0.14);
-  --anniv-border-strong: rgba(34, 29, 20, 0.32);
-  --anniv-accent: #7c6118; /* 纸面上的深赭金，保证对比度 */
-  --anniv-accent-soft: rgba(124, 97, 24, 0.12);
+  --anniv-bg: #f7fafd;
+  --anniv-surface: #ffffff;
+  --anniv-surface-soft: #eef5fb;
+  --anniv-fg: #14283d;
+  --anniv-fg-secondary: rgba(20, 40, 61, 0.8);
+  --anniv-muted: rgba(20, 40, 61, 0.56);
+  --anniv-faint: rgba(20, 40, 61, 0.34);
+  --anniv-border: rgba(20, 40, 61, 0.14);
+  --anniv-border-strong: rgba(20, 40, 61, 0.32);
+  --anniv-accent: #0750a8; /* 纸面上的 Seeker Blue 墨水 */
+  --anniv-accent-soft: rgba(7, 80, 168, 0.1);
   --anniv-error: #a84038;
 
-  --anniv-map-bg: #f6f1e6;
-  --anniv-map-land: #e5ddc8;
-  --anniv-map-border: rgba(34, 29, 20, 0.16);
-  --anniv-map-point: #221d14;
-  --anniv-map-point-halo: #7c6118;
+  --anniv-map-bg: #f7fafd;
+  --anniv-map-land: #e4edf6;
+  --anniv-map-border: rgba(20, 40, 61, 0.15);
+  --anniv-map-point: #14283d;
+  --anniv-map-point-halo: #0750a8;
 }
 
 /* 原生控件 / 滚动条跟随 7th 独立主题 */

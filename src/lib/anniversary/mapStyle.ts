@@ -26,7 +26,7 @@ export function buildMapStyle(
   points?: GeoJSON,
 ): StyleSpecification {
   const dark = theme !== 'light';
-  const accent = dark ? '#e8c766' : '#7c6118';
+  const accent = dark ? '#3a9dff' : '#0750a8'; /* Sky 光 / Seeker Blue 墨 */
   return {
     version: 8,
     sources: {
@@ -45,7 +45,7 @@ export function buildMapStyle(
       {
         id: 'bg',
         type: 'background',
-        paint: { 'background-color': dark ? '#060607' : '#f6f1e6' },
+        paint: { 'background-color': dark ? '#04101e' : '#f7fafd' },
       },
       {
         id: 'region-fill',
@@ -55,17 +55,17 @@ export function buildMapStyle(
           'fill-color': [
             'case',
             ['==', ['feature-state', 'hover'], true],
-            dark ? '#33322f' : '#d5c9a8',
+            dark ? '#16324f' : '#d3e3f2',
             [
               'interpolate',
               ['linear'],
               ['get', 'memberCount'],
               0,
-              dark ? '#141419' : '#e5ddc8',
+              dark ? '#0a2036' : '#e4edf6',
               10,
-              dark ? '#232017' : '#dcd0ae',
+              dark ? '#10294a' : '#d8e6f2',
               88,
-              dark ? '#4a3d1c' : '#c8b483',
+              dark ? '#1a3a5c' : '#c9dcee',
             ],
           ],
           'fill-opacity': 1,
@@ -80,7 +80,7 @@ export function buildMapStyle(
             'case',
             ['==', ['feature-state', 'hover'], true],
             accent,
-            dark ? 'rgba(242, 240, 235, 0.14)' : 'rgba(34, 29, 20, 0.16)',
+            dark ? 'rgba(234, 244, 255, 0.12)' : 'rgba(20, 40, 61, 0.15)',
           ],
           'line-width': ['case', ['==', ['feature-state', 'hover'], true], 1.4, 0.6],
         },
@@ -113,7 +113,7 @@ export function buildMapStyle(
         source: 'anniv-points',
         filter: ['>', ['get', 'memberCount'], 0],
         paint: {
-          'circle-color': dark ? '#f5e2a8' : '#221d14',
+          'circle-color': dark ? '#a8d8ff' : '#14283d',
           'circle-opacity': POINT_OPACITY.point,
           'circle-radius': [
             'interpolate',
@@ -127,7 +127,7 @@ export function buildMapStyle(
             7,
           ],
           'circle-stroke-width': 0.6,
-          'circle-stroke-color': dark ? 'rgba(6, 6, 7, 0.8)' : 'rgba(246, 241, 230, 0.85)',
+          'circle-stroke-color': dark ? 'rgba(4, 16, 30, 0.8)' : 'rgba(247, 250, 253, 0.85)',
         },
       },
     ],
