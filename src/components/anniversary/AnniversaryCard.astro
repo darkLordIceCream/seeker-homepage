@@ -1,10 +1,11 @@
 ---
 /**
- * 【七周年 · 首页角落入口】感性入口——"网站角落里藏着一张照片"。
- * 默认：小幅成员摄影作品 + SEEKER 07；桌面 hover 轻展开（主题文案 + ENTER）；
- * 移动端保持小卡，点击直达 /7th/。照片每次加载从成员收集作品池随机取一张
- * （构建期注入 GALLERY_POOL，客户端随机；背景图不占布局、零 CLS）。
- * 与 Activities 特殊块（理性入口）角色互补，不做弹窗广告感。
+ * 【七周年 · 首页角落入口】俏皮版——半张照片斜插在屏幕右缘外。
+ * 隐藏态：卡片约一半斜出屏幕（露出照片左半条 + 金色「7」旋钮把手）；
+ * 桌面 hover / 键盘聚焦 → 回弹滑出完整卡片（SEEKER 07 + 主题句 + 进入档案馆）；
+ * 移动端两段式：点窄条先弹出，再点内容才进入 /7th/；× 随时可关。
+ * 照片每次加载从成员收集作品池（GALLERY_POOL）随机取一张，零 CLS。
+ * reduced-motion：无滑入/摆动/回弹，常驻半藏态，hover/tap 即时切换。
  */
 import { GALLERY_POOL } from '@/data/gallery';
 
@@ -17,7 +18,8 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     ×
   </button>
   <a aria-label="七周年纪念册：SEEKER 07，光影七载，看见彼此" class="ac" href="/7th/">
-    <span aria-hidden="true" class="ac-photo" data-ac-photo>
+    <span aria-hidden="true" class="ac-knob">7</span>
+    <span class="ac-photo" data-ac-photo>
       <span class="ac-badge">07</span>
     </span>
     <span class="ac-body">
@@ -26,30 +28,45 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
         <span class="ac-range">2019 — 2026</span>
       </span>
       <span class="ac-slogan">光影七载，看见彼此。</span>
-      <span class="ac-cta">ENTER ARCHIVE →</span>
+      <span class="ac-cta">进入档案馆 →</span>
     </span>
   </a>
   <script define:vars={{ pool }} is:inline>
     (function () {
       const card = document.getElementById('anniv-corner');
       const close = document.getElementById('anniv-corner-close');
-      const photo = card && card.querySelector('[data-ac-photo]');
-      if (!card || !close || !photo) {
+      const link = card && card.querySelector('a.ac');
+      if (!card || !close || !link) {
         return;
       }
       // 每次加载随机取一张真实成员照片（构建期抽样池）
       try {
         const pick = pool[Math.floor(Math.random() * pool.length)];
-        if (pick && pick.url) {
+        const photo = card.querySelector('[data-ac-photo]');
+        if (pick && pick.url && photo) {
           photo.style.backgroundImage = `url('${pick.url}')`;
         }
       } catch (error) {
         /* 图池缺失时保留素底，不影响入口可用 */
       }
-      // 轻入场：仅淡入（无位移弹跳），reduced-motion 由 CSS 兜底直显
-      window.setTimeout(() => {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // 入场：从屏幕外滑入到半藏位（reduced-motion 直接就位）
+      if (reduced) {
         card.classList.add('is-shown');
-      }, 700);
+      } else {
+        window.setTimeout(() => {
+          card.classList.add('is-shown');
+        }, 900);
+      }
+      // 移动端两段式：第一击弹出完整卡片，再点内容才进入
+      link.addEventListener('click', (e) => {
+        const mobile = window.matchMedia('(max-width: 40rem)').matches;
+        if (!mobile || card.classList.contains('is-open')) {
+          return;
+        }
+        e.preventDefault();
+        card.classList.add('is-open');
+      });
       close.addEventListener('click', () => {
         card.remove();
       });
@@ -58,60 +75,79 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
 </aside>
 
 <style>
+  /* 位置：右缘偏下；默认半藏斜插（露出左条 + 金色旋钮） */
   .anniv-corner {
     position: fixed;
-    right: 1rem;
-    bottom: 1rem;
+    right: 0;
+    bottom: 16vh;
     z-index: 1200;
-    max-width: calc(100vw - 2rem);
-    opacity: 0;
+    width: min(19rem, calc(100vw - 2rem));
+    transform: translateX(112%) rotate(10deg);
+    transform-origin: left bottom;
   }
 
   .anniv-corner.is-shown {
-    opacity: 1;
-    transition: opacity 0.7s ease;
+    transform: translateX(calc(100% - 8rem)) rotate(7deg);
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .anniv-corner {
-      opacity: 1;
-    }
-
-    .anniv-corner.is-shown {
-      transition: none;
-    }
+  .anniv-corner.is-shown:hover,
+  .anniv-corner.is-shown:focus-within,
+  .anniv-corner.is-open {
+    transform: translateX(0) rotate(-2deg);
   }
 
   .ac {
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    display: block;
     background: var(--anniv-bg);
     border: 1px solid var(--anniv-border);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    border-right-color: transparent; /* 右缘插进屏幕外 */
+    border-radius: 8px 0 0 8px;
     text-decoration: none;
-    transition:
-      border-color 0.25s ease;
+    box-shadow: -8px 12px 32px rgba(0, 0, 0, 0.38);
+    transform-origin: left bottom;
+    animation: ac-waggle 7s ease-in-out 2.8s infinite;
   }
 
-  .ac:hover,
-  .ac:focus-visible {
-    border-color: color-mix(in srgb, var(--anniv-accent) 60%, transparent);
+  .anniv-corner:hover .ac,
+  .anniv-corner.is-open .ac,
+  .anniv-corner:focus-within .ac {
+    animation: none;
   }
 
-  .ac:focus-visible {
-    outline: 1px solid var(--anniv-accent);
-    outline-offset: 2px;
+  /* 金色「7」旋钮：半藏态的视觉把手 */
+  .ac-knob {
+    position: absolute;
+    left: -1.15rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--anniv-accent);
+    color: #221b08;
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.45),
+      inset 0 0 0 2px rgba(0, 0, 0, 0.14);
   }
 
   .ac-photo {
     position: relative;
     display: block;
-    width: 10.5rem;
     height: 7.4rem;
     background-size: cover;
     background-position: center;
     background-color: var(--anniv-surface);
-    transition: width 0.32s var(--ease-enter);
+    border-radius: 7px 0 0 0;
+    overflow: hidden;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .ac-badge {
@@ -128,6 +164,22 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
 
   .ac-body {
     display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 0.75rem;
+    transition:
+      max-height 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.3s ease,
+      padding 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* 展开（hover / 键盘聚焦 / 移动端 is-open）：完整内容 */
+  .anniv-corner:hover .ac-body,
+  .anniv-corner:focus-within .ac-body,
+  .anniv-corner.is-open .ac-body {
+    max-height: 7rem;
+    opacity: 1;
     padding: 0.6rem 0.75rem 0.7rem;
   }
 
@@ -154,22 +206,10 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     color: var(--anniv-faint);
   }
 
-  .ac-slogan,
-  .ac-cta {
-    display: block;
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(-2px);
-    transition:
-      max-height 0.32s var(--ease-enter),
-      opacity 0.28s ease,
-      transform 0.32s var(--ease-enter);
-  }
-
   .ac-slogan {
-    margin-top: 0;
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'SimSun', serif;
+    display: block;
+    margin-top: 0.45rem;
+    font-family: var(--anniv-serif);
     font-size: 0.86rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -178,7 +218,8 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
   }
 
   .ac-cta {
-    margin-top: 0;
+    display: block;
+    margin-top: 0.5rem;
     font-family: 'Archivo', sans-serif;
     font-size: 0.66rem;
     font-weight: 600;
@@ -187,35 +228,18 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     white-space: nowrap;
   }
 
-  /* 桌面 hover / 键盘聚焦：轻展开文案（无弹跳、无大幅缩放） */
-  @media (hover: hover) {
-    .ac:hover .ac-photo,
-    .ac:focus-visible .ac-photo {
-      width: 13.5rem;
-    }
-
-    .ac:hover .ac-slogan,
-    .ac:focus-visible .ac-slogan {
-      max-height: 1.8rem;
-      margin-top: 0.45rem;
-      opacity: 1;
-      transform: none;
-    }
-
-    .ac:hover .ac-cta,
-    .ac:focus-visible .ac-cta {
-      max-height: 1.4rem;
-      margin-top: 0.5rem;
-      opacity: 1;
-      transform: none;
-    }
+  /* hover / 键盘聚焦 / 移动端展开：照片轻微放大 */
+  .anniv-corner:hover .ac-photo,
+  .anniv-corner:focus-within .ac-photo,
+  .anniv-corner.is-open .ac-photo {
+    transform: scale(1.03);
   }
 
   .anniv-corner-close {
     position: absolute;
     top: -0.55rem;
-    right: -0.55rem;
-    z-index: 1;
+    left: -0.55rem;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -234,20 +258,52 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     background: rgba(0, 0, 0, 0.7);
   }
 
-  /* 移动端：更小的照片卡，点击直达（无 hover 依赖） */
+  /* 待机小摆动：勾引路过的访客（hover/展开即停） */
+  @keyframes ac-waggle {
+    0%,
+    7%,
+    100% {
+      transform: rotate(0deg);
+    }
+    2% {
+      transform: rotate(-1.4deg);
+    }
+    4.5% {
+      transform: rotate(1deg);
+    }
+  }
+
+  /* 移动端：更窄的半藏条；两段式（点窄条弹出，再点内容进入） */
   @media (max-width: 40rem) {
     .anniv-corner {
-      right: 0.6rem;
-      bottom: 0.6rem;
+      bottom: 14vh;
+    }
+
+    .anniv-corner.is-shown {
+      transform: translateX(calc(100% - 2.6rem)) rotate(7deg);
+    }
+
+    .anniv-corner.is-open {
+      transform: translateX(0) rotate(-2deg);
     }
 
     .ac-photo {
-      width: 6.4rem;
-      height: 6.4rem;
+      height: 6.2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anniv-corner,
+    .anniv-corner.is-shown,
+    .ac,
+    .ac-photo {
+      transition: none;
+      animation: none;
     }
 
-    .ac-body {
-      display: none;
+    .anniv-corner,
+    .anniv-corner.is-shown {
+      transform: translateX(calc(100% - 8rem)) rotate(7deg);
     }
   }
 </style>
