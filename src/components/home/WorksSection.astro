@@ -8,13 +8,19 @@
  * prefers-reduced-motion 下脚本不启动、全部静态展示首张。
  * 入场复用全局 .reveal 机制（--reveal-delay 错峰）。
  */
-import { type GalleryImage, GALLERY_HERO, GALLERY_SUPPORT_SQUARE, GALLERY_SUPPORT_TALL } from '@/data/gallery';
+import {
+  type GalleryImage,
+  GALLERY_HERO,
+  GALLERY_SUPPORT_SQUARE,
+  GALLERY_SUPPORT_TALL,
+} from '@/data/gallery';
 
 /** 入场错峰延迟 */
 const delay = (i: number) => `--reveal-delay:${80 + i * 70}ms`;
 
 /** 图注：有作品名带名，无题只署名 */
-const credit = (img: GalleryImage) => (img.title ? `@${img.author}《${img.title}》` : `@${img.author}`);
+const credit = (img: GalleryImage) =>
+  img.title ? `@${img.author}《${img.title}》` : `@${img.author}`;
 
 /** 主图池图的无障碍描述附署名（视觉署名随轮换，读屏走 alt） */
 const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
@@ -30,7 +36,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
   <div class="gallery-wall">
     {/* 主视觉 + 竖幅一排 */}
     <div class="wall-row wall-row--hero">
-      <div class="wall-slot wall-slot--hero reveal" style={delay(0)} data-cycle>
+      <div class="wall-slot wall-slot--hero reveal" data-cycle style={delay(0)}>
         <div class="slot-frame">
           {
             GALLERY_HERO.map((img, i) => (
@@ -59,7 +65,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
       </div>
       {
         GALLERY_SUPPORT_TALL.map((pool, slotIndex) => (
-          <div class="wall-slot reveal" style={delay(slotIndex + 1)} data-cycle>
+          <div class="wall-slot wall-slot--tall reveal" data-cycle style={delay(slotIndex + 1)}>
             <div class="slot-frame">
               {pool.map((img, i) => (
                 <img
@@ -90,7 +96,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     <div class="wall-row wall-row--square">
       {
         GALLERY_SUPPORT_SQUARE.map((pool, slotIndex) => (
-          <div class="wall-slot reveal" style={delay(slotIndex + 4)} data-cycle>
+          <div class="wall-slot wall-slot--square reveal" data-cycle style={delay(slotIndex + 4)}>
             <div class="slot-frame">
               {pool.map((img, i) => (
                 <img
@@ -131,7 +137,9 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     for (const slot of slots) {
       const imgs = slot.querySelectorAll<HTMLElement>('[data-fade-img]');
       const names = slot.querySelectorAll<HTMLElement>('[data-fade-credit]');
-      if (imgs.length < 2) continue;
+      if (imgs.length < 2) {
+        continue;
+      }
 
       let current = 0;
       let timer = 0;
@@ -145,14 +153,14 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
         names[current]?.classList.add('is-active');
       };
 
+      // 切换间隔：3~6s 均匀随机
+      const nextDelay = () => 3000 + Math.random() * 3000;
+
       const schedule = () => {
-        timer = window.setTimeout(
-          () => {
-            show((current + 1) % imgs.length);
-            schedule();
-          },
-          3000 + Math.random() * 3000,
-        );
+        timer = window.setTimeout(() => {
+          show((current + 1) % imgs.length);
+          schedule();
+        }, nextDelay());
       };
 
       // 悬停暂停该格轮换，移开后继续（触屏无 hover 语义，不受影响）
@@ -161,7 +169,9 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
         window.clearTimeout(timer);
       });
       slot.addEventListener('mouseleave', () => {
-        if (!paused) return;
+        if (!paused) {
+          return;
+        }
         paused = false;
         schedule();
       });
@@ -236,18 +246,22 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 
   .slot-frame {
     position: relative;
-    aspect-ratio: 4 / 3;
-    max-height: 44vh;
     border-radius: 10px;
     overflow: hidden;
     background: var(--muted);
   }
 
-  .wall-slot:nth-child(n + 2) .slot-frame {
-    aspect-ratio: 2 / 3;
+  .wall-slot--hero .slot-frame {
+    aspect-ratio: 4 / 3;
+    max-height: 44vh;
   }
 
-  .wall-row--square .slot-frame {
+  .wall-slot--tall .slot-frame {
+    aspect-ratio: 2 / 3;
+    max-height: 44vh;
+  }
+
+  .wall-slot--square .slot-frame {
     aspect-ratio: 1 / 1;
     max-height: 24vh;
   }

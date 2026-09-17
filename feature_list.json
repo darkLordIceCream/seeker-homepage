@@ -126,7 +126,7 @@
       "description": "摄影作品展示区域，支持图片画廊或瀑布流布局",
       "dependencies": ["feat-001", "feat-008"],
       "status": "done",
-      "evidence": "首页 #works 重构为编辑式摄影展墙（1 主图池 3 张慢速 crossfade + 3 竖幅 + 3 方幅共 9 张真实作品）。图单 src/data/gallery.ts（作者/标题摘自 src/content/activities entries 真实署名，w/h 与 activity-image-meta 一致，R2 只读未动）；WorksSection.astro 纯 CSS 展墙，无 JS，删除全部胶片/伪 EXIF 系统；hover 轻缩放、prefers-reduced-motion 静态降级、#works 锚点与 scrollspy 保留。init.sh 全绿（type-check 0 错误 / lint 0 错误 / build 通过）；浏览器验证 Desktop 1440×900、Laptop 1280×800、Tablet 834、Mobile 390 一屏收纳，Dark/Light 双主题正常，Network 仅 9 张 R2 图无重复加载"
+      "evidence": "首页 #works 重构为编辑式摄影展墙（1 主图池 5 张 + 3 竖幅格 ×3 + 3 方幅格 ×3，共 23 张真实作品）。图单 src/data/gallery.ts（作者/标题摘自 src/content/activities entries 真实署名，w/h 与 activity-image-meta 一致，R2 只读未动）；WorksSection.astro 删除全部胶片/伪 EXIF 系统，全部图位由小段原生 JS 以 3~6s/次的独立随机间隔轮换（各格节奏互不相同形成不对称感，MutationObserver 实测 7 格间隔均落在 3.1~6.0s），悬停暂停该格；hover 轻缩放、prefers-reduced-motion 脚本不启动全静态（同页 reload 实测 8s 零切换）、#works 锚点与 scrollspy 保留。init.sh 全绿（type-check 0 错误 / lint 0 错误 / build 通过）；浏览器验证 Desktop 1440×900、Laptop 1280×800、Tablet 834、Mobile 390 一屏收纳，Dark/Light 双主题正常，Network Gallery 恰好 23 张 R2 图无重复加载"
     },
     {
       "id": "feat-017",

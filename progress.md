@@ -1374,3 +1374,43 @@ ACTIVITY_IMAGE_META 提供构建期 w/h，可精确分型与防裁剪；④ 计�
 
 - 图单为首版机器辅助挑选，正式上线前建议成员人工过目一轮（换图只改 src/data/gallery.ts）
 - 主图池 3 张 crossfade 中《留白待雪》为高调白图，与暗色主题相邻屏的衔接观感可在真机再确认
+
+---
+
+## 2026-09-17 会话（续）：Gallery 全图位随机轮换
+
+用户追加需求：所有图位都要能切换其他图片，每个图位每次切换间隔在 3~6 秒之间独立随机，形成不对称节奏。
+
+### 实现
+
+- **选图扩充 9 →
+  23 张**：主图池 5（+iwanna我想 洞穴框景、脏了的布娃娃 落日亭）、竖幅 3 格 ×3（+X_ming《金辉下的澳门港》/《天穹彼岸》、ClevelandZhu《你好！2026！》、日行性猫猫《林中密城》、Talon 秋树、移动城堡内的全麦 银河）、方幅 3 格 ×3（+程早《极光洒落童话小镇》、黑暗之王 极简海滩/黑白城市、让我吃一口 窗光、月某人 微小星球、屋顶数星星《海边的袋鼠》）。109 张近方幅候选对比图目验后精选；全尺寸核验剔除带 HUAWEI 品牌水印与翻拍 Print 类图；竖幅第三格凑成「贡嘎彗星 + 沙井星轨 + 银河」星空主题组
+- **gallery.ts 结构**：GALLERY_SUPPORT_TALL / SQUARE 改为 `GalleryImage[][]`
+  （每格一份独立轮换列表），GALLERY_HERO 扩为 5 张
+- **WorksSection.astro**：三处图位统一为 wall-slot 结构（data-cycle +
+  data-fade-img/-credit + is-active）；CSS 由 keyframes 改为 opacity
+  transition 交叉淡化；新增 ~40 行原生 JS 调度器——每格 setTimeout 链，间隔
+  `3000 + Math.random() * 3000`ms，悬停暂停/移开续播；渐进增强：无 JS 或 prefers-reduced-motion 时静态展示各格首张
+- 图位比例改用显式修饰类（wall-slot--hero/tall/square），规避 nth-child 特异性压过 .wall-row--square 的隐患
+
+### 排障记录
+
+- 仓库已知工具链冲突复现：prettier（trailingComma: es5）vs eslint（comma-dangle:
+  always-multiline）在多行 setTimeout 参数上互相打架，按 progress.md 既有原则将调用单行化（抽出 nextDelay()）解决
+- reduced-motion 浏览器实测先出现「reduce:true 仍在切换」假象：系 agent-browser 对新导航页延迟应用媒体模拟所致（脚本一次性守卫在模拟生效前已启动）；同页 reload（模拟自文档加载即生效）复测 8s 零切换，守卫正确，真实用户不受影响
+- 注意：本会话进行中的 gallery.ts/WorksSection 改动被并行会话的提交 0f08a71（暗房中文化）顺带带入仓库；后续仅剩 WorksSection 修饰类与 nextDelay 两处增量，未做任何历史改写
+
+### 验证
+
+- init.sh 全绿（type-check 0 / lint 0 错误 / build 73 页）
+- MutationObserver 实测 40s：7 格共 81 次切换，各格间隔序列互不相同且全部落在 3.1~6.0s（如格 0:
+  5.3/4.6/3.7…，格 3: 6.0/3.4/3.9…）
+- reduced-motion：同页 reload 后 8s 零切换、7 格各留首张
+- performance：Gallery 恰好 23 张 R2 webp 无重复（另 2 张为七周年角卡随机图）
+- 视觉：Desktop 1440×900 与 Mobile 390 一屏收纳不变，图注基线对齐
+
+### 遗留 / 待办
+
+- 同前：图单建议成员人工过目一轮（只改 src/data/gallery.ts）
+- 23 张图全 lazy，但轮换池使首页图片请求从 9 →
+  23；若未来要省流量，可把每格轮换列表收紧为 2 张（配置即可，无需改组件）
