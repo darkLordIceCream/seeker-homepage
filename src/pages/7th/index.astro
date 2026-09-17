@@ -78,19 +78,17 @@ const heroPhoto = heroPick
     </header>
 
     <div class="arc-body" id="archive">
-      <!-- 01 / 七年序章：sticky 舞台（文字 → 头像墙停留 → 统计依序），地图在轨道后正常流 -->
+      <!-- 01 / 七年序章：sticky 舞台（引言 → 全屏头像墙停留 → 统计依序），地图在轨道后正常流 -->
       <section aria-labelledby="sec-intro" class="arc-sec arc-sec--intro">
         <div class="intro-track" data-story-scene="intro">
           <div class="intro-stage">
-            <div data-intro-head>
+            <AvatarWall />
+            <div class="intro-head" data-intro-head>
               <SectionHead en="SEVEN YEARS, MANY FRAMES" no="01" zh="七年序章" />
             </div>
             <p class="arc-copy-lead" data-intro-lead>
               七年，我们拍下了很多照片。<br />也因此，看见了很多彼此。
             </p>
-            <div data-intro-wall>
-              <AvatarWall stage />
-            </div>
             <dl class="arc-stats" data-intro-stats data-countup>
               <div class="arc-stat" data-intro-stat>
                 <dd data-count-to={stats.members}>{stats.members}</dd>
@@ -423,14 +421,25 @@ const heroPhoto = heroPick
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 1.4rem;
+    justify-content: flex-start;
     padding: calc(64px + 1.5rem) 0 1.5rem;
     overflow: hidden;
   }
 
+  /* 头像墙为全屏底层，文字/统计分层其上 */
+  .intro-head,
+  .intro-stage .arc-copy-lead,
+  .intro-stage .arc-stats {
+    position: relative;
+    z-index: 1;
+  }
+
   .intro-stage .arc-copy-lead {
     margin: 0;
+  }
+
+  .intro-stage .arc-stats {
+    margin-top: auto; /* 统计钉在舞台底部，墙淡出后成为主体 */
   }
 
   /* —— 滚动叙事通用舞台（sticky 钉住，track 高度按场景区分） —— */
