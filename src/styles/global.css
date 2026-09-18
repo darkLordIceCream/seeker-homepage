@@ -47,9 +47,9 @@
 
   /* —— Seeker 品牌基色（与 Logo 藏蓝/电光蓝同源）—— */
   --seeker-navy: #08294a;
-  --seeker-blue: #0750a8;
-  --seeker-sky: #3a9dff;
-  --seeker-pale-blue: #cdeafb;
+  --seeker-blue: #06427e;
+  --seeker-sky: #2e86de;
+  --seeker-pale-blue: #c7e2f6;
 
   /* —— Seeker Light（纸张 + 墨水 + 蓝色编辑标记）—— */
   --background: #f7fafd; /* 冷蓝纸 */
@@ -58,7 +58,7 @@
   --card-foreground: #14283d;
   --popover: #ffffff;
   --popover-foreground: #14283d;
-  --primary: #0750a8; /* Seeker Blue：结构/强调 */
+  --primary: #06427e; /* Seeker Blue：结构/强调 */
   --primary-foreground: #ffffff;
   --secondary: #eef5fb;
   --secondary-foreground: #14283d;
@@ -70,35 +70,35 @@
   --destructive-foreground: #ffffff;
   --border: #d8e4ef;
   --input: #c9d9e8;
-  --ring: #3a9dff; /* Sky：交互/焦点 */
-  --chart-1: #0750a8;
-  --chart-2: #3a9dff;
+  --ring: #2e86de; /* Sky：交互/焦点 */
+  --chart-1: #06427e;
+  --chart-2: #2e86de;
   --chart-3: #08294a;
-  --chart-4: #7fb8e8;
+  --chart-4: #5a9ae0;
   --chart-5: #cdeafb;
   --sidebar: #eef5fb;
   --sidebar-foreground: #14283d;
-  --sidebar-primary: #0750a8;
+  --sidebar-primary: #06427e;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #eef5fb;
   --sidebar-accent-foreground: #14283d;
   --sidebar-border: #d8e4ef;
-  --sidebar-ring: #3a9dff;
+  --sidebar-ring: #2e86de;
 
   /* —— 品牌与界面扩展令牌（浅色值）—— */
   /* 品牌渐变：藏蓝 → 天蓝（浅底上作大字 ≥3:1、作按钮底配白字 ≥4.5:1） */
-  --grad-a: #0750a8;
-  --grad-b: #3a9dff;
+  --grad-a: #06427e;
+  --grad-b: #2e86de;
   --on-gradient: #ffffff;
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(20, 40, 61, 0.14);
-  --glass-hover-border: rgba(7, 80, 168, 0.4);
+  --glass-hover-border: rgba(6, 66, 126, 0.4);
   --glass-shadow: 0 8px 30px rgba(20, 40, 61, 0.1);
   --glass-hover-shadow: 0 12px 40px rgba(7, 80, 168, 0.14);
   --divider: rgba(20, 40, 61, 0.16);
-  --glow-a: rgba(7, 80, 168, 0.08);
+  --glow-a: rgba(6, 66, 126, 0.08);
   --glow-b: rgba(58, 157, 255, 0.06);
-  --icon-tile: rgba(7, 80, 168, 0.1);
+  --icon-tile: rgba(6, 66, 126, 0.1);
 
   /* 拍立得/白框相片卡（浅色 = 白相纸） */
   --paper-face: #ffffff;
@@ -116,7 +116,7 @@
   --card-foreground: #eaf4ff;
   --popover: #08243f;
   --popover-foreground: #eaf4ff;
-  --primary: #3a9dff; /* Sky：暗夜里的光 */
+  --primary: #2e86de; /* Sky：暗夜里的光 */
   --primary-foreground: #061a30;
   --secondary: #0c3155;
   --secondary-foreground: #eaf4ff;
@@ -128,7 +128,7 @@
   --destructive-foreground: #061a30;
   --border: #1c4266;
   --input: #1c4266;
-  --ring: #3a9dff;
+  --ring: #2e86de;
   --chart-1: #3a9dff;
   --chart-2: #8fc9ff;
   --chart-3: #0750a8;
@@ -141,21 +141,21 @@
   --sidebar-accent: #0c3155;
   --sidebar-accent-foreground: #eaf4ff;
   --sidebar-border: #1c4266;
-  --sidebar-ring: #3a9dff;
+  --sidebar-ring: #2e86de;
 
   /* —— 品牌与界面扩展令牌（深色值）—— */
-  --grad-a: #3a9dff;
-  --grad-b: #8fc9ff;
+  --grad-a: #2e86de;
+  --grad-b: #6fb4f0;
   --on-gradient: #061a30;
   --glass-bg: rgba(8, 36, 63, 0.55);
   --glass-border: rgba(175, 200, 223, 0.12);
-  --glass-hover-border: rgba(58, 157, 255, 0.45);
+  --glass-hover-border: rgba(46, 134, 222, 0.45);
   --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   --glass-hover-shadow: 0 12px 40px rgba(58, 157, 255, 0.14);
   --divider: rgba(175, 200, 223, 0.15);
-  --glow-a: rgba(58, 157, 255, 0.08);
+  --glow-a: rgba(46, 134, 222, 0.08);
   --glow-b: rgba(143, 201, 255, 0.05);
-  --icon-tile: rgba(58, 157, 255, 0.12);
+  --icon-tile: rgba(46, 134, 222, 0.12);
 
   /* 拍立得/白框相片卡（深色 = 藏蓝 Surface 相纸，不再刺眼） */
   --paper-face: #0c3155; /* Secondary Surface */
@@ -374,8 +374,8 @@ html.js .reveal.in-view {
   --anniv-faint: rgba(234, 244, 255, 0.32);
   --anniv-border: rgba(234, 244, 255, 0.12);
   --anniv-border-strong: rgba(234, 244, 255, 0.28);
-  --anniv-accent: #3a9dff; /* Sky 光：与 Logo 电光蓝同源 */
-  --anniv-accent-soft: rgba(58, 157, 255, 0.14);
+  --anniv-accent: #2e86de; /* Sky 光：与 Logo 电光蓝同源 */
+  --anniv-accent-soft: rgba(46, 134, 222, 0.14);
   --anniv-error: #e88080;
   --anniv-serif: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
 
@@ -384,7 +384,7 @@ html.js .reveal.in-view {
   --anniv-map-land: #0a2036;
   --anniv-map-border: rgba(234, 244, 255, 0.12);
   --anniv-map-point: #a8d8ff;
-  --anniv-map-point-halo: #3a9dff;
+  --anniv-map-point-halo: #2e86de;
 
   /* motion tokens：慢、轻、克制 */
   --dur-fast: 150ms;
@@ -405,15 +405,15 @@ html[data-theme='light'] {
   --anniv-faint: rgba(20, 40, 61, 0.34);
   --anniv-border: rgba(20, 40, 61, 0.14);
   --anniv-border-strong: rgba(20, 40, 61, 0.32);
-  --anniv-accent: #0750a8; /* 纸面上的 Seeker Blue 墨水 */
-  --anniv-accent-soft: rgba(7, 80, 168, 0.1);
+  --anniv-accent: #06427e; /* 纸面上的 Seeker Blue 墨水 */
+  --anniv-accent-soft: rgba(6, 66, 126, 0.1);
   --anniv-error: #a84038;
 
   --anniv-map-bg: #f7fafd;
   --anniv-map-land: #e4edf6;
   --anniv-map-border: rgba(20, 40, 61, 0.15);
   --anniv-map-point: #14283d;
-  --anniv-map-point-halo: #0750a8;
+  --anniv-map-point-halo: #06427e;
 }
 
 /* 原生控件 / 滚动条跟随 7th 独立主题 */

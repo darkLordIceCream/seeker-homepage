@@ -26,7 +26,7 @@ export function buildMapStyle(
   points?: GeoJSON,
 ): StyleSpecification {
   const dark = theme !== 'light';
-  const accent = dark ? '#3a9dff' : '#0750a8'; /* Sky 光 / Seeker Blue 墨 */
+  const accent = dark ? '#2e86de' : '#06427e'; /* Sky 光 / Seeker Blue 墨 */
   return {
     version: 8,
     sources: {
