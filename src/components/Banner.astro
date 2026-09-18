@@ -19,14 +19,17 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     <div class="video-overlay"></div>
   </div>
 
-  <div class="banner-content">
-    <div class="slogan-container">
-      <h1 class="slogan">
-        <span class="slogan-line">拍一张照片，</span>
-        <span class="slogan-line slogan-line--second">交一个朋友</span>
-      </h1>
-    </div>
-  </div>
+  <!-- 手写字艺术图层：screen 混合叠加在视频上（黑=透明） -->
+  <h1 class="slogan">
+    <img
+      alt="拍一张照片，交一个朋友"
+      class="slogan-lettering"
+      decoding="async"
+      height="367"
+      src="https://r2.xn--seeker-ng2jm403afb4a.club/home/slogan-lettering.webp"
+      width="1106"
+    />
+  </h1>
 
   <button aria-label="滚动到下一屏" class="scroll-indicator">
     <span class="scroll-arrow"></span>
@@ -78,43 +81,49 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     z-index: 2;
   }
 
-  .banner-content {
-    position: relative;
-    z-index: 3;
-    text-align: center;
-    color: white;
-    max-width: 800px;
-    padding: 0 20px;
-  }
-
-  .slogan-container {
-    animation: fadeInUp 1.5s ease-out;
-  }
-
+  /* 手写字艺术图层：直接作为 banner 的绝对定位子层（z 序在视频/遮罩之上），
+     mix-blend-mode 与下方视频 screen 混合——黑底隐没、笔触与星星原样叠加。
+     不设 z-index/不建独立上下文，保证混合直达视频 */
   .slogan {
-    display: inline-block; /* 两行整体在视频上居中，错位在块内 */
-    text-align: left;
-    font-family: 'Ma Shan Zheng', 'Xingkai SC', 'STXingkai', 'Kaiti SC', 'KaiTi', serif;
-    font-size: 2.75rem;
-    font-weight: 400; /* 毛笔字自带笔锋，加粗会糊 */
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 0 20px 0;
-    background: linear-gradient(45deg, #eaf4ff, #7fc4ff, #2e86de);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    /* 渐变透明文字上 text-shadow 会糊在字上，用 drop-shadow 跟随文字形状 */
-    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.45));
-    line-height: 1.1;
+    z-index: 3;
+    pointer-events: none;
   }
 
-  .slogan-line {
-    display: block;
-    text-align: left;
+  .slogan-lettering {
+    width: min(720px, 82vw);
+    height: auto;
+    mix-blend-mode: screen;
+    animation: slogan-in 1.4s ease-out;
   }
 
-  /* 第二句右移错位，形成题字般的错落 */
-  .slogan-line--second {
-    padding-left: 1.2em;
+  @keyframes slogan-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slogan-lettering {
+      animation: none;
+    }
+  }
+
+  @keyframes slogan-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slogan-lettering {
+      animation: none;
+    }
   }
 
   .scroll-indicator {
@@ -145,16 +154,6 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     transform: rotate(45deg);
   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 
   @keyframes bounce {
     0%,
