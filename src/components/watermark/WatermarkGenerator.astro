@@ -12,44 +12,13 @@
  * 就地编辑）、拖动/双指缩放 + 滑杆双通道。照片仅在浏览器本地处理。
  * 逻辑层：render.ts / gestures.ts / template.ts（零改动）。
  */
-import { readFileSync } from 'node:fs';
 import { NICKNAME_MAX_LENGTH, WATERMARK_TEMPLATES } from '../../lib/watermark/template';
 import stats from '../../data/anniversary/stats.json';
 
-// 位置选择数据：来自构建脚本生成的区域代表点（与地图同源，坐标现成）
-interface LocOption {
-  value: string;
-  name: string;
-  lngLat: [number, number];
-}
-interface LocGroup {
-  label: string;
-  options: LocOption[];
-}
 
-const points = JSON.parse(
-  readFileSync('public/geo/anniv-points.json', 'utf8'),
-) as {
-  features: { geometry: { coordinates: [number, number] }; properties: { nameZh: string; kind: string } }[];
-};
-
-const locations: LocGroup[] = [
-  {
-    label: '中国省级行政区',
-    options: points.features
-      .filter(f => f.properties.kind === 'province')
-      .map(f => ({ value: `p:${f.properties.nameZh}`, name: f.properties.nameZh, lngLat: f.geometry.coordinates })),
-  },
-  {
-    label: '海外',
-    options: points.features
-      .filter(f => f.properties.kind === 'country')
-      .map(f => ({ value: `c:${f.properties.nameZh}`, name: f.properties.nameZh, lngLat: f.geometry.coordinates })),
-  },
-];
 ---
 
-<div class="dr" data-darkroom data-darkroom-root data-locations={JSON.stringify(locations)}>
+<div class="dr" data-darkroom data-darkroom-root>
   <!-- 未上传态：带上你的光（上传块） -->
   <section class="dr-empty" id="dr-empty">
     <p class="dr-empty-eyebrow">留下你的光 · A PLACE FOR YOUR LIGHT</p>
@@ -151,28 +120,6 @@ const locations: LocGroup[] = [
       <div class="dr-ready-actions">
         <a class="dr-make dr-make--ready" download hidden id="wm-download">下载海报</a>
         <button class="dr-swap" id="dr-again" type="button">再做一张</button>
-      </div>
-      <div class="dr-loc" data-darkroom-loc hidden>
-        <p class="dr-loc-title">你在哪里？</p>
-        <p class="dr-loc-title-en">WHERE ARE YOU?</p>
-        <p class="dr-loc-sub">选择你最常出没的地区，把你的光点到地图上（仅在本页展示，不会被上传或保存）。</p>
-        <div class="dr-loc-row">
-          <select aria-label="选择你的位置" class="dr-loc-select" id="wm-loc-select">
-            {
-              locations.map(group => (
-                <optgroup label={group.label}>
-                  {group.options.map(o => (
-                    <option value={o.value}>{o.name}</option>
-                  ))}
-                </optgroup>
-              ))
-            }
-          </select>
-          <button class="dr-make" data-loc-confirm type="button">点亮我的位置 →</button>
-        </div>
-        <p class="dr-loc-done" data-loc-done hidden>
-          ✦ 你在这里 —— 你的光已经点亮，地图正在等你。
-        </p>
       </div>
     </div>
 

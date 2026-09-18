@@ -1,103 +1,97 @@
 ---
+/**
+ * 【独立暗房部署】七周年纪念帧生成器（release/darkroom-preview 分支专用）。
+ * 本分支只为分享水印功能：根路径即暗房，无任何站点导航与其它内容。
+ * 水印逻辑层（render/gestures/template + darkroom 懒加载）零改动；
+ * 组件与主分支完全同源，修复随 cherry-pick 同步。
+ * 主题固定暗房暗色：head 内联脚本无条件 data-theme="dark"。
+ */
 import Layout from '../layouts/Layout.astro';
-import Navigation from '../components/Navigation.astro';
-import Banner from '../components/Banner.astro';
-import Footer from '../components/Footer.astro';
-import WorksSection from '../components/home/WorksSection.astro';
-import ActsSection from '../components/home/ActsSection.astro';
-import AboutSection from '../components/home/AboutSection.astro';
-import PageProgress from '../components/home/PageProgress.astro';
-import AnniversaryCard from '../components/anniversary/AnniversaryCard.astro';
+import WatermarkGenerator from '../components/watermark/WatermarkGenerator.astro';
 ---
 
-<Layout description="Seeker追光者官网，拍一张照片，交一个朋友" title="Seeker追光者">
-  <Navigation />
-  <PageProgress />
-  <main class="snap-scroll" id="main-content">
-    <Banner />
-    <WorksSection />
-    <ActsSection />
-    <AboutSection />
+<Layout
+  description="上传一张照片、写下你的昵称，生成 Seeker 追光者七周年纪念海报。全程在你的浏览器本地完成，照片不会上传服务器。"
+  title="SEEKER 追光者 · 七周年纪念帧"
+>
+  <!-- 独立部署：固定暗房暗色（不读 storage、无切换） -->
+  <script is:inline slot="head">
+    document.documentElement.dataset.theme = 'dark';
+  </script>
+
+  <main class="dk" id="main-content">
+    <header class="dk-bar">
+      <p class="dk-brand">
+        SEEKER <span class="dk-brand-dot">·</span> 追光者七周年
+        <span class="dk-brand-en">DARKROOM</span>
+      </p>
+      <p class="dk-privacy" title="照片只在你自己的浏览器里处理，不会上传到任何服务器">
+        完全在浏览器本地处理
+      </p>
+    </header>
+    <WatermarkGenerator />
+    <footer class="dk-foot">照片仅在浏览器本地处理，不会上传 · SEEKER 追光者</footer>
   </main>
-  <Footer />
-  <AnniversaryCard />
 </Layout>
 
 <style>
-  /* snap 容器：global.css 通过 html:has(.snap-scroll) 启用整屏吸附 */
-  .snap-scroll {
-    position: relative;
-    z-index: 1;
+  .dk {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--anniv-bg);
+    color: var(--anniv-fg);
+  }
+
+  .dk-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem clamp(1rem, 3vw, 2rem);
+    border-bottom: 1px solid var(--anniv-border);
+  }
+
+  .dk-brand {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--anniv-fg);
+  }
+
+  .dk-brand-dot {
+    color: var(--anniv-accent);
+  }
+
+  .dk-brand-en {
+    margin-left: 0.9em;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    color: var(--anniv-accent);
+  }
+
+  .dk-privacy {
+    margin: 0;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--anniv-faint);
+  }
+
+  .dk-foot {
+    padding: 1.4rem 1.5rem 1.8rem;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--anniv-faint);
+    border-top: 1px solid var(--anniv-border);
+  }
+
+  @media (max-width: 40rem) {
+    .dk-privacy {
+      display: none;
+    }
   }
 </style>
-
-<script>
-  // 带锚点进入时（如 /team 页点「小组简介」→ /#about）重新定位：
-  // 锚点跳转发生在样式加载前，scroll-snap 生效后位置会被拉回首屏。
-  // 不能等 load 事件——R2 大视频会把 load 拖到十几秒之后
-  if (window.location.hash) {
-    let userScrolled = false;
-    const markUserScrolled = () => {
-      userScrolled = true;
-    };
-    window.addEventListener('wheel', markUserScrolled, { once: true, passive: true });
-    window.addEventListener('touchstart', markUserScrolled, { once: true, passive: true });
-    window.addEventListener('keydown', markUserScrolled, { once: true });
-
-    const scrollToHash = () => {
-      const target = document.querySelector(window.location.hash);
-      if (target) {
-        target.scrollIntoView({ behavior: 'instant', block: 'start' });
-      }
-    };
-
-    // 主路径：DOM 就绪后立即跳（模块脚本执行时 CSS 已是渲染阻塞资源，样式必已生效；
-    // 双 rAF 等一帧样式应用）
-    const jumpWhenReady = () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(scrollToHash);
-      });
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', jumpWhenReady, { once: true });
-    } else {
-      jumpWhenReady();
-    }
-
-    // 兜底：load 后若位置漂移且用户尚未操作，再校准一次
-    window.addEventListener(
-      'load',
-      () => {
-        if (userScrolled) {
-          return;
-        }
-        const target = document.querySelector(window.location.hash);
-        if (target && Math.abs(target.getBoundingClientRect().top) > 2) {
-          scrollToHash();
-        }
-      },
-      { once: true },
-    );
-  }
-
-  // 滚动入场动画：reveal 元素进入视口后加 .in-view（CSS 侧延迟错峰）
-  const revealed = document.querySelectorAll<HTMLElement>('.reveal');
-
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver(
-      entries => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            revealObserver.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.15 },
-    );
-
-    revealed.forEach(el => revealObserver.observe(el));
-  } else {
-    revealed.forEach(el => el.classList.add('in-view'));
-  }
-</script>
