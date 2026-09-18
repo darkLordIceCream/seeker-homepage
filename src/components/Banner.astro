@@ -21,7 +21,10 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
 
   <div class="banner-content">
     <div class="slogan-container">
-      <h1 class="slogan">拍一张照片，交一个朋友</h1>
+      <h1 class="slogan">
+        <span class="slogan-line">拍一张照片，</span>
+        <span class="slogan-line slogan-line--second">交一个朋友</span>
+      </h1>
     </div>
   </div>
 
@@ -89,8 +92,11 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
   }
 
   .slogan {
-    font-size: 3.5rem;
-    font-weight: 700;
+    display: inline-block; /* 两行整体在视频上居中，错位在块内 */
+    text-align: left;
+    font-family: 'Ma Shan Zheng', 'Xingkai SC', 'STXingkai', 'Kaiti SC', 'KaiTi', serif;
+    font-size: 2.75rem;
+    font-weight: 400; /* 毛笔字自带笔锋，加粗会糊 */
     margin: 0 0 20px 0;
     background: linear-gradient(45deg, #eaf4ff, #7fc4ff, #2e86de);
     -webkit-background-clip: text;
@@ -98,7 +104,17 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     background-clip: text;
     /* 渐变透明文字上 text-shadow 会糊在字上，用 drop-shadow 跟随文字形状 */
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.45));
-    line-height: 1.2;
+    line-height: 1.1;
+  }
+
+  .slogan-line {
+    display: block;
+    text-align: left;
+  }
+
+  /* 第二句右移错位，形成题字般的错落 */
+  .slogan-line--second {
+    padding-left: 1.2em;
   }
 
   .scroll-indicator {
@@ -168,7 +184,7 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
 
   @media (max-width: 768px) {
     .slogan {
-      font-size: 2.5rem;
+      font-size: 2.1rem;
     }
 
     .banner-video {
@@ -178,7 +194,7 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
 
   @media (max-width: 480px) {
     .slogan {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
 
     .banner-content {
