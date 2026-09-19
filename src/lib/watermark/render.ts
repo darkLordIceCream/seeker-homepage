@@ -116,10 +116,29 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-/** 基准适配缩放（scale = 1 时）：contain 完整显示——宽高比取较小者，零裁切 */
-export function baseScale(template: WatermarkTemplate, photo: PhotoSize): number {
-  const area = template.photoArea;
-  return Math.min(area.width / photo.width, area.height / photo.height);
+/** 动态画布尺寸（模板参考系）：画布比例严格等于照片比例，海报贴合照片 */
+export interface CanvasSize {
+  w: number;
+  h: number;
+}
+
+/**
+ * 按照片推导画布尺寸：
+ * - 横版（frameAxis 'y'）：水印宽度钉住照片左右两端 → 画布宽 = 模板参考宽；
+ * - 竖版（frameAxis 'x'）：水印高度钉住照片上下两端 → 画布高 = 模板参考高。
+ */
+export function canvasSizeFor(
+  template: WatermarkTemplate,
+  photo: PhotoSize,
+): CanvasSize {
+  return template.frameAxis === 'y'
+    ? { w: template.width, h: Math.round((template.width * photo.height) / photo.width) }
+    : { w: Math.round((template.height * photo.width) / photo.height), h: template.height };
+}
+
+/** 水印帧贴合缩放：横版按宽度贴齐画布、竖版按高度贴齐画布 */
+export function frameScaleFor(template: WatermarkTemplate, canvas: CanvasSize): number {
+  return template.frameAxis === 'y' ? canvas.w / template.width : canvas.h / template.height;
 }
 
 type Rect2D = Pick<PhotoArea, 'x' | 'y' | 'width' | 'height'>;
@@ -129,30 +148,29 @@ interface DrawnSize {
   h: number;
 }
 
-/** 当前变换下照片的绘制尺寸（模板 px） */
-function drawnSize(template: WatermarkTemplate, photo: PhotoSize, scale: number): DrawnSize {
-  const s = baseScale(template, photo) * scale;
+/** 当前变换下照片的绘制尺寸（画布 px）：contain 相对画布，scale ≥ 1 放大裁切 */
+function drawnSize(canvas: CanvasSize, photo: PhotoSize, scale: number): DrawnSize {
+  const s = Math.min(canvas.w / photo.width, canvas.h / photo.height) * scale;
   return { w: photo.width * s, h: photo.height * s };
 }
 
-/** 钳制变换的输入：模板、照片尺寸与用户变换 */
+/** 钳制变换的输入：动态画布、照片尺寸与用户变换 */
 export interface ClampSpec {
-  template: WatermarkTemplate;
+  canvas: CanvasSize;
   photo: PhotoSize;
   transform: PhotoTransform;
 }
 
 /**
- * 钳制用户变换：
- * - scale ≥ 1（只允许在 contain 完整显示之上放大裁切）；
- * - contain 下 X/Y 均为居中对称位移（放大溢出侧可平移，不足侧锁 0）。
+ * 钳制用户变换（相对画布）：
+ * - scale ≥ 1（画布与照片同比，scale 1 即满幅无裁切无黑边）；
+ * - 放大后溢出轴可对称平移，未溢出轴锁 0。
  */
 export function clampTransform(spec: ClampSpec): PhotoTransform {
-  const { template, photo, transform: t } = spec;
-  const area = template.photoArea;
-  const { w: drawW, h: drawH } = drawnSize(template, photo, t.scale);
-  const rangeX = Math.max(0, (drawW - area.width) / 2);
-  const rangeY = Math.max(0, (drawH - area.height) / 2);
+  const { canvas, photo, transform: t } = spec;
+  const { w: drawW, h: drawH } = drawnSize(canvas, photo, t.scale);
+  const rangeX = Math.max(0, (drawW - canvas.w) / 2);
+  const rangeY = Math.max(0, (drawH - canvas.h) / 2);
   return {
     scale: Math.max(1, t.scale),
     x: clamp(t.x, -rangeX, rangeX),
@@ -162,7 +180,7 @@ export function clampTransform(spec: ClampSpec): PhotoTransform {
 
 /** 绕点缩放的输入（photo 允许为 null——未选照片时原样返回当前变换） */
 export interface ZoomAtSpec {
-  template: WatermarkTemplate;
+  canvas: CanvasSize;
   photo: PhotoSize | null;
   transform: PhotoTransform;
   px: number;
@@ -172,12 +190,9 @@ export interface ZoomAtSpec {
   maxScale: number;
 }
 
-/**
- * 围绕模板坐标 (px, py) 缩放 factor 倍：保持该点下的照片内容不动。
- * contain 适配下锚点参照系统一为区域中心。
- */
+/** 围绕画布坐标 (px, py) 缩放 factor 倍：保持该点下的照片内容不动（锚点=画布中心） */
 export function zoomAtTransform(spec: ZoomAtSpec): PhotoTransform {
-  const { template, photo, transform: t, px, py, factor, minScale, maxScale } = spec;
+  const { canvas, photo, transform: t, px, py, factor, minScale, maxScale } = spec;
   if (!photo) {
     return t;
   }
@@ -186,11 +201,10 @@ export function zoomAtTransform(spec: ZoomAtSpec): PhotoTransform {
     return t;
   }
   const k = scale / t.scale;
-  const area = template.photoArea;
-  const xRef = area.x + area.width / 2;
-  const yRef = area.y + area.height / 2;
+  const xRef = canvas.w / 2;
+  const yRef = canvas.h / 2;
   return clampTransform({
-    template,
+    canvas,
     photo,
     transform: {
       scale,
@@ -216,27 +230,25 @@ function roundedRectPath(ctx: CanvasRenderingContext2D, area: Rect2D, radius: nu
   ctx.closePath();
 }
 
-/** 照片绘制的输入：模板、已加载照片与用户变换 */
-export interface DrawPhotoSpec {
-  template: WatermarkTemplate;
+interface DrawPhotoSpec {
+  canvas: CanvasSize;
   photo: LoadedPhoto;
   transform: PhotoTransform;
 }
 
-/** 在照片区域内绘制用户照片（contain 完整显示居中 + 用户位移/缩放，圆角裁剪） */
+/** 满幅绘制用户照片（画布=照片比例，scale 1 零黑边零裁切；圆角裁剪） */
 function drawPhoto(ctx: CanvasRenderingContext2D, spec: DrawPhotoSpec): void {
-  const { template, photo, transform } = spec;
-  const area = template.photoArea;
-  const { w: drawW, h: drawH } = drawnSize(template, photo, transform.scale);
-  const dx = area.x + area.width / 2 + transform.x - drawW / 2;
-  const dy = area.y + area.height / 2 + transform.y - drawH / 2;
+  const { canvas, photo, transform } = spec;
+  const { w: drawW, h: drawH } = drawnSize(canvas, photo, transform.scale);
+  const dx = canvas.w / 2 + transform.x - drawW / 2;
+  const dy = canvas.h / 2 + transform.y - drawH / 2;
 
   ctx.save();
-  roundedRectPath(ctx, area, area.radius);
+  roundedRectPath(ctx, { x: 0, y: 0, width: canvas.w, height: canvas.h }, 0);
   ctx.clip();
   // 底色垫底，避免亚像素缝隙透出画布底（七周年海报为黑底）
   ctx.fillStyle = '#000000';
-  ctx.fillRect(area.x, area.y, area.width, area.height);
+  ctx.fillRect(0, 0, canvas.w, canvas.h);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(photo.source, dx, dy, drawW, drawH);
@@ -285,8 +297,11 @@ export interface NicknameDrawSpec {
   template: WatermarkTemplate;
   /** 用户输入的昵称（不含前缀） */
   nickname: string;
-  /** 水印帧平移偏移（模板 px，昵称随水印主体移动） */
-  frame?: FrameOffset;
+  /** 水印帧缩放（昵称字号/字距随帧等比） */
+  frameScale: number;
+  /** 水印帧在画布内的平移偏移（画布 px） */
+  frameDx: number;
+  frameDy: number;
 }
 
 /**
@@ -295,18 +310,19 @@ export interface NicknameDrawSpec {
  * 保证长 ID 不与模板手写体等固定元素重叠。坐标加 frame 偏移随水印移动。
  */
 function drawNickname(ctx: CanvasRenderingContext2D, spec: NicknameDrawSpec): void {
-  const { template, nickname, frame } = spec;
+  const { template, nickname, frameScale, frameDx, frameDy } = spec;
   const text = nickname.trim();
   if (!text) {
     return;
   }
   const style = template.nickname;
-  const fx = frame?.x ?? 0;
-  const fy = frame?.y ?? 0;
   const content = style.prefix + text;
   let size = style.fontSize;
   let spacing = style.letterSpacing;
   ctx.save();
+  // 帧坐标系：整体缩放 + 平移，昵称随水印主体移动
+  ctx.translate(frameDx, frameDy);
+  ctx.scale(frameScale, frameScale);
   ctx.fillStyle = style.color;
   ctx.textBaseline = 'alphabetic';
   const setFont = (s: number) => {
@@ -323,77 +339,73 @@ function drawNickname(ctx: CanvasRenderingContext2D, spec: NicknameDrawSpec): vo
     setFont(size);
   }
   if (spacing > 0) {
-    fillTextSpaced(ctx, {
-      text: content,
-      x: style.x + fx,
-      y: style.y + fy,
-      spacing,
-      align: style.align,
-    });
+    fillTextSpaced(ctx, { text: content, x: style.x, y: style.y, spacing, align: style.align });
   } else {
     ctx.textAlign = style.align;
-    ctx.fillText(content, style.x + fx, style.y + fy);
+    ctx.fillText(content, style.x, style.y);
   }
   ctx.restore();
 }
 
-/** 水印帧平移偏移（模板 px）：主体 + 昵称整体移动，二维码不动 */
+/** 水印帧在画布内的平移偏移（画布 px）：主体 + 昵称整体移动，二维码钉角不动 */
 export interface FrameOffset {
-  readonly x: number;
-  readonly y: number;
-}
-
-/** 水印帧偏移的钳制范围：按模板可动轴（frameAxis）在画布 12% 内平移 */
-export function frameRange(template: WatermarkTemplate): number {
-  return (template.frameAxis === 'x' ? template.width : template.height) * 0.12;
-}
-
-/** 钳制水印帧偏移：仅允许 frameAxis 轴向位移，另一轴锁 0 */
-export function clampFrame(template: WatermarkTemplate, frame: FrameOffset): FrameOffset {
-  const range = frameRange(template);
-  return template.frameAxis === 'x'
-    ? { x: clamp(frame.x, -range, range), y: 0 }
-    : { x: 0, y: clamp(frame.y, -range, range) };
+  dx: number;
+  dy: number;
 }
 
 export interface CompositionInput {
   template: WatermarkTemplate;
   templateImage: CanvasImageSource;
-  /** 二维码白卡位图（独立资产，钉死右下角，不随水印平移） */
+  /** 二维码白卡位图（独立资产，钉死画布右下角，不随水印平移） */
   qrImage: CanvasImageSource | null;
   photo: LoadedPhoto | null;
   transform: PhotoTransform;
+  /** 动态画布尺寸（照片比例决定；海报贴合照片） */
+  canvas: CanvasSize;
   frame: FrameOffset;
   /** 用户输入的昵称（不含前缀） */
   nickname: string;
-  /** 渲染比例：1 = 模板原始尺寸（导出用），<1 = 预览降采样 */
+  /** 渲染比例：1 = 画布原始尺寸（导出用），<1 = 预览降采样 */
   scale?: number;
 }
 
-/** 完整合成管线：清空 → 照片（contain 居中）→ 水印主体（可平移）→ 二维码（钉角）→ 昵称（随帧）。坐标一律为模板 px。 */
+/**
+ * 完整合成管线：清空 → 照片（满幅）→ 水印主体（贴合照片可平移）→
+ * 二维码（钉画布右下角，随画布等比）→ 昵称（随帧缩放平移）。
+ */
 export function renderComposition(canvas: HTMLCanvasElement, input: CompositionInput): void {
   const { template, templateImage, qrImage, photo, transform, frame, nickname, scale = 1 } = input;
-  canvas.width = Math.round(template.width * scale);
-  canvas.height = Math.round(template.height * scale);
+  const dims = input.canvas;
+  canvas.width = Math.round(dims.w * scale);
+  canvas.height = Math.round(dims.h * scale);
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     throw new Error('无法创建 Canvas 2D 上下文');
   }
   ctx.setTransform(scale, 0, 0, scale, 0, 0);
-  ctx.clearRect(0, 0, template.width, template.height);
+  ctx.clearRect(0, 0, dims.w, dims.h);
   if (photo) {
-    drawPhoto(ctx, { template, photo, transform });
+    drawPhoto(ctx, { canvas: dims, photo, transform });
   }
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
-  // 水印主体：整体按 frame 偏移绘制（二维码已挖孔分离）
-  ctx.drawImage(templateImage, frame.x, frame.y, template.width, template.height);
-  // 二维码白卡：钉死模板右下角原位（不随 frame 平移）
+  // 水印主体：frameScale 贴合画布（横版钉宽/竖版钉高）+ 帧平移
+  const fs = frameScaleFor(template, dims);
+  ctx.drawImage(templateImage, frame.dx, frame.dy, template.width * fs, template.height * fs);
+  // 二维码白卡：钉死画布右下角（留边距随帧缩放，保持与设计稿同比例）
   if (qrImage) {
     const q = template.qr;
-    ctx.drawImage(qrImage, q.x, q.y, q.width, q.height);
+    const padR = (template.width - q.x - q.width) * fs;
+    const padB = (template.height - q.y - q.height) * fs;
+    ctx.drawImage(
+      qrImage,
+      dims.w - q.width * fs - padR,
+      dims.h - q.height * fs - padB,
+      q.width * fs,
+      q.height * fs,
+    );
   }
-  drawNickname(ctx, { template, nickname, frame });
+  drawNickname(ctx, { template, nickname, frameScale: fs, frameDx: frame.dx, frameDy: frame.dy });
 }
 
 /** 按输出配置导出画布为 Blob */
