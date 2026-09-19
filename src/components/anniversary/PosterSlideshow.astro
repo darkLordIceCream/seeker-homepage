@@ -1,0 +1,182 @@
+---
+/**
+ * 【06 留光成物 · PosterSlideshow】成员巨片幻灯片。
+ * 滚动引擎（data-story-scene="posters"）只编排入场装框（引言 → 海报 → 署名/计数），
+ * 驻留期的自动轮播在 poster-slideshow.ts——接近板块 ~600px 才动态 import，
+ * 页面初始零图片处理成本。manifest 全量帧为展示池（确定性洗牌），
+ * 任一时刻仅预取当前 ±2 张。
+ * 海报自带相框/水印/二维码设计 → 原比例 contain 展示，绝不裁切。
+ * 无 JS / reduced-motion：静态展示首帧与署名（渐进增强，与全页引擎一致）。
+ */
+import { POSTERS } from '@/data/anniversary/posters';
+
+const total = POSTERS.length;
+const authors = new Set(POSTERS.map(p => p.author)).size;
+const first = POSTERS[0];
+const pad3 = (n: number): string => String(n).padStart(3, '0');
+---
+
+<div class="pss" data-poster-slideshow>
+  <p class="pss-lead" data-poster-lead>
+    过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
+    以下每一帧，都是一个人的七周年。
+  </p>
+  <figure class="pss-figure" data-poster-stage>
+    <div class="pss-media">
+      {
+        first && (
+          <img
+            class="pss-img is-current"
+            data-poster-img
+            src={first.src}
+            alt={`Seeker 七周年纪念海报 · @${first.author}`}
+            width={first.w}
+            height={first.h}
+            fetchpriority="high"
+            loading="lazy"
+            decoding="async"
+          />
+        )
+      }
+      <img class="pss-img" data-poster-img-b alt="" aria-hidden="true" />
+    </div>
+    <figcaption class="pss-cap" data-poster-cap>
+      <span class="pss-no">
+        <span data-poster-no>{first ? `NO.${pad3(first.no)}` : 'NO.000'}</span> / {total}
+      </span>
+      <span class="pss-author" data-poster-author>@{first?.author ?? ''}</span>
+    </figcaption>
+    <div class="pss-bar" aria-hidden="true">
+      <i data-poster-bar style={`width: ${total > 0 ? ((1 / total) * 100).toFixed(2) : 0}%`}></i>
+    </div>
+  </figure>
+</div>
+
+<style>
+  .pss {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .pss-lead {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(0.86rem, 1.7vw, 1.02rem);
+    line-height: 1.9;
+    letter-spacing: 0.06em;
+    color: var(--anniv-muted);
+  }
+
+  .pss-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+  }
+
+  /* 固定放映框：海报原比例 contain 居中（画幅各异，框不动、布局零跳动） */
+  .pss-media {
+    position: relative;
+    width: min(92vw, 56rem);
+    height: min(44vh, 28rem);
+  }
+
+  .pss-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    filter: drop-shadow(0 12px 40px rgba(2, 8, 20, 0.55));
+  }
+
+  :global([data-theme='light']) .pss-img {
+    filter: drop-shadow(0 10px 30px rgba(20, 40, 61, 0.28));
+  }
+
+  .pss-img.is-current {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* 两段式换帧：先整幅淡出旧帧（与 .is-current 同级，后声明覆盖其 opacity） */
+  .pss-img.is-outgoing {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .pss-img.is-incoming {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  .pss-cap {
+    display: flex;
+    align-items: baseline;
+    gap: 1.1rem;
+  }
+
+  .pss-no {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.26em;
+    color: var(--anniv-muted);
+    transition: opacity 0.18s ease;
+  }
+
+  .pss-author {
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--anniv-fg);
+    transition: opacity 0.18s ease;
+  }
+
+  .pss-cap.is-swap .pss-no,
+  .pss-cap.is-swap .pss-author {
+    opacity: 0;
+  }
+
+  .pss-bar {
+    width: min(46vw, 15rem);
+    height: 2px;
+    overflow: hidden;
+    background: var(--anniv-border);
+  }
+
+  .pss-bar i {
+    display: block;
+    height: 100%;
+    background: var(--anniv-accent);
+    transition: width 0.8s ease;
+  }
+
+  @media (max-width: 48rem) {
+    .pss-media {
+      height: min(34vh, 22rem);
+    }
+  }
+</style>
+
+<script>
+  // 巨片轮播懒加载：接近板块才载入轮播逻辑；reduced-motion 保持静态首帧
+  const root = document.querySelector('[data-poster-slideshow]');
+  if (root && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          io.disconnect();
+          import('../../lib/anniversary/poster-slideshow').then(m => m.initPosterSlideshow());
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    io.observe(root);
+  }
+</script>

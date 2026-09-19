@@ -166,32 +166,28 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     };
   },
 
-  /** 06 留光成物：照片 → 相框 → @昵称 → SEEKER 07 → 年份 → 完整纪念物 */
-  memory: track => {
-    const photo = track.querySelector<HTMLElement>('[data-memory-photo]');
-    const frame = track.querySelector<HTMLElement>('[data-memory-frame]');
-    const nick = track.querySelector<HTMLElement>('[data-memory-nick]');
-    const badge = track.querySelector<HTMLElement>('[data-memory-badge]');
-    const years = track.querySelector<HTMLElement>('[data-memory-years]');
+  /**
+   * 06 留光成物：巨片装框入场（引言 → 海报 → 署名/计数）。
+   * 驻留期滚动不干预——轮播由 poster-slideshow.ts 的定时器接管；
+   * 出场无独立编排，sticky 释放后由交接句与暗房开场接棒。
+   */
+  posters: track => {
+    const lead = track.querySelector<HTMLElement>('[data-poster-lead]');
+    const stage = track.querySelector<HTMLElement>('[data-poster-stage]');
+    const cap = track.querySelector<HTMLElement>('[data-poster-cap]');
     return ({ progress: p }) => {
-      if (photo) {
-        const t = ramp(p, 0.15, 0.35);
-        photo.style.opacity = t.toFixed(3);
-        photo.style.transform = `scale(${(1.05 - 0.05 * t).toFixed(4)})`;
+      if (lead) {
+        lead.style.opacity = ramp(p, 0.02, 0.08).toFixed(3);
       }
-      if (frame) {
-        frame.style.opacity = ramp(p, 0.35, 0.5).toFixed(3);
+      if (stage) {
+        const t = ramp(p, 0.04, 0.13);
+        stage.style.opacity = t.toFixed(3);
+        stage.style.transform = `scale(${(1.04 - 0.04 * t).toFixed(4)})`;
       }
-      if (nick) {
-        const t = ramp(p, 0.5, 0.62);
-        nick.style.opacity = t.toFixed(3);
-        nick.style.transform = `translateY(${(10 * (1 - t)).toFixed(1)}px)`;
-      }
-      if (badge) {
-        badge.style.opacity = ramp(p, 0.62, 0.76).toFixed(3);
-      }
-      if (years) {
-        years.style.opacity = ramp(p, 0.76, 0.9).toFixed(3);
+      if (cap) {
+        const t = ramp(p, 0.09, 0.15);
+        cap.style.opacity = t.toFixed(3);
+        cap.style.transform = `translateY(${(8 * (1 - t)).toFixed(1)}px)`;
       }
     };
   },

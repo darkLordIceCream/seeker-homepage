@@ -238,6 +238,13 @@
       "description": "把首页小组活动区的 Young Blood 占位卡替换为「追光之旅 · 摄影大赛」实卡（指向 /activities/chasing-light/）。新建 lightChasing 内容集合（2022/2023/2024 每年一个 .md，获奖名单与「背后的故事」全部照录公众号原文，不伪造），新增影展式常暗年度页模板 LightChasingYear（hero 即总冠军展示位 + 大赛结果公示常暗区：组冠军图上文下卡 + 优秀作品/特别关注 hover 显注密集网格 + 作品赏析主题化阅读区：哈苏 33/50/66% 图组栅格 + 衬线故事列 + LOBA 式组照编号 + GalleryStory 同款 lightbox + 年份文字导航 + 届数 pager）与历届门户 chasing-light.astro。图片管线：微信文章原始 HTML（chksm 签名 + CF Worker relay 通路）→ 图文交错解析 → 装饰图剔除/哈希去重/人工目检策展 65 图 → WebP q82 上传 R2 activities/chasing-light/<year>/<slug>/（immutable 缓存头）→ activity-image-meta 登记。验证：type-check/lint/build 全绿 77 页；桌面+375 截图回归四页；lightbox 开图/Esc 关闭实测。",
       "status": "done",
       "evidence": "commit feat/chasing-light 分支；dist 77 页含 /activities/chasing-light/ 与 2022/2023/2024 三年度页；R2 65 图全部 200"
+    },
+    {
+      "id": "feat-031",
+      "name": "06 留光成物改版：成员巨片幻灯片墙 + 暗房并入（七周年海报收集上墙）",
+      "description": "按用户收集的七周年水印海报（162 张源图，MD5 去重 161 张 / 92 位成员）重构板块 6：删除 MemoryObject 单件装框舞台与 ObjectsSection 静物档案（merchandise.json 一并移除），板块 6 只保留两件事——①成员巨片幻灯片墙 PosterSlideshow：滚动引擎新增 posters 工厂只编排入场装框（引言→海报→署名/计数三段 ramp，轨道 320vh/移动 240vh），驻留期由 poster-slideshow.ts 定时器自动轮播（4.5s/帧，两段式换帧：旧帧先整幅淡出、新帧再淡入，避免横竖幅混排交叉淡入叠出拼贴感），展示池=manifest 全量（seed 20260919 确定性洗牌、首帧竖幅精选），任一时刻仅预取当前 ±2 张、decode() 后才换帧、失败帧自动跳过；海报自带相框/水印/二维码 → 固定放映框内 object-fit contain 原比例展示绝不裁切；hover/focus/切后台/滚离板块即暂停（WCAG），reduced-motion/无 JS 静态首帧；manifest 由 scripts/make-7th-posters.mjs 生成（去重→sharp q82 WebP→src/data/anniversary/posters.ts），图片走 R2 activities/7th-anniversary/posters/NNN.webp；②暗房 WatermarkGenerator 原样并入板块 6 下半场（逻辑零改动），新增交接句「你的那一帧，还差你。」承接幻灯片与「你在哪里？」暗房开场，#leave-your-frame 锚点与 _redirects 不变",
+      "status": "done",
+      "evidence": "commit feat/7th-anniversary 分支；R2 161 张逐一 curl 自定义域全 200（content-type image/webp + immutable 缓存头）；./init.sh 全绿（type-check 0 错 0 警、lint 0 错 60 既有警告、77 页构建）；agent-browser headless 实测：入场装框 ramp 数学正确（p≈0.2 三层到位）、驻留自动轮播推进（NO.028→NO.143 连续 6+ 帧计数器/署名/进度条/槽位 aria 交接全部正确）、两段式换帧任一时刻仅单帧可见、悬停 6s 暂停/移开恢复、出场接交接句→「你在哪里？」→「带上你的光。」暗房初始化正常、1440x900/375x667 零横向溢出、深浅双主题截图核对；隐藏标签页 rAF/timer 节流为自动化环境假象（progress.md 已记录）"
     }
   ]
 }

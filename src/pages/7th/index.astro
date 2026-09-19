@@ -3,7 +3,8 @@
  * /7th/ — SEEKER 07 · 七周年「数字摄影纪念册」。
  * 主题：光影七载，看见彼此（2019 — 2026）。
  * 叙事结构：HERO → 01 七年序章 → 02 光影札记 → 03 他们的声音 → 04 追光印记
- *   → 05 同行之路 → LEAVE YOUR FRAME → 06 留光成物 → 07 光影七载 → WITH THANKS。
+ *   → 05 同行之路 → 06 留光成物（成员巨片幻灯片墙 + LEAVE YOUR FRAME 暗房）
+ *   → 07 光影七载 → WITH THANKS。
  * 一本可以在网页中阅读的摄影纪念册——不是活动页。
  * 统计唯一数据源：src/data/anniversary/stats.json（真实统计 2026-09）。
  */
@@ -17,8 +18,7 @@ import AnniversaryMap from '../../components/anniversary/AnniversaryMap.astro';
 import FounderNote from '../../components/anniversary/FounderNote.astro';
 import VoicesSection from '../../components/anniversary/VoicesSection.astro';
 import SharedRoad from '../../components/anniversary/SharedRoad.astro';
-import MemoryObject from '../../components/anniversary/MemoryObject.astro';
-import ObjectsSection from '../../components/anniversary/ObjectsSection.astro';
+import PosterSlideshow from '../../components/anniversary/PosterSlideshow.astro';
 import WatermarkGenerator from '../../components/watermark/WatermarkGenerator.astro';
 import Thanks from '../../components/anniversary/Thanks.astro';
 import { GALLERY_POOL } from '@/data/gallery';
@@ -27,9 +27,7 @@ import stats from '../../data/anniversary/stats.json';
 // HERO 首帧摄影作品：取成员收集池中最宽的横幅（全幅背景，构建期确定）
 const heroCandidates = [...GALLERY_POOL].filter(i => i.w > i.h).sort((a, b) => b.w - a.w);
 const heroPick = heroCandidates[0];
-const heroPhoto = heroPick
-  ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
-  : null;
+const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h } : null;
 ---
 
 <Layout
@@ -66,9 +64,7 @@ const heroPhoto = heroPick
         </div>
         <div class="arc-hero-core" data-hero-core>
           <p class="arc-hero-brand">SEEKER</p>
-          <p aria-hidden="true" class="arc-hero-num" data-hero-num>
-            07
-          </p>
+          <p aria-hidden="true" class="arc-hero-num" data-hero-num>07</p>
           <p class="arc-hero-years">YEARS OF LIGHT</p>
           <p class="arc-hero-range">2019 — 2026</p>
         </div>
@@ -134,21 +130,18 @@ const heroPhoto = heroPick
         <SharedRoad />
       </section>
 
-      <!-- 06 / 留光成物：纪念物成形舞台 + 真实设计物档案 -->
+      <!-- 06 / 留光成物：成员巨片幻灯片墙（入场装框 → 驻留自动轮播 → 出场）+ 暗房（LEAVE YOUR FRAME） -->
       <section aria-labelledby="sec-objects" class="arc-sec">
-        <div class="story-track story-track--memory" data-story-scene="memory">
+        <div class="story-track story-track--posters" data-story-scene="posters">
           <div class="story-stage">
             <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
-            <MemoryObject />
+            <PosterSlideshow />
           </div>
         </div>
-        <ObjectsSection />
-      </section>
-
-      <!-- LEAVE YOUR FRAME：WHERE ARE YOU? 暗房章节（上传→显影→昵称→生成→位置→✦），置于留光成物之下 -->
-      <section aria-labelledby="sec-frame" class="arc-darkroom" id="leave-your-frame">
-        <div class="drk-opening" data-reveal>
-          <p class="drk-eyebrow" id="sec-frame">LEAVE YOUR FRAME</p>
+        <p class="arc-handoff" data-reveal>你的那一帧，还差你。</p>
+        <!-- LEAVE YOUR FRAME：WHERE ARE YOU? 暗房（上传→显影→昵称→生成→位置→✦），留光成物下半场 -->
+        <div class="drk-opening" id="leave-your-frame" data-reveal>
+          <p class="drk-eyebrow">LEAVE YOUR FRAME</p>
           <h2 class="drk-title">你在哪里？</h2>
           <p class="drk-title-en">WHERE ARE YOU?</p>
           <p class="drk-sub">
@@ -456,8 +449,8 @@ const heroPhoto = heroPick
     height: 300vh; /* 五拍节拍轮换（bio + 三段寄语 + 落款） */
   }
 
-  .story-on .story-track--memory {
-    height: 280vh;
+  .story-on .story-track--posters {
+    height: 320vh; /* 入场装框 + 驻留（轮播由定时器接管，滚动只管进出） */
   }
 
   .story-on .story-track--ending {
@@ -469,8 +462,8 @@ const heroPhoto = heroPick
       height: 240vh;
     }
 
-    .story-on .story-track--memory {
-      height: 200vh;
+    .story-on .story-track--posters {
+      height: 240vh;
     }
 
     .story-on .story-track--ending {
@@ -485,6 +478,16 @@ const heroPhoto = heroPick
     letter-spacing: 0.42em;
     text-indent: 0.42em;
     color: var(--anniv-muted);
+  }
+
+  /* 06 巨片墙 → 暗房的交接句（data-reveal 渐显，接「你在哪里？」） */
+  .arc-handoff {
+    margin: clamp(1.5rem, 4vw, 2.5rem) auto;
+    text-align: center;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+    letter-spacing: 0.14em;
+    color: var(--anniv-fg);
   }
 
   .arc-copy-lead {

@@ -1547,3 +1547,152 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 用户工作区另有未提交改动（Footer.astro 微信二维码 +
   src/assets/images/wechat-qrcode.png），非本会话产物，未纳入提交
 - Safari 真机待测（沿袭 feat-026 既有遗留）
+
+## 会话记录（页脚公众号二维码 + 首页分部补全与分部小地图，2026-09-20）
+
+### 交付内容（分支 feat/7th-anniversary，均未提交）
+
+1. 页脚联系方式重做：邮箱/微信/全国各地分部三条占位删除，换成微信公众号二维码（src/assets/images/wechat-qrcode.png，512px/168KB，astro:assets 构建期优化为 10kB
+   webp）；Footer 全站生效，深浅主题截图验证通过
+2. 首页 About「小组简介」分部胶囊补全 9 个：陕西/山西/武汉/安徽/海南/云南/川渝/广西/上海（用户指定顺序，插金陵后，「你的城市 · 期待点亮」保持压尾虚线）
+3. 新增分部小地图（用户选定「静态 SVG」方案，零客户端框架）：
+   - src/data/branches.ts：11 个分部单一数据源（id/label/cities/lngLat）
+   - src/lib/branches/china-svg.ts：构建期读取 public/geo/china-provinces.json（已提交的 DataV 省界，不依赖周年页 WIP 产物），等距圆柱投影（经度 ×cos35°）→
+     0.1° 量化去重 → 像素空间 Douglas–Peucker 抽稀（闭合环按最远点拆半，容差 1.0px/段线 0.7px）→ 内联路径约 29KB；主图 viewBox
+     640×471（南界 16.5°N，给附图让出纯海区），南海诸岛附图复用同一完整投影空间等比缩小（150×54 框，clip 至 20.9°N 以南），主图九段线用 evenodd
+     clipPath 挖掉附图矩形避免重复描线；澳门（<0.2°）丢弃、港澳台保留
+   - src/components/home/BranchMap.astro：省份底 var(--glass-bg)/var(--divider) 主题自适应；分部圆点 = 渐变核（--grad-a/--grad-b
+     radialGradient）+ 光晕呼吸动画（prefers-reduced-motion 关闭、相位错开）；圆点内嵌
+     <title> 原生 tooltip；省份
+     <title>；~30 行原生 JS 实现胶囊 ↔ 圆点双向 mouseenter/mouseleave 高亮（.is-active）
+   - AboutSection 接入：地图置于胶囊下、join-row 上（max-width
+     420px），chip 加 transition + .is-active 样式
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors（51 既有 warnings，与我改动无关）/ build
+  77 页全绿
+- 截图实测（preview
+  :4322）：深色（默认）+ 浅色主题地图/胶囊/加入按钮渲染正常；hover 联动双端 class 验证通过；移动端 390×844 单列布局正常
+- 几何抽查：广州 [413.1, 386.5]、海口 [382.5,
+  425.8] 落位正确；台湾岛与附图框不重叠；附图仅含伸入南海的省份（海南/广东等按 maxY 过滤）
+- 调试注记：浏览器缓存过旧 HTML，用 cache-buster 排查后确认 dist 正确；调试用 svg
+  scale 变换已全部还原
+
+### 遗留 / 待办
+
+- AboutSection
+  join-row 仍有「微信：seeker-photo（占位）」（用户只要求改页脚，此处待指示）
+- 桌面端 About 屏内容（胶囊 3 行 + 地图 + join）略超 100svh，可滚动，用户已认可
+- 全部改动未提交：与周年 WIP（mapStyle/AnniversaryMap/map-points 等）同工作区，等用户信息补完统一整理提交
+
+## 会话记录（feat-026 光影札记主理人寄语 + 五拍滚动叙事，2026-09-20）
+
+### 交付内容（分支 feat/7th-anniversary，已提交）
+
+1. 数据：src/data/anniversary/founder-note.json（published 开关 + 三段寄语原文逐字保留，2026-09 主理人提供）；false 时 FounderNote 回退 AwaitNote 占位
+2. FounderNote.astro：AwaitNote 占位替换为三段正文；bio 与三段、落款均为 data-founder-beat 节拍，bio/正文 grid 叠放（1/1 同格，容器高取最高段，轮换不跳动、隐藏不占行）；《专题名》splitTopic 拆段以 .fn-topic 强调色渲染（不用 set:html，规则 astro/no-set-html-directive 禁用）；正文衬线 var(--anniv-serif) 行高 2
+3. scroll-story.ts founder 工厂扩展为五拍轮换（仿 ending）：肖像淡入+轻放大 →
+   bio(0.28-0.38) → 三段(0.42/0.56/0.70 进入，前段同窗退场)
+   → 落款(0.84-0.92，第三段压暗 0.25 衬底)；窗口表按节拍数键控（5=全文 /
+   2=占位回退）
+4. index.astro：story-track--founder 250vh→300vh（移动 180→240vh）
+5. 工具链对齐：.prettierrc trailingComma
+   es5→all——此前提交钩子里 prettier 后跑会剥掉函数参数尾逗号（c68df27 时 mapStyle.ts 被剥，lint
+   comma-dangle 报错），与 eslint
+   always-multiline 打架；'all' 对齐多数派既有风格，mapStyle 参数尾逗号补回
+6. 窄屏（≤48rem）：肖像压成「署名小票」（72px 小图 + 纵排署名同行）、正文 0.92rem/1.85，保证章节标题 + 当前节拍 + 落款 100svh 同屏
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors（51 既有 warnings）/ build 77 页全绿
+- 浏览器实测（dev +
+  IAB）：桌面 1280×720 五拍逐拍截图核对（轮换、退场、落款、压暗）；375×667 三拍同屏、无横向溢出；文字三段与 founder-note.json 逐字比对 ALL
+  PASS
+- 开场拍人像偶现空白为 lazy 图片解码时序（img.complete 后正常），非布局缺陷
+
+### 遗留 / 待办
+
+- progress.md 本次记录与页脚/分部会话记录同文件未提交（见下），由统一整理提交时一并带上
+- format:check 基线即红（Navigation.astro style 块 CssSyntaxError +
+  48 文件格式漂移），非本次引入，未处理
+- 三篇文章《那些忙碌的摄影师今年还在拍摄吗？》上线后可回填链接
+
+## 会话记录（分部小地图 v2「引线+按钮」+ 页脚二维码换图缩小，2026-09-20 续）
+
+### 交付内容（同分支，未提交）
+
+1. 分部小地图升级（用户反馈「简陋」→ 标注式地图）：
+   - BranchMap.astro 新增引线层（bm-net，圆点→按钮细线，pathLength=1 归一化描画，进入视口后按 0.09s 错峰 draw-in）与按钮层（bm-places，86×27 胶囊 + 分部名，样式同 chips 玻璃胶囊）
+   - PLACEMENTS 手工排布 11 个按钮中心点（逐一核算避让：台湾岛、南海附图框、海南/广佛等南部密集圆点、引线互不交叉、不出 viewBox）
+   - 联动升级为三方：chips 列表 ↔ 地图圆点 ↔ 地图按钮，悬停任一处同步 is-active，对应引线增亮（opacity
+     .45→1，宽 1→1.6）；无 JS 时引线常显（html.js 门控）
+   - 地图 max-width 420→440px；figure 加 .reveal 入场
+2. 页脚公众号二维码：换成用户 2026-09-20 提供的新图（512×512，144KB 入库），显示尺寸 128→100px（Image
+   width/height 256→200，构建后 8kB webp）
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors（51 既有 warnings）/ build 77 页全绿
+- 截图实测：地图 11 引线+按钮无碰撞；hover 地图「川渝分部」按钮 → 圆点光晕放大、引线 computed
+  opacity 1 / stroke-width 1.6px、chips 列表同步高亮，三方联动 ✓
+- 页脚新二维码渲染确认（getBoundingClientRect 宽 100px），含 Seeker logo 新图 ✓
+
+### 遗留 / 待办
+
+- 同前：AboutSection join-row「微信占位」待指示；全部改动未提交，等用户统一安排
+
+## 会话记录（feat-026 光影札记节拍吸附，2026-09-20 增量）
+
+- 用户反馈连续插值会停在两段之间影响阅读：founder 场景改为「节拍吸附」——进度只决定当前是第几拍（相邻拍中心的中点为阈值，5 拍阈值 0.395/0.53/0.67/0.81），跨过阈值整拍切换；切换过渡由 CSS
+  transition 0.55s ease-out-cubic 完成（FounderNote
+  .story-on 门控，will-change 提示）。任何停留位置看到的都是完整一段，肖像入场保留连续淡入
+- 验证：type-check / lint / build 全绿；运行时断言 p=0.95
+  → 三段 0.25 + 落款 1 + 其余 0；桌面截图核对「中点前停留=完整拍1」「跨过中点=整段切到拍2」「落款拍」；测试中曾出现的停帧为后台标签 rAF 暂停的假象，页面可见时无此问题
+- 改动文件：src/lib/anniversary/scroll-story.ts（founder 工厂状态机化）、src/components/anniversary/FounderNote.astro（节拍 transition）——已提交
+
+## 会话记录（feat-031 板块6 改版：成员巨片幻灯片墙 + 暗房并入，2026-09-20）
+
+### 素材与 R2
+
+- 源：桌面「附件下载_七周年海报收集」162 张（167MB，成员用暗房工具自制水印海报，文件名 = 作者_时间_原图名_序号）
+- `scripts/make-7th-posters.mjs`：MD5 去重（Wilson 重复 1 张）→ 161 张 /
+  92 位成员；sharp 转 WebP（q82
+  smartSubsample、EXIF 转正后剥离，尺寸不动——源已长边约 2500，唯一全景 12503x3705 按约定保留原分辨率）；产物
+  `.posters-stage/`（gitignore）
+- manifest
+  `src/data/anniversary/posters.ts`：脚本生成勿手改；数组顺序 = 展示顺序（seed
+  20260919 确定性洗牌，首帧 NO.028 @黒加侖 竖幅精选）；no
+  = 档案编号（按作者名 zh-Hans 排序赋号）；92 人/161 帧等文案数字全部运行时从 manifest 计算
+- 上传：全局 wrangler（~/Library/pnpm/wrangler，whoami 确认
+  djhannyuan@gmail.com），161 张逐一 put 到
+  `activities/7th-anniversary/posters/NNN.webp` （image/webp +
+  immutable 缓存头），curl 自定义域全量验证 200（011 首测 000 为连击瞬时失败，复测 200）；注意：wrangler
+  4.108 `r2 object put` 无 `--quiet` 参数
+
+### 板块 6 新结构（feat-031，详见 feature_list.json）
+
+- 删除：MemoryObject.astro、ObjectsSection.astro、merchandise.json、scroll-story
+  `memory` 工厂、`.story-track--memory` CSS
+- 新增：`PosterSlideshow.astro`（放映框 + 双槽位 + 署名/计数/进度线）、
+  `src/lib/anniversary/poster-slideshow.ts`（自动轮播逻辑，接近板块 ~600px 才动态 import）、scroll-story
+  `posters`
+  工厂（入场三段 ramp，轨道 320vh/240vh）、交接句 .arc-handoff「你的那一帧，还差你。」
+- 叙事：入场装框（引言→海报→署名）→ 驻留自动轮播（4.5s/帧，滚动不干预）→
+  sticky 释放 → 交接句 → 暗房「你在哪里？」（原样并入 06，#leave-your-frame锚点/重定向/footer 链接不变）
+- 设计取舍：海报自带相框+二维码 → 固定放映框内 contain 原比例展示绝不裁切；换帧用两段式（旧帧整幅淡出→新帧淡入）而非交叉淡入——横竖幅混排时新旧同框会叠出拼贴感、署名归属混淆；全量池+预取 ±2 张：所有成员的片子都会出现，任一时刻仅 3 张解码资源
+
+### 验证
+
+- ./init.sh 全绿（type-check 0 错 0 警、lint 0 错 60 既有警告、77 页构建）
+- agent-browser headless（1440x900 /
+  375x667）：入场 ramp 数学正确；自动轮播连续推进 6+ 帧（计数器/署名/进度条/槽位 aria 交接正确）；两段式换帧单帧可见；悬停 6s 暂停、移开恢复；出场→交接句→暗房 empty 态正常；深浅双主题截图核对；移动端零横向溢出
+- 环境假象记录：ZCode 内嵌浏览器面板被遮挡时 rAF 暂停 +
+  setTimeout 密集约节流，滚动引擎停帧、平滑滚动冻结——页面可见时无此问题（与 2026-09-20
+  founder 会话记录一致）；headless 验证时曾用「rAF→setTimeout 补丁 + 重新 initScrollStory」绕过
+
+### 未提交改动说明
+
+- 本功能文件已单独提交；工作区另有上一会话的分部小地图 v2 改动（BranchMap.astro、branches.ts、src/lib/branches/、Footer.astro、AboutSection.astro、wechat-qrcode.png）仍按其记录「等用户统一安排」未提交
+- `pnpm format`
+  现状：Navigation.astro 既有 CSS 语法错误导致 prettier 全仓跑挂（报错文件为已提交代码，非本次改动）；已恢复被 prettier 误重排的无关文件
