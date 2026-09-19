@@ -2,10 +2,11 @@
  * 照片预览手势：单指/鼠标拖动、双指捏合缩放、滚轮/触控板缩放。
  * 本模块只做指针簿记与「CSS px → 模板 px」换算；
  * 全部变换语义（基准适配、锚点、钳制）由调用方通过 drag / zoomAt 实现。
+ * drag 携带按下时的修饰键（shift=true 时调用方可转义为「移动水印帧」等）。
  */
 export interface GestureHandlers {
-  /** 单指拖动产生的位移（模板 px） */
-  drag(dx: number, dy: number): void;
+  /** 单指拖动产生的位移（模板 px）；modifiers 取自该指按下时 */
+  drag(dx: number, dy: number, modifiers?: { shift: boolean }): void;
   /** 以模板坐标 (px, py) 为锚点缩放 factor 倍（保持该点内容不动） */
   zoomAt(px: number, py: number, factor: number): void;
   /** CSS px → 模板 px 的换算系数 */
@@ -15,6 +16,8 @@ export interface GestureHandlers {
 /** 绑定手势，返回解绑函数 */
 export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () => void {
   const pointers = new Map<number, { x: number; y: number }>();
+  // 每根指针按下时的修饰键快照（拖动过程中以按下时为准，语义稳定）
+  const mods = new Map<number, { shift: boolean }>();
   // 捏合状态记录上一次双指间距，每次 move 以增量因子缩放
   let pinch: { prevDist: number } | null = null;
 
@@ -29,6 +32,7 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
       return;
     }
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    mods.set(e.pointerId, { shift: e.shiftKey });
     el.setPointerCapture(e.pointerId);
     if (pointers.size === 2) {
       const pts = [...pointers.values()];
@@ -50,7 +54,7 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
 
     if (pointers.size === 1) {
       const k = handlers.cssToTemplate();
-      handlers.drag(dx * k, dy * k);
+      handlers.drag(dx * k, dy * k, mods.get(e.pointerId));
     } else if (pointers.size === 2 && pinch) {
       const pts = [...pointers.values()];
       if (!(pts[0] && pts[1])) {
@@ -65,6 +69,7 @@ export function attachGestures(el: HTMLElement, handlers: GestureHandlers): () =
 
   const onPointerEnd = (e: PointerEvent): void => {
     pointers.delete(e.pointerId);
+    mods.delete(e.pointerId);
     if (pointers.size < 2) {
       pinch = null;
     }

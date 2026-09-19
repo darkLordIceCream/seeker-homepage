@@ -6,15 +6,15 @@
  * 源图：scripts/assets/watermark/seeker-7th-*-src.png
  * —— 设计师从 PSD 导出的「隐藏黑色背景层」透明 PNG（含 alpha 通道）。
  *
- * 导出图有两处需要程序修补（PSD 图层结构导致，设计本身无此意图）：
- * 1. 昵称层被烙进导出图（「© 肖默 / @肖默」）→ 在 eraseRects 内整体擦除，
- *    该位置由网站 Canvas 绘制用户输入的动态昵称；
- * 2. 二维码区域透明程度不一致（白卡/白码点与背景层编组）→ pasteRects
- *    区域整块替换为成品海报 JPG（flatSrc）的像素并强制不透明，
- *    保证码与白边完美贴合、任意照片上可扫。
+ * 2026-09-19 起：二维码/公众号信息与水印主体分离——
+ * 1. 主模板（*-frame.webp）：白卡+公众号文字区域 alpha 清零（挖孔），
+ *    水印主体（幽灵字/手写/装饰）可在画布内平移而二维码钉死右下角；
+ * 2. 二维码卡（*-qr.webp）：从成品海报 JPG（flatSrc）裁出白卡区域，
+ *    不透明白底保证任意照片上可扫，渲染期按 template.qr 坐标原位绘制。
+ * 历史的「白卡贴回主模板」逻辑已移除（旧 seeker-7th-*.webp 不再生成）。
  *
  * 若设计师更新导出图：覆盖 -src.png 后重跑本脚本即可。
- * 注意：导出时请隐藏「昵称」图层，否则依赖本脚本的擦除坐标。
+ * 注意：导出时请隐藏「昵称」图层，否则依赖 eraseRects 的擦除坐标。
  */
 import { stat } from 'node:fs/promises';
 import sharp from 'sharp';
@@ -27,7 +27,8 @@ const SOURCES = [
     src: 'scripts/assets/watermark/seeker-7th-portrait-src.png',
     /** 成品海报 JPG（flatten 后的真实外观，二维码白卡在此完全可见） */
     flatSrc: 'scripts/assets/watermark/seeker-7th-portrait.jpg',
-    out: `${OUT_DIR}/seeker-7th-portrait.webp`,
+    frameOut: `${OUT_DIR}/seeker-7th-portrait-frame.webp`,
+    qrOut: `${OUT_DIR}/seeker-7th-portrait-qr.webp`,
     /**
      * 擦除区域（若导出图烙入了昵称层则在此配置，alpha 清零）。
      * 当前导出已在 PS 里隐藏昵称图层，无需擦除；留空数组保留机制。
@@ -36,12 +37,18 @@ const SOURCES = [
     /** 白卡扫描窗口（需覆盖整张白卡、避开下方文字）与静区行的最小连续白段 */
     cardWindow: { x0: 1550, x1: 2050, y0: 3300, y1: 3660 },
     minRun: 170,
+    /**
+     * 主模板挖孔区：白卡边界 + 下方公众号文字。x0/x1 取卡片左右外扩
+     * （覆盖文字与卡片中心差），y1 延到窗口底（公众号文字行）。
+     */
+    holePad: { left: 60, right: 30, top: 8, bottom: 70 },
   },
   {
     name: '横版',
     src: 'scripts/assets/watermark/seeker-7th-landscape-src.png',
     flatSrc: 'scripts/assets/watermark/seeker-7th-landscape.jpg',
-    out: `${OUT_DIR}/seeker-7th-landscape.webp`,
+    frameOut: `${OUT_DIR}/seeker-7th-landscape-frame.webp`,
+    qrOut: `${OUT_DIR}/seeker-7th-landscape-qr.webp`,
     /**
      * 2026-09-17 晚间版导出：设计师已删除昵称图层（经像素级 diff 验证，
      * 与上一版唯一差异即「@肖默」文字区 598px），擦除步骤置空保留机制。
@@ -49,6 +56,7 @@ const SOURCES = [
     eraseRects: [],
     cardWindow: { x0: 2050, x1: 2499, y0: 1280, y1: 1558 },
     minRun: 100,
+    holePad: { left: 60, right: 30, top: 8, bottom: 70 },
   },
 ];
 
@@ -117,67 +125,61 @@ for (const job of SOURCES) {
   // 成品 JPG 归一化为 sRGB RGBA（微信导出的 JPG 是 4 通道 CMYK 标记 + alpha）
   const flat = await sharp(job.flatSrc).toColourspace('srgb').ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 
-  // 白卡精确边界（自校准），四周内缩 2px 避免把贴着黑底的抗锯齿边带进照片
+  // 白卡精确边界（自校准）
   const card = scanCardBounds(flat, job.cardWindow, job.minRun);
-  const pasteRect = {
-    x: card.x + 2,
-    y: card.y + 2,
-    width: card.w - 4,
-    height: card.h - 4,
+  console.log(`${job.name} 白卡边界: x${card.x} y${card.y} ${card.w}×${card.h}`);
+
+  // —— 1) 二维码卡资产：成品 JPG 裁白卡（原样不透明，保证可扫） ——
+  const qrRect = { x: card.x, y: card.y, width: card.w, height: card.h };
+  await sharp(job.flatSrc)
+    .extract({ left: qrRect.x, top: qrRect.y, width: qrRect.width, height: qrRect.height })
+    .toColourspace('srgb')
+    .flatten({ background: '#ffffff' })
+    .webp({ lossless: true })
+    .toFile(job.qrOut);
+  console.log(`${job.name} 二维码卡: ${qrRect.width}×${qrRect.height} → ${job.qrOut}`);
+  console.log(`   >>> template.qr = { src: '${job.qrOut.replace('public', '')}', x: ${qrRect.x}, y: ${qrRect.y}, w: ${qrRect.width}, h: ${qrRect.height} }`);
+
+  // —— 2) 主模板挖孔：白卡 + 公众号文字区域 alpha 清零 ——
+  const hole = {
+    x: Math.max(0, card.x - job.holePad.left),
+    y: Math.max(0, card.y - job.holePad.top),
+    width: Math.min(width, card.x + card.w + job.holePad.right) - Math.max(0, card.x - job.holePad.left),
+    height: Math.min(height, card.y + card.h + job.holePad.bottom) - Math.max(0, card.y - job.holePad.top),
   };
-  console.log(`${job.name} 白卡边界: x${card.x} y${card.y} ${card.w}×${card.h} → 贴入 ${pasteRect.width}×${pasteRect.height}`);
+  console.log(`${job.name} 挖孔区: x${hole.x} y${hole.y} ${hole.width}×${hole.height}`);
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const i = (y * width + x) * 4;
-      if (job.eraseRects.some((r) => inRect(x, y, r))) {
+      if (job.eraseRects.some((r) => inRect(x, y, r)) || inRect(x, y, hole)) {
         out[i + 3] = 0;
-      } else if (inRect(x, y, pasteRect)) {
-        // 二维码白卡区域：整块替换为成品图像素，强制不透明
-        const fi = (y * flat.info.width + x) * flat.info.channels;
-        out[i] = flat.data[fi];
-        out[i + 1] = flat.data[fi + 1];
-        out[i + 2] = flat.data[fi + 2];
-        out[i + 3] = 255;
       }
     }
   }
 
-  // 无损 WebP：二维码模块边缘零损耗，保证可扫
+  // 无损 WebP：笔触边缘零损耗
   await sharp(out, { raw: { width, height, channels: 4 } })
     .webp({ lossless: true, alphaQuality: 100 })
-    .toFile(job.out);
+    .toFile(job.frameOut);
 
-  const { size } = await stat(job.out);
+  const { size } = await stat(job.frameOut);
   const kb = (size / 1024).toFixed(1);
   if (size > 500 * 1024) {
-    throw new Error(`${job.out} ${kb}KB 超过 500KB 入库上限`);
+    throw new Error(`${job.frameOut} ${kb}KB 超过 500KB 入库上限`);
   }
 
-  // 校验：背景透明、昵称区已清空、二维码区域不透明
-  const check = await sharp(job.out).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  // 校验：背景透明、挖孔区干净、挖孔区外白卡位置不再有不透明像素
+  const check = await sharp(job.frameOut).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const alphaAt = (x, y) => {
     const { data: d, info: inf } = check;
     return d[(y * inf.width + x) * inf.channels + 3];
   };
   if (alphaAt(10, 10) !== 0) {
-    throw new Error(`${job.out} 背景未透明`);
+    throw new Error(`${job.frameOut} 背景未透明`);
   }
-  for (const r of job.eraseRects) {
-    let visible = 0;
-    for (let {y} = r; y < r.y + r.height; y++) {
-      for (let {x} = r; x < r.x + r.width; x++) {
-        if (alphaAt(x, y) > 0) {
-          visible++;
-        }
-      }
-    }
-    if (visible > 0) {
-      throw new Error(`${job.out} 昵称擦除区仍有 ${visible} 个可见像素`);
-    }
+  if (alphaAt(card.x + (card.w >> 1), card.y + (card.h >> 1)) !== 0) {
+    throw new Error(`${job.frameOut} 二维码挖孔区未清空`);
   }
-  if (alphaAt(pasteRect.x + (pasteRect.width >> 1), pasteRect.y + (pasteRect.height >> 1)) !== 255) {
-    throw new Error(`${job.out} 二维码区域未保持不透明`);
-  }
-  console.log(`✅ ${job.name} ${job.out} (${kb}KB, 无损)`);
+  console.log(`✅ ${job.name} ${job.frameOut} (${kb}KB, 无损, 已挖孔)`);
 }
