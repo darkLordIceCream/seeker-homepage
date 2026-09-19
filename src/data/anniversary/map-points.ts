@@ -1,14 +1,16 @@
 /**
  * 【七周年 · 地图墙】成员分布明细（国内到省 / 海外到国家）。
  *
- * ⚠️ 占位数据：数字与分布为演示用虚构值，上线前请替换为真实统计。
+ * 真实统计：2026-09 群内统计，28 个省级地区合计 219 人。
  * 数据本体在 map-points.json（本文件做类型化转出，供 TS 侧使用；
  * 构建脚本 build-map-geo.mjs 读同一 JSON 注入 GeoJSON 属性并生成光点源）。
  *
  * 字段说明：
  * - provinces[].name 必须与 china-provinces.json 的 properties.name 完全一致
- *   （北京市 / 广东省 / 台湾省 / 香港特别行政区 …）。
- * - countries[].worldName 为世界图中的英文国名（用于匹配边界取中心点）；
+ *   （北京市 / 广东省 / 台湾省 / 香港特别行政区 …）。未列入的省份视为 0 人
+ *   （边界保留、不生成光点）。
+ * - 地图现为中国视图：countries 留空即不展示海外；如恢复世界视图，
+ *   countries[].worldName 为世界图中的英文国名（用于匹配边界取中心点），
  *   小国（如新加坡）或位置需校正时改用 lngLat 手工标注 [经度, 纬度]。
  */
 
@@ -37,10 +39,10 @@ interface PointsData {
 
 const data = pointsData as unknown as PointsData;
 
-/** 国内成员分布（省级行政区，占位数据） */
+/** 国内成员分布（省级行政区，真实统计 2026-09） */
 export const PROVINCE_POINTS: readonly ProvincePoint[] = data.provinces;
 
-/** 海外成员分布（国家，占位数据） */
+/** 海外成员分布（国家；中国视图下为空，恢复世界视图时在 map-points.json 补充） */
 export const COUNTRY_POINTS: readonly CountryPoint[] = data.countries;
 
 /** 统计汇总（区域明细口径；页面头部统计的权威源是 stats.json，两者需一致） */

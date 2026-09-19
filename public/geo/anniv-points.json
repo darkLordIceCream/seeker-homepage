@@ -1,1 +1,215 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[116.46636363636365,40.189090909090915]},"properties":{"name":"北京市","nameZh":"北京市","memberCount":88,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[121.258,31.064]},"properties":{"name":"上海市","nameZh":"上海市","memberCount":76,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[113.2794957983193,23.1690756302521]},"properties":{"name":"广东省","nameZh":"广东省","memberCount":68,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[120.11610389610381,28.997532467532473]},"properties":{"name":"浙江省","nameZh":"浙江省","memberCount":52,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[119.15312499999995,33.0509375]},"properties":{"name":"江苏省","nameZh":"江苏省","memberCount":45,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[102.9264406779662,30.71237288135594]},"properties":{"name":"四川省","nameZh":"四川省","memberCount":33,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[111.49382812500002,27.27328125000001]},"properties":{"name":"湖南省","nameZh":"湖南省","memberCount":31,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[118.49054054054058,36.3837837837838]},"properties":{"name":"山东省","nameZh":"山东省","memberCount":29,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[114.04646017699112,33.97964601769912]},"properties":{"name":"河南省","nameZh":"河南省","memberCount":27,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[111.9243609022556,30.87203007518797]},"properties":{"name":"湖北省","nameZh":"湖北省","memberCount":25,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[118.25079207920788,26.04386138613861]},"properties":{"name":"福建省","nameZh":"福建省","memberCount":24,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.2979831932773,31.973949579831935]},"properties":{"name":"安徽省","nameZh":"安徽省","memberCount":22,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[107.88367924528303,29.975660377358505]},"properties":{"name":"重庆市","nameZh":"重庆市","memberCount":20,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[116.35006329113918,39.68050632911393]},"properties":{"name":"河北省","nameZh":"河北省","memberCount":21,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.70993421052636,35.25453947368421]},"properties":{"name":"陕西省","nameZh":"陕西省","memberCount":18,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[122.28226415094342,41.17358490566039]},"properties":{"name":"辽宁省","nameZh":"辽宁省","memberCount":16,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[101.66890909090912,25.537772727272735]},"properties":{"name":"云南省","nameZh":"云南省","memberCount":15,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.61455882352939,24.13191176470588]},"properties":{"name":"广西壮族自治区","nameZh":"广西壮族自治区","memberCount":14,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[115.71681818181818,27.551727272727266]},"properties":{"name":"江西省","nameZh":"江西省","memberCount":13,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[112.45341176470589,37.848705882352945]},"properties":{"name":"山西省","nameZh":"山西省","memberCount":12,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.87656000000004,27.022560000000002]},"properties":{"name":"贵州省","nameZh":"贵州省","memberCount":11,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.46750000000002,39.3925]},"properties":{"name":"天津市","nameZh":"天津市","memberCount":10,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[127.54252066115706,48.28958677685951]},"properties":{"name":"黑龙江省","nameZh":"黑龙江省","memberCount":9,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[109.8702857142857,19.230857142857143]},"properties":{"name":"海南省","nameZh":"海南省","memberCount":8,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[126.3731756756757,43.659324324324324]},"properties":{"name":"吉林省","nameZh":"吉林省","memberCount":8,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[114.54306264501155,44.226960556844546]},"properties":{"name":"内蒙古自治区","nameZh":"内蒙古自治区","memberCount":7,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[101.91249999999997,37.07593749999995]},"properties":{"name":"甘肃省","nameZh":"甘肃省","memberCount":6,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[84.12648648648651,40.81513513513514]},"properties":{"name":"新疆维吾尔自治区","nameZh":"新疆维吾尔自治区","memberCount":6,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[121.029375,23.747812500000006]},"properties":{"name":"台湾省","nameZh":"台湾省","memberCount":12,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[114.11333333333333,22.39]},"properties":{"name":"香港特别行政区","nameZh":"香港特别行政区","memberCount":9,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[113.56074999999998,22.15525]},"properties":{"name":"澳门特别行政区","nameZh":"澳门特别行政区","memberCount":3,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.23260869565217,37.34608695652174]},"properties":{"name":"宁夏回族自治区","nameZh":"宁夏回族自治区","memberCount":4,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[96.35493670886073,35.280759493670885]},"properties":{"name":"青海省","nameZh":"青海省","memberCount":3,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[88.93278846153852,31.443076923076912]},"properties":{"name":"西藏自治区","nameZh":"西藏自治区","memberCount":5,"kind":"province"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[138.5,36.5]},"properties":{"name":"Japan","nameZh":"日本","memberCount":11,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-98,39.5]},"properties":{"name":"United States","nameZh":"美国","memberCount":14,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[134,-24]},"properties":{"name":"Australia","nameZh":"澳大利亚","memberCount":9,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[103.8198,1.3521]},"properties":{"name":"新加坡","nameZh":"新加坡","memberCount":7,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-106,56]},"properties":{"name":"Canada","nameZh":"加拿大","memberCount":6,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-1.5,52.5]},"properties":{"name":"United Kingdom","nameZh":"英国","memberCount":5,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[10.4,51.2]},"properties":{"name":"Germany","nameZh":"德国","memberCount":4,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[172.8,-41.5]},"properties":{"name":"New Zealand","nameZh":"新西兰","memberCount":4,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[2.4,46.8]},"properties":{"name":"France","nameZh":"法国","memberCount":3,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[127.8,36.3]},"properties":{"name":"Korea","nameZh":"韩国","memberCount":3,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[102,4.2]},"properties":{"name":"Malaysia","nameZh":"马来西亚","memberCount":3,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[101,15.1]},"properties":{"name":"Thailand","nameZh":"泰国","memberCount":2,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[5.3,52.2]},"properties":{"name":"Netherlands","nameZh":"荷兰","memberCount":2,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[8.2,46.8]},"properties":{"name":"Switzerland","nameZh":"瑞士","memberCount":1,"kind":"country"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[54.3,23.9]},"properties":{"name":"United Arab Emirates","nameZh":"阿联酋","memberCount":1,"kind":"country"}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [116.46636363636365, 40.189090909090915] },
+      "properties": { "name": "北京市", "nameZh": "北京市", "memberCount": 7, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [117.46750000000002, 39.3925] },
+      "properties": { "name": "天津市", "nameZh": "天津市", "memberCount": 1, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [116.35006329113918, 39.68050632911393] },
+      "properties": { "name": "河北省", "nameZh": "河北省", "memberCount": 0, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [112.45341176470589, 37.848705882352945] },
+      "properties": { "name": "山西省", "nameZh": "山西省", "memberCount": 2, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [114.54306264501155, 44.226960556844546] },
+      "properties": {
+        "name": "内蒙古自治区",
+        "nameZh": "内蒙古自治区",
+        "memberCount": 0,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [122.28226415094342, 41.17358490566039] },
+      "properties": { "name": "辽宁省", "nameZh": "辽宁省", "memberCount": 5, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [126.3731756756757, 43.659324324324324] },
+      "properties": { "name": "吉林省", "nameZh": "吉林省", "memberCount": 1, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [127.54252066115706, 48.28958677685951] },
+      "properties": {
+        "name": "黑龙江省",
+        "nameZh": "黑龙江省",
+        "memberCount": 5,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [121.258, 31.064] },
+      "properties": { "name": "上海市", "nameZh": "上海市", "memberCount": 4, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [119.15312499999995, 33.0509375] },
+      "properties": { "name": "江苏省", "nameZh": "江苏省", "memberCount": 10, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [120.11610389610381, 28.997532467532473] },
+      "properties": { "name": "浙江省", "nameZh": "浙江省", "memberCount": 11, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [117.2979831932773, 31.973949579831935] },
+      "properties": { "name": "安徽省", "nameZh": "安徽省", "memberCount": 4, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [118.25079207920788, 26.04386138613861] },
+      "properties": { "name": "福建省", "nameZh": "福建省", "memberCount": 22, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.71681818181818, 27.551727272727266] },
+      "properties": { "name": "江西省", "nameZh": "江西省", "memberCount": 2, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [118.49054054054058, 36.3837837837838] },
+      "properties": { "name": "山东省", "nameZh": "山东省", "memberCount": 18, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [114.04646017699112, 33.97964601769912] },
+      "properties": { "name": "河南省", "nameZh": "河南省", "memberCount": 4, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [111.9243609022556, 30.87203007518797] },
+      "properties": { "name": "湖北省", "nameZh": "湖北省", "memberCount": 9, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [111.49382812500002, 27.27328125000001] },
+      "properties": { "name": "湖南省", "nameZh": "湖南省", "memberCount": 5, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [113.2794957983193, 23.1690756302521] },
+      "properties": { "name": "广东省", "nameZh": "广东省", "memberCount": 56, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [108.61455882352939, 24.13191176470588] },
+      "properties": {
+        "name": "广西壮族自治区",
+        "nameZh": "广西壮族自治区",
+        "memberCount": 2,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [109.8702857142857, 19.230857142857143] },
+      "properties": { "name": "海南省", "nameZh": "海南省", "memberCount": 6, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [107.88367924528303, 29.975660377358505] },
+      "properties": { "name": "重庆市", "nameZh": "重庆市", "memberCount": 2, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [102.9264406779662, 30.71237288135594] },
+      "properties": { "name": "四川省", "nameZh": "四川省", "memberCount": 12, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.87656000000004, 27.022560000000002] },
+      "properties": { "name": "贵州省", "nameZh": "贵州省", "memberCount": 10, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [101.66890909090912, 25.537772727272735] },
+      "properties": { "name": "云南省", "nameZh": "云南省", "memberCount": 5, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [88.93278846153852, 31.443076923076912] },
+      "properties": {
+        "name": "西藏自治区",
+        "nameZh": "西藏自治区",
+        "memberCount": 1,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [108.70993421052636, 35.25453947368421] },
+      "properties": { "name": "陕西省", "nameZh": "陕西省", "memberCount": 3, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [101.91249999999997, 37.07593749999995] },
+      "properties": { "name": "甘肃省", "nameZh": "甘肃省", "memberCount": 2, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [96.35493670886073, 35.280759493670885] },
+      "properties": { "name": "青海省", "nameZh": "青海省", "memberCount": 2, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.23260869565217, 37.34608695652174] },
+      "properties": {
+        "name": "宁夏回族自治区",
+        "nameZh": "宁夏回族自治区",
+        "memberCount": 0,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [84.12648648648651, 40.81513513513514] },
+      "properties": {
+        "name": "新疆维吾尔自治区",
+        "nameZh": "新疆维吾尔自治区",
+        "memberCount": 8,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [121.029375, 23.747812500000006] },
+      "properties": { "name": "台湾省", "nameZh": "台湾省", "memberCount": 0, "kind": "province" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [114.11333333333333, 22.39] },
+      "properties": {
+        "name": "香港特别行政区",
+        "nameZh": "香港特别行政区",
+        "memberCount": 0,
+        "kind": "province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [113.56074999999998, 22.15525] },
+      "properties": {
+        "name": "澳门特别行政区",
+        "nameZh": "澳门特别行政区",
+        "memberCount": 0,
+        "kind": "province"
+      }
+    }
+  ]
+}

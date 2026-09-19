@@ -1,6 +1,6 @@
 {
-  "members": 825,
-  "countries": 15,
-  "regions": 34,
-  "_note": "【占位数据】七周年头部统计唯一权威源（/7th/ 与 /7th/map/ 共用，禁止在组件里硬编码）。上线前替换为真实统计。regions = 中国省级行政区数；三个数字需与 map-points.ts 的明细分布（PROVINCE_POINTS / COUNTRY_POINTS）保持一致——更新明细时请同步本文件。"
+  "members": 219,
+  "countries": 0,
+  "regions": 28,
+  "_note": "七周年头部统计唯一权威源（/7th/ 与 /7th/map/ 共用，禁止在组件里硬编码）。真实统计 2026-09：28 个省级地区合计 219 人（明细见 map-points.json，两者需一致）；countries 为 0（地图为中国视图，海外暂无统计）。regions = 有成员的中国省级行政区数。"
 }

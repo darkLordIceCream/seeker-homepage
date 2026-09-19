@@ -1,15 +1,15 @@
 ---
 /**
- * 【01 七年序章 · WHERE WE ARE】嵌入式地图章节。
+ * 【01 七年序章 · WHERE WE ARE】嵌入式地图章节（中国全图：34 省级 + 九段线，含港澳台）。
  * 取代旧的静态地图预览与 /7th/map/ 独立页：地图成为章节本身。
  *
  * 滚动五阶段（进度由 scroll-story 引擎派发，本组件只消费）：
- *   World（安静出现）→ First Light（成员多的点先亮）→ Seven Years（全部点亮）
+ *   China（安静出现）→ First Light（成员多的点先亮）→ Seven Years（全部点亮）
  *   → People（hover/click 省份 tooltip）→ Exit（WE WERE HERE. 收尾）。
  *
  * 性能：懒加载——挂载点接近视口（rootMargin 800px）才动态 import maplibre
  * 并拉取 GeoJSON；reduced-motion / 无进度事件时地图直接呈现完整点亮状态。
- * 复用：mapStyle.ts 双主题风格、anniv-world 数据、anniv-theme-change 主题联动、
+ * 复用：mapStyle.ts 双主题风格、anniv-china 数据、anniv-theme-change 主题联动、
  * anniv-you-are-here 事件（暗房 ✦ YOU ARE HERE 标注，会话内展示不落库）。
  */
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -26,7 +26,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     <div class="am-exit" data-map-exit>
       <p class="am-exit-zh">我们曾在这里，<br />也仍在寻找。</p>
       <p class="am-exit-en">WE WERE HERE. AND WE ARE STILL LOOKING.</p>
-      <p class="am-exit-note">七年来，我们走到了世界各地。</p>
+      <p class="am-exit-note">七年来，我们走过大江南北。</p>
     </div>
   </div>
 </div>
@@ -225,7 +225,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     }
     const [maplibregl, geo, style] = await Promise.all([
       import('maplibre-gl'),
-      fetch('/geo/anniv-world.json').then(r => {
+      fetch('/geo/anniv-china.json').then(r => {
         if (!r.ok) {
           throw new Error(`地图数据加载失败：HTTP ${r.status}`);
         }
@@ -237,9 +237,13 @@ import 'maplibre-gl/dist/maplibre-gl.css';
     const map = new maplibregl.Map({
       container: mount,
       style: style.buildMapStyle(currentTheme(), geo),
-      center: [30, 26],
-      zoom: 1.15,
-      minZoom: 0.8,
+      // 视野框住中国全图（含南海九段线南端），随视口自适应缩放
+      bounds: [
+        [73.5, 3.8],
+        [135.1, 53.6],
+      ],
+      fitBoundsOptions: { padding: 24 },
+      minZoom: 2,
       maxZoom: 7,
       cooperativeGestures: true,
       attributionControl: false,

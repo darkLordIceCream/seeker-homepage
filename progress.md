@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-17 凌晨 **Branch:**
+**Last Updated:** 2026-09-19 **Branch:**
 feat/7th-anniversary（由 feat/photo-watermark 改名，未合并）**Active Feature:**
-feat-026 七周年第二版「光影七载，看见彼此」数字摄影纪念册（独立双主题 + 七章叙事 + 数据底座）—— 已完成待复核
+feat-026 七周年第二版「光影七载，看见彼此」数字摄影纪念册（独立双主题 + 七章叙事 + 数据底座）—— 地图墙换真实统计（219 人/28 省）并切换中国全图视图，已完成待复核
 
 ## Status
 
@@ -1511,3 +1511,39 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 2022 赏析文仅 5 位冠军有故事（原文如此），优秀奖无故事属正常
 - 首页「全部活动 →」仍指向 /under-construction（未在本次范围）
 - 2021 年大赛按需求未做
+
+## 会话记录（feat-026 地图墙真实数据 + 中国视图，2026-09-19）
+
+### 背景
+
+- 成员分布原为占位假数据（825 人/15 国/34 省），用户统计出真实省级分布后口头提供（高德群聊位置共享无官方导出，本会话已确认；截图识别备而未用）
+- 用户决策：地图改为「中国全图」视图（含港澳台与南海九段线），不再展示世界图层
+
+### 交付内容（分支 feat/7th-anniversary）
+
+- 真实数据：map-points.json 换 28 省真实人数（合计 219；用户口述出现两次湖南——「2 人」与「3 人」，合并为 5 并已向用户标注核对）；stats.json
+  → 219/0/28；头部统计去掉 COUNTRIES 项（海外为 0，避免显示 0 COUNTRIES）
+- 中国视图：build-map-geo.mjs 重写为仅处理 DataV 省级（35 要素 =
+  34 省级 + 九段线），输出改 public/geo/anniv-china.json（79KB，远低于原 480KB 世界+中国包）；anniv-world.json 删除；mapStyle 默认 URL 同步；初始视野改 fitBounds 中国全图（含南海），minZoom
+  2（防移动端 fitBounds 被 clamp 裁边）
+- 光点标定：region-fill 色阶与辉光/实点半径 interpolate 区间按真实最大省人数（广东 56）重定标；anniv-points.json 改为全量 34 省代表点——0 人省份保留供暗房「你在哪里」全量选择，页面样式按 memberCount>0 只点亮有成员省
+- 细节：九段线要素（adcode 100000_JD 无名）标注 nameZh=南海诸岛（memberCount
+  0，不生成光点）；地图收尾文案「七年来，我们走到了世界各地。」→「七年来，我们走过大江南北。」；暗房地区选择过滤空分组（海外组随 countries=[] 自动消失，剩 34 省级选项）；水印文案自动显示 219 位追光者
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors（48 既有 warnings）/ build 77 页 + MapLibre
+  worker 补齐，全绿
+- dev server +
+  IAB 浏览器实测 /7th/：中国全图渲染（含台湾岛/海南岛/九段线虚线），广东最大光点清晰、各省光点按人数分布；暗房选项 34 省、收尾文案、水印 219 位追光者均确认
+- 数据抽查：广东点 [113.28, 23.17]
+  count=56、台湾/香港/河北 count=0、天津 count=1 ✓
+
+### 遗留 / 待办
+
+- 「湖南 2+3=5」待用户确认；若有误改 map-points.json 后重跑
+  `node scripts/build-map-geo.mjs` 即可
+- scripts/build-map-preview.mjs 及产物 map-preview.svg 仍面向旧世界图，页面已不引用（遗留未清理）
+- 用户工作区另有未提交改动（Footer.astro 微信二维码 +
+  src/assets/images/wechat-qrcode.png），非本会话产物，未纳入提交
+- Safari 真机待测（沿袭 feat-026 既有遗留）

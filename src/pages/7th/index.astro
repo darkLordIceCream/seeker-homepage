@@ -5,7 +5,7 @@
  * 叙事结构：HERO → 01 七年序章 → 02 光影札记 → 03 他们的声音 → 04 追光印记
  *   → 05 同行之路 → LEAVE YOUR FRAME → 06 留光成物 → 07 光影七载 → WITH THANKS。
  * 一本可以在网页中阅读的摄影纪念册——不是活动页。
- * 统计唯一数据源：src/data/anniversary/stats.json（占位数据，待真实统计）。
+ * 统计唯一数据源：src/data/anniversary/stats.json（真实统计 2026-09）。
  */
 import Layout from '../../layouts/Layout.astro';
 import AnniversaryHeader from '../../components/anniversary/AnniversaryHeader.astro';
@@ -93,10 +93,6 @@ const heroPhoto = heroPick
               <div class="arc-stat" data-intro-stat>
                 <dd data-count-to={stats.members}>{stats.members}</dd>
                 <dt>SEEKERS</dt>
-              </div>
-              <div class="arc-stat" data-intro-stat>
-                <dd data-count-to={stats.countries}>{stats.countries}</dd>
-                <dt>COUNTRIES</dt>
               </div>
               <div class="arc-stat" data-intro-stat>
                 <dd data-count-to={stats.regions}>{stats.regions}</dd>

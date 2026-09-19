@@ -33,7 +33,7 @@ const points = JSON.parse(
   features: { geometry: { coordinates: [number, number] }; properties: { nameZh: string; kind: string } }[];
 };
 
-const locations: LocGroup[] = [
+const allLocGroups: LocGroup[] = [
   {
     label: '中国省级行政区',
     options: points.features
@@ -47,6 +47,8 @@ const locations: LocGroup[] = [
       .map(f => ({ value: `c:${f.properties.nameZh}`, name: f.properties.nameZh, lngLat: f.geometry.coordinates })),
   },
 ];
+// 中国视图下光点源只含省级（海外统计为空）；过滤空分组，避免渲染空的「海外」optgroup
+const locations: LocGroup[] = allLocGroups.filter(group => group.options.length > 0);
 ---
 
 <div class="dr" data-darkroom data-darkroom-root data-locations={JSON.stringify(locations)}>
