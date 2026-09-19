@@ -65,7 +65,7 @@ import stats from '../../data/anniversary/stats.json';
               >
                 <span
                   class="dr-format-box"
-                  data-portrait={t.fit.base === 'height' ? 'true' : 'false'}
+                  data-portrait={t.frameAxis === 'x' ? 'true' : 'false'}
                 />
                 <span class="dr-format-name">{t.name.split('·').pop()?.trim() ?? t.name}</span>
               </button>
@@ -105,6 +105,28 @@ import stats from '../../data/anniversary/stats.json';
             >↺</button
           >
         </div>
+      </div>
+
+      <!-- 水印位置：横版上下移 / 竖版左右移（昵称随行，二维码钉死右下角） -->
+      <div class="dr-ctrl dr-ctrl--frame">
+        <span class="dr-ctrl-label" data-frame-label>FRAME</span>
+        <div class="dr-scale-row">
+          <button aria-label="左移水印" data-frame-neg type="button">‹</button>
+          <input
+            aria-label="移动水印"
+            id="wm-frame"
+            max="1"
+            min="-1"
+            step="0.01"
+            type="range"
+            value="0"
+          />
+          <button aria-label="右移水印" data-frame-pos type="button">›</button>
+          <button aria-label="重置水印位置" class="dr-reset" data-frame-reset type="button"
+            >↺</button
+          >
+        </div>
+        <p class="dr-frame-hint" data-frame-hint>按住 Shift 拖动画布也可移动水印</p>
       </div>
     </div>
 
@@ -530,6 +552,24 @@ import stats from '../../data/anniversary/stats.json';
   #wm-zoom {
     width: clamp(6rem, 14vw, 9rem);
     accent-color: var(--anniv-accent);
+  }
+
+  #wm-frame {
+    width: clamp(6rem, 14vw, 9rem);
+    accent-color: var(--anniv-accent);
+  }
+
+  .dr-frame-hint {
+    margin: 0.3rem 0 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--anniv-faint);
+  }
+
+  @media (max-width: 48rem) {
+    .dr-frame-hint {
+      display: none;
+    }
   }
 
   button:disabled {

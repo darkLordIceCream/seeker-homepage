@@ -6,7 +6,10 @@
 import { attachGestures } from './gestures';
 import {
   buildFileName,
+  clampFrame,
   clampTransform,
+  frameRange,
+  type FrameOffset,
   ensureFonts,
   exportImage,
   initialTransform,
@@ -79,7 +82,10 @@ export function initDarkroom(): void {
 
   let currentTemplate: WatermarkTemplate = DEFAULT_WATERMARK_TEMPLATE;
   let templateBitmap: ImageBitmap | null = null;
+  let qrBitmap: ImageBitmap | null = null;
   const overlayCache = new Map<string, ImageBitmap>();
+  const qrCache = new Map<string, ImageBitmap>();
+  let frame: FrameOffset = { x: 0, y: 0 };
   let photo: LoadedPhoto | null = null;
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
@@ -132,8 +138,10 @@ export function initDarkroom(): void {
       renderComposition(canvas, {
         template: currentTemplate,
         templateImage: templateBitmap,
+        qrImage: qrBitmap,
         photo,
         transform,
+        frame,
         nickname: nicknameInput.value,
         scale,
       });
@@ -190,6 +198,66 @@ export function initDarkroom(): void {
     requestRender();
   }
 
+  /* —— 水印帧平移（FRAME）：仅 frameAxis 轴向，昵称随动，二维码钉角 —— */
+  const frameSlider = document.getElementById('wm-frame') as HTMLInputElement | null;
+  const frameNeg = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-neg]') ?? null;
+  const framePos = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-pos]') ?? null;
+  const frameReset = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-reset]') ?? null;
+  const frameLabel = darkroomRoot?.querySelector<HTMLElement>('[data-frame-label]') ?? null;
+
+  const FRAME_STEP = 24; // 模板 px / 击
+
+  function syncFrameControls(): void {
+    const axis = currentTemplate.frameAxis;
+    if (frameLabel) {
+      frameLabel.textContent = axis === 'y' ? 'FRAME ↕' : 'FRAME ↔';
+    }
+    if (frameNeg) {
+      frameNeg.setAttribute('aria-label', axis === 'y' ? '上移水印' : '左移水印');
+      frameNeg.textContent = axis === 'y' ? '˄' : '‹';
+    }
+    if (framePos) {
+      framePos.setAttribute('aria-label', axis === 'y' ? '下移水印' : '右移水印');
+      framePos.textContent = axis === 'y' ? '˅' : '›';
+    }
+    if (frameSlider) {
+      const range = frameRange(currentTemplate);
+      frameSlider.value = String(((axis === 'x' ? frame.x : frame.y) / range).toFixed(3));
+    }
+  }
+
+  function shiftFrame(delta: number): void {
+    frame = clampFrame(currentTemplate, {
+      x: frame.x + (currentTemplate.frameAxis === 'x' ? delta : 0),
+      y: frame.y + (currentTemplate.frameAxis === 'y' ? delta : 0),
+    });
+    syncFrameControls();
+    updateNickHit();
+    requestRender();
+  }
+
+  frameNeg?.addEventListener('click', () => shiftFrame(-FRAME_STEP));
+  framePos?.addEventListener('click', () => shiftFrame(FRAME_STEP));
+  frameReset?.addEventListener('click', () => {
+    frame = { x: 0, y: 0 };
+    syncFrameControls();
+    updateNickHit();
+    requestRender();
+  });
+  frameSlider?.addEventListener('input', () => {
+    const v = Number.parseFloat(frameSlider.value);
+    if (!Number.isFinite(v)) {
+      return;
+    }
+    const range = frameRange(currentTemplate);
+    frame = clampFrame(currentTemplate, {
+      x: currentTemplate.frameAxis === 'x' ? v * range : 0,
+      y: currentTemplate.frameAxis === 'y' ? v * range : 0,
+    });
+    updateNickHit();
+    requestRender();
+  });
+
   function releaseDownload(): void {
     if (downloadUrl) {
       URL.revokeObjectURL(downloadUrl);
@@ -231,8 +299,8 @@ export function initDarkroom(): void {
       // 自动识别横竖版：宽 ≥ 高 → 横版
       const detected =
         loaded.width >= loaded.height
-          ? WATERMARK_TEMPLATES.find(t => t.fit.base === 'width')
-          : WATERMARK_TEMPLATES.find(t => t.fit.base === 'height');
+          ? WATERMARK_TEMPLATES.find(t => t.frameAxis === 'y')
+          : WATERMARK_TEMPLATES.find(t => t.frameAxis === 'x');
       if (detected && detected.id !== currentTemplate.id) {
         await switchTemplate(detected, true);
       } else {
@@ -295,8 +363,10 @@ export function initDarkroom(): void {
       renderComposition(out, {
         template: currentTemplate,
         templateImage: templateBitmap,
+        qrImage: qrBitmap,
         photo,
         transform,
+        frame,
         nickname: nicknameInput.value,
       });
       const blob = await exportImage(out, currentTemplate.output);
@@ -330,9 +400,17 @@ export function initDarkroom(): void {
         bitmap = await loadTemplate(template.src);
         overlayCache.set(template.id, bitmap);
       }
+      let qr = qrCache.get(template.id);
+      if (!qr) {
+        qr = await loadTemplate(template.qr.src);
+        qrCache.set(template.id, qr);
+      }
       currentTemplate = template;
       templateBitmap = bitmap;
+      qrBitmap = qr;
       transform = initialTransform();
+      frame = { x: 0, y: 0 };
+      syncFrameControls();
       releaseDownload();
       canvas.style.aspectRatio = `${template.width} / ${template.height}`;
       layoutStage();
@@ -516,9 +594,18 @@ export function initDarkroom(): void {
 
   attachGestures(canvas, {
     cssToTemplate: () => currentTemplate.width / (canvas.clientWidth || 1),
-    drag: (dx, dy) => {
-      transform = normalize({ ...transform, x: transform.x + dx, y: transform.y + dy });
-      zoomSlider.value = String(transform.scale);
+    drag: (dx, dy, modifiers) => {
+      if (modifiers?.shift) {
+        // 水印帧平移（仅 frameAxis 轴向生效；昵称随动，二维码钉角不动）
+        frame = clampFrame(currentTemplate, {
+          x: frame.x + (currentTemplate.frameAxis === 'x' ? dx : 0),
+          y: frame.y + (currentTemplate.frameAxis === 'y' ? dy : 0),
+        });
+        updateNickHit();
+      } else {
+        transform = normalize({ ...transform, x: transform.x + dx, y: transform.y + dy });
+        zoomSlider.value = String(transform.scale);
+      }
       requestRender();
     },
     zoomAt: (px, py, factor) => {
@@ -553,11 +640,14 @@ export function initDarkroom(): void {
       await ensureFonts(currentTemplate.fonts);
       templateBitmap = await loadTemplate(currentTemplate.src);
       overlayCache.set(currentTemplate.id, templateBitmap);
+      qrBitmap = await loadTemplate(currentTemplate.qr.src);
+      qrCache.set(currentTemplate.id, qrBitmap);
       canvas.style.aspectRatio = `${currentTemplate.width} / ${currentTemplate.height}`;
       layoutStage();
       syncAreaCenter();
       syncTplButtons();
       syncControls();
+      syncFrameControls();
       updateNickHit();
       requestRender();
     } catch {

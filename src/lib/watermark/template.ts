@@ -4,19 +4,17 @@
  * 照片角色：用户照片做海报背景，白色模板元素（SEEKER 幽灵字母、手写体、
  * 小字、二维码）叠加其上，动态昵称由 Canvas 绘制。
  *
- * 照片适配规则（用户约定）：
- * - 竖版：照片与模板**上下对齐、左右居中**（高度铺满，宽度过宽裁两侧、
- *   过窄时两侧留黑边居中）；
- * - 横版：照片与模板**底部和左右对齐**（宽度铺满，高度过高裁顶部、
- *   过矮时顶部留黑边、底边对齐）。
- * 用户可在基准适配之上拖动 / 缩放微调。
+ * 照片适配规则（2026-09-19 用户约定：严格保持照片比例）：
+ * - contain 完整显示：照片按「宽高比中较小者」等比缩放，完整落在画布内
+ *   居中，不足处自然留黑边（黑底 underlay），默认零裁切；
+ * - 用户可放大（1–4×）微调构图，放大后可拖动。
  *
- * 叠加层资产：`public/templates/seeker-7th-{portrait,landscape}.webp`
- * （设计师 PSD 导出的透明 PNG 经 scripts/make-watermark-overlays.mjs
- * 修补昵称擦除 + 二维码垫白后无损转换）。
+ * 水印分层（2026-09-19）：二维码/公众号与水印主体分离——
+ * - `src`（*-frame.webp）：挖孔后的水印主体，可整体平移（frameAxis 轴向）；
+ * - `qr`（*-qr.webp）：二维码白卡，渲染期钉死模板右下角原位，不随平移。
  *
- * 更换 / 新增模板只需改本文件：src、尺寸、photoArea、fit、nickname 坐标
- * （单位一律为模板原始像素）。
+ * 更换 / 新增模板只需改本文件：src、尺寸、photoArea、fit、nickname、qr
+ * 坐标（单位一律为模板原始像素）。
  */
 
 export interface Rect {
@@ -31,16 +29,17 @@ export interface PhotoArea extends Rect {
   readonly radius: number;
 }
 
+/** 二维码白卡：独立资产 + 模板像素坐标（渲染期钉死右下角，不随水印平移） */
+export interface QrSpec extends Rect {
+  readonly src: string;
+}
+
 /**
- * 照片基准适配模式：
- * - `base: 'height'` 照片高度对齐区域高度（竖版，anchorY = 'center'）；
- * - `base: 'width'` 照片宽度对齐区域宽度（横版，anchorY = 'bottom'）。
- * anchorY 是放大后纵向拖动的锚定语义：'center' 上下对称裁切，
- * 'bottom' 底边始终对齐、只裁/补顶部。
+ * 照片基准适配模式：contain——照片完整显示（min(宽比, 高比) 等比缩放），
+ * 居中锚定；黑底打底，不足侧自然留黑边。scale ≥ 1 可放大裁切微调。
  */
 export interface FitSpec {
-  readonly base: 'height' | 'width';
-  readonly anchorY: 'center' | 'bottom';
+  readonly base: 'contain';
 }
 
 export interface NicknameStyle {
@@ -84,11 +83,16 @@ export interface OutputSpec {
 export interface WatermarkTemplate {
   readonly id: string;
   readonly name: string;
+  /** 水印主体（挖孔版，二维码已分离） */
   readonly src: string;
   readonly width: number;
   readonly height: number;
   readonly photoArea: PhotoArea;
   readonly fit: FitSpec;
+  /** 水印主体可平移轴向：竖版 'x'（左右）、横版 'y'（上下） */
+  readonly frameAxis: 'x' | 'y';
+  /** 二维码白卡（钉死右下角原位，不随水印平移） */
+  readonly qr: QrSpec;
   readonly nickname: NicknameStyle;
   readonly output: OutputSpec;
   readonly fonts: readonly WebFont[];
@@ -111,15 +115,23 @@ const OUTPUT: OutputSpec = {
   extension: '.jpg',
 };
 
-/** 竖版 9:16 —— 照片上下对齐、左右居中；昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692]，右锚 1458 避开「方」字尾笔（x≈1470） */
+/** 竖版 9:16 —— 昵称「© 肖 默」实测 bbox x[1338,1455] y[1662,1692]，右锚 1458 避开「方」字尾笔（x≈1470） */
 export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   id: 'seeker-7th-portrait',
   name: 'Seeker 七周年纪念海报 · 竖版',
-  src: '/templates/seeker-7th-portrait.webp',
+  src: '/templates/seeker-7th-portrait-frame.webp',
   width: 2084,
   height: 3705,
   photoArea: { x: 0, y: 0, width: 2084, height: 3705, radius: 0 },
-  fit: { base: 'height', anchorY: 'center' },
+  fit: { base: 'contain' },
+  frameAxis: 'x',
+  qr: {
+    src: '/templates/seeker-7th-portrait-qr.webp',
+    x: 1713,
+    y: 3399,
+    width: 183,
+    height: 183,
+  },
   nickname: {
     x: 1458,
     y: 1688,
@@ -138,15 +150,23 @@ export const SEEKER_7TH_PORTRAIT: WatermarkTemplate = {
   fonts: [{ family: 'NotoSansSCSub', url: '/fonts/noto-sans-sc-300-subset.woff2', weight: '300' }],
 };
 
-/** 横版 16:10 —— 照片底部和左右对齐；昵称「@肖默」实测 bbox x[848,938] y[985,1012]，右锚 936 避开「方」字尾笔（x≈950） */
+/** 横版 16:10 —— 昵称「@肖默」实测 bbox x[848,938] y[985,1012]，右锚 936 避开「方」字尾笔（x≈950） */
 export const SEEKER_7TH_LANDSCAPE: WatermarkTemplate = {
   id: 'seeker-7th-landscape',
   name: 'Seeker 七周年纪念海报 · 横版',
-  src: '/templates/seeker-7th-landscape.webp',
+  src: '/templates/seeker-7th-landscape-frame.webp',
   width: 2500,
   height: 1559,
   photoArea: { x: 0, y: 0, width: 2500, height: 1559, radius: 0 },
-  fit: { base: 'width', anchorY: 'bottom' },
+  fit: { base: 'contain' },
+  frameAxis: 'y',
+  qr: {
+    src: '/templates/seeker-7th-landscape-qr.webp',
+    x: 2265,
+    y: 1367,
+    width: 120,
+    height: 120,
+  },
   nickname: {
     x: 936,
     y: 1008,
