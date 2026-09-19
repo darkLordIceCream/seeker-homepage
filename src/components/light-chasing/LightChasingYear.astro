@@ -43,7 +43,12 @@ const jsonLd = JSON.stringify({
 });
 ---
 
-<Layout description={data.excerpt} image={data.cover} title={data.title}>
+<Layout
+  defaultTheme="dark"
+  description={data.excerpt}
+  image={data.cover}
+  title={data.title}
+>
   <Navigation />
 
   <main class="cl-page" id="main-content">
@@ -189,7 +194,7 @@ const jsonLd = JSON.stringify({
 
     <!-- §作品赏析（阅读区，跟随站点明暗主题） -->
     <section aria-label="作品赏析" class="cl-stories">
-      <header class="cl-sec-head cl-sec-head--theme">
+      <header class="cl-sec-head">
         <p class="sec-en">BEHIND THE STORIES</p>
         <h2 class="sec-title">作品赏析</h2>
         {data.sponsors && <p class="sec-sponsors">本届赞助鸣谢 · {data.sponsors}</p>}
@@ -387,15 +392,15 @@ const jsonLd = JSON.stringify({
   .cl-page {
     min-height: 100vh;
     padding-top: 70px;
-    /* 影展式常暗：hero 与结果公示区固定夜空底，不随站点主题翻转 */
-    --cl-bg: #04101e;
-    --cl-panel: #08243f;
-    --cl-fg: #eaf4ff;
-    --cl-fg2: rgba(234, 244, 255, 0.78);
-    --cl-muted: rgba(234, 244, 255, 0.55);
-    --cl-faint: rgba(234, 244, 255, 0.32);
-    --cl-border: rgba(234, 244, 255, 0.12);
-    --cl-accent: #2e86de;
+    /* 整页跟随站点明暗主题（进入本页默认深色，见 Layout defaultTheme）；
+       仅照片上的文字用固定浅色（压暗渐变保证两套主题下可读） */
+    --cl-bg: var(--background);
+    --cl-fg: var(--foreground);
+    --cl-fg2: var(--muted-foreground);
+    --cl-muted: var(--muted-foreground);
+    --cl-faint: var(--muted-foreground);
+    --cl-border: var(--divider);
+    --cl-accent: var(--grad-a);
     --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
     --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
     background: var(--cl-bg);
@@ -515,12 +520,12 @@ const jsonLd = JSON.stringify({
     font-weight: 700;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--cl-accent);
+    color: #5aa9e8; /* 照片上固定亮蓝，两套主题都可读 */
   }
 
   .hero-award-en {
     margin-left: 10px;
-    color: var(--cl-faint);
+    color: rgba(234, 244, 255, 0.55);
   }
 
   .hero-title {
@@ -536,7 +541,7 @@ const jsonLd = JSON.stringify({
     font-weight: 600;
     letter-spacing: 0.42em;
     text-transform: uppercase;
-    color: var(--cl-fg2);
+    color: rgba(234, 244, 255, 0.78);
   }
 
   .hero-work {
@@ -545,7 +550,7 @@ const jsonLd = JSON.stringify({
     font-weight: 700;
     letter-spacing: 0.06em;
     line-height: 1.35;
-    color: var(--cl-fg);
+    color: #eaf4ff;
     text-shadow: 0 2px 24px rgba(4, 16, 30, 0.55);
   }
 
@@ -553,7 +558,7 @@ const jsonLd = JSON.stringify({
     margin: 0;
     font-size: 15px;
     letter-spacing: 0.1em;
-    color: var(--cl-fg2);
+    color: rgba(234, 244, 255, 0.78);
   }
 
   /* —— 章节头：居中细列，EN 大写宽字距 + 中文衬线 —— */
@@ -595,7 +600,7 @@ const jsonLd = JSON.stringify({
     font-size: 15.5px;
     line-height: 2.05;
     letter-spacing: 0.02em;
-    color: var(--cl-fg2);
+    color: var(--foreground);
   }
 
   .cl-prose :global(p) {
@@ -829,20 +834,10 @@ const jsonLd = JSON.stringify({
     outline-offset: 4px;
   }
 
-  /* —— 作品赏析：阅读区，交还站点明暗主题 —— */
+  /* —— 作品赏析：与整页同一主题底，无分割色带 —— */
   .cl-stories {
     margin-top: clamp(64px, 9vw, 104px);
     padding-bottom: 40px;
-    background: var(--background);
-    color: var(--foreground);
-  }
-
-  .cl-sec-head--theme .sec-en {
-    color: var(--grad-a);
-  }
-
-  .cl-sec-head--theme .sec-title {
-    color: var(--foreground);
   }
 
   .sec-sponsors {

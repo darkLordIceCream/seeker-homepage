@@ -100,8 +100,11 @@
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
-    // Get initial theme
-    let currentTheme = localStorage.getItem('theme') || 'light';
+    // Get initial theme：以 html 上已应用的类为准（Layout 可能按页面强制默认主题），
+    // 无类时回退 localStorage；切换后照常写入 localStorage
+    let currentTheme = html.classList.contains('dark')
+      ? 'dark'
+      : localStorage.getItem('theme') || 'light';
 
     // Apply initial theme
     if (currentTheme === 'dark') {

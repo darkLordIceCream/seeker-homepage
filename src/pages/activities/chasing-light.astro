@@ -26,6 +26,7 @@ const jsonLd = JSON.stringify({
 ---
 
 <Layout
+  defaultTheme="dark"
   description="「追光之旅」是 Seeker追光者 的年度摄影大赛，历届大赛结果公示与获奖作品赏析。"
   image={latest?.data.cover}
   title="追光之旅 · 历届摄影大赛"
@@ -112,14 +113,15 @@ const jsonLd = JSON.stringify({
   .cl-hub {
     min-height: 100vh;
     padding-top: 70px;
-    /* 影展式常暗海报页 */
-    --cl-bg: #04101e;
-    --cl-fg: #eaf4ff;
-    --cl-fg2: rgba(234, 244, 255, 0.78);
-    --cl-muted: rgba(234, 244, 255, 0.55);
-    --cl-faint: rgba(234, 244, 255, 0.32);
-    --cl-border: rgba(234, 244, 255, 0.12);
-    --cl-accent: #2e86de;
+    /* 整页跟随站点明暗主题（进入本页默认深色，见 Layout defaultTheme）；
+       仅照片上的文字用固定浅色 */
+    --cl-bg: var(--background);
+    --cl-fg: var(--foreground);
+    --cl-fg2: var(--muted-foreground);
+    --cl-muted: var(--muted-foreground);
+    --cl-faint: var(--muted-foreground);
+    --cl-border: var(--divider);
+    --cl-accent: var(--grad-a);
     --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
     --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
     background: var(--cl-bg);
@@ -182,7 +184,7 @@ const jsonLd = JSON.stringify({
     font-weight: 700;
     letter-spacing: 0.42em;
     text-transform: uppercase;
-    color: var(--cl-accent);
+    color: #5aa9e8; /* 照片上固定亮蓝 */
   }
 
   .hub-title {
@@ -192,7 +194,7 @@ const jsonLd = JSON.stringify({
     font-weight: 700;
     letter-spacing: 0.14em;
     line-height: 1.2;
-    color: var(--cl-fg);
+    color: #eaf4ff;
     text-shadow: 0 2px 24px rgba(4, 16, 30, 0.55);
   }
 
@@ -201,13 +203,13 @@ const jsonLd = JSON.stringify({
     font-family: var(--font-serif-song);
     font-size: clamp(0.95rem, 1.8vw, 1.15rem);
     letter-spacing: 0.22em;
-    color: var(--cl-fg2);
+    color: rgba(234, 244, 255, 0.78);
   }
 
   .hub-cta {
     display: inline-block;
     padding: 10px 22px;
-    border: 1px solid var(--cl-border);
+    border: 1px solid rgba(234, 244, 255, 0.3);
     border-radius: 999px;
     background: rgba(4, 16, 30, 0.4);
     -webkit-backdrop-filter: blur(8px);
@@ -216,7 +218,7 @@ const jsonLd = JSON.stringify({
     font-size: 12.5px;
     font-weight: 600;
     letter-spacing: 0.18em;
-    color: var(--cl-fg);
+    color: #eaf4ff;
     text-decoration: none;
     transition:
       border-color 0.2s ease,
@@ -224,12 +226,12 @@ const jsonLd = JSON.stringify({
   }
 
   .hub-cta:hover {
-    border-color: var(--cl-accent);
-    color: var(--cl-accent);
+    border-color: #5aa9e8;
+    color: #9ecdf5;
   }
 
   .hub-cta:focus-visible {
-    outline: 2px solid var(--cl-accent);
+    outline: 2px solid #5aa9e8;
     outline-offset: 4px;
   }
 
@@ -246,7 +248,7 @@ const jsonLd = JSON.stringify({
     font-size: 15.5px;
     line-height: 2.05;
     letter-spacing: 0.02em;
-    color: var(--cl-fg2);
+    color: var(--foreground);
   }
 
   /* —— 历届年份卡 —— */
