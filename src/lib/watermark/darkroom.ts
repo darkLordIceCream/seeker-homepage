@@ -108,19 +108,23 @@ export function initDarkroom(): void {
    * 水印帧布局：贴合缩放 + 居中基准 + 可平移半径（横版 y 轴 / 竖版 x 轴）。
    * free = 画布长 - 帧长，可正可负：
    * - 正（帧短于画布）：帧在 [0, free] 内平移，不越出画布；
-   * - 负（帧长于画布，照片比模板比例更极端）：帧在 [-|free|, 0] 平移，
-   *   选择溢出裁切显示哪一段。平移半径一律 |free| / 2，居中基准 free / 2。
+   * - 负（帧长于画布）：帧在 [-|free|, 0] 平移，选择溢出裁切显示哪一段。
+   * 另保证最小平移半径（画布沿动轴的 8%）：照片比例接近模板时 free ≈ 0，
+   * 若无此下限滑块将完全失效——用户始终期望水印可移。
    */
   function frameLayout(): { dx: number; dy: number; scale: number; range: number } {
     const fs = frameScaleFor(currentTemplate, canvasDims);
     const fw = currentTemplate.width * fs;
     const fh = currentTemplate.height * fs;
+    const minRange = (currentTemplate.frameAxis === 'y' ? canvasDims.h : canvasDims.w) * 0.08;
     if (currentTemplate.frameAxis === 'y') {
       const free = canvasDims.h - fh;
-      return { dx: 0, dy: free / 2 + framePan.v * (Math.abs(free) / 2), scale: fs, range: Math.abs(free) / 2 };
+      const range = Math.max(Math.abs(free) / 2, minRange);
+      return { dx: 0, dy: free / 2 + framePan.v * range, scale: fs, range };
     }
     const free = canvasDims.w - fw;
-    return { dx: free / 2 + framePan.v * (Math.abs(free) / 2), dy: 0, scale: fs, range: Math.abs(free) / 2 };
+    const range = Math.max(Math.abs(free) / 2, minRange);
+    return { dx: free / 2 + framePan.v * range, dy: 0, scale: fs, range };
   }
 
   function syncCanvasSize(): void {
