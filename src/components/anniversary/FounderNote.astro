@@ -183,10 +183,15 @@ function splitTopic(text: string): ParaPart[] {
     color: var(--anniv-muted);
   }
 
-  /* 引擎就绪（story-on）后由工厂逐帧写入内联样式接管显隐；
+  /* 引擎就绪（story-on）后由工厂按「当前节拍」写内联样式接管显隐；
+     切换走固定时长过渡（节拍吸附：跨过中点即整拍切换，不停在两拍之间）；
      无 JS / reduced-motion 不加 story-on，本规则不生效，全文静态可读 */
   :global(.story-on) [data-founder-beat] {
     opacity: 0;
+    transition:
+      opacity 0.55s cubic-bezier(0.33, 1, 0.68, 1),
+      transform 0.55s cubic-bezier(0.33, 1, 0.68, 1);
+    will-change: opacity, transform;
   }
 
   /* 窄屏：肖像压成「署名小票」（小图 + 纵排署名一行），正文行距收紧，

@@ -113,39 +113,31 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
 
   /**
    * 02 光影札记：暗场 → 肖像淡入 + 轻微放大 → 文字节拍轮换
-   * （bio 开场 → 三段正文逐段聚焦 → 落款；前段退场、当前段成为焦点，
-   * 末段压暗为背景衬托落款）。节拍窗口键为节拍数：
-   * 5 = 全文（bio + 三段 + 落款），2 = 占位回退（bio + 落款）。
+   * （bio 开场 → 三段正文逐段聚焦 → 落款；末段压暗为背景衬托落款）。
+   * 节拍吸附：进度只决定「当前在第几拍」（跨过相邻拍中心的中点即整拍切换），
+   * 切换过渡由 CSS transition 完成（FounderNote 内 .story-on 门控）——
+   * 停在任何位置看到的都是完整一段，绝不会停在两拍之间。
+   * 中心点表键为节拍数：5 = 全文（bio + 三段 + 落款），2 = 占位回退。
    */
   founder: track => {
     const portrait = track.querySelector<HTMLElement>('[data-founder-portrait]');
     const beats = [...track.querySelectorAll<HTMLElement>('[data-founder-beat]')];
-    interface BeatWindow {
-      a: number;
-      b: number;
-      outA?: number;
-      outB?: number;
-      dim?: number;
-    }
-    const WINDOWS: Record<number, BeatWindow[]> = {
-      5: [
-        { a: 0.28, b: 0.38, outA: 0.42, outB: 0.47 },
-        { a: 0.42, b: 0.5, outA: 0.56, outB: 0.61 },
-        { a: 0.56, b: 0.64, outA: 0.7, outB: 0.75 },
-        { a: 0.7, b: 0.78, outA: 0.84, outB: 0.9, dim: 0.25 },
-        { a: 0.84, b: 0.92 },
-      ],
-      2: [
-        { a: 0.3, b: 0.42 },
-        { a: 0.78, b: 0.9 },
-      ],
+    const CENTERS: Record<number, number[]> = {
+      5: [0.33, 0.46, 0.6, 0.74, 0.88],
+      2: [0.36, 0.84],
     };
-    const windows =
-      WINDOWS[beats.length] ??
-      beats.map((_, i): BeatWindow => {
-        const step = 0.6 / Math.max(1, beats.length - 1);
-        return { a: 0.28 + step * i, b: 0.38 + step * i };
-      });
+    const centers =
+      CENTERS[beats.length] ??
+      beats.map((_, i) => 0.33 + (0.55 * i) / Math.max(1, beats.length - 1));
+    const thresholds: number[] = [];
+    for (let i = 1; i < centers.length; i++) {
+      const a = centers[i - 1];
+      const b = centers[i];
+      if (a !== undefined && b !== undefined) {
+        thresholds.push((a + b) / 2);
+      }
+    }
+    let active = -1;
     return ({ progress: p }) => {
       if (portrait) {
         const t = ramp(p, 0.12, 0.26);
@@ -153,19 +145,23 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         portrait.style.opacity = t.toFixed(3);
         portrait.style.transform = `scale(${(1 + 0.04 * zoom).toFixed(4)})`;
       }
-      beats.forEach((el, i) => {
-        const w = windows[i];
-        if (!w) {
-          return;
+      let s = 0;
+      for (const th of thresholds) {
+        if (p >= th) {
+          s++;
         }
-        const tIn = ramp(p, w.a, w.b);
-        const tOut = w.outA !== undefined && w.outB !== undefined ? ramp(p, w.outA, w.outB) : 0;
-        const dim = w.dim ?? 0;
-        const opacity = tIn * (1 - tOut * (1 - dim));
-        const rise = 18 * (1 - tIn);
-        const drift = dim > 0 ? 0 : 12 * tOut;
+      }
+      if (s === active) {
+        return;
+      }
+      active = s;
+      beats.forEach((el, i) => {
+        // 落款拍（最后一拍）：前一段压暗 0.25 作背景，其余非当前拍整段退场
+        const dim = s === beats.length - 1 && i === s - 1 ? 0.25 : 0;
+        const opacity = i === s ? 1 : dim;
+        const ty = i === s ? 0 : i < s ? -14 : 16;
         el.style.opacity = opacity.toFixed(3);
-        el.style.transform = `translateY(${(rise - drift).toFixed(1)}px)`;
+        el.style.transform = `translateY(${ty}px)`;
       });
     };
   },
