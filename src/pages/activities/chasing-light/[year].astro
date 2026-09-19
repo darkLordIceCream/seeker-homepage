@@ -1,0 +1,19 @@
+---
+// 追光之旅 · 年度页路由：/activities/chasing-light/<year>/
+// 内容来自 lightChasing 集合（每年一个 .md：结果公示 + 作品赏析合并一页）
+import { getCollection } from 'astro:content';
+import LightChasingYear from '../../../components/light-chasing/LightChasingYear.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('lightChasing');
+  const years = entries.sort((a, b) => b.data.year - a.data.year);
+  return years.map(entry => ({
+    params: { year: String(entry.data.year) },
+    props: { entry, years },
+  }));
+}
+
+const { entry, years } = Astro.props;
+---
+
+<LightChasingYear entry={entry} years={years} />

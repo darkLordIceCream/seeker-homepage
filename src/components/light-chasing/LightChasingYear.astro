@@ -1,0 +1,1300 @@
+---
+// 追光之旅 · 年度大赛页：结果公示 + 作品赏析合并一页
+// 版式参考四大摄影比赛官网（2025-09 调研）：
+// - Hero 即总冠军展示位（徕卡 LOBA：全屏黑厅 + 全出血获奖作 + 角标 Photo: © 作者）
+// - 结果公示区常暗：组冠军图上文下卡（IPPAWARDS）→ 优秀作品/特别关注密集网格 hover 显注（华为 XMAGE）
+// - 作品赏析区跟随站点明暗主题：编辑块图组（哈苏 33/50/66% 栅格）+ 衬线「背后的故事」列
+// - 年份导航为一排文字链接（XMAGE）；lightbox 复用 GalleryStory 自研实现
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../Navigation.astro';
+import Footer from '../Footer.astro';
+import { activityImageDims } from '../../lib/activityImageMeta';
+
+interface Props {
+  entry: import('astro:content').CollectionEntry<'lightChasing'>;
+  /** 全部届数（按年份倒序），供年份导航与上下届 pager */
+  years: import('astro:content').CollectionEntry<'lightChasing'>[];
+}
+
+const { entry, years } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+/** 赏析顺序与公示一致：总冠军 → 组冠军 → 优秀作品 → 特别关注奖 */
+const allWinners = [data.grandPrize, ...data.groups, ...data.excellence, ...data.attention];
+
+const newer = years.find(y => y.data.year > data.year);
+const older = years.find(y => y.data.year < data.year);
+
+/** 两位编号：01、02…（组照编号图注，LOBA 式） */
+const num = (i: number) => String(i + 1).padStart(2, '0');
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: `${data.title} · 结果公示与作品赏析`,
+  description: data.excerpt,
+  datePublished: data.pubDate.toISOString(),
+  image: data.cover,
+  numberOfItems: allWinners.length,
+  author: { '@type': 'Organization', name: 'Seeker追光者' },
+  publisher: { '@type': 'Organization', name: 'Seeker追光者' },
+});
+---
+
+<Layout description={data.excerpt} image={data.cover} title={data.title}>
+  <Navigation />
+
+  <main class="cl-page" id="main-content">
+    <script is:inline set:html={jsonLd} type="application/ld+json" />
+
+    <!-- 年份导航：一排文字链接（XMAGE 式） -->
+    <nav aria-label="历届大赛" class="cl-yearnav">
+      <a class="yn-back" href="/activities/chasing-light/">← 历届大赛</a>
+      <div class="yn-years">
+        {years.map(y => (
+          <a
+            aria-current={y.data.year === data.year ? 'page' : undefined}
+            class:list={['yn-year', { 'is-current': y.data.year === data.year }]}
+            href={`/activities/chasing-light/${y.data.year}/`}
+          >
+            {y.data.year}
+          </a>
+        ))}
+      </div>
+    </nav>
+
+    <!-- Hero 即总冠军展示位 -->
+    <header class="cl-hero">
+      <img
+        alt={`《${data.grandPrize.title}》——${data.grandPrize.author}作品（${data.title}${data.grandPrize.award}）`}
+        decoding="async"
+        fetchpriority="high"
+        height={activityImageDims(data.cover)?.h}
+        loading="eager"
+        src={data.cover}
+        width={activityImageDims(data.cover)?.w}
+      />
+      <div aria-hidden="true" class="hero-scrim"></div>
+      <p class="hero-credit">Photo: © {data.grandPrize.author}</p>
+      <div class="hero-caption">
+        <p class="hero-award">{data.grandPrize.award} <span class="hero-award-en">GRAND PRIZE</span></p>
+        <h1 class="hero-title">
+          <span class="hero-year">{data.year} 追光之旅</span>
+          <span class="hero-work">《{data.grandPrize.title}》</span>
+        </h1>
+        <p class="hero-author">{data.grandPrize.author}</p>
+      </div>
+    </header>
+
+    <!-- §大赛结果公示（常暗展区） -->
+    <section aria-label="大赛结果公示" class="cl-results">
+      <header class="cl-sec-head">
+        <p class="sec-en">RESULTS ANNOUNCEMENT</p>
+        <h2 class="sec-title">大赛结果公示</h2>
+      </header>
+
+      <div class="cl-intro">
+        <div class="cl-prose">
+          <Content />
+        </div>
+        {data.stats && <p class="cl-stats">{data.stats}</p>}
+      </div>
+
+      {data.groups.length > 0 && (
+        <div class="cl-groups">
+          {data.groups.map(w => {
+            const dim = activityImageDims(w.cover);
+            return (
+              <figure class="win-card">
+                <button
+                  aria-label={`查看大图：《${w.title}》`}
+                  class="win-shutter"
+                  data-author={w.author}
+                  data-full={w.cover}
+                  data-title={w.title}
+                  type="button"
+                >
+                  <img
+                    alt={`《${w.title}》——${w.author}作品（${w.award}）`}
+                    decoding="async"
+                    height={dim?.h}
+                    loading="lazy"
+                    src={w.cover}
+                    width={dim?.w}
+                  />
+                </button>
+                <figcaption class="win-meta">
+                  <p class="win-award">{w.award}</p>
+                  <p class="win-title">《{w.title}》</p>
+                  <p class="win-author">{w.author}</p>
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
+      )}
+
+      {(data.excellence.length > 0 || data.attention.length > 0) && (
+        <div class="cl-minor">
+          {[...data.excellence, ...data.attention].map(w => (
+            <figure class="minor-tile">
+              <button
+                aria-label={`查看大图：《${w.title}》`}
+                class="tile-shutter"
+                data-author={w.author}
+                data-full={w.cover}
+                data-title={w.title}
+                type="button"
+              >
+                <img
+                  alt={`《${w.title}》——${w.author}作品（${w.award}）`}
+                  decoding="async"
+                  height={activityImageDims(w.cover)?.h}
+                  loading="lazy"
+                  src={w.cover}
+                  width={activityImageDims(w.cover)?.w}
+                />
+                <span aria-hidden="true" class="tile-scrim"></span>
+                <span class="tile-info">
+                  <span class="tile-award">{w.award}</span>
+                  <span class="tile-title">《{w.title}》</span>
+                  <span class="tile-author">© {w.author}</span>
+                </span>
+              </button>
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {(data.resultsNote || data.sourceResults) && (
+        <aside class="cl-note">
+          {data.resultsNote && <p class="note-text">{data.resultsNote}</p>}
+          <p class="note-links">
+            {data.sourceResults && (
+              <a href={data.sourceResults} rel="noopener noreferrer" target="_blank">
+                微信原文 · 结果公示 ↗
+              </a>
+            )}
+            {data.sourceStories && (
+              <a href={data.sourceStories} rel="noopener noreferrer" target="_blank">
+                微信原文 · 作品赏析 ↗
+              </a>
+            )}
+          </p>
+        </aside>
+      )}
+    </section>
+
+    <!-- §作品赏析（阅读区，跟随站点明暗主题） -->
+    <section aria-label="作品赏析" class="cl-stories">
+      <header class="cl-sec-head cl-sec-head--theme">
+        <p class="sec-en">BEHIND THE STORIES</p>
+        <h2 class="sec-title">作品赏析</h2>
+        {data.sponsors && <p class="sec-sponsors">本届赞助鸣谢 · {data.sponsors}</p>}
+      </header>
+
+      <div class="cl-story-list">
+        {allWinners.map(w => (
+          <article class="story-block cl-reveal">
+            <header class="story-head">
+              <p class="story-award">{w.award}</p>
+              <h3 class="story-title">《{w.title}》</h3>
+              <p class="story-author">{w.author}</p>
+            </header>
+            <div class="story-imgs" data-count={w.images.length === 1 ? '1' : w.images.length === 2 ? '2' : '3+'}>
+              {w.images.map((img, i) => (
+                <figure class="story-fig">
+                  <button
+                    aria-label={`查看大图：《${w.title}》${w.images.length > 1 ? `（${num(i)}）` : ''}`}
+                    class="story-shutter"
+                    data-author={w.author}
+                    data-full={img}
+                    data-title={w.title}
+                    type="button"
+                  >
+                    <img
+                      alt={w.images.length > 1
+                        ? `《${w.title}》（${num(i)}）——${w.author}作品`
+                        : `《${w.title}》——${w.author}作品`}
+                      decoding="async"
+                      height={activityImageDims(img)?.h}
+                      loading="lazy"
+                      src={img}
+                      width={activityImageDims(img)?.w}
+                    />
+                  </button>
+                  {w.images.length > 1 && <span aria-hidden="true" class="story-num">{num(i)}</span>}
+                </figure>
+              ))}
+            </div>
+            {w.story && (
+              <div class="story-text">
+                <p class="st-label">背后的故事 <span aria-hidden="true">HIS STORY</span></p>
+                {w.story.split(/\n+/).filter(Boolean).map(para => (
+                  <p class="st-para">{para}</p>
+                ))}
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <nav aria-label="届数跳转" class="cl-pager">
+        <div class="pager-slot">
+          {newer ? (
+            <a class="pager-card" href={`/activities/chasing-light/${newer.data.year}/`}>
+              <span class="pager-kicker">← 上一届 {newer.data.year}</span>
+              <strong class="pager-title">《{newer.data.grandPrize.title}》</strong>
+              <span class="pager-sub">{newer.data.grandPrize.author}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty">
+              <span class="pager-kicker">← 上一届</span>
+              <strong class="pager-title">已是最近一届</strong>
+            </div>
+          )}
+        </div>
+        <div class="pager-slot">
+          {older ? (
+            <a class="pager-card pager-right" href={`/activities/chasing-light/${older.data.year}/`}>
+              <span class="pager-kicker">下一届 {older.data.year} →</span>
+              <strong class="pager-title">《{older.data.grandPrize.title}》</strong>
+              <span class="pager-sub">{older.data.grandPrize.author}</span>
+            </a>
+          ) : (
+            <div aria-disabled="true" class="pager-card is-empty pager-right">
+              <span class="pager-kicker">下一届 →</span>
+              <strong class="pager-title">敬请期待</strong>
+              <span class="pager-sub">新一届大赛筹备中</span>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      <footer class="cl-foot">
+        <a class="back-link" href="/activities/chasing-light/">← 返回「追光之旅」历届大赛</a>
+      </footer>
+    </section>
+  </main>
+
+  <div aria-label="查看大图" aria-modal="true" class="lightbox" hidden role="dialog">
+    <button aria-label="关闭大图" class="lb-btn lb-close" type="button">
+      <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+    </button>
+    <button aria-label="下一张" class="lb-btn lb-next" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+    <figure class="lb-stage">
+      <img alt="" class="lb-img" decoding="async" />
+      <figcaption class="lb-cap"></figcaption>
+    </figure>
+    <button aria-label="上一张" class="lb-btn lb-prev" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <p aria-live="polite" class="lb-count"></p>
+  </div>
+
+  <Footer />
+</Layout>
+
+<script>
+  // lightbox 与 GalleryStory 同款：点击看 R2 原图，Esc 关闭、←→ 切换（无依赖渐进增强）
+  const lightbox = document.querySelector<HTMLElement>('.lightbox');
+  const shutters = [...document.querySelectorAll<HTMLButtonElement>('.win-shutter, .tile-shutter, .story-shutter')];
+  const slides = shutters.map(btn => ({
+    full: btn.dataset.full ?? '',
+    title: btn.dataset.title ?? '',
+    author: btn.dataset.author ?? '',
+  }));
+  let current = -1;
+  let lastFocus: HTMLElement | null = null;
+
+  const renderSlide = () => {
+    const img = lightbox?.querySelector<HTMLImageElement>('.lb-img');
+    const cap = lightbox?.querySelector<HTMLElement>('.lb-cap');
+    const count = lightbox?.querySelector<HTMLElement>('.lb-count');
+    const slide = slides[current];
+    if (!img || !cap || !count || !slide) {return;}
+    img.src = slide.full;
+    img.alt = `《${slide.title}》——${slide.author}作品`;
+    cap.textContent = `«${slide.title}» @${slide.author}`;
+    count.textContent = `${current + 1} / ${slides.length}`;
+  };
+
+  const openLightbox = (index: number) => {
+    if (!lightbox) {return;}
+    current = index;
+    renderSlide();
+    lastFocus = document.activeElement as HTMLElement | null;
+    document.documentElement.style.overflow = 'hidden';
+    lightbox.hidden = false;
+    lightbox.querySelector<HTMLElement>('.lb-close')?.focus();
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) {return;}
+    lightbox.hidden = true;
+    document.documentElement.style.overflow = '';
+    lastFocus?.focus();
+    current = -1;
+  };
+
+  const step = (delta: number) => {
+    if (current < 0 || slides.length === 0) {return;}
+    current = (current + delta + slides.length) % slides.length;
+    renderSlide();
+  };
+
+  shutters.forEach((btn, i) => {
+    btn.addEventListener('click', () => openLightbox(i));
+  });
+  lightbox?.querySelector('.lb-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.lb-prev')?.addEventListener('click', () => step(-1));
+  lightbox?.querySelector('.lb-next')?.addEventListener('click', () => step(1));
+  lightbox?.addEventListener('click', e => {
+    if (e.target === lightbox) {closeLightbox();}
+  });
+  document.addEventListener('keydown', e => {
+    if (current < 0) {return;}
+    if (e.key === 'Escape') {closeLightbox();}
+    else if (e.key === 'ArrowRight') {step(1);}
+    else if (e.key === 'ArrowLeft') {step(-1);}
+  });
+
+  // 区块入场：进入视口一次后定格（reduced-motion 由 CSS 兜底）
+  const blocks = document.querySelectorAll('.cl-reveal');
+  if ('IntersectionObserver' in window) {
+    const reveal = new IntersectionObserver(
+      entries => {
+        for (const item of entries) {
+          if (item.isIntersecting) {
+            item.target.classList.add('is-visible');
+            reveal.unobserve(item.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    blocks.forEach(item => reveal.observe(item));
+  } else {
+    blocks.forEach(item => item.classList.add('is-visible'));
+  }
+</script>
+
+<style>
+  .cl-page {
+    min-height: 100vh;
+    padding-top: 70px;
+    /* 影展式常暗：hero 与结果公示区固定夜空底，不随站点主题翻转 */
+    --cl-bg: #04101e;
+    --cl-panel: #08243f;
+    --cl-fg: #eaf4ff;
+    --cl-fg2: rgba(234, 244, 255, 0.78);
+    --cl-muted: rgba(234, 244, 255, 0.55);
+    --cl-faint: rgba(234, 244, 255, 0.32);
+    --cl-border: rgba(234, 244, 255, 0.12);
+    --cl-accent: #2e86de;
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+    background: var(--cl-bg);
+    color: var(--cl-fg);
+  }
+
+  /* —— 年份导航 —— */
+  .cl-yearnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px var(--edge);
+    border-bottom: 1px solid var(--cl-border);
+    background: var(--cl-bg);
+  }
+
+  .yn-back {
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--cl-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .yn-back:hover {
+    color: var(--cl-fg);
+  }
+
+  .yn-years {
+    display: flex;
+    gap: 22px;
+  }
+
+  .yn-year {
+    font-family: 'Archivo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--cl-faint);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .yn-year:hover {
+    color: var(--cl-fg2);
+  }
+
+  .yn-year.is-current {
+    color: var(--cl-fg);
+    border-bottom: 2px solid var(--cl-accent);
+    padding-bottom: 2px;
+  }
+
+  .yn-back:focus-visible,
+  .yn-year:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+  }
+
+  /* —— Hero：总冠军展示位（LOBA 式黑厅） —— */
+  .cl-hero {
+    position: relative;
+    height: min(92vh, 960px);
+    overflow: hidden;
+    background: var(--cl-bg);
+  }
+
+  .cl-hero img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(4, 16, 30, 0.34) 0%, rgba(4, 16, 30, 0) 30%),
+      linear-gradient(180deg, rgba(4, 16, 30, 0) 42%, rgba(4, 16, 30, 0.82) 100%);
+  }
+
+  .hero-credit {
+    position: absolute;
+    z-index: 2;
+    top: 20px;
+    right: 24px;
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(234, 244, 255, 0.66);
+    text-shadow: 0 1px 8px rgba(4, 16, 30, 0.6);
+  }
+
+  .hero-caption {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 var(--edge) clamp(36px, 6vh, 64px);
+  }
+
+  .hero-award {
+    margin: 0 0 14px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .hero-award-en {
+    margin-left: 10px;
+    color: var(--cl-faint);
+  }
+
+  .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0 0 12px;
+  }
+
+  .hero-year {
+    font-family: 'Archivo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--cl-fg2);
+  }
+
+  .hero-work {
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.7rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+    color: var(--cl-fg);
+    text-shadow: 0 2px 24px rgba(4, 16, 30, 0.55);
+  }
+
+  .hero-author {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    color: var(--cl-fg2);
+  }
+
+  /* —— 章节头：居中细列，EN 大写宽字距 + 中文衬线 —— */
+  .cl-sec-head {
+    padding: clamp(56px, 9vw, 96px) var(--edge) 0;
+    text-align: center;
+  }
+
+  .sec-en {
+    margin: 0 0 14px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .sec-title {
+    margin: 0;
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-indent: 0.14em;
+    color: var(--cl-fg);
+  }
+
+  /* —— 开场白：640px 衬线列 + 投稿数据句 —— */
+  .cl-intro {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 48px) 24px 0;
+  }
+
+  .cl-prose {
+    font-family: var(--font-serif-song);
+    font-size: 15.5px;
+    line-height: 2.05;
+    letter-spacing: 0.02em;
+    color: var(--cl-fg2);
+  }
+
+  .cl-prose :global(p) {
+    margin: 0 0 1.7em;
+  }
+
+  .cl-stats {
+    margin: 0;
+    padding: 14px 0 14px 20px;
+    border-left: 2px solid var(--cl-accent);
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--cl-fg);
+  }
+
+  /* —— 组冠军：图上文下卡，2 列自然幅面画廊墙 —— */
+  .cl-groups {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 48px clamp(32px, 4vw, 56px);
+    padding: clamp(48px, 7vw, 80px) var(--edge) 0;
+  }
+
+  .win-card {
+    width: calc(50% - clamp(16px, 2vw, 28px));
+    max-width: 560px;
+    margin: 0;
+  }
+
+  .win-shutter {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    line-height: 0;
+  }
+
+  .win-shutter img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .win-shutter:focus-visible,
+  .tile-shutter:focus-visible,
+  .story-shutter:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .win-meta {
+    padding: 16px 2px 0;
+  }
+
+  .win-award {
+    margin: 0 0 6px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .win-title {
+    margin: 0 0 4px;
+    font-family: var(--font-serif-song);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--cl-fg);
+  }
+
+  .win-author {
+    margin: 0;
+    font-size: 13.5px;
+    letter-spacing: 0.08em;
+    color: var(--cl-muted);
+  }
+
+  /* —— 优秀作品 / 特别关注：3 列密集网格，hover 显注（XMAGE 式） —— */
+  .cl-minor {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 20px);
+    padding: clamp(48px, 7vw, 80px) var(--edge) 0;
+  }
+
+  .minor-tile {
+    margin: 0;
+  }
+
+  .tile-shutter {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    line-height: 0;
+    overflow: hidden;
+  }
+
+  .tile-shutter img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+
+  .tile-shutter:hover img {
+    transform: scale(1.05);
+  }
+
+  .tile-scrim {
+    position: absolute;
+    inset: 40% 0 0;
+    background: linear-gradient(180deg, rgba(4, 16, 30, 0) 0%, rgba(4, 16, 30, 0.72) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .tile-info {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .tile-shutter:hover .tile-scrim,
+  .tile-shutter:focus-visible .tile-scrim,
+  .tile-shutter:focus-within .tile-scrim {
+    opacity: 1;
+  }
+
+  .tile-shutter:hover .tile-info,
+  .tile-shutter:focus-visible .tile-info,
+  .tile-shutter:focus-within .tile-info {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 触屏设备：信息常显（无 hover） */
+  @media (hover: none) {
+    .tile-scrim,
+    .tile-info {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .tile-award {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(234, 244, 255, 0.72);
+  }
+
+  .tile-title {
+    font-family: var(--font-serif-song);
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #eaf4ff;
+  }
+
+  .tile-author {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: rgba(234, 244, 255, 0.62);
+  }
+
+  /* —— 公示脚注 —— */
+  .cl-note {
+    max-width: 640px;
+    margin: clamp(48px, 7vw, 72px) auto 0;
+    padding: 22px 24px;
+    border: 1px solid var(--cl-border);
+    border-radius: 8px;
+  }
+
+  .note-text {
+    margin: 0 0 10px;
+    font-size: 13.5px;
+    line-height: 1.9;
+    white-space: pre-line;
+    color: var(--cl-muted);
+  }
+
+  .note-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .note-links a {
+    color: var(--cl-accent);
+    text-decoration: none;
+  }
+
+  .note-links a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .note-links a:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+  }
+
+  /* —— 作品赏析：阅读区，交还站点明暗主题 —— */
+  .cl-stories {
+    margin-top: clamp(64px, 9vw, 104px);
+    padding-bottom: 40px;
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  .cl-sec-head--theme .sec-en {
+    color: var(--grad-a);
+  }
+
+  .cl-sec-head--theme .sec-title {
+    color: var(--foreground);
+  }
+
+  .sec-sponsors {
+    max-width: 640px;
+    margin: 18px auto 0;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    line-height: 1.9;
+    color: var(--muted-foreground);
+  }
+
+  .cl-story-list {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 64px) 24px 0;
+  }
+
+  .story-block {
+    padding: clamp(36px, 5vw, 56px) 0;
+    border-top: 1px solid var(--divider);
+  }
+
+  .cl-story-list .story-block:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .story-head {
+    text-align: center;
+  }
+
+  .story-award {
+    margin: 0 0 10px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .story-title {
+    margin: 0 0 6px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--foreground);
+  }
+
+  .story-author {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 赏析图组：1 图 66% / 2 图对开 / 3+ 图三联（哈苏栅格） —— */
+  .story-imgs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+
+  .story-fig {
+    position: relative;
+    margin: 0;
+  }
+
+  .story-imgs[data-count='1'] .story-fig {
+    width: min(100%, 854px);
+  }
+
+  .story-imgs[data-count='2'] .story-fig {
+    width: calc(50% - 7px);
+  }
+
+  .story-imgs[data-count='3+'] .story-fig {
+    width: calc(33.333% - 9.34px);
+  }
+
+  .story-shutter {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    line-height: 0;
+  }
+
+  .story-shutter img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .story-num {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 背后的故事：640px 衬线列 —— */
+  .story-text {
+    max-width: 640px;
+    margin: clamp(28px, 4vw, 40px) auto 0;
+  }
+
+  .st-label {
+    margin: 0 0 16px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .st-label span {
+    margin-left: 8px;
+    color: var(--muted-foreground);
+  }
+
+  .st-para {
+    margin: 0 0 1.6em;
+    font-family: var(--font-serif-song);
+    font-size: 15.5px;
+    line-height: 2.05;
+    letter-spacing: 0.02em;
+    color: var(--foreground);
+  }
+
+  /* —— 届数 pager（GalleryStory 同款语言） —— */
+  .cl-pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 980px;
+    margin: clamp(32px, 5vw, 48px) auto 0;
+    padding: 0 24px;
+  }
+
+  .pager-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 20px 16px;
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  a.pager-card:hover {
+    border-color: var(--grad-a);
+  }
+
+  a.pager-card:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+
+  .pager-card.is-empty {
+    opacity: 0.65;
+  }
+
+  .pager-right {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .pager-kicker {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--grad-a);
+  }
+
+  .pager-title {
+    font-family: var(--font-serif-song);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  a.pager-card:hover .pager-title {
+    color: var(--grad-a);
+  }
+
+  .pager-sub {
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  .cl-foot {
+    max-width: 740px;
+    margin: 32px auto 0;
+    padding: 30px 24px 56px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--grad-a);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— Lightbox（与 GalleryStory 同款深底） —— */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 12, 18, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    animation: lb-fade 0.25s ease-out;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .lb-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 64px;
+    max-width: 100%;
+  }
+
+  .lb-img {
+    display: block;
+    max-width: min(92vw, 1400px);
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  .lb-cap {
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.82);
+    text-align: center;
+  }
+
+  .lb-count {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lb-btn {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .lb-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .lb-btn:focus-visible {
+    outline: 2px solid var(--grad-a);
+    outline-offset: 4px;
+  }
+
+  .lb-close {
+    top: 18px;
+    right: 18px;
+  }
+
+  .lb-prev {
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-next {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* —— 区块入场 —— */
+  html.js .cl-reveal {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  html.js .cl-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox {
+      animation: none;
+    }
+
+    .tile-shutter img {
+      transition: none;
+    }
+
+    html.js .cl-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .cl-minor {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 900px) {
+    .win-card {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .cl-yearnav {
+      padding: 12px 20px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .cl-hero {
+      height: 74vh;
+      min-height: 460px;
+    }
+
+    .hero-caption {
+      padding: 0 20px 32px;
+    }
+
+    .hero-credit {
+      right: 16px;
+    }
+
+    .cl-results,
+    .cl-minor {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .cl-minor {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .cl-sec-head {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .yn-years {
+      gap: 16px;
+    }
+
+    .story-imgs[data-count='2'] .story-fig,
+    .story-imgs[data-count='3+'] .story-fig {
+      width: 100%;
+    }
+
+    .cl-pager {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .pager-right {
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    .lb-prev,
+    .lb-next {
+      top: auto;
+      bottom: 18px;
+      transform: none;
+    }
+
+    .lb-stage {
+      margin: 0 12px;
+    }
+
+    .lb-count {
+      top: 26px;
+    }
+  }
+</style>

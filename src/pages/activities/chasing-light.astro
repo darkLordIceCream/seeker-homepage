@@ -1,0 +1,423 @@
+---
+// 追光之旅 · 历届大赛门户：/activities/chasing-light/
+// 影展式常暗海报页：总冠军全出血 hero → 赛事简介衬线块 → 历届年份卡（IPPAWARDS 式图上文下）
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import { activityImageDims } from '../../lib/activityImageMeta';
+
+const entries = await getCollection('lightChasing');
+const years = entries.sort((a, b) => b.data.year - a.data.year);
+const latest = years[0];
+
+const heroDim = latest ? activityImageDims(latest.data.cover) : undefined;
+
+const intro = `「追光之旅」是 Seeker追光者 的年度摄影大赛：每年冬天开启征稿，来年春天揭晓结果。大赛设总冠军与自然、城市、人文、商业创意、校园、组图六个组别，另有优秀作品与特别关注奖。历届结果公示与获奖作品赏析收录于此。`;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: '追光之旅 · 历届大赛',
+  description: 'Seeker追光者年度摄影大赛「追光之旅」历届结果公示与作品赏析',
+  image: latest?.data.cover,
+  author: { '@type': 'Organization', name: 'Seeker追光者' },
+});
+---
+
+<Layout
+  description="「追光之旅」是 Seeker追光者 的年度摄影大赛，历届大赛结果公示与获奖作品赏析。"
+  image={latest?.data.cover}
+  title="追光之旅 · 历届摄影大赛"
+>
+  <Navigation />
+
+  <main class="cl-hub" id="main-content">
+    <script is:inline set:html={jsonLd} type="application/ld+json" />
+
+    <!-- Hero：最近一届总冠军全出血 -->
+    <header class="hub-hero">
+      {latest && (
+        <img
+          alt={`《${latest.data.grandPrize.title}》——${latest.data.grandPrize.author}作品（${latest.data.title}${latest.data.grandPrize.award}）`}
+          decoding="async"
+          fetchpriority="high"
+          height={heroDim?.h}
+          loading="eager"
+          src={latest.data.cover}
+          width={heroDim?.w}
+        />
+      )}
+      <div aria-hidden="true" class="hub-scrim"></div>
+      <p class="hub-credit">Photo: © {latest?.data.grandPrize.author}</p>
+      <div class="hub-caption">
+        <p class="hub-kicker">SEEKER · CHASING THE LIGHT</p>
+        <h1 class="hub-title">追光之旅</h1>
+        <p class="hub-dek">Seeker追光者 年度摄影大赛</p>
+        <a class="hub-cta" href="#editions">历届大赛 ↓</a>
+      </div>
+    </header>
+
+    <!-- 赛事简介（常暗衬线块） -->
+    <section aria-label="赛事简介" class="hub-intro">
+      <p class="intro-text">{intro}</p>
+    </section>
+
+    <!-- 历届年份卡 -->
+    <section aria-label="历届大赛" class="hub-editions" id="editions">
+      <header class="ed-sec-head">
+        <p class="ed-en">EDITIONS</p>
+        <h2 class="ed-title">历届大赛</h2>
+      </header>
+      <div class="ed-grid">
+        {years.map(y => {
+          const dim = activityImageDims(y.data.cover);
+          return (
+            <a
+              aria-label={`${y.data.title}：总冠军《${y.data.grandPrize.title}》${y.data.grandPrize.author}`}
+              class="ed-card"
+              href={`/activities/chasing-light/${y.data.year}/`}
+            >
+              <span class="ed-media">
+                <img
+                  alt={`《${y.data.grandPrize.title}》——${y.data.grandPrize.author}作品（${y.data.title}总冠军）`}
+                  decoding="async"
+                  height={dim?.h}
+                  loading="lazy"
+                  src={y.data.cover}
+                  width={dim?.w}
+                />
+              </span>
+              <span class="ed-meta">
+                <span class="ed-year">{y.data.year}</span>
+                <span class="ed-name">{y.data.title}</span>
+                <span class="ed-work">总冠军《{y.data.grandPrize.title}》 · {y.data.grandPrize.author}</span>
+                <span class="ed-cta">查看结果 →</span>
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <footer class="hub-foot">
+      <a class="back-link" href="/#activities">← 返回首页活动</a>
+    </footer>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .cl-hub {
+    min-height: 100vh;
+    padding-top: 70px;
+    /* 影展式常暗海报页 */
+    --cl-bg: #04101e;
+    --cl-fg: #eaf4ff;
+    --cl-fg2: rgba(234, 244, 255, 0.78);
+    --cl-muted: rgba(234, 244, 255, 0.55);
+    --cl-faint: rgba(234, 244, 255, 0.32);
+    --cl-border: rgba(234, 244, 255, 0.12);
+    --cl-accent: #2e86de;
+    --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
+    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+    background: var(--cl-bg);
+    color: var(--cl-fg);
+  }
+
+  /* —— Hero —— */
+  .hub-hero {
+    position: relative;
+    height: min(92vh, 960px);
+    overflow: hidden;
+  }
+
+  .hub-hero img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hub-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(4, 16, 30, 0.34) 0%, rgba(4, 16, 30, 0) 30%),
+      linear-gradient(180deg, rgba(4, 16, 30, 0) 42%, rgba(4, 16, 30, 0.85) 100%);
+  }
+
+  .hub-credit {
+    position: absolute;
+    z-index: 2;
+    top: 20px;
+    right: 24px;
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(234, 244, 255, 0.66);
+    text-shadow: 0 1px 8px rgba(4, 16, 30, 0.6);
+  }
+
+  .hub-caption {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 var(--edge) clamp(36px, 6vh, 64px);
+  }
+
+  .hub-kicker {
+    margin: 0 0 16px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .hub-title {
+    margin: 0 0 10px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    color: var(--cl-fg);
+    text-shadow: 0 2px 24px rgba(4, 16, 30, 0.55);
+  }
+
+  .hub-dek {
+    margin: 0 0 26px;
+    font-family: var(--font-serif-song);
+    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+    letter-spacing: 0.22em;
+    color: var(--cl-fg2);
+  }
+
+  .hub-cta {
+    display: inline-block;
+    padding: 10px 22px;
+    border: 1px solid var(--cl-border);
+    border-radius: 999px;
+    background: rgba(4, 16, 30, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-family: 'Archivo', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--cl-fg);
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .hub-cta:hover {
+    border-color: var(--cl-accent);
+    color: var(--cl-accent);
+  }
+
+  .hub-cta:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+  }
+
+  /* —— 赛事简介 —— */
+  .hub-intro {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 80px) 24px 0;
+  }
+
+  .intro-text {
+    margin: 0;
+    font-family: var(--font-serif-song);
+    font-size: 15.5px;
+    line-height: 2.05;
+    letter-spacing: 0.02em;
+    color: var(--cl-fg2);
+  }
+
+  /* —— 历届年份卡 —— */
+  .hub-editions {
+    padding: clamp(40px, 6vw, 64px) var(--edge) 0;
+  }
+
+  .ed-sec-head {
+    text-align: center;
+  }
+
+  .ed-en {
+    margin: 0 0 14px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .ed-title {
+    margin: 0;
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-indent: 0.14em;
+    color: var(--cl-fg);
+  }
+
+  .ed-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 48px clamp(32px, 4vw, 56px);
+    padding-top: clamp(36px, 5vw, 56px);
+  }
+
+  .ed-card {
+    display: block;
+    width: calc(50% - clamp(16px, 2vw, 28px));
+    max-width: 560px;
+    text-decoration: none;
+  }
+
+  .ed-media {
+    display: block;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .ed-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.35s ease;
+  }
+
+  .ed-card:hover .ed-media img {
+    transform: scale(1.03);
+  }
+
+  .ed-card:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .ed-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 2px 0;
+  }
+
+  .ed-year {
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--cl-accent);
+  }
+
+  .ed-name {
+    font-size: 13.5px;
+    letter-spacing: 0.08em;
+    color: var(--cl-muted);
+  }
+
+  .ed-work {
+    font-family: var(--font-serif-song);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--cl-fg);
+  }
+
+  .ed-cta {
+    margin-top: 8px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--cl-fg2);
+    transition: color 0.2s ease;
+  }
+
+  .ed-card:hover .ed-cta {
+    color: var(--cl-accent);
+  }
+
+  .hub-foot {
+    max-width: 740px;
+    margin: clamp(48px, 7vw, 80px) auto 0;
+    padding: 30px 24px 56px;
+    border-top: 1px solid var(--cl-border);
+    text-align: center;
+  }
+
+  .back-link {
+    font-family: 'Archivo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--cl-fg2);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--cl-fg);
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--cl-accent);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ed-media img {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .ed-card {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .hub-credit {
+      right: 16px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .hub-hero {
+      height: 78vh;
+      min-height: 480px;
+    }
+
+    .hub-caption {
+      padding: 0 20px 32px;
+    }
+
+    .hub-editions {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+</style>

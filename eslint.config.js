@@ -238,4 +238,14 @@ export default [
       'astro/no-set-html-directive': 'off',
     },
   },
+  // 追光之旅年度页与历届门户：set:html 仅用于输出构建期常量（JSON-LD 结构化数据，非用户输入）
+  {
+    files: [
+      'src/components/light-chasing/LightChasingYear.astro',
+      'src/pages/activities/chasing-light.astro',
+    ],
+    rules: {
+      'astro/no-set-html-directive': 'off',
+    },
+  },
 ];
