@@ -156,6 +156,14 @@ const locations: LocGroup[] = [
           <button aria-label="重置水印位置" class="dr-reset" data-frame-reset type="button"
             >↺</button
           >
+          <button
+            aria-label="隐藏二维码与公众号信息"
+            aria-pressed="false"
+            class="dr-qr-toggle"
+            data-qr-toggle
+            type="button"
+            >＠</button
+          >
         </div>
         <p class="dr-frame-hint" data-frame-hint>按住 Shift 拖动画布也可移动水印</p>
       </div>
@@ -617,6 +625,17 @@ const locations: LocGroup[] = [
     font-size: 0.62rem;
     letter-spacing: 0.06em;
     color: var(--anniv-faint);
+  }
+
+  /* 二维码开关：选中态用 accent 描边示明（与 FORMAT 选择器同语言） */
+  .dr-qr-toggle {
+    font-size: 0.95rem;
+  }
+
+  .dr-qr-toggle[aria-pressed='true'] {
+    color: var(--anniv-accent);
+    border-color: var(--anniv-accent);
+    background: color-mix(in srgb, var(--anniv-accent) 8%, transparent);
   }
 
   @media (max-width: 48rem) {
