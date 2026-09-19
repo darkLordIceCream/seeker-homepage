@@ -244,14 +244,16 @@ export function initDarkroom(): void {
   function syncFrameControls(): void {
     const axis = currentTemplate.frameAxis;
     if (frameLabel) {
-      frameLabel.textContent = axis === 'y' ? 'FRAME ↕' : 'FRAME ↔';
+      frameLabel.textContent = axis === 'y' ? '水印位置 ↕' : '水印位置 ↔';
     }
     if (frameNeg) {
       frameNeg.setAttribute('aria-label', axis === 'y' ? '上移水印' : '左移水印');
+      frameNeg.title = axis === 'y' ? '上移水印' : '左移水印';
       frameNeg.textContent = axis === 'y' ? '˄' : '‹';
     }
     if (framePos) {
       framePos.setAttribute('aria-label', axis === 'y' ? '下移水印' : '右移水印');
+      framePos.title = axis === 'y' ? '下移水印' : '右移水印';
       framePos.textContent = axis === 'y' ? '˅' : '›';
     }
     if (frameSlider) {
@@ -289,6 +291,7 @@ export function initDarkroom(): void {
     showQr = !showQr;
     qrToggle.setAttribute('aria-pressed', String(!showQr));
     qrToggle.setAttribute('aria-label', showQr ? '隐藏二维码与公众号信息' : '显示二维码与公众号信息');
+    qrToggle.title = showQr ? '隐藏二维码与公众号信息' : '显示二维码与公众号信息';
     qrToggle.textContent = showQr ? '＠' : '－';
     requestRender();
   });

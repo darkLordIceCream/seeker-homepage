@@ -75,7 +75,7 @@ import stats from '../../data/anniversary/stats.json';
       </div>
 
       <div class="dr-ctrl dr-ctrl--name">
-        <span class="dr-ctrl-eyebrow">WHO ARE YOU?</span>
+        <span class="dr-ctrl-eyebrow">你是谁？</span>
         <label class="dr-ctrl-label" for="wm-nickname">NAME</label>
         <input
           autocomplete="off"
@@ -87,11 +87,11 @@ import stats from '../../data/anniversary/stats.json';
       </div>
 
       <div class="dr-ctrl dr-ctrl--scale">
-        <span class="dr-ctrl-label">SCALE</span>
+        <span class="dr-ctrl-label">缩放 SCALE</span>
         <div class="dr-scale-row">
-          <button aria-label="缩小" disabled id="wm-zoom-out" type="button">−</button>
+          <button aria-label="缩小照片" title="缩小照片" disabled id="wm-zoom-out" type="button">−</button>
           <input
-            aria-label="缩放照片"
+            aria-label="缩放照片" title="缩放照片"
             disabled
             id="wm-zoom"
             max="4"
@@ -100,8 +100,8 @@ import stats from '../../data/anniversary/stats.json';
             type="range"
             value="1"
           />
-          <button aria-label="放大" disabled id="wm-zoom-in" type="button">＋</button>
-          <button aria-label="重置位置与缩放" class="dr-reset" disabled id="wm-reset" type="button"
+          <button aria-label="放大照片" title="放大照片" disabled id="wm-zoom-in" type="button">＋</button>
+          <button aria-label="重置位置与缩放" title="重置位置与缩放" class="dr-reset" disabled id="wm-reset" type="button"
             >↺</button
           >
         </div>
@@ -109,11 +109,11 @@ import stats from '../../data/anniversary/stats.json';
 
       <!-- 水印位置：横版上下移 / 竖版左右移（昵称随行，二维码钉死右下角） -->
       <div class="dr-ctrl dr-ctrl--frame">
-        <span class="dr-ctrl-label" data-frame-label>FRAME</span>
+        <span class="dr-ctrl-label" data-frame-label>水印位置</span>
         <div class="dr-scale-row">
-          <button aria-label="左移水印" data-frame-neg type="button">‹</button>
+          <button aria-label="左移水印" title="左移水印" data-frame-neg type="button">‹</button>
           <input
-            aria-label="移动水印"
+            aria-label="移动水印" title="移动水印"
             id="wm-frame"
             max="1"
             min="-1"
@@ -121,12 +121,12 @@ import stats from '../../data/anniversary/stats.json';
             type="range"
             value="0"
           />
-          <button aria-label="右移水印" data-frame-pos type="button">›</button>
-          <button aria-label="重置水印位置" class="dr-reset" data-frame-reset type="button"
+          <button aria-label="右移水印" title="右移水印" data-frame-pos type="button">›</button>
+          <button aria-label="重置水印位置" title="重置水印位置" class="dr-reset" data-frame-reset type="button"
             >↺</button
           >
           <button
-            aria-label="隐藏二维码与公众号信息"
+            aria-label="隐藏二维码与公众号信息" title="隐藏二维码与公众号信息"
             aria-pressed="false"
             class="dr-qr-toggle"
             data-qr-toggle
