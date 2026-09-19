@@ -111,23 +111,62 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     };
   },
 
-  /** 02 光影札记：暗场 → 肖像淡入 → 轻微放大 → 寄语浮现 → 文字成为焦点 */
+  /**
+   * 02 光影札记：暗场 → 肖像淡入 + 轻微放大 → 文字节拍轮换
+   * （bio 开场 → 三段正文逐段聚焦 → 落款；前段退场、当前段成为焦点，
+   * 末段压暗为背景衬托落款）。节拍窗口键为节拍数：
+   * 5 = 全文（bio + 三段 + 落款），2 = 占位回退（bio + 落款）。
+   */
   founder: track => {
     const portrait = track.querySelector<HTMLElement>('[data-founder-portrait]');
-    const text = track.querySelector<HTMLElement>('[data-founder-text]');
+    const beats = [...track.querySelectorAll<HTMLElement>('[data-founder-beat]')];
+    interface BeatWindow {
+      a: number;
+      b: number;
+      outA?: number;
+      outB?: number;
+      dim?: number;
+    }
+    const WINDOWS: Record<number, BeatWindow[]> = {
+      5: [
+        { a: 0.28, b: 0.38, outA: 0.42, outB: 0.47 },
+        { a: 0.42, b: 0.5, outA: 0.56, outB: 0.61 },
+        { a: 0.56, b: 0.64, outA: 0.7, outB: 0.75 },
+        { a: 0.7, b: 0.78, outA: 0.84, outB: 0.9, dim: 0.25 },
+        { a: 0.84, b: 0.92 },
+      ],
+      2: [
+        { a: 0.3, b: 0.42 },
+        { a: 0.78, b: 0.9 },
+      ],
+    };
+    const windows =
+      WINDOWS[beats.length] ??
+      beats.map((_, i): BeatWindow => {
+        const step = 0.6 / Math.max(1, beats.length - 1);
+        return { a: 0.28 + step * i, b: 0.38 + step * i };
+      });
     return ({ progress: p }) => {
       if (portrait) {
-        const t = ramp(p, 0.18, 0.4);
-        const zoom = ramp(p, 0.48, 0.62);
-        const recede = ramp(p, 0.8, 1);
+        const t = ramp(p, 0.12, 0.26);
+        const zoom = ramp(p, 0.3, 0.44);
         portrait.style.opacity = t.toFixed(3);
-        portrait.style.transform = `scale(${(1 + 0.04 * zoom - 0.02 * recede).toFixed(4)})`;
+        portrait.style.transform = `scale(${(1 + 0.04 * zoom).toFixed(4)})`;
       }
-      if (text) {
-        const t = ramp(p, 0.62, 0.78);
-        text.style.opacity = t.toFixed(3);
-        text.style.transform = `translateY(${(20 * (1 - t)).toFixed(1)}px)`;
-      }
+      beats.forEach((el, i) => {
+        const w = windows[i];
+        if (!w) {
+          return;
+        }
+        const tIn = ramp(p, w.a, w.b);
+        const tOut = w.outA !== undefined && w.outB !== undefined ? ramp(p, w.outA, w.outB) : 0;
+        const dim = w.dim ?? 0;
+        const opacity = tIn * (1 - tOut * (1 - dim));
+        const rise = 18 * (1 - tIn);
+        const drift = dim > 0 ? 0 : 12 * tOut;
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `translateY(${(rise - drift).toFixed(1)}px)`;
+      });
     };
   },
 
@@ -273,9 +312,7 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
       if (Math.abs(p - last) >= 0.004) {
         last = p;
-        window.dispatchEvent(
-          new CustomEvent('anniv-map-progress', { detail: { progress: p } }),
-        );
+        window.dispatchEvent(new CustomEvent('anniv-map-progress', { detail: { progress: p } }));
       }
     };
   },

@@ -7,7 +7,9 @@ export default {
   semi: true,
   singleQuote: true,
   quoteProps: 'as-needed',
-  trailingComma: 'es5',
+  // 'all' 与 eslint comma-dangle: 'always-multiline' 对齐；此前 'es5' 会在提交
+  // 钩子里剥掉函数参数尾逗号，与 eslint 打架（2026-09 对齐）
+  trailingComma: 'all',
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'avoid',

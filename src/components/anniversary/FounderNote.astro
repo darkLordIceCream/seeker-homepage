@@ -1,11 +1,16 @@
 ---
 /**
  * 【02 光影札记 · FounderNote】主理人寄语——Editorial Portrait 版式。
- * 人物叙事而非商业身份展示：真实主理人肖像 + 简介；寄语全文待内容就绪
- * （占位标记），数据来自 src/content/members/ 真实条目，不伪造文案。
+ * 人物叙事而非商业身份展示：真实主理人肖像 + 简介 + 寄语全文（2026-09 原文）。
+ * 数据：肖像/姓名/简介来自 src/content/members/ 真实条目；寄语正文来自
+ * src/data/anniversary/founder-note.json（published 开关，false 时回退 AwaitNote 占位）。
+ * 滚动叙事：data-founder-beat 节拍由 scroll-story.ts 的 founder 工厂驱动，
+ * 舞台钉住期间 bio → 三段正文 → 落款逐段轮换；无 JS / reduced-motion 无
+ * story-on 门控，全部内容静态完整可读。
  */
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { readFileSync } from 'node:fs';
 import AwaitNote from './AwaitNote.astro';
 
 const founder = await getEntry('members', '倾斜的地平线');
@@ -13,12 +18,40 @@ if (!founder) {
   throw new Error('缺少成员条目：倾斜的地平线（src/content/members/）');
 }
 const { name, role, title, avatar, bio } = founder.data;
+
+const noteData = JSON.parse(
+  readFileSync('src/data/anniversary/founder-note.json', 'utf8'),
+) as { published: boolean; paragraphs: string[] };
+const paragraphs = noteData.published ? noteData.paragraphs : [];
+
+interface ParaPart {
+  text: string;
+  topic: boolean;
+}
+
+/** 《专题名》拆出独立片段，模板中以强调色 span 渲染（不用 set:html） */
+function splitTopic(text: string): ParaPart[] {
+  return text
+    .split(/(《[^》]+》)/g)
+    .filter(Boolean)
+    .map(part => ({ text: part, topic: part.startsWith('《') }));
+}
 ---
 
 <div class="fn">
   <figure class="fn-portrait" data-founder-portrait>
     <Image
-      alt={`${name} · ${role}`}       decoding="async"       densities={[1, 1.5, 2]}       loading="lazy"       src={avatar}       width={720}
+      alt={`${name} · ${role}`}
+
+      decoding="async"
+
+      densities={[1, 1.5, 2]}
+
+      loading="lazy"
+
+      src={avatar}
+
+      width={720}
     />
     <figcaption class="fn-cred">
       <span class="fn-cred-name">{name}</span>
@@ -27,9 +60,20 @@ const { name, role, title, avatar, bio } = founder.data;
   </figure>
   <div class="fn-body" data-founder-text>
     <p class="fn-kicker">A NOTE FROM SEEKER</p>
-    <p class="fn-bio">{bio}</p>
-    <AwaitNote />
-    <p class="fn-sign">— {name}</p>
+    <div class="fn-beats">
+      <p class="fn-bio" data-founder-beat>{bio}</p>
+      {
+        paragraphs.map(p => (
+          <p class="fn-para" data-founder-beat>
+            {splitTopic(p).map(part =>
+              part.topic ? <span class="fn-topic">{part.text}</span> : part.text,
+            )}
+          </p>
+        ))
+      }
+      {paragraphs.length === 0 && <AwaitNote />}
+    </div>
+    <p class="fn-sign" data-founder-beat>— {name}</p>
   </div>
 </div>
 
@@ -37,7 +81,7 @@ const { name, role, title, avatar, bio } = founder.data;
   .fn {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 1.75rem;
   }
 
   .fn-portrait {
@@ -49,8 +93,8 @@ const { name, role, title, avatar, bio } = founder.data;
     display: block;
     width: 100%;
     height: auto;
-    /* 滚动舞台内限高，保证肖像 + 寄语同屏 */
-    max-height: 52vh;
+    /* 纵向布局（<56rem）：肖像限高，保证肖像 + 当前节拍文字同屏 */
+    max-height: 26vh;
     width: auto;
     max-width: 100%;
   }
@@ -102,6 +146,30 @@ const { name, role, title, avatar, bio } = founder.data;
     color: var(--anniv-fg);
   }
 
+  /* 节拍叠放：bio 与三段正文占同一格，容器高取最高段，轮换时不跳动、
+     隐藏的节拍不占额外行；占位回退时 AwaitNote 不设 grid-area，自动落到下一行 */
+  .fn-beats {
+    display: grid;
+  }
+
+  .fn-beats > .fn-bio,
+  .fn-beats > .fn-para {
+    grid-area: 1 / 1;
+  }
+
+  .fn-para {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(0.98rem, 2.2vw, 1.18rem);
+    line-height: 2;
+    letter-spacing: 0.02em;
+    color: var(--anniv-fg);
+  }
+
+  .fn-topic {
+    color: var(--anniv-accent);
+  }
+
   .fn-body :global(.await) {
     align-items: flex-start;
     text-align: left;
@@ -115,6 +183,47 @@ const { name, role, title, avatar, bio } = founder.data;
     color: var(--anniv-muted);
   }
 
+  /* 引擎就绪（story-on）后由工厂逐帧写入内联样式接管显隐；
+     无 JS / reduced-motion 不加 story-on，本规则不生效，全文静态可读 */
+  :global(.story-on) [data-founder-beat] {
+    opacity: 0;
+  }
+
+  /* 窄屏：肖像压成「署名小票」（小图 + 纵排署名一行），正文行距收紧，
+     保证章节标题 + 当前节拍 + 落款在 100svh 内同屏 */
+  @media (max-width: 48rem) {
+    .fn {
+      gap: 1.1rem;
+    }
+
+    .fn-body {
+      gap: 1.1rem;
+    }
+
+    .fn-portrait {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .fn-portrait img {
+      max-height: 72px;
+    }
+
+    .fn-cred {
+      flex: 1;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .fn-para {
+      font-size: 0.92rem;
+      line-height: 1.85;
+    }
+  }
+
   @media (min-width: 56rem) {
     .fn {
       flex-direction: row;
@@ -125,6 +234,11 @@ const { name, role, title, avatar, bio } = founder.data;
     .fn-portrait {
       flex: 2;
       max-width: none;
+    }
+
+    /* 横向布局：肖像为常驻侧列，恢复大图 */
+    .fn-portrait img {
+      max-height: 52vh;
     }
 
     .fn-body {

@@ -24,7 +24,7 @@ export const POINT_OPACITY = { glow: 0.16, point: 0.95 } as const;
 export function buildMapStyle(
   theme: AnniversaryTheme,
   geo?: GeoJSON,
-  points?: GeoJSON
+  points?: GeoJSON,
 ): StyleSpecification {
   const dark = theme !== 'light';
   const accent = dark ? '#2e86de' : '#06427e'; /* Sky 光 / Seeker Blue 墨 */
