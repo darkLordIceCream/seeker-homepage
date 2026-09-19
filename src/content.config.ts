@@ -114,6 +114,62 @@ const activities = defineCollection({
   },
 });
 
+/** 追光之旅获奖者：公示名单 + 赏析文共用的获奖条目 */
+const lightChasingAward = z.object({
+  /** 奖项名，如「总冠军」「自然组冠军」「优秀作品」 */
+  award: z.string(),
+  /** 作品名称（不含书名号） */
+  title: z.string(),
+  /** 作者昵称（原文「ID：」后的名字，照录） */
+  author: z.string(),
+  /** 代表图（结果公示区展示，R2 绝对 URL，构建期经 activity-image-meta 提供尺寸） */
+  cover: z.string(),
+  /** 赏析图组（作品赏析区按序展示，R2 绝对 URL） */
+  images: z.array(z.string()).default([]),
+  /** 背后的故事（摄影师第一人称自述，原文照录） */
+  story: z.string().optional(),
+});
+
+// 追光之旅年度大赛：每年一个 .md（结果公示 + 作品赏析合并一页，影展式常暗）
+const lightChasing = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/light-chasing' }),
+  schema: z.object({
+    /** 届数年份，如 2024（同时是路由参数） */
+    year: z.number(),
+    /** 大赛全名，如「2024追光之旅摄影大赛」 */
+    title: z.string(),
+    /** 届期标注，如「DEC 2024 — APR 2025」 */
+    period: z.string(),
+    /** hero 封面 / og:image（总冠军代表图，R2 绝对 URL） */
+    cover: z.string(),
+    /** 摘要（SEO / 门户年份卡展示用） */
+    excerpt: z.string(),
+    /** 投稿数据句（原文照录，如「10w 余张投稿」） */
+    stats: z.string().optional(),
+    /** 赞助鸣谢（文字行，原文名单照录） */
+    sponsors: z.string().optional(),
+    /** 总冠军（hero 即其展示位） */
+    grandPrize: lightChasingAward,
+    /** 组别冠军（自然/城市/人文/商业创意/校园/组图） */
+    groups: z.array(lightChasingAward).default([]),
+    /** 优秀作品 */
+    excellence: z.array(lightChasingAward).default([]),
+    /** 特别关注奖 */
+    attention: z.array(lightChasingAward).default([]),
+    /** 公示期与异议渠道说明（原文照录） */
+    resultsNote: z.string().optional(),
+    /** 微信原文链接：结果公示 */
+    sourceResults: z.string(),
+    /** 微信原文链接：作品赏析 */
+    sourceStories: z.string(),
+    pubDate: z.coerce.date(),
+    /** 届数排序，越小越早 */
+    order: z.number().default(0),
+    /** 页面模板（当前仅 light-chasing 影展型） */
+    layout: z.enum(['light-chasing']).default('light-chasing'),
+  }),
+});
+
 // 七周年手记：文章就位后在此目录新增 .md（schema 参照 welfare）
 const anniversary = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/anniversary' }),
@@ -127,4 +183,4 @@ const anniversary = defineCollection({
   }),
 });
 
-export const collections = { members, welfare, activities, anniversary };
+export const collections = { members, welfare, activities, lightChasing, anniversary };

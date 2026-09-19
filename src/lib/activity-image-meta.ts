@@ -2070,4 +2070,17 @@ export const ACTIVITY_IMAGE_META: Readonly<
   'activities/story-of-time-2025-12/37.webp': { w: 1080, h: 1539 },
   'activities/story-of-time-2025-12/committee.webp': { w: 1080, h: 578 },
   'activities/story-of-time-2025-12/cover.webp': { w: 1280, h: 544 },
+  // chasing-light（追光之旅，脚本追加，勿手改）
+  'activities/chasing-light/2023/grand-prize/cover.webp': { w: 2560, h: 1432 },
+  'activities/chasing-light/2023/nature/01.webp': { w: 2560, h: 1709 },
+  'activities/chasing-light/2023/city/01.webp': { w: 2560, h: 1427 },
+  'activities/chasing-light/2023/people/01.webp': { w: 1280, h: 850 },
+  'activities/chasing-light/2023/campus/01.webp': { w: 1194, h: 1778 },
+  'activities/chasing-light/2023/excellent-01/01.webp': { w: 1280, h: 866 },
+  'activities/chasing-light/2023/excellent-02/01.webp': { w: 996, h: 1776 },
+  'activities/chasing-light/2023/excellent-03/01.webp': { w: 1280, h: 848 },
+  'activities/chasing-light/2023/excellent-04/01.webp': { w: 1190, h: 1790 },
+  'activities/chasing-light/2023/excellent-05/01.webp': { w: 1280, h: 846 },
+  'activities/chasing-light/2023/attention-01/01.webp': { w: 1280, h: 718 },
+  'activities/chasing-light/2023/attention-02/01.webp': { w: 1178, h: 1768 },
 };

@@ -44,3 +44,6 @@ __pycache__/
 # local agent tooling
 .sisyphus/
 .zcode/
+
+# 追光之旅图片发布暂存（上传 R2 后即可删）
+.chasing-stage/
