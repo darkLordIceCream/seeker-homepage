@@ -86,6 +86,7 @@ export function initDarkroom(): void {
   const overlayCache = new Map<string, ImageBitmap>();
   const qrCache = new Map<string, ImageBitmap>();
   let frame: FrameOffset = { x: 0, y: 0 };
+  let showQr = true;
   let photo: LoadedPhoto | null = null;
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
@@ -138,7 +139,7 @@ export function initDarkroom(): void {
       renderComposition(canvas, {
         template: currentTemplate,
         templateImage: templateBitmap,
-        qrImage: qrBitmap,
+        qrImage: showQr ? qrBitmap : null,
         photo,
         transform,
         frame,
@@ -258,6 +259,16 @@ export function initDarkroom(): void {
     requestRender();
   });
 
+  /* 二维码/公众号显隐：隐藏时预览与导出都不含该信息 */
+  const qrToggle = darkroomRoot?.querySelector<HTMLButtonElement>('[data-qr-toggle]') ?? null;
+  qrToggle?.addEventListener('click', () => {
+    showQr = !showQr;
+    qrToggle.setAttribute('aria-pressed', String(!showQr));
+    qrToggle.setAttribute('aria-label', showQr ? '隐藏二维码与公众号信息' : '显示二维码与公众号信息');
+    qrToggle.textContent = showQr ? '＠' : '－';
+    requestRender();
+  });
+
   function releaseDownload(): void {
     if (downloadUrl) {
       URL.revokeObjectURL(downloadUrl);
@@ -363,7 +374,7 @@ export function initDarkroom(): void {
       renderComposition(out, {
         template: currentTemplate,
         templateImage: templateBitmap,
-        qrImage: qrBitmap,
+        qrImage: showQr ? qrBitmap : null,
         photo,
         transform,
         frame,
