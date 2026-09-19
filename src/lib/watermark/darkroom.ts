@@ -6,17 +6,17 @@
 import { attachGestures } from './gestures';
 import {
   buildFileName,
-  clampFrame,
+  canvasSizeFor,
   clampTransform,
-  frameRange,
-  type FrameOffset,
   ensureFonts,
   exportImage,
   initialTransform,
   loadPhoto,
   loadTemplate,
   PhotoDecodeError,
+  frameScaleFor,
   renderComposition,
+  type CanvasSize,
   zoomAtTransform,
   type LoadedPhoto,
   type PhotoTransform,
@@ -85,8 +85,11 @@ export function initDarkroom(): void {
   let qrBitmap: ImageBitmap | null = null;
   const overlayCache = new Map<string, ImageBitmap>();
   const qrCache = new Map<string, ImageBitmap>();
-  let frame: FrameOffset = { x: 0, y: 0 };
   let showQr = true;
+  /** 动态画布尺寸（模板参考系）：照片上传后按比例重推导 */
+  const canvasDims: CanvasSize = { w: DEFAULT_WATERMARK_TEMPLATE.width, h: DEFAULT_WATERMARK_TEMPLATE.height };
+  /** 水印帧平移（-1..1，相对可动范围的居中偏移）；横版 y 轴、竖版 x 轴 */
+  const framePan = { v: 0 };
   let photo: LoadedPhoto | null = null;
   let transform: PhotoTransform = initialTransform();
   let downloadUrl: string | null = null;
@@ -97,8 +100,34 @@ export function initDarkroom(): void {
   const areaCenter = { x: 0, y: 0 };
 
   function syncAreaCenter(): void {
-    areaCenter.x = currentTemplate.photoArea.x + currentTemplate.photoArea.width / 2;
-    areaCenter.y = currentTemplate.photoArea.y + currentTemplate.photoArea.height / 2;
+    areaCenter.x = canvasDims.w / 2;
+    areaCenter.y = canvasDims.h / 2;
+  }
+
+  /** 水印帧布局：贴合缩放 + 居中基准 + 可平移半径（横版 y 轴 / 竖版 x 轴） */
+  function frameLayout(): { dx: number; dy: number; scale: number; range: number } {
+    const fs = frameScaleFor(currentTemplate, canvasDims);
+    const fw = currentTemplate.width * fs;
+    const fh = currentTemplate.height * fs;
+    if (currentTemplate.frameAxis === 'y') {
+      const free = Math.max(0, canvasDims.h - fh);
+      return { dx: 0, dy: free / 2 + framePan.v * (free / 2), scale: fs, range: free / 2 };
+    }
+    const free = Math.max(0, canvasDims.w - fw);
+    return { dx: free / 2 + framePan.v * (free / 2), dy: 0, scale: fs, range: free / 2 };
+  }
+
+  function syncCanvasSize(): void {
+    const next = canvasSizeFor(currentTemplate, {
+      width: photo?.width ?? currentTemplate.width,
+      height: photo?.height ?? currentTemplate.height,
+    });
+    canvasDims.w = next.w;
+    canvasDims.h = next.h;
+    canvas.style.aspectRatio = `${canvasDims.w} / ${canvasDims.h}`;
+    framePan.v = 0;
+    layoutStage();
+    syncAreaCenter();
   }
 
   function setStatus(message: string, isError = false, sticky = false): void {
@@ -133,16 +162,18 @@ export function initDarkroom(): void {
       const cssWidth = canvas.clientWidth || stage.clientWidth || 360;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const scale = Math.max(
-        Math.min((cssWidth * dpr) / currentTemplate.width, 1600 / currentTemplate.width),
+        Math.min((cssWidth * dpr) / canvasDims.w, 1600 / canvasDims.w),
         0.2,
     );
+      const fl = frameLayout();
       renderComposition(canvas, {
         template: currentTemplate,
         templateImage: templateBitmap,
         qrImage: showQr ? qrBitmap : null,
         photo,
         transform,
-        frame,
+        canvas: { w: canvasDims.w, h: canvasDims.h },
+        frame: { dx: fl.dx, dy: fl.dy },
         nickname: nicknameInput.value,
         scale,
       });
@@ -150,7 +181,9 @@ export function initDarkroom(): void {
   }
 
   const normalize = (t: PhotoTransform): PhotoTransform =>
-    photo ? clampTransform({ template: currentTemplate, photo, transform: t }) : t;
+    photo
+      ? clampTransform({ canvas: { ...canvasDims }, photo, transform: t })
+      : t;
 
   function syncTplButtons(): void {
     for (const btn of tplButtons) {
@@ -186,7 +219,7 @@ export function initDarkroom(): void {
 
   function zoomBy(factor: number): void {
     transform = zoomAtTransform({
-      template: currentTemplate,
+      canvas: { ...canvasDims },
       photo,
       transform,
       px: areaCenter.x,
@@ -199,14 +232,14 @@ export function initDarkroom(): void {
     requestRender();
   }
 
-  /* —— 水印帧平移（FRAME）：仅 frameAxis 轴向，昵称随动，二维码钉角 —— */
+  /* —— 水印帧平移（FRAME）：横版上下/竖版左右，昵称随动，二维码钉角 —— */
   const frameSlider = document.getElementById('wm-frame') as HTMLInputElement | null;
   const frameNeg = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-neg]') ?? null;
   const framePos = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-pos]') ?? null;
   const frameReset = darkroomRoot?.querySelector<HTMLButtonElement>('[data-frame-reset]') ?? null;
   const frameLabel = darkroomRoot?.querySelector<HTMLElement>('[data-frame-label]') ?? null;
 
-  const FRAME_STEP = 24; // 模板 px / 击
+  const FRAME_STEP = 0.12; // pan 每击步进（-1..1）
 
   function syncFrameControls(): void {
     const axis = currentTemplate.frameAxis;
@@ -222,16 +255,12 @@ export function initDarkroom(): void {
       framePos.textContent = axis === 'y' ? '˅' : '›';
     }
     if (frameSlider) {
-      const range = frameRange(currentTemplate);
-      frameSlider.value = String(((axis === 'x' ? frame.x : frame.y) / range).toFixed(3));
+      frameSlider.value = framePan.v.toFixed(3);
     }
   }
 
   function shiftFrame(delta: number): void {
-    frame = clampFrame(currentTemplate, {
-      x: frame.x + (currentTemplate.frameAxis === 'x' ? delta : 0),
-      y: frame.y + (currentTemplate.frameAxis === 'y' ? delta : 0),
-    });
+    framePan.v = Math.max(-1, Math.min(1, framePan.v + delta));
     syncFrameControls();
     updateNickHit();
     requestRender();
@@ -240,23 +269,18 @@ export function initDarkroom(): void {
   frameNeg?.addEventListener('click', () => shiftFrame(-FRAME_STEP));
   framePos?.addEventListener('click', () => shiftFrame(FRAME_STEP));
   frameReset?.addEventListener('click', () => {
-    frame = { x: 0, y: 0 };
+    framePan.v = 0;
     syncFrameControls();
     updateNickHit();
     requestRender();
   });
   frameSlider?.addEventListener('input', () => {
     const v = Number.parseFloat(frameSlider.value);
-    if (!Number.isFinite(v)) {
-      return;
+    if (Number.isFinite(v)) {
+      framePan.v = Math.max(-1, Math.min(1, v));
+      updateNickHit();
+      requestRender();
     }
-    const range = frameRange(currentTemplate);
-    frame = clampFrame(currentTemplate, {
-      x: currentTemplate.frameAxis === 'x' ? v * range : 0,
-      y: currentTemplate.frameAxis === 'y' ? v * range : 0,
-    });
-    updateNickHit();
-    requestRender();
   });
 
   /* 二维码/公众号显隐：隐藏时预览与导出都不含该信息 */
@@ -314,10 +338,11 @@ export function initDarkroom(): void {
           : WATERMARK_TEMPLATES.find(t => t.frameAxis === 'x');
       if (detected && detected.id !== currentTemplate.id) {
         await switchTemplate(detected, true);
-      } else {
-        syncControls();
-        requestRender();
       }
+      syncCanvasSize();
+      syncControls();
+      updateNickHit();
+      requestRender();
       playDeveloping();
       setStatus(
         `已识别为${loaded.width >= loaded.height ? '横图' : '竖图'}，自动套用${currentTemplate.name.split('·').pop()?.trim() ?? ''}版式`,
@@ -371,13 +396,15 @@ export function initDarkroom(): void {
     const sweep = playSweep();
     try {
       const out = document.createElement('canvas');
+      const fl = frameLayout();
       renderComposition(out, {
         template: currentTemplate,
         templateImage: templateBitmap,
         qrImage: showQr ? qrBitmap : null,
         photo,
         transform,
-        frame,
+        canvas: { w: canvasDims.w, h: canvasDims.h },
+        frame: { dx: fl.dx, dy: fl.dy },
         nickname: nicknameInput.value,
       });
       const blob = await exportImage(out, currentTemplate.output);
@@ -420,12 +447,10 @@ export function initDarkroom(): void {
       templateBitmap = bitmap;
       qrBitmap = qr;
       transform = initialTransform();
-      frame = { x: 0, y: 0 };
+      framePan.v = 0;
       syncFrameControls();
       releaseDownload();
-      canvas.style.aspectRatio = `${template.width} / ${template.height}`;
-      layoutStage();
-      syncAreaCenter();
+      syncCanvasSize();
       syncTplButtons();
       updateNickHit();
       syncControls();
@@ -440,7 +465,7 @@ export function initDarkroom(): void {
 
   /** 舞台尺寸：编辑态下按剩余视口高度最大化 */
   function layoutStage(): void {
-    const aspect = currentTemplate.width / currentTemplate.height;
+    const aspect = canvasDims.w / canvasDims.h;
     const availW = Math.min(window.innerWidth - 32, 920);
     const headH = 56;
     const reserve = window.innerWidth < 768 ? 340 : 220;
@@ -582,7 +607,7 @@ export function initDarkroom(): void {
       return;
     }
     transform = zoomAtTransform({
-      template: currentTemplate,
+      canvas: { ...canvasDims },
       photo,
       transform,
       px: areaCenter.x,
@@ -607,11 +632,12 @@ export function initDarkroom(): void {
     cssToTemplate: () => currentTemplate.width / (canvas.clientWidth || 1),
     drag: (dx, dy, modifiers) => {
       if (modifiers?.shift) {
-        // 水印帧平移（仅 frameAxis 轴向生效；昵称随动，二维码钉角不动）
-        frame = clampFrame(currentTemplate, {
-          x: frame.x + (currentTemplate.frameAxis === 'x' ? dx : 0),
-          y: frame.y + (currentTemplate.frameAxis === 'y' ? dy : 0),
-        });
+        // 水印帧平移（横版沿 y、竖版沿 x；昵称随动，二维码钉角不动）
+        const fl = frameLayout();
+        const css = canvasDims.w / (canvas.clientWidth || 1);
+        const pan = (currentTemplate.frameAxis === 'y' ? dy : dx) / css / (fl.range || 1);
+        framePan.v = Math.max(-1, Math.min(1, framePan.v + pan));
+        syncFrameControls();
         updateNickHit();
       } else {
         transform = normalize({ ...transform, x: transform.x + dx, y: transform.y + dy });
@@ -621,7 +647,7 @@ export function initDarkroom(): void {
     },
     zoomAt: (px, py, factor) => {
       transform = zoomAtTransform({
-        template: currentTemplate,
+        canvas: { ...canvasDims },
         photo,
         transform,
         px,
