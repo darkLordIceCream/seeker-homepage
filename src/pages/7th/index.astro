@@ -98,14 +98,10 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
         </div>
       </section>
 
-      <!-- 03 / 同行之路：品牌合作（钉住——关系网络在轨道内生长后驻留） -->
+      <!-- 03 / 同行之路：品牌合作（卡片墙，滚动渐显） -->
       <section aria-labelledby="sec-road" class="arc-sec">
-        <div class="story-track story-track--road" data-story-scene="road">
-          <div class="story-stage">
-            <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
-            <SharedRoad />
-          </div>
-        </div>
+        <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
+        <SharedRoad />
       </section>
 
       <!-- 04 / 七载光影：留光成物（成员巨片幻灯片墙）+ 暗房（LEAVE YOUR FRAME） -->
@@ -340,10 +336,6 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 320vh; /* 三段项目记忆：进入 → 驻留 → 退为残影的重叠时间轴 */
   }
 
-  .story-on .story-track--road {
-    height: 430vh; /* 品牌星系：镜头逐颗掠过 13 颗品牌行星（聚焦+驻留+穿出） */
-  }
-
   .story-on .story-track--posters {
     height: 320vh; /* 入场装框 + 驻留（轮播由定时器接管，滚动只管进出） */
   }
@@ -355,10 +347,6 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
 
     .story-on .story-track--projects {
       height: 250vh;
-    }
-
-    .story-on .story-track--road {
-      height: 350vh;
     }
 
     .story-on .story-track--posters {
