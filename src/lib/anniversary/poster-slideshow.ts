@@ -14,14 +14,14 @@ import { POSTERS } from '@/data/anniversary/posters';
 
 /** 每帧驻留时长（含换帧之外的全部停留） */
 const INTERVAL_MS = 2000;
-/** 换帧两段各自的时长：旧帧淡出 / 新帧淡入（须与组件内 .pss-img 的 transition 一致） */
-const FADE_MS = 450;
+/** 换帧滑动时长（旧帧滑出与新帧滚入同时进行；与 CSS transition 时长一致） */
+const SWAP_MS = 550;
 /** 向前预取张数 */
 const PRELOAD_AHEAD = 2;
 /** 署名切换的微淡出时长 */
 const CAP_SWAP_MS = 180;
-/** 换帧全程（淡出+淡入），从驻留周期内扣除，保证「每 INTERVAL_MS 一张」 */
-const SWAP_TOTAL_MS = FADE_MS * 2;
+/** 换帧计入驻留周期：schedule 延迟 = INTERVAL_MS - SWAP_MS，严格「每 INTERVAL_MS 一张」 */
+const SWAP_TOTAL_MS = SWAP_MS;
 /** 单帧解码等待上限：防止个别环境 decode() 永不返回把轮播锁死 */
 const DECODE_TIMEOUT_MS = 1500;
 /** 缓右漂移速度（px/ms ≈ 13px/s）：钉住时照片缓缓向右飘 */
@@ -137,7 +137,7 @@ export function initPosterSlideshow(): void {
     back.src = poster.src;
     back.alt = `Seeker 七周年纪念海报 · @${poster.author}`;
     // decode() 等待加超时上限：个别环境 decode 可能永不返回（卡死轮播），
-    // 超时则照常换帧（fade 的 450ms 还能给解码留缓冲）；失败帧照旧跳过
+    // 超时则照常换帧（滑动动画还能给解码留缓冲）；失败帧照旧跳过
     const decoded = ((): Promise<void> => {
       if (typeof back.decode === 'function') {
         return back.decode();
@@ -160,32 +160,41 @@ export function initPosterSlideshow(): void {
       schedule();
       return;
     }
-    // 两段式换帧（暗房换照）：旧帧先整幅淡出，新帧再淡入——
-    // 不用交叉淡入，横竖幅混排时新旧同框会叠出拼贴感、署名归属混淆。
-    // 漂移在「空场瞬间」（旧帧已隐、新帧未现）归零：若在新帧可见后才归零，
-    // 整个放映层会向左突跳一截（用户实测踩坑）
+    // 滑动换帧（走带）：旧帧加速右滑出、新帧自左加速滚入——与板块
+    // 「光向右流动」的运动语言一致（入场左飘入、驻留缓右漂、离场右飘出）。
+    // 漂移位置守恒：放映层此刻带着漂移 d，归零会让可见画面左跳 d px——
+    // 先把旧帧瞬置 +d 抵消（视觉不变），再让两帧从补偿后的位置起滑
+    const d = drift;
+    resetDrift();
+    if (d > 0) {
+      front.style.transition = 'none';
+      front.style.transform = `translateX(${d.toFixed(1)}px)`;
+    }
+    back.classList.add('is-entering');
+    void back.offsetWidth; // 固定瞬置起点（旧帧补偿位 / 新帧左缘外），再开过渡
+    if (d > 0) {
+      front.style.transition = '';
+      front.style.transform = '';
+    }
+    front.classList.remove('is-current');
     front.classList.add('is-outgoing');
+    back.classList.remove('is-entering');
+    back.classList.add('is-current');
     window.setTimeout(() => {
-      resetDrift();
-      front.classList.remove('is-current', 'is-outgoing');
-      back.classList.add('is-incoming');
-      window.setTimeout(() => {
-        back.classList.remove('is-incoming');
-        back.classList.add('is-current');
-        back.removeAttribute('aria-hidden');
-        front.setAttribute('aria-hidden', 'true');
-        const prev = front;
-        front = back;
-        back = prev;
-        index = next;
-        switching = false;
-        updateCaption(index);
-        for (let k = 1; k <= PRELOAD_AHEAD; k++) {
-          preload(index + k);
-        }
-        schedule();
-      }, FADE_MS);
-    }, FADE_MS);
+      front.classList.remove('is-outgoing'); // 回基础态（透明、瞬置，不可见）
+      back.removeAttribute('aria-hidden');
+      front.setAttribute('aria-hidden', 'true');
+      const prev = front;
+      front = back;
+      back = prev;
+      index = next;
+      switching = false;
+      updateCaption(index);
+      for (let k = 1; k <= PRELOAD_AHEAD; k++) {
+        preload(index + k);
+      }
+      schedule();
+    }, SWAP_MS);
   }
 
   // 不做悬停暂停：用户停留观看时鼠标多半停在大海报上，悬停即冻结
