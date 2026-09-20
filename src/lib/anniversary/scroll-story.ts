@@ -242,45 +242,21 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     };
   },
   /**
-   * 03 同行之路：品牌关系网节拍——所有品牌文字节点连接到「合作品牌」枢纽
-   * （排名不分先后：网络本身无序）。滚动依次聚焦每个品牌：节点与连线点亮，
-   * 顶部放大字「@品牌名」、下方稍小字体展开合作文案（跨过相邻段中点即整段
-   * 切换，transition 由 CSS 完成，绝不停在两段之间）。末段点亮「排名不分先后」。
+   * 03 同行之路：品牌卡片墙的两行反向视差（view 模式——不钉住，进度=区块
+   * 穿越视口）。上排随滚动轻微上浮、下排轻微下沉（transform-only，幅度
+   * 克制），两行随滚动呼吸错层；卡片自身的依次浮现交给 data-reveal 约定。
+   * 移动端单列浏览，视差幅度减半。
    */
   road: track => {
-    const nodes = [...track.querySelectorAll<HTMLElement>('[data-road-node]')];
-    const links = [...track.querySelectorAll<HTMLElement>('[data-road-link]')];
-    const focuses = [...track.querySelectorAll<HTMLElement>('[data-road-focus]')];
-    const fineprint = track.querySelector<HTMLElement>('[data-road-fineprint]');
-    const N = Math.min(nodes.length, focuses.length);
-    const SPAN = N > 0 ? 0.94 / N : 1;
-    const HEAD = 0.03;
-    let active = -1;
-    return ({ progress: p }) => {
-      let s = -1;
-      for (let i = 0; i < N; i++) {
-        const q = (p - (HEAD + i * SPAN)) / SPAN;
-        if (q >= -0.5 && q < 1.5 && s < 0) {
-          s = i; // 第一段从进入即生效；段间中点由阈值切换
-        }
+    const top = track.querySelector<HTMLElement>('[data-road-row="top"]');
+    const bottom = track.querySelector<HTMLElement>('[data-road-row="bottom"]');
+    return ({ progress: p, isDesktop }) => {
+      const amp = isDesktop ? 34 : 16;
+      if (top) {
+        top.style.transform = `translateY(${(-amp * p).toFixed(1)}px)`;
       }
-      // 阈值切换：跨过每段中点即切换到下一段（吸附，不停在中间态）
-      s = Math.max(0, Math.min(N - 1, Math.floor((p - HEAD) / SPAN)));
-      if (s === active) {
-        return;
-      }
-      active = s;
-      nodes.forEach((el, i) => {
-        el.classList.toggle('is-active', i === s);
-      });
-      links.forEach((el, i) => {
-        el.classList.toggle('is-active', i === s);
-      });
-      focuses.forEach((el, i) => {
-        el.style.opacity = i === s ? '1' : '0';
-      });
-      if (fineprint) {
-        fineprint.style.opacity = s >= N - 1 ? '1' : '0';
+      if (bottom) {
+        bottom.style.transform = `translateY(${(amp * p).toFixed(1)}px)`;
       }
     };
   },

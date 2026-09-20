@@ -98,14 +98,10 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
         </div>
       </section>
 
-      <!-- 03 / 同行之路：品牌合作（钉住——关系网络在轨道内生长后驻留） -->
+      <!-- 03 / 同行之路：品牌合作（一屏两行卡片墙，滚动视差 + 渐显） -->
       <section aria-labelledby="sec-road" class="arc-sec">
-        <div class="story-track story-track--road" data-story-scene="road">
-          <div class="story-stage">
-            <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
-            <SharedRoad />
-          </div>
-        </div>
+        <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
+        <SharedRoad />
       </section>
 
       <!-- 04 / 七载光影：留光成物（成员巨片幻灯片墙）+ 暗房（LEAVE YOUR FRAME） -->
@@ -340,10 +336,6 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 320vh; /* 三段项目记忆：进入 → 驻留 → 退为残影的重叠时间轴 */
   }
 
-  .story-on .story-track--road {
-    height: 240vh; /* 关系网络生长 + 完成后驻留 */
-  }
-
   /* 舞台内题头收紧：给三行卡腾出一屏（仅此章节作用域） */
   .story-on .story-track--projects :global(.ash) {
     margin-bottom: 0.6rem;
@@ -359,8 +351,35 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     letter-spacing: 0.32em;
   }
 
+  /* 矮视口：题头再收一档 + 压缩舞台上下留白，保证三卡完整可见 */
+  @media (max-height: 780px) {
+    .story-on .story-track--projects .story-stage {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .story-on .story-track--projects :global(.ash) {
+      margin-bottom: 0.3rem;
+      gap: 0.25rem;
+    }
+
+    .story-on .story-track--projects :global(.ash-zh) {
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    }
+  }
+
   .story-on .story-track--posters {
     height: 320vh; /* 入场装框 + 驻留（轮播由定时器接管，滚动只管进出） */
+  }
+
+  /* 03 卡片墙：题头收紧，让两行 13 卡与题头同屏 */
+  .story-on .sr :global(.ash) {
+    margin-bottom: 0.9rem;
+    gap: 0.4rem;
+  }
+
+  .story-on .sr :global(.ash-zh) {
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
   }
 
   @media (max-width: 48rem) {
@@ -370,10 +389,6 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
 
     .story-on .story-track--projects {
       height: 250vh;
-    }
-
-    .story-on .story-track--road {
-      height: 200vh;
     }
 
     .story-on .story-track--posters {
