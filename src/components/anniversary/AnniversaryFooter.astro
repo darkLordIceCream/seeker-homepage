@@ -3,6 +3,17 @@
  * 【SEEKER 07 · 纪念册页脚】不复制主站 Footer——独立出版物的极简收尾。
  * 光影七载，看见彼此。/ 2019 — 2026 / 拍一张照片，交一个朋友。/ © 2026 SEEKER
  */
+
+// 七周年项目制作名单：[角色, 名字]，按用户给定顺序排列
+const credits: Array<[string, string]> = [
+  ['周年文章', '赵老师'],
+  ['抽奖运营', '月某人 Ted'],
+  ['周年标语', 'SteveZhang LEO'],
+  ['地图打卡', 'LEO'],
+  ['专题访谈', 'WHITE-SCORE 田田'],
+  ['海报设计', '肖默（哈姐）'],
+  ['网站设计', '黑暗之王'],
+];
 ---
 
 <footer class="af">
@@ -16,6 +27,22 @@
       <a href="/7th/#where-we-are">WHERE WE ARE</a>
       <a href="/7th/#leave-your-frame">DARKROOM</a>
     </nav>
+    <section aria-label="七周年制作名单" class="af-credits">
+      <p class="af-credits-head">CREDITS · 制作名单</p>
+      <ul class="af-credits-list" role="list">
+        {
+          credits.map(([role, name]) => (
+            <li>
+              <span class="af-credit-role">{role}</span>
+              <span class="af-credit-sep" aria-hidden="true">
+                丨
+              </span>
+              <span class="af-credit-name">{name}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
     <p class="af-copy">© 2026 SEEKER</p>
   </div>
 </footer>
@@ -88,6 +115,46 @@
   }
 
   .af-links a:hover {
+    color: var(--anniv-fg);
+  }
+
+  .af-credits {
+    margin-top: 2.6rem;
+  }
+
+  .af-credits-head {
+    margin: 0;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--anniv-accent);
+  }
+
+  .af-credits-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem 1.8rem;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .af-credit-role {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--anniv-muted);
+  }
+
+  .af-credit-sep {
+    font-size: 0.8rem;
+    color: var(--anniv-faint);
+  }
+
+  .af-credit-name {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
     color: var(--anniv-fg);
   }
 
