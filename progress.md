@@ -1803,3 +1803,11 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 移动端单列加 order:-1 保持文字在上；375px 零溢出
 - 验证：驻留截图（左图右文、右侧文字零遮挡）；离场 transform
   -538px 向左 ✓；./init.sh 全绿；提交流：revert b717751 → 本改动
+
+### 走带去框改边缘渐隐（2026-09-20 用户反馈续六）
+
+- 用户反馈框式裁切限制照片、视觉差；要求改为左右淡出淡入的呼吸感，淡出位置正好在文字处、不影响文字
+- 实现：删 .pss-clip 裁切层；.pss-track 加 mask-image 线性渐隐（transparent 0 →
+  #000 10vw → #000 52vw → transparent 88vw，mask-size 130vw
+  no-repeat——mask 盒比 track 宽、右侧渐变区正好铺在文字列下方：照片延展过放映区右缘后渐淡、到文字处近乎透明）；mask 随 stage 走，入场/离场大编排不受淡出干扰；-webkit- 前缀兼容 Safari
+- 验证：驻留截图（右缘渐隐、文字零遮挡）；换帧滑动中截图（新帧右入渐显、旧帧左出渐隐、间隔自然）；拖拽/自动拨动不受影响；./init.sh 全绿
