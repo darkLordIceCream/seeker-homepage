@@ -248,10 +248,10 @@
     },
     {
       "id": "feat-032",
-      "name": "追光印记深色展示卡 + 逐个登场特写（舞台式）",
-      "description": "按用户反馈定稿：卡片深色化（anniv-surface 深蓝卡体 + anniv-bg 深底照片区 contain 不裁切 + 主题化 caption）；编排改为站位定格后逐个登场特写——Part1/2/3 依次 3D 放大登场（translateZ +180、scale ×1.32、向屏幕中心偏 40px 叠加相邻卡、提亮置顶），下一个登场时前一个原路返回站位，三个登完对称退回后方 + 集体暗场谢幕；focus 用 smooth(ramp) 窗口插值保持快速/反向滚动严格连续",
+      "name": "追光印记舞台化定稿：顺序登场 + 一起退场（深色展示卡）",
+      "description": "按用户反馈定稿简化：三卡纵向三行站位，从光影札记滑入时按顺序依次从后方走上台（Part1 先现，错峰 0.06），台上定格供阅读（desc 两行摘要，全文在项目页），0.68-0.84 三卡一起同步退场（退回后方深处并暗场）；卡片为深色展示卡——图上文下横排、照片区深底 contain 完整显示不裁切、完整 PART/标题/描述/CTA 内容；题头在 projects 轨道作用域内收紧保证一屏",
       "status": "done",
-      "evidence": "commit feat/7th-anniversary；headless 截图（站位定格/P1 登场特写叠加 P2/P3 登场特写/谢幕 opacity 0.01）+ 移动端 375px 登场成立零溢出；./init.sh 全绿"
+      "evidence": "commit feat/7th-anniversary；桌面定格截图（三行卡 217-874px 一屏内、照片完整）+ 移动端零溢出 + ./init.sh 全绿"
     }
   ]
 }

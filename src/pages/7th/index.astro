@@ -336,6 +336,21 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 320vh; /* 三段项目记忆：进入 → 驻留 → 退为残影的重叠时间轴 */
   }
 
+  /* 舞台内题头收紧：给三行卡腾出一屏（仅此章节作用域） */
+  .story-on .story-track--projects :global(.ash) {
+    margin-bottom: 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .story-on .story-track--projects :global(.ash-zh) {
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+  }
+
+  .story-on .story-track--projects :global(.ash-en) {
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+  }
+
   .story-on .story-track--posters {
     height: 320vh; /* 入场装框 + 驻留（轮播由定时器接管，滚动只管进出） */
   }
