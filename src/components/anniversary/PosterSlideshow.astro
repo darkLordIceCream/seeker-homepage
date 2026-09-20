@@ -90,7 +90,7 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     font-size: clamp(0.84rem, 1.35vw, 1rem);
     line-height: 1.95;
     letter-spacing: 0.05em;
-    color: var(--anniv-muted);
+    color: color-mix(in srgb, var(--anniv-fg) 88%, transparent);
   }
 
   .pss-stay {
@@ -149,11 +149,13 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
   }
 
   /* 放映区：占满右列（滚动引擎写 stage 外层，走带物理引擎写 track 内槽位）；
-     空框 ghost 是 stage 的静止兄弟层，覆盖同一区域 */
+     overflow 裁切让走带/飘入飘出都框在右列内——照片永不进入左列文字区
+     （用户反馈文字被亮色照片压得不显眼）；空框 ghost 是静止兄弟层 */
   .pss-right {
     position: relative;
     z-index: 1;
     height: min(78vh, 50rem);
+    overflow: hidden;
   }
 
   .pss-stage {

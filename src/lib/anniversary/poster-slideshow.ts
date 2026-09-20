@@ -31,6 +31,8 @@ const AUTO_NUDGE_V = 420;
 const PRELOAD_AHEAD = 2;
 /** 署名切换的微淡出时长 */
 const CAP_SWAP_MS = 180;
+/** 走带步长系数：格距略宽于放映区，相邻照片不露进可视区（裁切框内只见当前帧） */
+const STEP_FACTOR = 1.15;
 
 const mod = (n: number, m: number): number => ((n % m) + m) % m;
 const pad3 = (n: number): string => String(n).padStart(3, '0');
@@ -52,7 +54,7 @@ export function initPosterSlideshow(): void {
     return;
   }
 
-  let step = track.clientWidth || 1;
+  let step = (track.clientWidth || 1) * STEP_FACTOR;
   /** 带偏移（px）：带位置 = 格号 * step + band，向右为正 */
   let band = 0;
   let vel = 0;
@@ -230,7 +232,7 @@ export function initPosterSlideshow(): void {
   io.observe(track);
 
   window.addEventListener('resize', () => {
-    const w = track.clientWidth || 1;
+    const w = (track.clientWidth || 1) * STEP_FACTOR;
     curG = Math.round(-band / step);
     step = w;
     band = -curG * step;
