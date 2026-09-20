@@ -1,23 +1,32 @@
 ---
 /**
- * 【SEEKER 07 · 章节眉题】编号 / 04 + 中文名大字（衬线）+ 英文辅助小字。
+ * 【SEEKER 07 · 章节眉题】编号 / 04 + 「中文名丨副题」大字（衬线）+ 英文辅助小字。
  * 规范 #83：大号中文标题为主，英文只是辅助视觉语言。
  */
 interface Props {
   /** 章节号，如 '01' */
   no: string;
-  /** 中文章节名（主标题） */
+  /** 中文章节名（主标题），如「光影札记」 */
   zh: string;
+  /** 中文副题（「丨」之后，稍小一号），如「主理人寄语」 */
+  sub?: string;
   /** 英文辅助题（小字） */
   en: string;
 }
 
-const { no, zh, en } = Astro.props;
+const { no, zh, sub, en } = Astro.props;
 ---
 
 <div class="ash">
   <span aria-hidden="true" class="ash-meta">{no} / 04</span>
-  <h2 class="ash-zh">{zh}</h2>
+  <h2 class="ash-zh">
+    {zh}{sub && (
+      <>
+        <span aria-hidden="true" class="ash-div">丨</span>
+        <span class="ash-sub">{sub}</span>
+      </>
+    )}
+  </h2>
   <span class="ash-en">{en}</span>
 </div>
 
@@ -45,6 +54,18 @@ const { no, zh, en } = Astro.props;
     letter-spacing: 0.12em;
     line-height: 1.25;
     color: var(--anniv-fg);
+  }
+
+  .ash-div {
+    margin: 0 0.18em;
+    color: var(--anniv-faint);
+  }
+
+  .ash-sub {
+    font-size: 0.52em;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--anniv-muted);
   }
 
   .ash-en {
