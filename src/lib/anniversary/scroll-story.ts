@@ -115,7 +115,8 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     }
     let active = -1;
-    let chaseTimer = 0;
+    let locked = false;
+    let settleTimer = 0;
     const applySeg = (seg: number): void => {
       beats.forEach((el, i) => {
         // 落款拍（最后一拍）：前一段压暗 0.25 作背景，其余非当前拍整段退场
@@ -125,26 +126,6 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         el.style.opacity = opacity.toFixed(3);
         el.style.transform = `translateY(${ty}px)`;
       });
-    };
-    // 追赶链（时间驱动）：滚动只更新目标段，一次只推进/回退一段——
-    // 不管滑多长都逐段过（每段 520ms），滚动停止后也会追完
-    const chase = (target: number): void => {
-      window.clearTimeout(chaseTimer);
-      const stepTo = (): void => {
-        if (active === target) {
-          return;
-        }
-        active += target > active ? 1 : -1;
-        applySeg(active);
-        if (active !== target) {
-          chaseTimer = window.setTimeout(() => {
-            chase(target);
-          }, 520);
-        }
-      };
-      chaseTimer = window.setTimeout(() => {
-        stepTo();
-      }, 40);
     };
     return ({ progress: p }) => {
       if (portrait) {
@@ -164,9 +145,26 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         applySeg(active);
         return;
       }
-      if (target !== active) {
-        chase(target);
+      if (locked) {
+        // 本次滚动手势已消费一段：等滚动静止后解锁，下次手势再切一段
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(() => {
+          locked = false;
+        }, 280);
+        return;
       }
+      if (target === active) {
+        return;
+      }
+      // 一次一段：本次手势只推进/回退一段，然后锁定到滚动静止——
+      // 滑多滑少都只过一段话，绝不连跳、绝不延迟
+      active += target > active ? 1 : -1;
+      locked = true;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        locked = false;
+      }, 280);
+      applySeg(active);
     };
   },
 
