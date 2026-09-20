@@ -1832,3 +1832,11 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   +1.5°），自动拨动同步转回内容右移（target = band +
   step、冲量 +420，新帧自左滚入）——入场左入、换帧右流、离场右出，运动语言统一向右
 - 验证：离场 transform +538.7px 向右 ✓；./init.sh 全绿
+
+### 走带 3D 纵深（2026-09-20 用户反馈续十）
+
+- 用户要求滑出的照片「稍微缩小、变暗、往后退」：物理循环 apply() 按槽偏离中心的距离写 norm（0=居中 1=一格远）——scale
+  1→0.85、亮度 1→0.6（CSS 变量 --pss-dim 挂在 filter
+  brightness 上，drop-shadow 留 CSS 与主题联动）、z-index
+  2/1 分层；拖拽跟手时同样实时缩放变暗 = 翻相册的进深感，无需任何 CSS transition
+- 验证：换帧中点截图（滑出帧缩小变暗沉下层、新帧全亮前景）；./init.sh 全绿

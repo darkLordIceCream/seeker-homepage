@@ -189,7 +189,9 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     object-fit: contain;
     will-change: transform;
     pointer-events: none;
-    filter: drop-shadow(0 18px 60px rgba(2, 8, 20, 0.6));
+    /* 3D 纵深：偏离中心的帧由物理引擎写 --pss-dim（1 → 0.6），
+       亮度随偏移降低 = 往后退；drop-shadow 留在 CSS 与主题联动 */
+    filter: drop-shadow(0 18px 60px rgba(2, 8, 20, 0.6)) brightness(var(--pss-dim, 1));
   }
 
   :global([data-theme='light']) .pss-img {

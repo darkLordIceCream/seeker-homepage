@@ -98,9 +98,16 @@ export function initPosterSlideshow(): void {
     for (let j = 0; j < slots.length; j++) {
       const g = gi[j];
       const img = slots[j];
-      if (g !== undefined && img) {
-        img.style.transform = `translate3d(${(g * step + band).toFixed(1)}px, 0, 0)`;
+      if (g === undefined || !img) {
+        continue;
       }
+      const x = g * step + band;
+      // 3D 纵深：偏离中心越远越缩小、越暗、越靠下层（滑出 = 往后退）
+      const norm = Math.min(1, Math.abs(x) / step);
+      const scale = 1 - 0.15 * norm;
+      img.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) scale(${scale.toFixed(4)})`;
+      img.style.zIndex = norm < 0.5 ? '2' : '1';
+      img.style.setProperty('--pss-dim', (1 - 0.4 * norm).toFixed(3));
     }
   };
 
