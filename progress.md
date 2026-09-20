@@ -1773,3 +1773,19 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 修复过程中的 bug：滑动版换帧初版漏移除旧帧 is-current（旧帧永久叠在新帧上，z2 双层同显）——补 front.classList.remove('is-current')；左列 z-index 提到 3（滑动帧从文字后穿过时双保险）
 - 验证：换帧中两帧位移矩阵采样：新帧 -797→-379→0（每 100ms 位移 9→37→69→
   112→191，标准加速）、旧帧 19(漂移补偿位)→427→出屏同步加速；类生命周期 CUR→OUT→清理、周期 2.07s；中间帧截图确认走带同屏；./init.sh 全绿
+
+### 轮播重构：可抓取拖动的物理走带（2026-09-20 用户反馈续三）
+
+- 用户反馈滑动换帧「太生硬」，要求「抓住照片拖动」的手感：1:1 跟手、自然惯性、轻微阻尼、连续位移动画、移动端流畅
+- 重构 PosterSlideshow（双槽淡出/滑动换帧 → 三槽无限循环走带）：
+  - DOM：track 内 3 个槽位（data-poster-slot），槽 j 持真实格号 gi[j]，带位置 =
+    gi[j]*step +
+    band；每帧 ensureWindow 把窗口 [g0-1,g0+1] 外最远的槽重派到缺失格（无限循环）；touch-action:
+    pan-y + grab 光标
+  - 物理引擎（rAF 逐帧写 transform，零 CSS
+    transition）：拖拽 1:1 跟手（pointermove 直写 band，120ms 速度采样窗）；松手速度投影 0.15s 定目标格，欠阻尼弹簧吸附（ω=9、ζ=0.78 轻微过冲回弹）；停留 2s 自动拨动走同一弹簧（420px/s 初速冲量，像手指轻拨）；caption/进度线 settle 时更新
+  - 删除：漂移层（物理走带取代）、CSS 状态类过渡、is-incoming/outgoing 体系
+- 修过的坑：初始相邻槽未绑图（ensureWindow 只管格覆盖不管绑定，显式补赋）；function 声明提升致 guard 窄化失效（改 const 箭头函数）；headless 低帧率下 rAF
+  dt 恒上限，弹簧「过冲大」为离散采样伪影（真机 60fps 过冲 ~2%）
+- 验证：拖 150px（不足半格）松手弹回当前格 +
+  caption 正常；拨动方向正确（内容右移、新帧从左入）；三槽窗口覆盖 + 循环重派；移动端零溢出；滚动编排回归（入场/离场/空框不受影响）；./init.sh 全绿
