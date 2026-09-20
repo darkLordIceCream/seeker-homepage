@@ -161,9 +161,12 @@ export function initPosterSlideshow(): void {
       return;
     }
     // 两段式换帧（暗房换照）：旧帧先整幅淡出，新帧再淡入——
-    // 不用交叉淡入，横竖幅混排时新旧同框会叠出拼贴感、署名归属混淆
+    // 不用交叉淡入，横竖幅混排时新旧同框会叠出拼贴感、署名归属混淆。
+    // 漂移在「空场瞬间」（旧帧已隐、新帧未现）归零：若在新帧可见后才归零，
+    // 整个放映层会向左突跳一截（用户实测踩坑）
     front.classList.add('is-outgoing');
     window.setTimeout(() => {
+      resetDrift();
       front.classList.remove('is-current', 'is-outgoing');
       back.classList.add('is-incoming');
       window.setTimeout(() => {
@@ -176,7 +179,6 @@ export function initPosterSlideshow(): void {
         back = prev;
         index = next;
         switching = false;
-        resetDrift();
         updateCaption(index);
         for (let k = 1; k <= PRELOAD_AHEAD; k++) {
           preload(index + k);

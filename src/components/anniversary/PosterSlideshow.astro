@@ -27,6 +27,7 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     <p class="pss-lead" data-poster-lead>
       过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
       以下每一帧，都是一个人的七周年。
+      <span class="pss-stay">✦ 请停驻欣赏</span>
     </p>
     <div class="pss-cap" data-poster-cap>
       <span class="pss-no">
@@ -93,6 +94,19 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     line-height: 1.95;
     letter-spacing: 0.05em;
     color: var(--anniv-muted);
+  }
+
+  .pss-stay {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: var(--anniv-fg);
+  }
+
+  .pss-stay::first-letter {
+    color: var(--anniv-accent);
   }
 
   .pss-cap {
