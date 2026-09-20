@@ -146,35 +146,63 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：舞台式走位（三卡纵向三行站位，固定不走位顺序）。
-   * 从光影札记滑入：三卡按顺序依次从各自后方（深处、缩小、变暗）走上台前
-   * 定格——Part 1 先现、Part 2 跟上、Part 3 最后；台上驻留供阅读；
-   * 然后三卡一起退场（同步退回后方深处并暗场消失），轨道释放接同行之路。
-   * 所有状态由 progress 直接计算（无 transition/定时器），快速与反向滚动
-   * 严格连续。
+   * 02 追光印记：空间行走式叙事——三块方形展板同存于一个空间，滚动 = 相机
+   * 沿微 S 展道前移（progress 连续映射相机格位 cam，经停驻点有「面对」停留）。
+   * 每块展板相对相机的深度 rel = i - cam 连续变化：
+   *   rel 0 = 面前（最大最亮最清晰）→ 负 = 身后（放大穿过、渐淡消失）
+   *   → 正 = 前方（近大远小，远处微光等待）。
+   * 遮挡由空间深度自然产生：面对 Part 01 时，Part 02 在其后方露出一点——
+   * 用户会知道「前面还有一个」，而不是「网页要切到下一张卡片」。
+   * 空间错位克制（微 S 走道：左 → 中 → 右），走完 Part 03 后整个展厅
+   * 变暗退出，自然接 03 同行之路。所有状态由 progress 直接计算（无
+   * transition/定时器），快速与反向滚动严格连续。
    */
   projects: track => {
-    const cards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
-    return ({ progress: P, isDesktop }) => {
-      const depth = isDesktop ? 480 : 320; // 后方站位深度（perspective 产生近大远小）
-      for (let i = 0; i < cards.length; i++) {
-        const el = cards[i];
-        if (!el) {
-          continue;
+    const boards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
+    // 行走路径表：progress → 相机格位（停驻点 = 每块展板面前）
+    const PATH: [number, number][] = [
+      [0, -0.35],
+      [0.05, 0],
+      [0.26, 0],
+      [0.38, 1],
+      [0.57, 1],
+      [0.69, 2],
+      [0.86, 2],
+      [1, 2.9],
+    ];
+    // 展道空间错位（克制）：左 → 中 → 右
+    const PAN = [
+      { x: -6, y: 0 },
+      { x: 0, y: -2 },
+      { x: 6, y: 1 },
+    ];
+    const camAt = (P: number): number => {
+      for (let k = 1; k < PATH.length; k++) {
+        const a = PATH[k - 1];
+        const b = PATH[k];
+        if (a && b && P <= b[0]) {
+          return a[1] + (b[1] - a[1]) * smooth(ramp(P, a[0], b[0]));
         }
-        // 顺序出现：Part 1 先现，Part 2/3 依次跟上（错峰 0.06）
-        const off = i * 0.06;
-        const walkIn = smooth(ramp(P, off, 0.2 + off));
-        // 一起退场：三卡同步退回后方深处并暗场消失（无错峰）
-        const walkOut = smooth(ramp(P, 0.68, 0.84));
-        const on = walkIn * (1 - walkOut); // 0=后方深处 1=台前定格
-        const z = -depth * (1 - on);
-        const dim = 1 - 0.68 * (1 - on);
-        const opacity = 0.15 + 0.85 * on;
-        el.style.opacity = opacity.toFixed(3);
-        el.style.transform = `translate3d(0, ${(26 * (1 - on)).toFixed(1)}px, ${z.toFixed(1)}px) scale(${(0.82 + 0.18 * on).toFixed(4)})`;
-        el.style.setProperty('--ps-dim', dim.toFixed(3));
       }
+      const last = PATH[PATH.length - 1];
+      return last ? last[1] : 0;
+    };
+    return ({ progress: P, isDesktop }) => {
+      const step = (isDesktop ? 92 : 105) * (window.innerWidth / 100); // 板间距 px
+      const exit = smooth(ramp(P, 0.9, 1)); // 走过 Part 03 后展厅整体变暗退出
+      boards.forEach((el, i) => {
+        const pan = PAN[i] ?? { x: 0, y: 0 };
+        const rel = i - camAt(P); // <0 身后（已面对过） >0 前方（等待）
+        const away = Math.abs(rel);
+        // 穿过身后渐淡（不穿模）；前方始终存在——远处微光等待
+        const passed = rel < -0.06 ? Math.min(1, (-rel - 0.06) / 0.42) : 0;
+        const opacity = (1 - 0.92 * passed) * (1 - 0.45 * exit);
+        const dim = Math.max(0.55, 1 - away * 0.42); // 远处微光等待，可辨识但不抢戏
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `translate3d(${pan.x.toFixed(1)}vw, ${pan.y.toFixed(1)}vh, ${(-rel * step).toFixed(1)}px)`;
+        el.style.zIndex = String(60 - Math.round(rel * 30));
+        el.style.setProperty('--ps-dim', dim.toFixed(3));
+      });
     };
   },
   /**
@@ -217,6 +245,58 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         const s = ramp(p, 0.95, 1);
         ghost.style.opacity = (g * (1 - s)).toFixed(3);
         ghost.style.transform = `scale(${(1 - 0.06 * s).toFixed(4)})`;
+      }
+    };
+  },
+
+  /**
+   * 03 同行之路：关系网络在钉住轨道内逐渐展开
+   * （SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长），
+   * 完成于 ~0.72，尾部驻留「待归档」占位后解锁下一章。
+   */
+  road: track => {
+    const center = track.querySelector<HTMLElement>('[data-road-center]');
+    const h1 = track.querySelector<HTMLElement>('[data-road-h1]');
+    const left = track.querySelector<HTMLElement>('[data-road-left]');
+    const h2 = track.querySelector<HTMLElement>('[data-road-h2]');
+    const right = track.querySelector<HTMLElement>('[data-road-right]');
+    const v1 = track.querySelector<HTMLElement>('[data-road-v1]');
+    const top = track.querySelector<HTMLElement>('[data-road-top]');
+    const v2 = track.querySelector<HTMLElement>('[data-road-v2]');
+    const bottom = track.querySelector<HTMLElement>('[data-road-bottom]');
+    return ({ progress: p }) => {
+      if (center) {
+        const t = ramp(p, 0.03, 0.16);
+        center.style.opacity = t.toFixed(3);
+        center.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
+      }
+      if (h1) {
+        h1.style.opacity = '1';
+        h1.style.transform = `scaleX(${ramp(p, 0.16, 0.34).toFixed(3)})`;
+      }
+      if (left) {
+        left.style.opacity = ramp(p, 0.34, 0.46).toFixed(3);
+      }
+      if (h2) {
+        h2.style.opacity = '1';
+        h2.style.transform = `scaleX(${ramp(p, 0.18, 0.36).toFixed(3)})`;
+      }
+      if (right) {
+        right.style.opacity = ramp(p, 0.36, 0.48).toFixed(3);
+      }
+      if (v1) {
+        v1.style.opacity = '1';
+        v1.style.transform = `scaleY(${ramp(p, 0.48, 0.6).toFixed(3)})`;
+      }
+      if (top) {
+        top.style.opacity = ramp(p, 0.6, 0.7).toFixed(3);
+      }
+      if (v2) {
+        v2.style.opacity = '1';
+        v2.style.transform = `scaleY(${ramp(p, 0.5, 0.62).toFixed(3)})`;
+      }
+      if (bottom) {
+        bottom.style.opacity = ramp(p, 0.62, 0.72).toFixed(3);
       }
     };
   },

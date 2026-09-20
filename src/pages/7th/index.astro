@@ -98,10 +98,14 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
         </div>
       </section>
 
-      <!-- 03 / 同行之路：品牌合作（卡片墙，滚动渐显） -->
+      <!-- 03 / 同行之路：品牌合作（钉住——关系网络在轨道内生长后驻留） -->
       <section aria-labelledby="sec-road" class="arc-sec">
-        <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
-        <SharedRoad />
+        <div class="story-track story-track--road" data-story-scene="road">
+          <div class="story-stage">
+            <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
+            <SharedRoad />
+          </div>
+        </div>
       </section>
 
       <!-- 04 / 七载光影：留光成物（成员巨片幻灯片墙）+ 暗房（LEAVE YOUR FRAME） -->
@@ -336,6 +340,10 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 320vh; /* 三段项目记忆：进入 → 驻留 → 退为残影的重叠时间轴 */
   }
 
+  .story-on .story-track--road {
+    height: 240vh; /* 关系网络生长 + 完成后驻留 */
+  }
+
   /* 舞台内题头收紧：给三行卡腾出一屏（仅此章节作用域） */
   .story-on .story-track--projects :global(.ash) {
     margin-bottom: 0.6rem;
@@ -362,6 +370,10 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
 
     .story-on .story-track--projects {
       height: 250vh;
+    }
+
+    .story-on .story-track--road {
+      height: 200vh;
     }
 
     .story-on .story-track--posters {
