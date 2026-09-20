@@ -115,7 +115,37 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     }
     let active = -1;
-    let lastSwap = 0;
+    let chaseTimer = 0;
+    const applySeg = (seg: number): void => {
+      beats.forEach((el, i) => {
+        // 落款拍（最后一拍）：前一段压暗 0.25 作背景，其余非当前拍整段退场
+        const dim = seg === beats.length - 1 && i === seg - 1 ? 0.25 : 0;
+        const opacity = i === seg ? 1 : dim;
+        const ty = i === seg ? 0 : i < seg ? -14 : 16;
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `translateY(${ty}px)`;
+      });
+    };
+    // 追赶链（时间驱动）：滚动只更新目标段，一次只推进/回退一段——
+    // 不管滑多长都逐段过（每段 520ms），滚动停止后也会追完
+    const chase = (target: number): void => {
+      window.clearTimeout(chaseTimer);
+      const stepTo = (): void => {
+        if (active === target) {
+          return;
+        }
+        active += target > active ? 1 : -1;
+        applySeg(active);
+        if (active !== target) {
+          chaseTimer = window.setTimeout(() => {
+            chase(target);
+          }, 520);
+        }
+      };
+      chaseTimer = window.setTimeout(() => {
+        stepTo();
+      }, 40);
+    };
     return ({ progress: p }) => {
       if (portrait) {
         const t = ramp(p, 0.12, 0.26);
@@ -123,34 +153,20 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         portrait.style.opacity = t.toFixed(3);
         portrait.style.transform = `scale(${(1 + 0.04 * zoom).toFixed(4)})`;
       }
-      let s = 0;
+      let target = 0;
       for (const th of thresholds) {
         if (p >= th) {
-          s++;
+          target++;
         }
       }
-      if (s === active) {
+      if (active === -1) {
+        active = target;
+        applySeg(active);
         return;
       }
-      // 一次一段锁：不管滑多长，每次只推进/回退一段（首帧直接就位）；
-      // 快速滑过时按 520ms 节奏逐段追上，绝不跳段
-      const now = performance.now();
-      if (active !== -1) {
-        if (now - lastSwap < 520) {
-          return;
-        }
-        s = s > active ? active + 1 : active - 1;
+      if (target !== active) {
+        chase(target);
       }
-      lastSwap = now;
-      active = s;
-      beats.forEach((el, i) => {
-        // 落款拍（最后一拍）：前一段压暗 0.25 作背景，其余非当前拍整段退场
-        const dim = s === beats.length - 1 && i === s - 1 ? 0.25 : 0;
-        const opacity = i === s ? 1 : dim;
-        const ty = i === s ? 0 : i < s ? -14 : 16;
-        el.style.opacity = opacity.toFixed(3);
-        el.style.transform = `translateY(${ty}px)`;
-      });
     };
   },
 
@@ -192,7 +208,7 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     // 拍切换边界（progress）：面对三段停留均匀铺在行走轨道上
     const EDGE = [0.18, 0.42, 0.68];
     let beat = -1;
-    let lastAt = 0;
+    let chaseTimer = 0;
     const applyBeat = (b: number, isDesktop: boolean): void => {
       const step = (isDesktop ? 92 : 105) * (window.innerWidth / 100); // 板间距 px
       const exit = b >= 3 ? 1 : 0; // 末拍：三卡一起退场暗场
@@ -211,25 +227,41 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         el.style.setProperty('--ps-dim', dim.toFixed(3));
       });
     };
+    // 追赶链（时间驱动，与滚动解耦）：滚动只更新目标拍，追赶链按 620ms/段
+    // 逐段推进——滚动停止后也会追完，绝不冻在中间拍
+    const chase = (target: number, isDesktop: boolean): void => {
+      window.clearTimeout(chaseTimer);
+      const stepTo = (): void => {
+        if (beat === target) {
+          return;
+        }
+        beat += target > beat ? 1 : -1;
+        applyBeat(beat, isDesktop);
+        if (beat !== target) {
+          chaseTimer = window.setTimeout(() => {
+            chase(target, isDesktop);
+          }, 620);
+        }
+      };
+      chaseTimer = window.setTimeout(() => {
+        stepTo();
+      }, 60);
+    };
     return ({ progress: P, isDesktop }) => {
-      let b = 0;
+      let target = 0;
       for (const edge of EDGE) {
         if (P >= edge) {
-          b++;
+          target++;
         }
       }
       if (beat === -1) {
-        // 首帧：直接就位到当前拍（不做段落锁）
-        beat = b;
+        // 首帧：直接就位到当前拍
+        beat = target;
         applyBeat(beat, isDesktop);
         return;
       }
-      const now = performance.now();
-      // 段落锁：不管滑多长，一次只推进一段；切换间隔至少 600ms
-      if (b !== beat && now - lastAt >= 600) {
-        beat += b > beat ? 1 : -1;
-        lastAt = now;
-        applyBeat(beat, isDesktop);
+      if (target !== beat) {
+        chase(target, isDesktop);
       }
     };
   },
