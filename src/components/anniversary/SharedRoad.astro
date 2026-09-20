@@ -1,238 +1,320 @@
 ---
 /**
- * 【05 同行之路 · SharedRoad】SEEKER 的关系网络——品牌 / 社区 / 地方分部 / 高校。
- * 版式：十字节点网络（editorial 细线 + 小节点），不做 Logo Wall。
- * 数据：src/data/anniversary/partners.json（published=false 时展示网络骨架 +
- * 待归档占位——节点类型是结构标签，不虚构具体品牌/机构）。
+ * 【03 同行之路 · SharedRoad】SEEKER 的品牌星系——品牌是行星，环绕 SEEKER 恒星。
+ * story-on：钉住轨道上 13 颗品牌行星环绕分布（排名不分先后——环绕本身无序），
+ * 滚动推动镜头依次掠过，每颗行星聚焦到镜前、对侧信息卡展开该品牌的合作故事；
+ * 已掠过的行星淡出、轨道渐空，如时间走过。
+ * 无 JS / reduced-motion：星系层隐藏，回退为普通文档流的品牌列表（全部可读）。
+ * 数据：src/data/anniversary/partners.json（published=true，文案照录原文）。
  */
-import AwaitNote from './AwaitNote.astro';
 import partnersData from '../../data/anniversary/partners.json';
 
 interface Partner {
   name: string;
-  kind: 'brand' | 'community' | 'chapter' | 'university';
+  slug: string;
+  kind: 'brand' | 'platform';
+  glyph?: string;
+  logo?: string;
+  title?: string;
   blurb: string;
-  story?: string;
 }
-
-const KIND_LABEL: Record<Partner['kind'], string> = {
-  brand: '品牌',
-  community: '摄影社区',
-  chapter: '地方分部',
-  university: '高校',
-};
 
 const data = partnersData as { published: boolean; partners: Partner[] };
 const partners = data.published ? data.partners : [];
-const groups = ['brand', 'community', 'chapter', 'university'].map(kind => ({
-  kind,
-  label: KIND_LABEL[kind as Partner['kind']],
-  items: partners.filter(p => p.kind === kind),
-}));
-const hasContent = partners.length > 0;
 ---
 
 <div class="sr">
-  <div aria-hidden={hasContent ? 'true' : undefined} class="sr-net">
-    <span class="sr-node sr-node--top" data-road-top>品牌<span class="sr-en"> BRANDS</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--v1" data-road-v1></span>
-    <span class="sr-node sr-node--left" data-road-left>社区<span class="sr-en"> COMMUNITIES</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--h1" data-road-h1></span>
-    <span class="sr-node sr-node--center" data-road-center>SEEKER</span>
-    <span aria-hidden="true" class="sr-line sr-line--h2" data-road-h2></span>
-    <span class="sr-node sr-node--right" data-road-right>高校<span class="sr-en"> UNIVERSITIES</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--v2" data-road-v2></span>
-    <span class="sr-node sr-node--bottom" data-road-bottom>地方分部<span class="sr-en"> CHAPTERS</span></span>
+  {/* —— 回退形态：普通文档流列表（无 JS / reduced-motion / SEO） —— */}
+  <div class="sr-fallback">
+    {
+      partners.map(p => (
+        <article class="sr-item">
+          <p class="sr-item-brand">
+            {p.name}
+            {p.kind === 'platform' && <span class="sr-item-tag">合作平台</span>}
+          </p>
+          {p.title && <p class="sr-item-title">{p.title}</p>}
+          <p class="sr-item-blurb">{p.blurb}</p>
+        </article>
+      ))
+    }
+    <p class="sr-fineprint">以上排名不分先后。</p>
   </div>
 
-  {
-    hasContent ? (
-      <div data-reveal>
-        {groups
-          .filter(g => g.items.length > 0)
-          .map(g => (
-            <div class="sr-group">
-              <p class="sr-group-label">{g.label}</p>
-              {g.items.map(p => (
-                <div class="sr-partner">
-                  <p class="sr-partner-name">{p.name}</p>
-                  <p class="sr-partner-blurb">{p.blurb}</p>
-                  {p.story && <p class="sr-partner-story">{p.story}</p>}
-                </div>
-              ))}
-            </div>
-          ))}
-      </div>
-    ) : (
-      <div data-reveal>
-        <AwaitNote />
-      </div>
-    )
-  }
+  {/* —— 星系形态：轨道 + 恒星 + 行星（装饰层，位置由滚动引擎驱动） —— */}
+  <div aria-hidden="true" class="sr-space">
+    <div class="sr-orbit"></div>
+    <div class="sr-star" data-road-star>
+      <span class="sr-star-ring"></span>
+      <span class="sr-star-name">SEEKER</span>
+    </div>
+    {
+      partners.map(p => (
+        <span class="sr-planet" data-road-planet>
+          {p.logo ? (
+            <img alt="" decoding="async" loading="lazy" src={p.logo} />
+          ) : (
+            <span class="sr-glyph">{p.glyph ?? p.name.slice(0, 1)}</span>
+          )}
+        </span>
+      ))
+    }
+  </div>
+
+  {/* —— 聚焦信息卡：每颗行星一张，同格叠放，工厂按聚焦度接管显隐 —— */}
+  <div class="sr-cards">
+    {
+      partners.map(p => (
+        <article class="sr-card" data-road-card>
+          <p class="sr-card-brand">
+            {p.name}
+            {p.kind === 'platform' && <span class="sr-item-tag">合作平台</span>}
+          </p>
+          {p.title && <p class="sr-card-title">{p.title}</p>}
+          <p class="sr-card-blurb">{p.blurb}</p>
+        </article>
+      ))
+    }
+    <p class="sr-fineprint sr-fineprint--cards" data-road-fineprint>以上排名不分先后。</p>
+  </div>
 </div>
 
 <style>
   .sr {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
-
-  /* 十字关系网：细线连接（品牌在上、社区 ─ SEEKER ─ 高校、地方分部在下） */
-  .sr-net {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr;
-    grid-template-areas:
-      '. . top . .'
-      '. . v1 . .'
-      'left h1 center h2 right'
-      '. . v2 . .'
-      '. . bottom . .';
-    place-items: center;
-    gap: 0.9rem 0;
-    max-width: 42rem;
-    margin: 0 auto;
-    padding: clamp(1.5rem, 4vw, 2.5rem) 0;
     width: 100%;
   }
 
-  .sr-node {
-    padding: 0.55rem 1.1rem;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    white-space: nowrap;
-    color: var(--anniv-muted);
-    border: 1px solid var(--anniv-border);
-    transition:
-      color var(--dur-normal) ease,
-      border-color var(--dur-normal) ease;
-  }
-
-  /* 窄屏十字放不下英文后缀，只留中文节点名 */
-  @media (max-width: 40rem) {
-    .sr-en {
-      display: none;
-    }
-
-    .sr-node {
-      padding: 0.45rem 0.8rem;
-      letter-spacing: 0.14em;
-    }
-  }
-
-  .sr-node--center {
-    grid-area: center;
-    padding: 0.85rem 1.6rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-indent: 0.3em;
-    color: var(--anniv-accent);
-    border-color: var(--anniv-border-strong);
-  }
-
-  .sr-node--top {
-    grid-area: top;
-  }
-
-  .sr-node--bottom {
-    grid-area: bottom;
-  }
-
-  .sr-node--left {
-    grid-area: left;
-  }
-
-  .sr-node--right {
-    grid-area: right;
-  }
-
-  .sr-line {
-    background: var(--anniv-border);
-  }
-
-  /* 连线从 SEEKER 一侧向外生长 */
-  .sr-line--h1 {
-    transform-origin: right center;
-  }
-
-  .sr-line--h2 {
-    transform-origin: left center;
-  }
-
-  .sr-line--v1 {
-    transform-origin: center bottom;
-  }
-
-  .sr-line--v2 {
-    transform-origin: center top;
-  }
-
-  .sr-line--v1 {
-    grid-area: v1;
-    width: 1px;
-    height: clamp(1.8rem, 5vw, 3rem);
-  }
-
-  .sr-line--v2 {
-    grid-area: v2;
-    width: 1px;
-    height: clamp(1.8rem, 5vw, 3rem);
-  }
-
-  .sr-line--h1 {
-    grid-area: h1;
-    width: clamp(1.6rem, 5vw, 3rem);
-    height: 1px;
-  }
-
-  .sr-line--h2 {
-    grid-area: h2;
-    width: clamp(1.6rem, 5vw, 3rem);
-    height: 1px;
-  }
-
-  .sr-group {
+  /* —— 回退列表（默认形态） —— */
+  .sr-fallback {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    padding-top: 1.8rem;
+    gap: 2.2rem;
+    max-width: 46rem;
+    margin: 0 auto;
+  }
+
+  .sr-item {
+    padding-top: 1.6rem;
     border-top: 1px solid var(--anniv-border);
   }
 
-  .sr-group-label {
-    margin: 0;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    color: var(--anniv-accent);
-  }
-
-  .sr-partner-name {
-    margin: 0 0 0.3rem;
+  .sr-item-brand {
+    margin: 0 0 0.4rem;
     font-family: var(--anniv-serif);
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: var(--anniv-fg);
   }
 
-  .sr-partner-blurb {
+  .sr-item-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--anniv-serif);
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--anniv-accent);
+  }
+
+  .sr-item-blurb {
     margin: 0;
-    max-width: 40em;
-    font-size: 0.86rem;
-    line-height: 1.9;
+    font-size: 0.9rem;
+    line-height: 2;
+    letter-spacing: 0.04em;
     color: var(--anniv-muted);
   }
 
-  .sr-partner-story {
-    margin: 0.4rem 0 0;
-    max-width: 40em;
-    font-size: 0.86rem;
-    line-height: 2;
+  .sr-item-tag,
+  .sr-card-brand :global(.sr-item-tag) {
+    display: inline-block;
+    margin-left: 0.7rem;
+    padding: 0.18rem 0.6rem;
+    vertical-align: 0.15em;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--anniv-accent);
+    border: 1px solid var(--anniv-border-strong);
+    border-radius: 999px;
+  }
+
+  .sr-fineprint {
+    margin: 1.4rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-align: center;
+    color: var(--anniv-muted);
+  }
+
+  /* —— 星系形态（默认隐藏，story-on 接管） —— */
+  .sr-space,
+  .sr-cards {
+    display: none;
+  }
+
+  :global(.story-on) .sr-fallback {
+    display: none;
+  }
+
+  :global(.story-on) .sr-space {
+    display: block;
+    position: relative;
+    height: min(46svh, 430px);
+    perspective: 1200px;
+  }
+
+  :global(.story-on) .sr-cards {
+    display: grid;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* 轨道：椭圆细线（环绕 SEEKER） */
+  :global(.story-on) .sr-orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(74vw, 720px);
+    height: min(38svh, 350px);
+    transform: translate(-50%, -50%);
+    border: 1px solid var(--anniv-border);
+    border-radius: 50%;
+  }
+
+  /* SEEKER 恒星：中心环 + 名字 */
+  :global(.story-on) .sr-star {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  :global(.story-on) .sr-star-ring {
+    width: 92px;
+    height: 92px;
+    border: 1px solid var(--anniv-border-strong);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 38% 32%, rgba(46, 134, 222, 0.28), transparent 62%),
+      radial-gradient(circle at 50% 50%, rgba(46, 134, 222, 0.08), transparent 70%);
+    box-shadow: 0 0 34px rgba(46, 134, 222, 0.22);
+  }
+
+  :global(.story-on) .sr-star-name {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    color: var(--anniv-accent);
+  }
+
+  /* 行星：轨道上均布，聚焦时由引擎推向镜头 */
+  :global(.story-on) .sr-planet {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(52px, 4.6vw, 68px);
+    height: clamp(52px, 4.6vw, 68px);
+    margin: calc(clamp(52px, 4.6vw, 68px) / -2);
+    border-radius: 50%;
+    overflow: hidden;
+    background: radial-gradient(circle at 36% 30%, rgba(46, 134, 222, 0.16), rgba(8, 36, 63, 0.9) 68%);
+    border: 1px solid var(--anniv-border-strong);
+    box-shadow: 0 0 18px rgba(46, 134, 222, 0.14);
+    will-change: opacity, transform;
+  }
+
+  :global(.story-on) .sr-planet img {
+    width: 74%;
+    height: 74%;
+    object-fit: contain;
+  }
+
+  :global(.story-on) .sr-glyph {
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 700;
+    color: var(--anniv-fg);
+  }
+
+  /* 聚焦信息卡：同格叠放于星系下方 */
+  :global(.story-on) .sr-card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 200px;
+    padding: clamp(1.2rem, 2.6vw, 1.9rem) clamp(1.1rem, 2.6vw, 2rem);
+    opacity: 0; /* 初始隐藏，工厂按聚焦度接管 */
+    border: 1px solid var(--anniv-border);
+    background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
+    will-change: opacity, transform;
+  }
+
+  :global(.story-on) .sr-card-brand {
+    margin: 0 0 0.5rem;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--anniv-fg);
+  }
+
+  :global(.story-on) .sr-card-title {
+    margin: 0 0 0.7rem;
+    font-family: var(--anniv-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--anniv-accent);
+  }
+
+  :global(.story-on) .sr-card-blurb {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(0.86rem, 1.5vw, 0.94rem);
+    line-height: 1.95;
+    letter-spacing: 0.03em;
+    text-align: justify;
     color: var(--anniv-fg-secondary);
+  }
+
+  :global(.story-on) .sr-fineprint--cards {
+    grid-area: 1 / 1;
+    align-self: end;
+    transform: translateY(clamp(28px, 4svh, 44px));
+    opacity: 0; /* 工厂在全部行星掠过后点亮 */
+  }
+
+  @media (max-width: 48rem) {
+    :global(.story-on) .sr-space {
+      height: min(40svh, 330px);
+    }
+
+    :global(.story-on) .sr-orbit {
+      width: 86vw;
+      height: min(30svh, 240px);
+    }
+
+    :global(.story-on) .sr-star-ring {
+      width: 68px;
+      height: 68px;
+    }
+
+    :global(.story-on) .sr-card {
+      min-height: 240px;
+    }
   }
 </style>

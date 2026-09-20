@@ -32,6 +32,8 @@ type SceneFactory = (track: HTMLElement) => SceneApply;
 const clamp01 = (v: number): number => Math.min(1, Math.max(0, v));
 /** progress 在 [a, b] 区间的线性推进（0 → 1） */
 const ramp = (p: number, a: number, b: number): number => clamp01((p - a) / (b - a));
+/** smoothstep 缓动：两端减速的 S 曲线（节拍过渡用） */
+const smooth = (t: number): number => t * t * (3 - 2 * t);
 
 /**
  * 场景注册表：名字来自标记元素上的 data-story-scene。
@@ -144,51 +146,34 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：舞台式三卡节拍（三槽循环走带，与留光成物同一 3D 思想）。
-   * 进入章节：Part 01 占主位（全亮全尺寸），Part 02 右后、Part 03 左后
-   * 待命（缩小、变暗、translateZ 后退、微微内转）。滚动推进节拍——带子
-   * 左移一格 Part 2 上场、Part 1 退左后、Part 3 绕右后；再滚 Part 3 上场；
-   * 末段三卡一起后退变暗（谢幕），轨道释放接同行之路。
+   * 02 追光印记：舞台式走位（三张拍立得固定左/中/右三个站位）。
+   * 从光影札记滑入：三卡从各自站位的后方（深处、缩小、变暗）逐渐走上台前
+   * 定格（左中右依次错峰，像点名上场）；台上驻留供阅读；继续滑动各自
+   * 对称退回后方；三张都退回后一起集体谢幕（继续后退 + 暗场退场）。
    * 所有状态由 progress 直接计算（无 transition/定时器），快速与反向滚动
-   * 严格连续；绕行侧后方的卡在 |raw|>1 后降透明度，背面穿场不穿帮。
+   * 严格连续。
    */
   projects: track => {
-    const beats = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
-    const stageEl = track.querySelector<HTMLElement>('.ps-beats');
-    const mod3 = (n: number): number => ((n % 3) + 3) % 3;
-    const smooth = (t: number): number => t * t * (3 - 2 * t);
+    const cards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
     return ({ progress: P, isDesktop }) => {
-      // 节拍：p → 浮点格位 g（0/1/2 = Part1/2/3 主位；过渡区间 smoothstep 缓动）
-      const g =
-        P <= 0.3
-          ? 0
-          : P < 0.44
-            ? smooth(ramp(P, 0.3, 0.44))
-            : P <= 0.56
-              ? 1
-              : P < 0.7
-                ? 1 + smooth(ramp(P, 0.56, 0.7))
-                : 2;
-      const step = (isDesktop ? 27 : 56) * (window.innerWidth / 100);
-      beats.forEach((el, i) => {
-        // 循环取模：raw 0=主位 ±1=右/左后方；|raw|>1 起降透明（绕行背面不穿帮）
-        let raw = mod3(i - g);
-        if (raw > 1.5) {
-          raw -= 3;
+      const depth = isDesktop ? 520 : 340; // 后方站位深度（perspective 透视产生近大远小）
+      for (let i = 0; i < cards.length; i++) {
+        const el = cards[i];
+        if (!el) {
+          continue;
         }
-        const a = Math.min(1, Math.abs(raw));
-        const side = raw > 0 ? 1 : raw < 0 ? -1 : 0;
-        const wrap = Math.min(1, Math.max(0, Math.abs(raw) - 1) / 0.5);
-        el.style.opacity = (1 - 0.85 * wrap).toFixed(3);
-        el.style.transform = `translate3d(${(raw * step).toFixed(1)}px, 0, ${(-260 * a).toFixed(1)}px) rotateY(${(-side * 10 * a).toFixed(2)}deg) scale(${(1 - 0.14 * a).toFixed(4)})`;
-        el.style.zIndex = a < 0.5 ? '2' : '1';
-        el.style.setProperty('--ps-dim', (1 - 0.55 * a).toFixed(3));
-      });
-      // 谢幕：三卡一起后退变暗（容器级；opacity 会压平 3d，故用 filter 变暗）
-      if (stageEl) {
-        const s = smooth(ramp(P, 0.85, 1));
-        stageEl.style.transform = `translate3d(0, ${(20 * s).toFixed(1)}px, ${(-300 * s).toFixed(1)}px) scale(${(1 - 0.06 * s).toFixed(4)})`;
-        stageEl.style.filter = `brightness(${(1 - 0.55 * s).toFixed(3)})`;
+        // 走位错峰：左(0) 中(1) 右(2) 依次相差 0.05，像逐个点名上场
+        const off = i * 0.05;
+        const walkIn = smooth(ramp(P, off, 0.24 + off));
+        const walkOut = smooth(ramp(P, 0.58 + off, 0.8 + off));
+        const on = walkIn * (1 - walkOut); // 0=后方深处 1=台前定格
+        const bye = smooth(ramp(P, 0.84, 0.98)); // 集体谢幕：一起继续后退并暗场
+        const z = -depth * (1 - on) - 260 * bye;
+        const dim = 1 - 0.68 * (1 - on) - 0.4 * bye;
+        const opacity = (0.18 + 0.82 * on) * (1 - bye);
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `translate3d(0, ${(26 * (1 - on)).toFixed(1)}px, ${z.toFixed(1)}px) scale(${(0.78 + 0.22 * on).toFixed(4)})`;
+        el.style.setProperty('--ps-dim', dim.toFixed(3));
       }
     };
   },
@@ -237,53 +222,67 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 03 同行之路：关系网络在钉住轨道内逐渐展开
-   * （SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长），
-   * 完成于 ~0.72，尾部驻留「待归档」占位后解锁下一章。
+   * 03 同行之路：品牌星系——品牌是行星，环绕 SEEKER 恒星（排名不分先后：
+   * 环绕本身无序）。滚动推动镜头依次掠过每颗行星：行星从轨道飞向镜头
+   * （perspective 自然放大）→ 聚焦驻留、信息卡展开 → 被甩到身后穿出淡出，
+   * 轨道渐空；末尾点亮「排名不分先后」。聚焦期间其余行星与恒星压暗，
+   * 突出当前主角。全部由 progress 直接计算，快速/反向滚动严格连续。
    */
   road: track => {
-    const center = track.querySelector<HTMLElement>('[data-road-center]');
-    const h1 = track.querySelector<HTMLElement>('[data-road-h1]');
-    const left = track.querySelector<HTMLElement>('[data-road-left]');
-    const h2 = track.querySelector<HTMLElement>('[data-road-h2]');
-    const right = track.querySelector<HTMLElement>('[data-road-right]');
-    const v1 = track.querySelector<HTMLElement>('[data-road-v1]');
-    const top = track.querySelector<HTMLElement>('[data-road-top]');
-    const v2 = track.querySelector<HTMLElement>('[data-road-v2]');
-    const bottom = track.querySelector<HTMLElement>('[data-road-bottom]');
-    return ({ progress: p }) => {
-      if (center) {
-        const t = ramp(p, 0.03, 0.16);
-        center.style.opacity = t.toFixed(3);
-        center.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
+    const planets = [...track.querySelectorAll<HTMLElement>('[data-road-planet]')];
+    const cards = [...track.querySelectorAll<HTMLElement>('[data-road-card]')];
+    const star = track.querySelector<HTMLElement>('[data-road-star]');
+    const fineprint = track.querySelector<HTMLElement>('[data-road-fineprint]');
+    const N = planets.length;
+    const SPAN = N > 0 ? 0.94 / N : 1;
+    const HEAD = 0.03;
+    return ({ progress: P, isDesktop }) => {
+      if (N === 0) {
+        return;
       }
-      if (h1) {
-        h1.style.opacity = '1';
-        h1.style.transform = `scaleX(${ramp(p, 0.16, 0.34).toFixed(3)})`;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const rx = Math.min(w * (isDesktop ? 0.36 : 0.42), 520);
+      const ry = h * (isDesktop ? 0.24 : 0.16);
+      const focuses: number[] = [];
+      let maxFocus = 0;
+      planets.forEach((el, i) => {
+        const q = clamp01((P - (HEAD + i * SPAN)) / SPAN);
+        const approach = ramp(q, 0, 0.26);
+        const depart = ramp(q, 0.74, 1);
+        const focus = approach * (1 - depart);
+        focuses[i] = focus;
+        if (focus > maxFocus) {
+          maxFocus = focus;
+        }
+        const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+        // 聚焦：轨道位 → 镜前中心（略上）；离场：向前穿出 + 交替侧向漂移
+        const x =
+          Math.cos(ang) * rx * (1 - approach) + depart * depart * (i % 2 === 0 ? -1 : 1) * w * 0.24;
+        const y = Math.sin(ang) * ry * (1 - approach) - h * 0.09 * focus;
+        const z = focus * 420 + depart * depart * 640;
+        el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px)`;
+      });
+      planets.forEach((el, i) => {
+        const q = clamp01((P - (HEAD + i * SPAN)) / SPAN);
+        const depart = ramp(q, 0.74, 1);
+        let op = 0.5 + 0.5 * focuses[i]!;
+        op *= 1 - depart * 0.92; // 已掠过：淡出，轨道渐空
+        op *= 1 - 0.55 * maxFocus * (1 - Math.min(1, focuses[i]! * 2.2)); // 聚焦时其余压暗
+        el.style.opacity = op.toFixed(3);
+      });
+      cards.forEach((card, i) => {
+        const q = clamp01((P - (HEAD + i * SPAN)) / SPAN);
+        const show = ramp(q, 0.2, 0.32) * (1 - ramp(q, 0.72, 0.86));
+        card.style.opacity = show.toFixed(3);
+        card.style.transform = `translateY(${(26 * (1 - show)).toFixed(1)}px)`;
+      });
+      if (star) {
+        star.style.opacity = (1 - 0.65 * maxFocus).toFixed(3);
       }
-      if (left) {
-        left.style.opacity = ramp(p, 0.34, 0.46).toFixed(3);
-      }
-      if (h2) {
-        h2.style.opacity = '1';
-        h2.style.transform = `scaleX(${ramp(p, 0.18, 0.36).toFixed(3)})`;
-      }
-      if (right) {
-        right.style.opacity = ramp(p, 0.36, 0.48).toFixed(3);
-      }
-      if (v1) {
-        v1.style.opacity = '1';
-        v1.style.transform = `scaleY(${ramp(p, 0.48, 0.6).toFixed(3)})`;
-      }
-      if (top) {
-        top.style.opacity = ramp(p, 0.6, 0.7).toFixed(3);
-      }
-      if (v2) {
-        v2.style.opacity = '1';
-        v2.style.transform = `scaleY(${ramp(p, 0.5, 0.62).toFixed(3)})`;
-      }
-      if (bottom) {
-        bottom.style.opacity = ramp(p, 0.62, 0.72).toFixed(3);
+      if (fineprint) {
+        const allDone = ramp(P, HEAD + N * SPAN, HEAD + N * SPAN + 0.03);
+        fineprint.style.opacity = allDone.toFixed(3);
       }
     };
   },
