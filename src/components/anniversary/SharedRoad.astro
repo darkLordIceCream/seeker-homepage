@@ -1,238 +1,330 @@
 ---
 /**
- * 【05 同行之路 · SharedRoad】SEEKER 的关系网络——品牌 / 社区 / 地方分部 / 高校。
- * 版式：十字节点网络（editorial 细线 + 小节点），不做 Logo Wall。
- * 数据：src/data/anniversary/partners.json（published=false 时展示网络骨架 +
- * 待归档占位——节点类型是结构标签，不虚构具体品牌/机构）。
+ * 【03 同行之路 · SharedRoad】品牌关系网——所有品牌以文字节点连接到中心的
+ * 「合作品牌」枢纽（无图片、排名不分先后：网络本身无序）。
+ * story-on：钉住轨道内滚动依次聚焦每个品牌——节点与连线点亮，顶部放大字
+ * 「@品牌名」、下方稍小字体展开合作文案（节拍切换，绝不停在两段之间）。
+ * 无 JS / reduced-motion：网络与聚焦区隐藏，回退为普通文档流列表（全部可读）。
+ * 文案照录用户提供原文；数据：src/data/anniversary/partners.json。
  */
-import AwaitNote from './AwaitNote.astro';
 import partnersData from '../../data/anniversary/partners.json';
 
 interface Partner {
   name: string;
-  kind: 'brand' | 'community' | 'chapter' | 'university';
+  /** 网络节点的短名（长名品牌用，避免溢出）；缺省用 name */
+  short?: string;
+  slug: string;
+  kind: 'brand' | 'platform';
+  title?: string;
   blurb: string;
-  story?: string;
 }
-
-const KIND_LABEL: Record<Partner['kind'], string> = {
-  brand: '品牌',
-  community: '摄影社区',
-  chapter: '地方分部',
-  university: '高校',
-};
 
 const data = partnersData as { published: boolean; partners: Partner[] };
 const partners = data.published ? data.partners : [];
-const groups = ['brand', 'community', 'chapter', 'university'].map(kind => ({
-  kind,
-  label: KIND_LABEL[kind as Partner['kind']],
-  items: partners.filter(p => p.kind === kind),
-}));
-const hasContent = partners.length > 0;
+const N = partners.length;
+
+/** 节点在关系网中的分布：椭圆均布（百分比坐标，与 SVG viewBox 等效换算） */
+const nodePos = partners.map((_, i) => {
+  const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+  return { x: 50 + Math.cos(ang) * 39, y: 50 + Math.sin(ang) * 37 };
+});
 ---
 
 <div class="sr">
-  <div aria-hidden={hasContent ? 'true' : undefined} class="sr-net">
-    <span class="sr-node sr-node--top" data-road-top>品牌<span class="sr-en"> BRANDS</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--v1" data-road-v1></span>
-    <span class="sr-node sr-node--left" data-road-left>社区<span class="sr-en"> COMMUNITIES</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--h1" data-road-h1></span>
-    <span class="sr-node sr-node--center" data-road-center>SEEKER</span>
-    <span aria-hidden="true" class="sr-line sr-line--h2" data-road-h2></span>
-    <span class="sr-node sr-node--right" data-road-right>高校<span class="sr-en"> UNIVERSITIES</span></span>
-    <span aria-hidden="true" class="sr-line sr-line--v2" data-road-v2></span>
-    <span class="sr-node sr-node--bottom" data-road-bottom>地方分部<span class="sr-en"> CHAPTERS</span></span>
+  {/* —— 回退形态：普通文档流列表（无 JS / reduced-motion / SEO） —— */}
+  <div class="sr-fallback">
+    {
+      partners.map(p => (
+        <article class="sr-item">
+          <p class="sr-item-brand">
+            {p.name}
+            {p.kind === 'platform' && <span class="sr-item-tag">合作平台</span>}
+          </p>
+          {p.title && <p class="sr-item-title">{p.title}</p>}
+          <p class="sr-item-blurb">{p.blurb}</p>
+        </article>
+      ))
+    }
+    <p class="sr-fineprint">以上排名不分先后。</p>
   </div>
 
-  {
-    hasContent ? (
-      <div data-reveal>
-        {groups
-          .filter(g => g.items.length > 0)
-          .map(g => (
-            <div class="sr-group">
-              <p class="sr-group-label">{g.label}</p>
-              {g.items.map(p => (
-                <div class="sr-partner">
-                  <p class="sr-partner-name">{p.name}</p>
-                  <p class="sr-partner-blurb">{p.blurb}</p>
-                  {p.story && <p class="sr-partner-story">{p.story}</p>}
-                </div>
-              ))}
-            </div>
-          ))}
-      </div>
-    ) : (
-      <div data-reveal>
-        <AwaitNote />
-      </div>
-    )
-  }
+  {/* —— 关系网形态（story-on 接管）：枢纽 + 品牌节点 + 连线 —— */}
+  <div aria-hidden="true" class="sr-net">
+    <svg class="sr-links" preserveAspectRatio="none" viewBox="0 0 100 100">
+      {
+        partners.map((_, i) => (
+          <line
+            class="sr-link"
+            data-road-link
+            x1={50}
+            x2={nodePos[i]?.x}
+            y1={50}
+            y2={nodePos[i]?.y}
+          />
+        ))
+      }
+    </svg>
+    <span class="sr-node sr-node--hub">
+      合作品牌
+      <span class="sr-node-en">BRAND PARTNERSHIP</span>
+    </span>
+    {
+      partners.map((p, i) => (
+        <span
+          class="sr-node sr-node--brand"
+          data-road-node
+          style={`left:${nodePos[i]?.x}%;top:${nodePos[i]?.y}%`}
+        >
+          {p.short ?? p.name}
+        </span>
+      ))
+    }
+  </div>
+
+  {/* —— 聚焦区：顶部放大字 @品牌名，下方稍小字体文案（同格叠放节拍切换） —— */}
+  <div class="sr-focus">
+    {
+      partners.map(p => (
+        <article class="sr-focus-item" data-road-focus>
+          <p class="sr-at">@{p.name}</p>
+          {p.title && <p class="sr-focus-title">{p.title}</p>}
+          <p class="sr-focus-blurb">{p.blurb}</p>
+        </article>
+      ))
+    }
+  </div>
+
+  <p class="sr-fineprint sr-fineprint--net" data-road-fineprint>以上排名不分先后。</p>
 </div>
 
 <style>
   .sr {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
-
-  /* 十字关系网：细线连接（品牌在上、社区 ─ SEEKER ─ 高校、地方分部在下） */
-  .sr-net {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr;
-    grid-template-areas:
-      '. . top . .'
-      '. . v1 . .'
-      'left h1 center h2 right'
-      '. . v2 . .'
-      '. . bottom . .';
-    place-items: center;
-    gap: 0.9rem 0;
-    max-width: 42rem;
-    margin: 0 auto;
-    padding: clamp(1.5rem, 4vw, 2.5rem) 0;
     width: 100%;
   }
 
-  .sr-node {
-    padding: 0.55rem 1.1rem;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    white-space: nowrap;
-    color: var(--anniv-muted);
-    border: 1px solid var(--anniv-border);
-    transition:
-      color var(--dur-normal) ease,
-      border-color var(--dur-normal) ease;
-  }
-
-  /* 窄屏十字放不下英文后缀，只留中文节点名 */
-  @media (max-width: 40rem) {
-    .sr-en {
-      display: none;
-    }
-
-    .sr-node {
-      padding: 0.45rem 0.8rem;
-      letter-spacing: 0.14em;
-    }
-  }
-
-  .sr-node--center {
-    grid-area: center;
-    padding: 0.85rem 1.6rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-indent: 0.3em;
-    color: var(--anniv-accent);
-    border-color: var(--anniv-border-strong);
-  }
-
-  .sr-node--top {
-    grid-area: top;
-  }
-
-  .sr-node--bottom {
-    grid-area: bottom;
-  }
-
-  .sr-node--left {
-    grid-area: left;
-  }
-
-  .sr-node--right {
-    grid-area: right;
-  }
-
-  .sr-line {
-    background: var(--anniv-border);
-  }
-
-  /* 连线从 SEEKER 一侧向外生长 */
-  .sr-line--h1 {
-    transform-origin: right center;
-  }
-
-  .sr-line--h2 {
-    transform-origin: left center;
-  }
-
-  .sr-line--v1 {
-    transform-origin: center bottom;
-  }
-
-  .sr-line--v2 {
-    transform-origin: center top;
-  }
-
-  .sr-line--v1 {
-    grid-area: v1;
-    width: 1px;
-    height: clamp(1.8rem, 5vw, 3rem);
-  }
-
-  .sr-line--v2 {
-    grid-area: v2;
-    width: 1px;
-    height: clamp(1.8rem, 5vw, 3rem);
-  }
-
-  .sr-line--h1 {
-    grid-area: h1;
-    width: clamp(1.6rem, 5vw, 3rem);
-    height: 1px;
-  }
-
-  .sr-line--h2 {
-    grid-area: h2;
-    width: clamp(1.6rem, 5vw, 3rem);
-    height: 1px;
-  }
-
-  .sr-group {
+  /* —— 回退列表（默认形态；story-on 下隐藏） —— */
+  .sr-fallback {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    padding-top: 1.8rem;
+    gap: 2.2rem;
+    max-width: 46rem;
+    margin: 0 auto;
+  }
+
+  .sr-item {
+    padding-top: 1.6rem;
     border-top: 1px solid var(--anniv-border);
   }
 
-  .sr-group-label {
-    margin: 0;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    color: var(--anniv-accent);
-  }
-
-  .sr-partner-name {
-    margin: 0 0 0.3rem;
+  .sr-item-brand {
+    margin: 0 0 0.4rem;
     font-family: var(--anniv-serif);
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: var(--anniv-fg);
   }
 
-  .sr-partner-blurb {
+  .sr-item-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--anniv-serif);
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--anniv-accent);
+  }
+
+  .sr-item-blurb {
     margin: 0;
-    max-width: 40em;
-    font-size: 0.86rem;
-    line-height: 1.9;
+    font-size: 0.9rem;
+    line-height: 2;
+    letter-spacing: 0.04em;
     color: var(--anniv-muted);
   }
 
-  .sr-partner-story {
-    margin: 0.4rem 0 0;
+  .sr-item-tag {
+    display: inline-block;
+    margin-left: 0.7rem;
+    padding: 0.18rem 0.6rem;
+    vertical-align: 0.15em;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--anniv-accent);
+    border: 1px solid var(--anniv-border-strong);
+    border-radius: 999px;
+  }
+
+  .sr-fineprint {
+    margin: 1.6rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-align: center;
+    color: var(--anniv-muted);
+  }
+
+  /* —— 关系网形态（默认隐藏，story-on 接管） —— */
+  .sr-net,
+  .sr-focus {
+    display: none;
+  }
+
+  :global(.story-on) .sr-fallback {
+    display: none;
+  }
+
+  :global(.story-on) .sr-net {
+    display: block;
+    position: relative;
+    height: min(44svh, 420px);
+    margin: 0 auto;
+  }
+
+  /* 连线层：拉伸铺满网络区（线宽不受拉伸影响） */
+  :global(.story-on) .sr-links {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  :global(.story-on) .sr-link {
+    stroke: var(--anniv-border);
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+    transition: stroke 0.45s ease;
+  }
+
+  :global(.story-on) .sr-link.is-active {
+    stroke: var(--anniv-accent);
+  }
+
+  /* 节点：绝对定位在分布点上（translate 居中），激活时点亮放大 */
+  :global(.story-on) .sr-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--anniv-muted);
+    border: 1px solid var(--anniv-border);
+    background: color-mix(in srgb, var(--anniv-bg) 72%, transparent);
+    transition:
+      color 0.45s ease,
+      border-color 0.45s ease,
+      background-color 0.45s ease,
+      box-shadow 0.45s ease;
+  }
+
+  :global(.story-on) .sr-node--brand.is-active {
+    color: var(--anniv-fg);
+    border-color: var(--anniv-accent);
+    background: color-mix(in srgb, var(--anniv-surface) 85%, transparent);
+    box-shadow: 0 0 20px rgba(46, 134, 222, 0.22);
+  }
+
+  :global(.story-on) .sr-node--hub {
+    left: 50%;
+    top: 50%;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--anniv-accent);
+    border-color: var(--anniv-border-strong);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  :global(.story-on) .sr-node-en {
+    font-size: 0.56rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: var(--anniv-faint);
+  }
+
+  /* —— 聚焦区：@品牌名 放大大字 + 稍小文案（同格叠放节拍切换） —— */
+  :global(.story-on) .sr-focus {
+    display: grid;
+    max-width: 44rem;
+    margin: clamp(1.6rem, 3.5svh, 2.6rem) auto 0;
+  }
+
+  :global(.story-on) .sr-focus-item {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    opacity: 0; /* 初始隐藏，工厂按当前聚焦接管 */
+    transition: opacity 0.45s ease;
+  }
+
+  :global(.story-on) .sr-at {
+    margin: 0 0 0.7rem;
+    font-family: var(--anniv-serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
+    color: var(--anniv-fg);
+  }
+
+  :global(.story-on) .sr-focus-title {
+    margin: 0 0 0.8rem;
+    font-family: var(--anniv-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--anniv-accent);
+  }
+
+  :global(.story-on) .sr-focus-blurb {
+    margin: 0;
     max-width: 40em;
-    font-size: 0.86rem;
+    font-family: var(--anniv-serif);
+    font-size: clamp(0.88rem, 1.6vw, 0.98rem);
     line-height: 2;
+    letter-spacing: 0.03em;
+    text-align: justify;
     color: var(--anniv-fg-secondary);
+  }
+
+  :global(.story-on) .sr-fineprint--net {
+    margin-top: clamp(1.2rem, 2.5svh, 2rem);
+    opacity: 0; /* 全部聚焦完成后由工厂点亮 */
+  }
+
+  @media (max-width: 48rem) {
+    :global(.story-on) .sr-net {
+      height: min(38svh, 330px);
+    }
+
+    :global(.story-on) .sr-node {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+
+    :global(.story-on) .sr-node--hub {
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    :global(.story-on) .sr-focus-blurb {
+      font-size: 0.86rem;
+      line-height: 1.9;
+    }
   }
 </style>

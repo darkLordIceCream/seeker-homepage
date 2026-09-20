@@ -32,8 +32,6 @@ type SceneFactory = (track: HTMLElement) => SceneApply;
 const clamp01 = (v: number): number => Math.min(1, Math.max(0, v));
 /** progress 在 [a, b] 区间的线性推进（0 → 1） */
 const ramp = (p: number, a: number, b: number): number => clamp01((p - a) / (b - a));
-/** smoothstep 缓动：两端减速的 S 曲线（节拍过渡用） */
-const smooth = (t: number): number => t * t * (3 - 2 * t);
 
 /**
  * 场景注册表：名字来自标记元素上的 data-story-scene。
@@ -117,6 +115,7 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       }
     }
     let active = -1;
+    let lastSwap = 0;
     return ({ progress: p }) => {
       if (portrait) {
         const t = ramp(p, 0.12, 0.26);
@@ -133,6 +132,16 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       if (s === active) {
         return;
       }
+      // 一次一段锁：不管滑多长，每次只推进/回退一段（首帧直接就位）；
+      // 快速滑过时按 520ms 节奏逐段追上，绝不跳段
+      const now = performance.now();
+      if (active !== -1) {
+        if (now - lastSwap < 520) {
+          return;
+        }
+        s = s > active ? active + 1 : active - 1;
+      }
+      lastSwap = now;
       active = s;
       beats.forEach((el, i) => {
         // 落款拍（最后一拍）：前一段压暗 0.25 作背景，其余非当前拍整段退场
@@ -157,19 +166,20 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
    * 变暗退出，自然接 03 同行之路。所有状态由 progress 直接计算（无
    * transition/定时器），快速与反向滚动严格连续。
    */
+  /**
+   * 02 追光印记：舞台式三卡节拍（三卡固定左/中/右站位，段落吸附）。
+   * 进入章节 Part 01 占主位（全亮全尺寸），Part 02/03 在右/左后方待命（缩小、变暗、后退、微转）；
+   * 滚动推进节拍——Part 2 上场 Part 1 退场、Part 3 上场 Part 2 退场，
+   * 末段三卡一起后退变暗谢幕。编排逻辑在 scroll-story.ts 的 projects 工厂。
+   * 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
+   * 图文数据与首页活动卡同源（R2 代表图 + 主站路由）。
+   * 段落吸附：progress 只决定「当前拍」（面对 P1 / P2 / P3 / 退场谢幕），
+   * 一次最多推进一段（不管滑多长，段落锁 600ms + ±1 步进）；
+   * 拍内姿态 = 该拍的目标状态，切换由 CSS transition 补间——
+   * 滚动不会停在任何中间态上。
+   */
   projects: track => {
     const boards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
-    // 行走路径表：progress → 相机格位（停驻点 = 每块展板面前）
-    const PATH: [number, number][] = [
-      [0, -0.35],
-      [0.05, 0],
-      [0.26, 0],
-      [0.38, 1],
-      [0.57, 1],
-      [0.69, 2],
-      [0.86, 2],
-      [1, 2.9],
-    ];
     // 展道空间错位：向右斜的走道（左 → 中 → 右）——错位量需让下一块板
     // 从当前板的侧面露出（遮挡关系的空间前提）
     const PAN = [
@@ -177,33 +187,50 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       { x: 0, y: -2 },
       { x: 14, y: 1 },
     ];
-    const camAt = (P: number): number => {
-      for (let k = 1; k < PATH.length; k++) {
-        const a = PATH[k - 1];
-        const b = PATH[k];
-        if (a && b && P <= b[0]) {
-          return a[1] + (b[1] - a[1]) * smooth(ramp(P, a[0], b[0]));
-        }
-      }
-      const last = PATH[PATH.length - 1];
-      return last ? last[1] : 0;
-    };
-    return ({ progress: P, isDesktop }) => {
+    // 各拍相机格位：拍1 面对展板1、拍2 展板2、拍3 展板3、拍4 退场暗场
+    const CAM = [0, 1, 2, 2.9];
+    // 拍切换边界（progress）：面对三段停留均匀铺在行走轨道上
+    const EDGE = [0.18, 0.42, 0.68];
+    let beat = -1;
+    let lastAt = 0;
+    const applyBeat = (b: number, isDesktop: boolean): void => {
       const step = (isDesktop ? 92 : 105) * (window.innerWidth / 100); // 板间距 px
-      const exit = smooth(ramp(P, 0.9, 1)); // 走过 Part 03 后展厅整体变暗退出
+      const exit = b >= 3 ? 1 : 0; // 末拍：三卡一起退场暗场
+      const cam = CAM[Math.min(b, 2)] ?? 0;
       boards.forEach((el, i) => {
         const pan = PAN[i] ?? { x: 0, y: 0 };
-        const rel = i - camAt(P); // <0 身后（已面对过） >0 前方（等待）
+        const rel = i - cam; // <0 身后（已面对过） >0 前方（等待）
         const away = Math.abs(rel);
         // 穿过身后渐淡（不穿模）；前方始终存在——远处微光等待
         const passed = rel < -0.06 ? Math.min(1, (-rel - 0.06) / 0.42) : 0;
-        const opacity = (1 - 0.92 * passed) * (1 - 0.45 * exit);
-        const dim = Math.max(0.55, 1 - away * 0.42); // 远处微光等待，可辨识但不抢戏
+        const opacity = (1 - 0.92 * passed) * (1 - 0.9 * exit);
+        const dim = Math.max(0.55, 1 - away * 0.42) * (1 - 0.45 * exit);
         el.style.opacity = opacity.toFixed(3);
         el.style.transform = `translate3d(${pan.x.toFixed(1)}vw, ${pan.y.toFixed(1)}vh, ${(-rel * step).toFixed(1)}px)`;
         el.style.zIndex = String(60 - Math.round(rel * 30));
         el.style.setProperty('--ps-dim', dim.toFixed(3));
       });
+    };
+    return ({ progress: P, isDesktop }) => {
+      let b = 0;
+      for (const edge of EDGE) {
+        if (P >= edge) {
+          b++;
+        }
+      }
+      if (beat === -1) {
+        // 首帧：直接就位到当前拍（不做段落锁）
+        beat = b;
+        applyBeat(beat, isDesktop);
+        return;
+      }
+      const now = performance.now();
+      // 段落锁：不管滑多长，一次只推进一段；切换间隔至少 600ms
+      if (b !== beat && now - lastAt >= 600) {
+        beat += b > beat ? 1 : -1;
+        lastAt = now;
+        applyBeat(beat, isDesktop);
+      }
     };
   },
   /**
@@ -214,90 +241,91 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
    * 随滚动二次加速向右飘出屏幕 → 空框浮现 p .86→.93、收束淡出 p .94→1
    * （结束动作：光已飘走，框留余温）。
    */
+  /**
+   * 04 留光成物：巨片舞台（段落吸附三拍）。
+   * 拍0（未到）：巨片在后方深处（缩小、变暗、下坠）；拍1（面对）：台前定格
+   * 全亮供观看，引言/署名/进度线同步亮起；拍2（走过）：整体向右退出并暗场
+   * ——空框浮现在原地（光已飘走，框留余温），交棒给下方的暗房章节。
+   * progress 只决定当前拍（一次一段），切换由 CSS transition 补间；
+   * 快速/反向滚动不会停在任何中间态上。
+   */
   posters: track => {
     const lead = track.querySelector<HTMLElement>('[data-poster-lead]');
     const stage = track.querySelector<HTMLElement>('[data-poster-stage]');
     const cap = track.querySelector<HTMLElement>('[data-poster-cap]');
     const ghost = track.querySelector<HTMLElement>('[data-poster-ghost]');
-    return ({ progress: p }) => {
-      const vw = window.innerWidth;
-      if (stage) {
-        // 入场：从左侧 -60vw 减速飘入；(1-t)² 让就位带缓出感
-        const tIn = ramp(p, 0.02, 0.2);
-        // 离场：t² 二次加速向右飘出屏幕
-        const tOut = ramp(p, 0.82, 0.96);
-        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) + tOut * tOut * 1.15 * vw;
-        stage.style.opacity = ramp(p, 0.05, 0.15).toFixed(3);
-        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(tOut * 1.5).toFixed(2)}deg)`;
+    let beat = -1;
+    return ({ progress: P }) => {
+      const b = P < 0.12 ? 0 : P < 0.72 ? 1 : 2;
+      if (b === beat) {
+        return;
       }
-      if (lead) {
-        const e = ramp(p, 0.82, 0.9);
-        lead.style.opacity = (ramp(p, 0.03, 0.1) * (1 - e)).toFixed(3);
-        lead.style.transform = `translateY(${(-14 * e).toFixed(1)}px)`;
-      }
-      if (cap) {
-        const e = ramp(p, 0.84, 0.92);
-        cap.style.opacity = (ramp(p, 0.1, 0.18) * (1 - e)).toFixed(3);
-        cap.style.transform = `translateY(${(10 * e).toFixed(1)}px)`;
-      }
-      if (ghost) {
-        // 浮现后完整停留（.92→.95），末段再收束淡出
-        const g = ramp(p, 0.84, 0.92);
-        const s = ramp(p, 0.95, 1);
-        ghost.style.opacity = (g * (1 - s)).toFixed(3);
-        ghost.style.transform = `scale(${(1 - 0.06 * s).toFixed(4)})`;
+      beat = b;
+      const set = (el: HTMLElement | null, op: string, tf: string): void => {
+        if (el) {
+          el.style.opacity = op;
+          el.style.transform = tf;
+        }
+      };
+      if (b === 0) {
+        set(lead, '0', 'translateY(14px)');
+        set(stage, '0.1', 'scale(0.88) translateY(26px)');
+        set(cap, '0', 'translateY(10px)');
+        set(ghost, '0', 'none');
+      } else if (b === 1) {
+        set(lead, '1', 'translateY(0)');
+        set(stage, '1', 'translate3d(0, 0, 0)');
+        set(cap, '1', 'translateY(0)');
+        set(ghost, '0', 'none');
+      } else {
+        // 退场：巨片整体向右退出并暗场；空框原地浮现
+        set(lead, '0', 'translateY(-14px)');
+        set(stage, '0', 'translate3d(46vw, 0, 0)');
+        set(cap, '0', 'translateY(10px)');
+        set(ghost, '1', 'none');
       }
     };
   },
-
   /**
-   * 03 同行之路：关系网络在钉住轨道内逐渐展开
-   * （SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长），
-   * 完成于 ~0.72，尾部驻留「待归档」占位后解锁下一章。
+   * 03 同行之路：品牌关系网节拍——所有品牌文字节点连接到「合作品牌」枢纽
+   * （排名不分先后：网络本身无序）。滚动依次聚焦每个品牌：节点与连线点亮，
+   * 顶部放大字「@品牌名」、下方稍小字体展开合作文案（跨过相邻段中点即整段
+   * 切换，transition 由 CSS 完成，绝不停在两段之间）。末段点亮「排名不分先后」。
    */
   road: track => {
-    const center = track.querySelector<HTMLElement>('[data-road-center]');
-    const h1 = track.querySelector<HTMLElement>('[data-road-h1]');
-    const left = track.querySelector<HTMLElement>('[data-road-left]');
-    const h2 = track.querySelector<HTMLElement>('[data-road-h2]');
-    const right = track.querySelector<HTMLElement>('[data-road-right]');
-    const v1 = track.querySelector<HTMLElement>('[data-road-v1]');
-    const top = track.querySelector<HTMLElement>('[data-road-top]');
-    const v2 = track.querySelector<HTMLElement>('[data-road-v2]');
-    const bottom = track.querySelector<HTMLElement>('[data-road-bottom]');
+    const nodes = [...track.querySelectorAll<HTMLElement>('[data-road-node]')];
+    const links = [...track.querySelectorAll<HTMLElement>('[data-road-link]')];
+    const focuses = [...track.querySelectorAll<HTMLElement>('[data-road-focus]')];
+    const fineprint = track.querySelector<HTMLElement>('[data-road-fineprint]');
+    const N = Math.min(nodes.length, focuses.length);
+    const SPAN = N > 0 ? 0.94 / N : 1;
+    const HEAD = 0.03;
+    let active = -1;
     return ({ progress: p }) => {
-      if (center) {
-        const t = ramp(p, 0.03, 0.16);
-        center.style.opacity = t.toFixed(3);
-        center.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
+      let s = -1;
+      for (let i = 0; i < N; i++) {
+        const q = (p - (HEAD + i * SPAN)) / SPAN;
+        if (q >= -0.5 && q < 1.5 && s < 0) {
+          s = i; // 第一段从进入即生效；段间中点由阈值切换
+        }
       }
-      if (h1) {
-        h1.style.opacity = '1';
-        h1.style.transform = `scaleX(${ramp(p, 0.16, 0.34).toFixed(3)})`;
+      // 阈值切换：跨过每段中点即切换到下一段（吸附，不停在中间态）
+      s = Math.max(0, Math.min(N - 1, Math.floor((p - HEAD) / SPAN)));
+      if (s === active) {
+        return;
       }
-      if (left) {
-        left.style.opacity = ramp(p, 0.34, 0.46).toFixed(3);
-      }
-      if (h2) {
-        h2.style.opacity = '1';
-        h2.style.transform = `scaleX(${ramp(p, 0.18, 0.36).toFixed(3)})`;
-      }
-      if (right) {
-        right.style.opacity = ramp(p, 0.36, 0.48).toFixed(3);
-      }
-      if (v1) {
-        v1.style.opacity = '1';
-        v1.style.transform = `scaleY(${ramp(p, 0.48, 0.6).toFixed(3)})`;
-      }
-      if (top) {
-        top.style.opacity = ramp(p, 0.6, 0.7).toFixed(3);
-      }
-      if (v2) {
-        v2.style.opacity = '1';
-        v2.style.transform = `scaleY(${ramp(p, 0.5, 0.62).toFixed(3)})`;
-      }
-      if (bottom) {
-        bottom.style.opacity = ramp(p, 0.62, 0.72).toFixed(3);
+      active = s;
+      nodes.forEach((el, i) => {
+        el.classList.toggle('is-active', i === s);
+      });
+      links.forEach((el, i) => {
+        el.classList.toggle('is-active', i === s);
+      });
+      focuses.forEach((el, i) => {
+        el.style.opacity = i === s ? '1' : '0';
+      });
+      if (fineprint) {
+        fineprint.style.opacity = s >= N - 1 ? '1' : '0';
       }
     };
   },
