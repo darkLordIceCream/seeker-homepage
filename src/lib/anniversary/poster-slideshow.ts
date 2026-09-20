@@ -17,16 +17,17 @@
  */
 import { POSTERS } from '@/data/anniversary/posters';
 
-/** 自动拨动节拍（无交互多久拨一格） */
-const AUTO_MS = 2000;
-/** 弹簧角频率（刚度） */
-const OMEGA = 9;
-/** 阻尼比：<1 轻微过冲回弹，抓照片的「落位」感 */
-const ZETA = 0.78;
+/** 自动拨动节拍（无交互多久拨一格）：基础间隔 + 随机增量，打破节拍器感 */
+const AUTO_MS = 1900;
+const AUTO_MS_VAR = 700;
+/** 弹簧角频率（刚度）：偏软，落位从容不急促 */
+const OMEGA = 6.5;
+/** 阻尼比：<1 过冲回弹（落位呼吸感），0.72 比旧值多一丝回弹 */
+const ZETA = 0.72;
 /** 松手速度投影时长（s）：速度换算成额外位移的预估 */
 const FLING_LEAD = 0.15;
-/** 自动拨动的初速冲量（px/s）：像手指轻拨一下 */
-const AUTO_NUDGE_V = 420;
+/** 自动拨动的初速冲量（px/s）：基础值，实际 ±15% 随机——每次拨动力度不同 */
+const AUTO_NUDGE_V = 300;
 /** 向前预取张数 */
 const PRELOAD_AHEAD = 2;
 /** 署名切换的微淡出时长 */
@@ -52,7 +53,7 @@ export function initPosterSlideshow(): void {
     return;
   }
 
-  let step = track.clientWidth || 1;
+  let step = (track.clientWidth || 1) * 1.5; // 格距 1.5×：邻格照片不延展进左列文字区
   /** 带偏移（px）：带位置 = 格号 * step + band，向右为正 */
   let band = 0;
   let vel = 0;
@@ -69,6 +70,8 @@ export function initPosterSlideshow(): void {
   let inView = false;
   let { hidden } = document;
   let idleT0 = performance.now();
+  /** 下一次拨动的等待时长（每次随机，避免严格周期性） */
+  let nextAutoMs = AUTO_MS + Math.random() * AUTO_MS_VAR;
 
   /** 槽 j 持有的格号；初始：槽0 = 格0（SSR 首帧已渲染 POSTERS[0]） */
   const gi = [0, -1, 1];
@@ -102,8 +105,10 @@ export function initPosterSlideshow(): void {
         continue;
       }
       const x = g * step + band;
-      // 3D 纵深：偏离中心越远越缩小、越暗、越靠下层（滑出 = 往后退）
-      const norm = Math.min(1, Math.abs(x) / step);
+      // 3D 纵深：偏离中心越远越缩小、越暗、越靠下层（滑出 = 往后退）；
+      // smoothstep 让边缘的变化更缓，呼吸感更自然
+      const lin = Math.min(1, Math.abs(x) / step);
+      const norm = lin * lin * (3 - 2 * lin);
       const scale = 1 - 0.15 * norm;
       img.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) scale(${scale.toFixed(4)})`;
       img.style.zIndex = norm < 0.5 ? '2' : '1';
@@ -168,6 +173,7 @@ export function initPosterSlideshow(): void {
       preload(curG + k);
     }
     idleT0 = performance.now();
+    nextAutoMs = AUTO_MS + Math.random() * AUTO_MS_VAR;
   }
 
   // —— 拖拽：1:1 跟手，pointer 事件统一鼠标/触摸 ——
@@ -237,7 +243,7 @@ export function initPosterSlideshow(): void {
   io.observe(track);
 
   window.addEventListener('resize', () => {
-    const w = track.clientWidth || 1;
+    const w = (track.clientWidth || 1) * 1.5;
     curG = Math.round(-band / step);
     step = w;
     band = -curG * step;
@@ -268,10 +274,11 @@ export function initPosterSlideshow(): void {
           target = null;
           onSettle();
         }
-      } else if (inView && !hidden && now - idleT0 > AUTO_MS) {
-        // 自动拨动：内容右移一格（下一帧自左滚入），与离场向右同向，给一个「轻拨」初速
+      } else if (inView && !hidden && now - idleT0 > nextAutoMs) {
+        // 自动拨动：内容右移一格（下一帧自左滚入），轻拨初速 ±15% 随机——
+        // 每次拨动的轨迹都略有不同，避免严格周期性的机械感
         target = band + step;
-        vel = AUTO_NUDGE_V;
+        vel = AUTO_NUDGE_V * (0.9 + Math.random() * 0.25);
       }
     }
 
