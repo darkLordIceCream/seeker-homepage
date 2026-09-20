@@ -10,7 +10,6 @@
  * （poster-slideshow.ts 的 rAF 循环写 [data-poster-track] 内槽位位移，
  * 无 CSS transition，杜绝「生硬」的机械过渡）。
  * 动效分工：滚动引擎（data-story-scene="posters"）只写 [data-poster-stage]——
- * 照片飘出后 [data-poster-ghost] 空框浮现再收束（结束动作：光已飘走，框留余温）。
  * 无 JS / reduced-motion：静态展示首帧与署名（渐进增强，与全页引擎一致）。
  * 首帧不用 loading="lazy"：sticky + overflow:hidden 舞台里 WebKit 懒加载不可靠。
  */
@@ -47,10 +46,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
         <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
         <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
       </div>
-    </div>
-    {/* 空框是放映区的静止兄弟层：照片加速飘出时它原地留下（光已飘走，框留余温） */}
-    <div class="pss-ghost" data-poster-ghost aria-hidden="true">
-      <p class="pss-ghost-text">光已飘向下一帧</p>
     </div>
   </div>
   <div class="pss-side">
@@ -154,7 +149,7 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
   }
 
   /* 放映区：占满右列（滚动引擎写 stage 外层，走带物理引擎写 track 内槽位）；
-     空框 ghost 是 stage 的静止兄弟层，覆盖同一区域 */
+     */
   .pss-right {
     position: relative;
     z-index: 1;
@@ -196,34 +191,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
 
   :global([data-theme='light']) .pss-img {
     filter: drop-shadow(0 14px 44px rgba(20, 40, 61, 0.3));
-  }
-
-  /* 结束动作：照片加速飘出后，空框浮现再收束——光已飘走，框留余温 */
-  .pss-ghost {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid color-mix(in srgb, var(--anniv-accent) 50%, transparent);
-    box-shadow: inset 0 0 80px color-mix(in srgb, var(--anniv-accent) 12%, transparent);
-    background: linear-gradient(
-      120deg,
-      transparent 25%,
-      color-mix(in srgb, var(--anniv-accent) 10%, transparent) 50%,
-      transparent 75%
-    );
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .pss-ghost-text {
-    margin: 0;
-    font-family: var(--anniv-serif);
-    font-size: clamp(1rem, 2vw, 1.45rem);
-    letter-spacing: 0.32em;
-    text-indent: 0.32em;
-    color: var(--anniv-fg);
   }
 
   @media (max-width: 48rem) {

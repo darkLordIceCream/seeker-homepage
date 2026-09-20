@@ -336,22 +336,7 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 320vh; /* 三段项目记忆：进入 → 驻留 → 退为残影的重叠时间轴 */
   }
 
-  /* 舞台内题头收紧：给三行卡腾出一屏（仅此章节作用域） */
-  .story-on .story-track--projects :global(.ash) {
-    margin-bottom: 0.6rem;
-    gap: 0.4rem;
-  }
-
-  .story-on .story-track--projects :global(.ash-zh) {
-    font-size: clamp(1.4rem, 2.6vw, 2rem);
-  }
-
-  .story-on .story-track--projects :global(.ash-en) {
-    font-size: 0.6rem;
-    letter-spacing: 0.32em;
-  }
-
-  /* 矮视口：题头再收一档 + 压缩舞台上下留白，保证三卡完整可见 */
+  /* 矮视口：压缩舞台上下留白 + 题签收纳，保证三卡完整可见 */
   @media (max-height: 780px) {
     .story-on .story-track--projects .story-stage {
       padding-top: 0.5rem;
@@ -366,15 +351,6 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
 
     .story-on .story-track--projects :global(.ps-cta) {
       display: none; /* 矮视口舞台收纳：整卡可点击进项目页 */
-    }
-
-    .story-on .story-track--projects :global(.ash) {
-      margin-bottom: 0.3rem;
-      gap: 0.25rem;
-    }
-
-    .story-on .story-track--projects :global(.ash-zh) {
-      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
     }
   }
 

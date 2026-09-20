@@ -208,7 +208,6 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     const lead = track.querySelector<HTMLElement>('[data-poster-lead]');
     const stage = track.querySelector<HTMLElement>('[data-poster-stage]');
     const cap = track.querySelector<HTMLElement>('[data-poster-cap]');
-    const ghost = track.querySelector<HTMLElement>('[data-poster-ghost]');
     let beat = -1;
     return ({ progress: P }) => {
       const b = P < 0.12 ? 0 : P < 0.72 ? 1 : 2;
@@ -226,18 +225,18 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         set(lead, '0', 'translateY(14px)');
         set(stage, '0.1', 'scale(0.88) translateY(26px)');
         set(cap, '0', 'translateY(10px)');
-        set(ghost, '0', 'none');
+
       } else if (b === 1) {
         set(lead, '1', 'translateY(0)');
         set(stage, '1', 'translate3d(0, 0, 0)');
         set(cap, '1', 'translateY(0)');
-        set(ghost, '0', 'none');
+
       } else {
         // 退场：巨片整体向右退出并暗场；空框原地浮现
         set(lead, '0', 'translateY(-14px)');
         set(stage, '0', 'translate3d(46vw, 0, 0)');
         set(cap, '0', 'translateY(10px)');
-        set(ghost, '1', 'none');
+
       }
     };
   },
