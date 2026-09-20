@@ -263,8 +263,8 @@ export function initPosterSlideshow(): void {
         }
       } else if (inView && !hidden && now - idleT0 > AUTO_MS) {
         // 自动拨动：内容右移一格（下一帧自左滚入），给一个「轻拨」初速
-        target = band + step;
-        vel = AUTO_NUDGE_V;
+        target = band - step;
+        vel = -AUTO_NUDGE_V;
       }
     }
 

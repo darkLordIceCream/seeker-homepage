@@ -1,15 +1,16 @@
 ---
 /**
- * 【06 留光成物 · PosterSlideshow】成员巨片走带（左文右图编辑排版）。
- * 左列 = 引言 + 署名/计数/进度线；右列 = 放映区，海报 contain 原比例
- * 展示（自带相框/水印/二维码，绝不裁切），占满右侧视口。
+ * 【06 留光成物 · PosterSlideshow】成员巨片走带（左图右文编辑排版）。
+ * 左列 = 放映区，海报 contain 原比例展示（自带相框/水印/二维码，绝不裁切），
+ * 占满左侧视口；右列 = 引言 + 署名/计数/进度线。
+ * 照片的全部运动（入场左飘入、换帧左流、离场左飘出）都发生在左半区与
+ * 屏幕左缘外——右侧文字天然不被经过（用户定稿布局）。
  * 交互：可直接抓住照片左右拖动（1:1 跟手），松手带惯性、轻微阻尼
  * 弹簧吸附到格；停留 2s 自动拨动一格——拨动与拖动共用同一套物理模型
  * （poster-slideshow.ts 的 rAF 循环写 [data-poster-track] 内槽位位移，
  * 无 CSS transition，杜绝「生硬」的机械过渡）。
  * 动效分工：滚动引擎（data-story-scene="posters"）只写 [data-poster-stage]——
- * 入场从左侧飘入、离场随滚动加速右飘出；照片飘出后 [data-poster-ghost]
- * 空框浮现再收束（结束动作：光已飘走，框留余温）。
+ * 照片飘出后 [data-poster-ghost] 空框浮现再收束（结束动作：光已飘走，框留余温）。
  * 无 JS / reduced-motion：静态展示首帧与署名（渐进增强，与全页引擎一致）。
  * 首帧不用 loading="lazy"：sticky + overflow:hidden 舞台里 WebKit 懒加载不可靠。
  */
@@ -22,6 +23,37 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
 ---
 
 <div class="pss" data-poster-slideshow>
+  <div class="pss-right">
+    <div class="pss-stage" data-poster-stage>
+      {/* 裁切层只作用于走带：换帧滑动框内进行、右侧邻格被裁不可见（不压字）；
+          入场/离场写在 stage 外层，无裁切、保留照片延展的飘逸感 */}
+      <div class="pss-clip">
+        <div class="pss-track" data-poster-track>
+          {
+            first && (
+              <img
+                class="pss-img"
+                data-poster-slot
+                src={first.src}
+                alt={`Seeker 七周年纪念海报 · @${first.author}`}
+                width={first.w}
+                height={first.h}
+                fetchpriority="high"
+                decoding="async"
+                draggable="false"
+              />
+            )
+          }
+          <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
+          <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
+        </div>
+      </div>
+    </div>
+    {/* 空框是放映区的静止兄弟层：照片加速飘出时它原地留下（光已飘走，框留余温） */}
+    <div class="pss-ghost" data-poster-ghost aria-hidden="true">
+      <p class="pss-ghost-text">光已飘向下一帧</p>
+    </div>
+  </div>
   <div class="pss-side">
     <p class="pss-lead" data-poster-lead>
       过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
@@ -38,39 +70,14 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
       </div>
     </div>
   </div>
-  <div class="pss-right">
-    <div class="pss-stage" data-poster-stage>
-      <div class="pss-track" data-poster-track>
-        {
-          first && (
-            <img
-              class="pss-img"
-              data-poster-slot
-              src={first.src}
-              alt={`Seeker 七周年纪念海报 · @${first.author}`}
-              width={first.w}
-              height={first.h}
-              fetchpriority="high"
-              decoding="async"
-              draggable="false"
-            />
-          )
-        }
-        <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
-        <img class="pss-img" data-poster-slot alt="" aria-hidden="true" draggable="false" />
-      </div>
-    </div>
-    {/* 空框是放映区的静止兄弟层：照片加速飘出时它原地留下（光已飘走，框留余温） */}
-    <div class="pss-ghost" data-poster-ghost aria-hidden="true">
-      <p class="pss-ghost-text">光已飘向下一帧</p>
-    </div>
-  </div>
 </div>
 
 <style>
   .pss {
     display: grid;
-    grid-template-columns: minmax(18rem, 31%) 1fr;
+    /* 放映区在左、文字在右：照片的全部运动（入场/换帧/离场）都发生在
+       左半区与屏幕左缘外，右侧文字天然不被经过（用户定稿布局） */
+    grid-template-columns: 1fr minmax(18rem, 31%);
     gap: clamp(1.6rem, 3.5vw, 4rem);
     align-items: center;
     width: 100%;
@@ -80,7 +87,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     display: flex;
     flex-direction: column;
     gap: clamp(1.2rem, 2.4vw, 2rem);
-    /* 照片滑动换帧/飘入时从文字后面穿过（z3 > 放映区 z1，标题署名永不被盖） */
     position: relative;
     z-index: 3;
   }
@@ -161,6 +167,13 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     inset: 0;
   }
 
+  /* 裁切层：只裁走带（换帧滑动/拖拽出框部分），入场离场在 stage 层不受影响 */
+  .pss-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
   /* 走带轨道：可抓取拖动；pan-y 保留页面纵向滚动，横向位移归走带 */
   .pss-track {
     position: absolute;
@@ -223,6 +236,11 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
       grid-template-columns: 1fr;
       gap: 1.4rem;
       align-items: start;
+    }
+
+    /* 移动端单列：文字保持在放映区上方（与桌面左右关系的阅读顺序一致） */
+    .pss-side {
+      order: -1;
     }
 
     .pss-right {

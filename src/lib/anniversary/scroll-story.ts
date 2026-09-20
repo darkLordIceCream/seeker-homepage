@@ -212,11 +212,11 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       if (stage) {
         // 入场：从左侧 -60vw 减速飘入；(1-t)² 让就位带缓出感
         const tIn = ramp(p, 0.02, 0.2);
-        // 离场：t² 二次加速飘向右出屏
+        // 离场：t² 二次加速向左飘出屏幕（放映区在左半区，照片全程不碰右侧文字）
         const tOut = ramp(p, 0.82, 0.96);
-        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) + tOut * tOut * 1.15 * vw;
+        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) - tOut * tOut * 1.15 * vw;
         stage.style.opacity = ramp(p, 0.05, 0.15).toFixed(3);
-        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(tOut * 1.5).toFixed(2)}deg)`;
+        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(-tOut * 1.5).toFixed(2)}deg)`;
       }
       if (lead) {
         const e = ramp(p, 0.82, 0.9);
