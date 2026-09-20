@@ -1696,3 +1696,27 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 本功能文件已单独提交；工作区另有上一会话的分部小地图 v2 改动（BranchMap.astro、branches.ts、src/lib/branches/、Footer.astro、AboutSection.astro、wechat-qrcode.png）仍按其记录「等用户统一安排」未提交
 - `pnpm format`
   现状：Navigation.astro 既有 CSS 语法错误导致 prettier 全仓跑挂（报错文件为已提交代码，非本次改动）；已恢复被 prettier 误重排的无关文件
+
+## 会话记录（About 区收敛：去胶囊列表、期待点亮入地图卡片、删微信占位，2026-09-20 续 2）
+
+### 交付内容（同分支，未提交）
+
+1. AboutSection：删除 branch-chips 胶囊列表（含 .chip/.chip--more/.chip.is-active 样式与id="branches"，无外部引用，已 grep 确认）；join-row 删除「微信：seeker-photo（占位）」（.join-contact 样式同删），现在左栏为 标题/简介/特性/team-link/地图/加入按钮
+2. BranchMap：新增 figcaption「你的城市 · 期待点亮」虚线胶囊（卡片内 SVG 下方，沿用 chip--more 视觉）；联动脚本移除 .branch-chips 查询（降为圆点↔按钮双向），注释同步更新
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors（52 既有 warnings）/ build 全绿
+- 截图实测（深+浅主题、390×844 移动端）：胶囊列表消失、地图卡片含 11 分部按钮 + 期待点亮虚线胶囊、加入按钮独占一行无微信占位；地图内 hover 联动（海南：pill+dot
+  is-active）回归通过
+- 未提交，与前两次会话改动及周年 WIP 同工作区，等用户统一安排
+
+### 板块6 海报加载不出修复（2026-09-20 用户反馈）
+
+- 症状：板块6 放映框/署名在、海报图不出来；排查时 R2 自定义域全量 200 正常、Chromium（headless + 内嵌）渲染正常
+- 根因：首帧 `<img loading="lazy">` 嵌在 sticky 舞台（.story-stage
+  overflow:hidden）里，WebKit 对「sticky +
+  overflow:hidden 容器内的懒加载图」距离计算有 bug，请求可能永不发出（页面顶部非 lazy 的 R2 图都正常，符合此模式）
+- 修复：PosterSlideshow 首帧去 loading="lazy"（fetchpriority="high" 已有）；poster-slideshow.ts 的 decode() 加老 Safari 兼容（缺失时等 load/error，error 走既有跳帧逻辑，不会让坏帧上墙）
+- 验证：type-check/build 全绿；内嵌浏览器实测首帧直出（naturalWidth>0、无 lazy 属性）、换帧正常推进（NO.117→NO.143 时间线）
+- 教训：滚动叙事页深处的图（轨道 1.2 万 px 下）不要依赖 lazy——WebKit 的懒加载触发在 pinned 容器里不可靠；首帧一律 eager 直出

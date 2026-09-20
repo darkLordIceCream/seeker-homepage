@@ -7,6 +7,8 @@
  * 任一时刻仅预取当前 ±2 张。
  * 海报自带相框/水印/二维码设计 → 原比例 contain 展示，绝不裁切。
  * 无 JS / reduced-motion：静态展示首帧与署名（渐进增强，与全页引擎一致）。
+ * 首帧不用 loading="lazy"：它嵌在 sticky + overflow:hidden 的舞台里，
+ * WebKit 对这种组合的懒加载距离计算有 bug，图片请求可能永不发出（用户实测踩坑）。
  */
 import { POSTERS } from '@/data/anniversary/posters';
 
@@ -33,7 +35,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
             width={first.w}
             height={first.h}
             fetchpriority="high"
-            loading="lazy"
             decoding="async"
           />
         )

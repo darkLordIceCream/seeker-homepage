@@ -101,7 +101,17 @@ export function initPosterSlideshow(): void {
     back.src = poster.src;
     back.alt = `Seeker 七周年纪念海报 · @${poster.author}`;
     try {
-      await back.decode();
+      // decode() 在老版 Safari 缺失——缺失时等 load/error 事件，失败照常跳帧
+      if (typeof back.decode === 'function') {
+        await back.decode();
+      } else if (!back.complete || back.naturalWidth === 0) {
+        await new Promise<void>((resolve, reject) => {
+          back.addEventListener('load', () => resolve(), { once: true });
+          back.addEventListener('error', () => reject(new Error('poster load failed')), {
+            once: true,
+          });
+        });
+      }
     } catch {
       failed.add(next);
       switching = false;
