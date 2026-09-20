@@ -356,6 +356,16 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     .story-on .story-track--projects .story-stage {
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
+      gap: 0.9rem;
+    }
+
+    .story-on .story-track--projects :global(.ps-body) {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .story-on .story-track--projects :global(.ps-cta) {
+      display: none; /* 矮视口舞台收纳：整卡可点击进项目页 */
     }
 
     .story-on .story-track--projects :global(.ash) {

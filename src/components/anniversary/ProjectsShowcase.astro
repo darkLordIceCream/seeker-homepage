@@ -97,19 +97,24 @@ const PROJECTS = [
   :global(.story-on) .ps-beats {
     display: flex;
     flex-direction: column;
-    gap: clamp(0.9rem, 1.8vh, 1.5rem);
+    gap: clamp(0.7rem, 1.4vh, 1.2rem);
   }
 
+  /* 行高直接由视口推导（(100svh − 题头与留白预留) / 3）：矮视口整组等比
+     压缩，三卡 + 题头恒定落在一屏内；行内溢出裁切保底 */
   :global(.story-on) .ps-beat {
+    height: calc((100svh - 15rem) / 3);
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     will-change: transform;
   }
 
   :global(.story-on) .ps-card {
     display: grid;
     grid-template-columns: 38% 1fr;
+    height: 100%;
     transform: scale(0.965);
     filter: brightness(0.68);
     transition:
@@ -204,7 +209,9 @@ const PROJECTS = [
 
   /* story-on 舞台内：三行卡压缩为紧凑摘要卡（全文在项目页） */
   :global(.story-on) .ps-body {
-    padding: clamp(0.8rem, 1.6vh, 1.2rem) clamp(1rem, 2vw, 1.4rem);
+    padding: clamp(0.7rem, 1.6vh, 1.2rem) clamp(1rem, 2vw, 1.4rem);
+    min-height: 0;
+    overflow: hidden;
   }
 
   :global(.story-on) .ps-title {
@@ -226,6 +233,22 @@ const PROJECTS = [
   :global(.story-on) .ps-cta {
     margin-top: 0.4rem;
     font-size: 0.62rem;
+  }
+
+  /* 矮视口（笔记本小窗）：题签一行、进一步收紧，保证三卡完整在一屏 */
+  @media (max-height: 780px) {
+    :global(.story-on) .ps-body {
+      padding: 0.55rem clamp(0.9rem, 1.6vw, 1.2rem);
+    }
+
+    :global(.story-on) .ps-desc {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+
+    :global(.story-on) .ps-cta {
+      margin-top: 0.25rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
