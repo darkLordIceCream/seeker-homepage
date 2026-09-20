@@ -66,25 +66,53 @@ const ROW_B = partners.slice(6, 13);
 </div>
 
 <script>
-  // 放大镜：内层内容以鼠标位置为变换原点轻微放大（跟手），移出恢复。
-  // 委托在卡片墙上，mousemove 频繁写 CSS 变量（廉价），无第三方依赖。
+  // 悬浮弹窗卡：悬停时克隆卡片内容为浮层（完整文案、放大展示），叠加在其他
+  // 卡片之上；浮层定位在原卡上方（顶部行则向下弹），不推动任何布局；移出即销毁。
+  // 无第三方依赖；触屏（hover:none）不触发，手机端维持单列完整阅读。
   const wall = document.querySelector<HTMLElement>('.sr');
-  if (wall) {
-    const cards = [...wall.querySelectorAll<HTMLElement>('.sr-card')];
-    const setLens = (card: HTMLElement, e: MouseEvent) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
-      card.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
-      card.style.setProperty('--zoom', '1.1');
-      card.classList.add('is-lens'); // 放大时解除文案截断，完整显示
+  if (wall && window.matchMedia('(hover: hover)').matches) {
+    const POPUP_W = 360; // 浮层宽（与 CSS .sr-popup 同步）
+    let popup: HTMLElement | null = null;
+
+    const removePopup = () => {
+      popup?.remove();
+      popup = null;
     };
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => setLens(card, e));
-      card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--zoom', '1');
-        card.classList.remove('is-lens');
+
+    wall.querySelectorAll<HTMLElement>('.sr-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        removePopup();
+        const r = card.getBoundingClientRect();
+        const pop = document.createElement('div');
+        pop.className = 'sr-popup';
+        const inner = card.querySelector('.sr-card-inner');
+        if (inner) {
+          pop.append(inner.cloneNode(true));
+        }
+        pop.style.width = `${POPUP_W}px`;
+        // 水平：优先与原卡左对齐，右溢出则右对齐原卡右缘，再兜底夹回视口
+        let { left } = r;
+        if (left + POPUP_W > window.innerWidth - 12) {
+          left = r.right - POPUP_W;
+        }
+        left = Math.max(12, Math.min(left, window.innerWidth - POPUP_W - 12));
+        // 垂直：上排卡片向上弹，下排向下弹（哪边空间够用哪边）
+        const openUp = r.top > window.innerHeight * 0.45;
+        pop.style.left = `${left}px`;
+        pop.style.top = openUp ? 'auto' : `${r.bottom + 10}px`;
+        if (openUp) {
+          pop.style.bottom = `${window.innerHeight - r.top + 10}px`;
+        }
+        document.body.append(pop);
+        // 下一帧加可见类，触发淡入上浮过渡
+        requestAnimationFrame(() => {
+          pop.classList.add('is-open');
+        });
+        popup = pop;
       });
+      card.addEventListener('mouseleave', removePopup);
     });
+    window.addEventListener('scroll', removePopup, { passive: true });
   }
 </script>
 
@@ -126,35 +154,15 @@ const ROW_B = partners.slice(6, 13);
     box-shadow: 0 0 24px rgba(46, 134, 222, 0.18);
   }
 
-  /* 内层：跟随鼠标原点缩放（工厂/脚本写 --zoom 与 --mx/--my） */
   .sr-card-inner {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: clamp(0.9rem, 1.6vw, 1.25rem) clamp(0.85rem, 1.5vw, 1.15rem);
-    transform: scale(var(--zoom, 1));
-    transform-origin: var(--mx, 50%) var(--my, 50%);
-    transition: transform 0.18s ease-out;
-    will-change: transform;
   }
 
-  /* 镜片高光：跟随鼠标的圆形柔光，hover 淡入 */
-  .sr-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle 110px at var(--mx, 50%) var(--my, 50%),
-      rgba(46, 134, 222, 0.14),
-      transparent 72%
-    );
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-
-  .sr-card:hover::after {
-    opacity: 1;
+  .sr-card:hover {
+    background: color-mix(in srgb, var(--anniv-surface) 88%, transparent);
   }
 
   .sr-card-brand {
@@ -209,11 +217,52 @@ const ROW_B = partners.slice(6, 13);
     overflow: hidden;
   }
 
-  /* 放大镜悬停：解除截断，透过放大的内容层读到完整文案（卡片高度不变不跳动） */
-  .sr-card.is-lens .sr-card-blurb {
+
+  /* —— 悬浮弹窗卡：完整文案、放大展示，叠加在其他卡片之上 ——
+     （JS 动态创建的元素不带 Astro scope 哈希，须 :global 命中） */
+  :global(.sr-popup) {
+    position: fixed;
+    z-index: 60;
+    max-height: min(60vh, 520px);
+    overflow: auto;
+    padding: clamp(1.2rem, 2vw, 1.6rem) clamp(1.1rem, 2vw, 1.5rem);
+    border: 1px solid var(--anniv-accent);
+    background: color-mix(in srgb, var(--anniv-bg) 94%, #061a30);
+    box-shadow:
+      0 18px 50px rgba(4, 16, 30, 0.6),
+      0 0 30px rgba(46, 134, 222, 0.16);
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition:
+      opacity 0.22s ease,
+      transform 0.22s var(--ease-enter);
+    pointer-events: none;
+  }
+
+  :global(.sr-popup.is-open) {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.sr-popup) .sr-card-inner {
+    padding: 0;
+  }
+
+  :global(.sr-popup) .sr-card-brand {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(.sr-popup) .sr-card-title {
+    font-size: 0.95rem;
+  }
+
+  :global(.sr-popup) .sr-card-blurb {
     display: block;
     -webkit-line-clamp: unset;
     overflow: visible;
+    font-size: 0.9rem;
+    line-height: 2;
     color: var(--anniv-fg-secondary);
   }
 

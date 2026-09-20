@@ -1,0 +1,388 @@
+---
+/**
+ * 首页「小组简介」分部示意地图：构建期把省界 GeoJSON 投影成静态 SVG，
+ * 零客户端框架；仅一段原生脚本做分部胶囊 ↔ 圆点 ↔ 地图按钮三方联动。
+ * 版式：主图大陆范围 + 右下角南海诸岛附图（经典中国全图版式）；
+ * 每个分部圆点伸出一根引线连到写着分部名的胶囊按钮（标注式地图）。
+ */
+import { BRANCHES } from '../../data/branches';
+import { buildChinaSvgData, projectPoint } from '../../lib/branches/china-svg';
+
+const data = buildChinaSvgData();
+
+// 南海诸岛附图：框选完整投影空间的南段（y ≥ 415 ≈ 20.9°N）等比缩进右下角
+const INSET_W = 150;
+const INSET_H = 54;
+const INSET_X = data.viewW - INSET_W - 8;
+const INSET_Y = data.viewH - INSET_H - 8;
+const INSET_SCALE = INSET_W / data.fullWidth;
+const INSET_CLIP_TOP = 415;
+const INSET_TX = INSET_X;
+const INSET_TY = INSET_Y + 2 - INSET_CLIP_TOP * INSET_SCALE;
+const insetProvinces = data.provinces.filter(p => p.maxY >= INSET_CLIP_TOP);
+
+// 地图按钮（胶囊）中心坐标：手工排布避让海岸线/台湾岛/附图，引线互不交叉
+const PLACEMENTS: Record<string, { x: number; y: number }> = {
+  shanxi: { x: 490, y: 155 },
+  shaanxi: { x: 300, y: 190 },
+  anhui: { x: 415, y: 245 },
+  jinling: { x: 565, y: 230 },
+  shanghai: { x: 565, y: 285 },
+  wuhan: { x: 505, y: 320 },
+  chuanyu: { x: 225, y: 290 },
+  yunnan: { x: 210, y: 375 },
+  guangxi: { x: 270, y: 440 },
+  guangfo: { x: 435, y: 390 },
+  hainan: { x: 388, y: 455 },
+};
+
+const PILL_W = 86;
+const PILL_H = 27;
+
+const dots = BRANCHES.map((branch, i) => {
+  const [x, y] = projectPoint(branch.lngLat);
+  const spot = PLACEMENTS[branch.id] ?? { x: x + 60, y: y - 40 };
+  return {
+    ...branch,
+    x,
+    y,
+    spot,
+    // 光晕呼吸相位与引线描画节奏共用一组错峰延时
+    delay: (i * 0.09).toFixed(2),
+  };
+});
+---
+
+<figure class="branch-map reveal" data-branch-map>
+  <span aria-hidden="true" class="bm-label">分部坐标 · WHERE WE ARE</span>
+  <svg
+    aria-label="Seeker追光者各分部地理位置示意地图"
+    role="img"
+    viewBox={`0 0 ${data.viewW} ${data.viewH}`}
+  >
+    <defs>
+      <radialGradient cx="35%" cy="30%" id="bm-core" r="80%">
+        <stop class="bm-core-hi" offset="0%"></stop>
+        <stop class="bm-core-lo" offset="100%"></stop>
+      </radialGradient>
+      <clipPath id="bm-inset-clip">
+        <rect height={INSET_H} rx="4" width={INSET_W} x={INSET_X} y={INSET_Y}></rect>
+      </clipPath>
+      {/* 主图段线挖掉附图区域（evenodd），避免附图内外重复描线 */}
+      <clipPath id="bm-main-dash-clip">
+        <path
+          clip-rule="evenodd"
+          d={`M0 0H${data.viewW}V${data.viewH}H0Z M${INSET_X} ${INSET_Y}h${INSET_W}v${INSET_H}h-${INSET_W}Z`}
+        ></path>
+      </clipPath>
+    </defs>
+
+    <g class="bm-land">
+      {
+        data.provinces.map(p => (
+          <path d={p.d}>
+            <title>{p.name}</title>
+          </path>
+        ))
+      }
+    </g>
+
+    <g class="bm-ninedash" clip-path="url(#bm-main-dash-clip)">
+      {data.nineDash.map(d => <path d={d} />)}
+    </g>
+
+    <g clip-path="url(#bm-inset-clip)">
+      <g transform={`translate(${INSET_TX} ${INSET_TY}) scale(${INSET_SCALE})`}>
+        <g class="bm-inset-land">
+          {insetProvinces.map(p => <path d={p.d} />)}
+        </g>
+        <g class="bm-inset-dash">
+          {data.nineDash.map(d => <path d={d} />)}
+        </g>
+      </g>
+    </g>
+    <rect class="bm-inset-frame" height={INSET_H} rx="4" width={INSET_W} x={INSET_X} y={INSET_Y}
+    ></rect>
+    <text
+      class="bm-inset-label"
+      text-anchor="middle"
+      x={INSET_X + INSET_W / 2}
+      y={INSET_Y + INSET_H - 7}
+    >
+      南海诸岛
+    </text>
+
+    {/* 引线：圆点 → 分部按钮（进入视口时描画） */}
+    <g class="bm-net">
+      {
+        dots.map(b => (
+          <g data-branch-line={b.id}>
+            <path
+              d={`M${b.x} ${b.y}L${b.spot.x} ${b.spot.y}`}
+              pathLength="1"
+              style={`--bm-delay:${b.delay}s`}
+            />
+          </g>
+        ))
+      }
+    </g>
+
+    {/* 分部按钮 */}
+    <g class="bm-places">
+      {
+        dots.map(b => (
+          <g class="bm-place" data-branch={b.id}>
+            <title>{`${b.label} · ${b.cities}`}</title>
+            <rect
+              height={PILL_H}
+              rx={PILL_H / 2}
+              width={PILL_W}
+              x={b.spot.x - PILL_W / 2}
+              y={b.spot.y - PILL_H / 2}
+            />
+            <text text-anchor="middle" x={b.spot.x} y={b.spot.y + 5.5}>
+              {b.label}
+            </text>
+          </g>
+        ))
+      }
+    </g>
+
+    <g class="bm-dots">
+      {
+        dots.map(b => (
+          <g class="bm-dot" data-branch={b.id} transform={`translate(${b.x} ${b.y})`}>
+            <title>{`${b.label} · ${b.cities}`}</title>
+            <circle class="bm-halo" r="11" style={`--bm-delay:${b.delay}s`} />
+            <circle class="bm-core" r="3.4" />
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+
+  <figcaption class="bm-more-row">
+    <span class="bm-more">你的城市 · 期待点亮</span>
+  </figcaption>
+</figure>
+
+<script>
+  // 地图圆点 ↔ 地图按钮 双向高亮（纯原生 JS，渐进增强）
+  const map = document.querySelector('[data-branch-map]');
+  if (map) {
+    const targets = [...map.querySelectorAll<SVGGraphicsElement>('[data-branch]')];
+    const lines = map.querySelectorAll<SVGGElement>('[data-branch-line]');
+    const setActive = (id: string, on: boolean) => {
+      for (const el of targets) {
+        if (el.dataset.branch === id) {
+          el.classList.toggle('is-active', on);
+        }
+      }
+      for (const line of lines) {
+        if (line.dataset.branchLine === id) {
+          line.classList.toggle('is-active', on);
+        }
+      }
+    };
+    for (const el of targets) {
+      const id = el.dataset.branch;
+      if (!id) {
+        continue;
+      }
+      el.addEventListener('mouseenter', () => {
+        setActive(id, true);
+      });
+      el.addEventListener('mouseleave', () => {
+        setActive(id, false);
+      });
+    }
+  }
+</script>
+
+<style>
+  .branch-map {
+    margin: 0 0 22px;
+    width: 100%;
+    max-width: 440px;
+    padding: 14px 14px 10px;
+    border-radius: 18px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+  }
+
+  .bm-label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted-foreground);
+  }
+
+  .bm-more-row {
+    display: flex;
+    margin-top: 10px;
+  }
+
+  .bm-more {
+    padding: 5px 13px;
+    border-radius: 999px;
+    border: 1px dashed var(--glass-border);
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .bm-land path {
+    fill: var(--secondary);
+    stroke: var(--divider);
+    stroke-width: 0.75;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .bm-ninedash path {
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 0.9;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .bm-inset-land path {
+    fill: var(--secondary);
+  }
+
+  .bm-inset-dash path {
+    fill: none;
+    stroke: var(--foreground);
+    opacity: 0.55;
+    stroke-width: 1.1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .bm-inset-frame {
+    fill: none;
+    stroke: var(--glass-border);
+  }
+
+  .bm-inset-label {
+    font-size: 16px;
+    letter-spacing: 3px;
+    fill: var(--muted-foreground);
+  }
+
+  /* 引线：进入视口后按错峰延时描画（pathLength=1 归一化） */
+  html.js .bm-net path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition:
+      stroke-dashoffset 0.9s ease var(--bm-delay, 0s),
+      opacity 0.25s ease,
+      stroke-width 0.25s ease;
+  }
+
+  html.js .reveal.in-view .bm-net path {
+    stroke-dashoffset: 0;
+  }
+
+  .bm-net path {
+    fill: none;
+    stroke: var(--grad-a);
+    opacity: 0.45;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .bm-net path.is-active,
+  .bm-net g.is-active path {
+    opacity: 1;
+    stroke-width: 1.6;
+  }
+
+  .bm-place rect {
+    fill: var(--secondary);
+    stroke: var(--glass-border);
+    stroke-width: 1.2;
+    transition: stroke 0.25s ease;
+  }
+
+  .bm-place text {
+    font-size: 16px;
+    letter-spacing: 1px;
+    fill: var(--foreground);
+    text-anchor: middle;
+    transition: fill 0.25s ease;
+  }
+
+  .bm-place.is-active rect {
+    stroke: var(--grad-a);
+  }
+
+  .bm-place.is-active text {
+    fill: var(--grad-a);
+  }
+
+  .bm-core-hi {
+    stop-color: var(--grad-b);
+  }
+
+  .bm-core-lo {
+    stop-color: var(--grad-a);
+  }
+
+  .bm-halo {
+    fill: var(--grad-a);
+    opacity: 0.16;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bm-pulse 3.4s ease-in-out infinite;
+    animation-delay: var(--bm-delay, 0s);
+    transition:
+      transform 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  @keyframes bm-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.14;
+    }
+    50% {
+      transform: scale(1.45);
+      opacity: 0.32;
+    }
+  }
+
+  .bm-core {
+    fill: url(#bm-core);
+    stroke: var(--background);
+    stroke-width: 0.8;
+    transition: stroke-width 0.25s ease;
+  }
+
+  .bm-dot.is-active .bm-halo {
+    animation: none;
+    opacity: 0.45;
+    transform: scale(1.6);
+  }
+
+  .bm-dot.is-active .bm-core {
+    stroke-width: 1.4;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bm-halo {
+      animation: none;
+    }
+
+    html.js .bm-net path {
+      transition: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

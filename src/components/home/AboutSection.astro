@@ -1,5 +1,6 @@
 ---
 // 首页第4层「介绍」：左文右图，浅色收尾（画册的文字页），含分部与加入入口
+import BranchMap from './BranchMap.astro';
 ---
 
 <section aria-labelledby="about-title" class="section about-section" id="about">
@@ -31,15 +32,10 @@
 
       <a class="team-link" href="/team">认识主理人团队 →</a>
 
-      <div class="branch-chips" id="branches">
-        <span class="chip">广佛分部</span>
-        <span class="chip">金陵分部</span>
-        <span class="chip chip--more">你的城市 · 期待点亮</span>
-      </div>
+      <BranchMap />
 
       <div class="join-row" id="join">
         <a class="join-btn" href="/under-construction">加入我们</a>
-        <span class="join-contact">微信：seeker-photo（占位）</span>
       </div>
     </div>
 
@@ -119,27 +115,6 @@
     transform: translateY(-1px);
   }
 
-  .branch-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 22px;
-  }
-
-  .chip {
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--glass-border);
-    background: var(--glass-bg);
-    font-size: 13px;
-    color: var(--foreground);
-  }
-
-  .chip--more {
-    border-style: dashed;
-    color: var(--muted-foreground);
-  }
-
   .join-row {
     display: flex;
     align-items: center;
@@ -170,11 +145,6 @@
   .join-btn:focus-visible {
     outline: 2px solid var(--grad-a);
     outline-offset: 3px;
-  }
-
-  .join-contact {
-    font-size: 13px;
-    color: var(--muted-foreground);
   }
 
   .about-photo {
