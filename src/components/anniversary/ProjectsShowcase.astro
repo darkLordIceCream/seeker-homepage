@@ -1,0 +1,202 @@
+---
+// 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
+// view 滚动模式（不钉住）：下滑依次浮现，出现后保持可见、可 hover、可点击进入主站。
+// 图文数据与首页活动卡同源（R2 代表图 + 主站路由）；图框固定 3:2 裁切，天然无 CLS。
+const PROJECTS = [
+  {
+    part: 'PART. 01',
+    title: '时间的故事',
+    desc: '“时间的故事”是 Seeker追光者的核心项目。2026 年，新的时间的故事同样汇聚了多元的摄影主题，参与者都可以通过镜头自由表达他们对时间的理解与诠释。今年，在排版上，我们用“日期”替换了以往的“组别”，强化了时间的概念。这个项目不仅展现了时间流逝中的美好，更为Seeker们提供了一个记录和分享他们独特故事的舞台，无论故事来自何处，皆可在此绽放。',
+    href: '/activities/story-of-time/',
+    image: 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-08/cover.webp',
+    alt: '《时间的故事》八月篇封面——夕光沉远岸，秋意漫画框',
+  },
+  {
+    part: 'PART. 02',
+    title: '追光之旅',
+    desc: '“追光之旅”是 Seeker 追光者举办的年度摄影大赛，也是属于Seeker摄影人的一次年度回望与共同出发。赛事以镜头为舟，向自然、城市与人间烟火追寻光亮，设置自然户外、城市建筑、人文纪实、商业创意、校园学生等赛道，并评选年度总冠军、赛道冠军和优秀作品。它鼓励创作者记录时代的温度，也珍藏每个人心中的微光。',
+    href: '/activities/chasing-light/',
+    image: 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/chasing-light/2024/grand-prize/01.webp',
+    alt: '2024 追光之旅总冠军《喜马拉雅山的宇宙烟火》——源Dream作品',
+  },
+  {
+    part: 'PART. 03',
+    title: '「带上她的眼睛」乡村儿童摄影课',
+    desc: '“带上她的眼睛”是我们招募有意愿的乡村教师，在乡村中小学创办摄影社团和开展摄影课，我们将提供所需器材与培训指导，期望将影像作为一种美育的方法，培养儿童发现、记录与分享美的能力，将表达的权利交还给儿童本身，由他们自己来记录更真实的乡村生活与环境。',
+    href: '/welfare/',
+    image: 'https://r2.xn--seeker-ng2jm403afb4a.club/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
+    alt: '「带上她的眼睛」公益项目——乡村摄影课',
+  },
+] as const;
+---
+
+<div class="ps" data-story-mode="view" data-story-scene="projects">
+  <div class="ps-list">
+    {
+      PROJECTS.map(p => (
+        <div class="ps-item" data-project-card>
+          <a class="ps-card" href={p.href}>
+            <span class="ps-media">
+              <img
+                alt={p.alt}
+                decoding="async"
+                loading="lazy"
+                src={p.image}
+              />
+            </span>
+            <span class="ps-body">
+              <span class="ps-part">{p.part}</span>
+              <span class="ps-title">{p.title}</span>
+              <p class="ps-desc">{p.desc}</p>
+              <span class="ps-cta">
+                进入项目
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  height="14"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="14"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </span>
+            </span>
+          </a>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ps {
+    max-width: 56rem;
+    margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+  }
+
+  .ps-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4rem, 9vw, 7rem);
+  }
+
+  /* —— 项目卡：整卡可点，图上文下 ——
+     .ps-item 承载滚动出现动画（引擎写内联样式），.ps-card 承载 hover 上浮，互不覆盖 */
+  .ps-card {
+    display: block;
+    text-decoration: none;
+    border: 1px solid var(--anniv-border);
+    background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
+    transition:
+      border-color var(--dur-normal) var(--ease-enter),
+      transform var(--dur-normal) var(--ease-enter);
+  }
+
+  .ps-card:hover {
+    border-color: var(--anniv-accent);
+    transform: translateY(-4px);
+  }
+
+  .ps-card:focus-visible {
+    outline: 2px solid var(--anniv-accent);
+    outline-offset: 4px;
+  }
+
+  .ps-media {
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-bottom: 1px solid var(--anniv-border);
+  }
+
+  .ps-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-enter);
+  }
+
+  .ps-card:hover .ps-media img {
+    transform: scale(1.03);
+  }
+
+  .ps-body {
+    display: block;
+    padding: clamp(1.4rem, 3.5vw, 2.2rem) clamp(1.2rem, 3.5vw, 2.4rem) clamp(1.5rem, 3.5vw, 2.3rem);
+  }
+
+  .ps-part {
+    display: block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    color: var(--anniv-accent);
+  }
+
+  .ps-title {
+    display: block;
+    margin-top: 0.8rem;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--anniv-fg);
+  }
+
+  .ps-desc {
+    margin: 1.1rem 0 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(0.9rem, 1.8vw, 1rem);
+    line-height: 2;
+    letter-spacing: 0.04em;
+    text-align: justify;
+    color: var(--anniv-fg-secondary);
+  }
+
+  .ps-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--anniv-muted);
+    transition:
+      color var(--dur-normal) ease,
+      gap var(--dur-normal) ease;
+  }
+
+  .ps-card:hover .ps-cta {
+    gap: 0.85rem;
+    color: var(--anniv-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ps-card,
+    .ps-media img,
+    .ps-cta {
+      transition: none;
+    }
+  }
+
+  /* —— 滚动依次浮现：仅 JS 叙事可用时隐藏初始态，引擎 ramp 后保持显示 —— */
+  :global(.story-on) .ps-item {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.story-on) .ps-item {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

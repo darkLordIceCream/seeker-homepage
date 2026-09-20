@@ -67,30 +67,13 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 01 七年序章：引言 → 全屏头像墙淡入/停留/淡出（缓慢漂移）→ 统计依序出现。
-   * 头像墙为舞台全屏底层（桌面横版/移动竖版由 <picture> 切换）。
-   * 节奏：墙尽早入场、退场只压暗到 28% 保留质感底，避免长黑屏打断。
+   * 头像墙过渡：HERO 之后全屏停留一帧「看见彼此」。
+   * 墙尽早入场、驻留缓漂，退场只压暗到 28% 保留质感底，交棒给 01 光影札记。
    */
   intro: track => {
-    const head = track.querySelector<HTMLElement>('[data-intro-head]');
-    const lead = track.querySelector<HTMLElement>('[data-intro-lead]');
     const wall = track.querySelector<HTMLElement>('[data-intro-wall]');
     const cap = track.querySelector<HTMLElement>('[data-wall-cap]');
-    const stats = Array.from(track.querySelectorAll<HTMLElement>('[data-intro-stat]'));
-    const statStarts = [0.62, 0.7, 0.78];
     return ({ progress: p }) => {
-      if (head) {
-        const t = ramp(p, 0, 0.08);
-        const out = ramp(p, 0.5, 0.62);
-        head.style.opacity = (t * (1 - out)).toFixed(3);
-        head.style.transform = `translateY(${(16 * (1 - t) - 12 * out).toFixed(1)}px)`;
-      }
-      if (lead) {
-        const t = ramp(p, 0.04, 0.12);
-        const out = ramp(p, 0.5, 0.62);
-        lead.style.opacity = (t * (1 - out)).toFixed(3);
-        lead.style.transform = `translateY(${(16 * (1 - t) - 12 * out).toFixed(1)}px)`;
-      }
       if (wall) {
         const enter = ramp(p, 0.04, 0.2);
         const drift = ramp(p, 0.2, 0.6);
@@ -102,12 +85,6 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         const t = ramp(p, 0.24, 0.36) * (1 - ramp(p, 0.56, 0.68));
         cap.style.opacity = t.toFixed(3);
       }
-      stats.forEach((el, i) => {
-        const start = statStarts[i] ?? 0.78;
-        const t = ramp(p, start, start + 0.07);
-        el.style.opacity = t.toFixed(3);
-        el.style.transform = `translateY(${(14 * (1 - t)).toFixed(1)}px)`;
-      });
     };
   },
 
@@ -167,6 +144,29 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
+   * 02 追光印记：三大项目卡依次浮现（view 模式——不钉住，进度=区块穿越视口）。
+   * 卡片滑入视口下部时淡入/上浮，ramp clamp 后保持显示（可 hover、可点击进入主站）。
+   * 出现动画写外层 .ps-item（内联样式），hover 上浮在内层 .ps-card，互不覆盖。
+   */
+  projects: track => {
+    const cards = [...track.querySelectorAll<HTMLElement>('[data-project-card]')];
+    // 三窗按卡片在文档流中的次序错开（区块穿越进程的前/中/后段）
+    const windows: [number, number][] = [
+      [0.02, 0.12],
+      [0.3, 0.4],
+      [0.58, 0.68],
+    ];
+    return ({ progress: p }) => {
+      cards.forEach((el, i) => {
+        const [a, b] = windows[i] ?? windows[windows.length - 1] ?? [0, 0.1];
+        const t = ramp(p, a, b);
+        el.style.opacity = t.toFixed(3);
+        el.style.transform = `translateY(${(28 * (1 - t)).toFixed(1)}px)`;
+      });
+    };
+  },
+
+  /**
    * 06 留光成物：巨片飞行编排（全程滚动驱动；驻留缓漂由 poster-slideshow
    * 的时间驱动层接管，写 [data-poster-drift]，与本工厂写的 [data-poster-stage]
    * 分层叠加）：
@@ -206,46 +206,6 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         const s = ramp(p, 0.95, 1);
         ghost.style.opacity = (g * (1 - s)).toFixed(3);
         ghost.style.transform = `scale(${(1 - 0.06 * s).toFixed(4)})`;
-      }
-    };
-  },
-
-  /** 07 光影七载：2019 → WE STARTED → 7 → YEARS LATER → 2026 → 主题句（全页最慢） */
-  ending: track => {
-    const head = track.querySelector<HTMLElement>('[data-ending-head]');
-    const line1 = track.querySelector<HTMLElement>('[data-ending-line1]');
-    const seven = track.querySelector<HTMLElement>('[data-ending-seven]');
-    const later = track.querySelector<HTMLElement>('[data-ending-later]');
-    const line2 = track.querySelector<HTMLElement>('[data-ending-line2]');
-    const brand = track.querySelector<HTMLElement>('[data-ending-brand]');
-    return ({ progress: p }) => {
-      if (head) {
-        const t = ramp(p, 0, 0.08);
-        head.style.opacity = t.toFixed(3);
-      }
-      if (line1) {
-        const t = ramp(p, 0.05, 0.18);
-        line1.style.opacity = t.toFixed(3);
-        line1.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
-      }
-      if (seven) {
-        const t = ramp(p, 0.22, 0.4);
-        seven.style.opacity = t.toFixed(3);
-        seven.style.transform = `scale(${(0.92 + 0.08 * t).toFixed(4)})`;
-      }
-      if (later) {
-        const t = ramp(p, 0.4, 0.52);
-        later.style.opacity = t.toFixed(3);
-      }
-      if (line2) {
-        const t = ramp(p, 0.58, 0.74);
-        line2.style.opacity = t.toFixed(3);
-        line2.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
-      }
-      if (brand) {
-        const t = ramp(p, 0.78, 0.94);
-        brand.style.opacity = t.toFixed(3);
-        brand.style.transform = `translateY(${(18 * (1 - t)).toFixed(1)}px)`;
       }
     };
   },

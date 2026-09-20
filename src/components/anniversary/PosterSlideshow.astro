@@ -1,7 +1,7 @@
 ---
 /**
  * 【06 留光成物 · PosterSlideshow】成员巨片幻灯片（左文右图编辑排版）。
- * 左列 = 章节题 + 引言 + 署名/计数/进度线；右列 = 放映区，海报 contain 原比例
+ * 左列 = 引言 + 署名/计数/进度线；右列 = 放映区，海报 contain 原比例
  * 展示（自带相框/水印/二维码，绝不裁切），占满右侧视口。
  * 动效分工：滚动引擎（data-story-scene="posters"）写 [data-poster-stage]——
  * 入场从左侧飘入、离场随滚动加速右飘出；驻留期的缓右漂移（时间驱动）写
@@ -13,7 +13,6 @@
  * 首帧不用 loading="lazy"：sticky + overflow:hidden 舞台里 WebKit 懒加载不可靠。
  */
 import { POSTERS } from '@/data/anniversary/posters';
-import SectionHead from './SectionHead.astro';
 
 const total = POSTERS.length;
 const authors = new Set(POSTERS.map(p => p.author)).size;
@@ -23,7 +22,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
 
 <div class="pss" data-poster-slideshow>
   <div class="pss-side">
-    <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
     <p class="pss-lead" data-poster-lead>
       过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
       以下每一帧，都是一个人的七周年。
@@ -82,10 +80,6 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     /* 照片飘入时从文字后面穿过（照片 z 在下，标题署名永不被盖） */
     position: relative;
     z-index: 2;
-  }
-
-  .pss-side :global(.ash) {
-    margin-bottom: 0;
   }
 
   .pss-lead {
