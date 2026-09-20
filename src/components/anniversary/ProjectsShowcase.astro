@@ -1,8 +1,9 @@
 ---
 // 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
-// 连续滚动叙事（非 Carousel）：滚动不决定「当前第几张」，而是决定故事进行到什么
-// 程度——三张卡在重叠时间轴上进出（上一段退为背景残影时，下一段正从它身后成为
-// 主体），图先入、文稍晚，中段安静驻留供阅读，末段轻微呼气后交棒下一章。
+// 舞台式三卡节拍（三槽循环走带，与留光成物同一 3D 思想）：进入章节 Part 01
+// 占主位（全亮全尺寸），Part 02/03 在右/左后方待命（缩小、变暗、后退、微转）；
+// 滚动推进节拍——Part 2 上场 Part 1 退场、Part 3 上场 Part 2 退场，
+// 末段三卡一起后退变暗谢幕。编排逻辑在 scroll-story.ts 的 projects 工厂。
 // 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
 // 图文数据与首页活动卡同源（R2 代表图 + 主站路由）；图框固定 3:2 裁切，天然无 CLS。
 const PROJECTS = [
@@ -69,16 +70,6 @@ const PROJECTS = [
       ))
     }
   </div>
-
-  <!-- 滚动进度指示：只随 progress 连续变化（工厂接管），不承担切换控制 -->
-  <div aria-hidden="true" class="ps-progress" data-project-progress>
-    <span class="ps-progress-label" data-project-part>{PROJECTS[0]?.part}</span>
-    <span class="ps-dots">
-      {PROJECTS.map(() => (
-        <i class="ps-dot" data-project-dot />
-      ))}
-    </span>
-  </div>
 </div>
 
 <style>
@@ -93,10 +84,6 @@ const PROJECTS = [
     display: flex;
     flex-direction: column;
     gap: clamp(3rem, 7vw, 5rem);
-  }
-
-  .ps-progress {
-    display: none;
   }
 
   /* —— story-on：3D 展厅空间（三场景同时存在，滚动 = 镜头前移）——
@@ -127,20 +114,6 @@ const PROJECTS = [
     will-change: opacity, transform;
   }
 
-  /* 图先入：媒体层初始隐藏，工厂按场景进度插值；文字各层由工厂按错峰窗驱动 */
-  :global(.story-on) [data-project-media] {
-    opacity: 0;
-    will-change: opacity, transform;
-  }
-
-  :global(.story-on) .ps-progress {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.4rem;
-    margin-top: 1.6rem;
-  }
-
   /* —— 项目卡：整卡可点，图上文下（.ps-beat 管节拍显隐，.ps-card 管 hover 上浮） —— */
   .ps-card {
     display: block;
@@ -148,6 +121,8 @@ const PROJECTS = [
     text-decoration: none;
     border: 1px solid var(--anniv-border);
     background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
+    /* 3D 纵深：侧后待命卡由工厂写 --ps-dim（1 → 0.45）整卡变暗 = 往后退 */
+    filter: brightness(var(--ps-dim, 1));
     transition:
       border-color var(--dur-normal) var(--ease-enter),
       transform var(--dur-normal) var(--ease-enter);
@@ -255,27 +230,6 @@ const PROJECTS = [
   .ps-card:hover .ps-cta {
     gap: 0.85rem;
     color: var(--anniv-accent);
-  }
-
-  /* —— 节拍进度指示 —— */
-  .ps-progress-label {
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.34em;
-    color: var(--anniv-muted);
-  }
-
-  .ps-dots {
-    display: inline-flex;
-    gap: 0.55rem;
-  }
-
-  .ps-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--anniv-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {

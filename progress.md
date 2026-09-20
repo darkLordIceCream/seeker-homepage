@@ -1840,3 +1840,21 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   brightness 上，drop-shadow 留 CSS 与主题联动）、z-index
   2/1 分层；拖拽跟手时同样实时缩放变暗 = 翻相册的进深感，无需任何 CSS transition
 - 验证：换帧中点截图（滑出帧缩小变暗沉下层、新帧全亮前景）；./init.sh 全绿
+
+### 追光印记「舞台式 3D 节拍」改造（2026-09-20 用户需求）
+
+- 用户需求：用板块6走带的 3D 思想改造追光印记三卡——去掉底部三点；Part1 主位、Part2/3 两翼后方待命；滚动换场（2 上场 1 下场、3 上场 2 下场）；末段三卡一起谢幕
+- 探索澄清：追光印记 = 代码 02 章节（ProjectsShowcase.astro +
+  projects 工厂），1e3c239 的钉住翻卡已被 4939f53/faadd7c 重写为 3D 镜头连续插值
+- 重写 projects 工厂为「三槽循环走带」（与留光成物同思想）：
+  - 节拍 g(p)：0-0.3 Part1 主位 → 0.3-0.44 smoothstep 过渡 → 0.44-0.56
+    Part2 主位 → 0.56-0.7 过渡 → 0.7-0.85 Part3 主位 → 0.85-1 谢幕
+  - raw = mod3(i - g) 折叠到 [-1.5,1.5)：0=主位、±1=右/左后；scale
+    1→0.86、brightness 1→0.45（CSS 变量 --ps-dim）、translateZ 0→-260、rotateY
+    ∓10°（侧后内转）、z-index 2/1 分层；|raw|>1 降透明度（绕行背面不穿帮）
+  - 谢幕：容器级 translateZ -300 + scale 0.94 + brightness
+    0.45（不用容器 opacity——会压平 preserve-3d）
+  - 删除：SPANS/DEPTH 锚点/逐层错峰/leadIdx/三点 dots 逻辑；组件删 .ps-progress 整块（三点+PART
+    label）与相关 CSS
+- 验证：五状态截图（0.15 Part1 主位两翼待命 / 0.37 过渡换场 / 0.5 Part2 主位 /
+  0.78 Part3 主位 / 0.97 三卡谢幕）全部正确；移动端零溢出；./init.sh 全绿

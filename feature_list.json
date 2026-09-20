@@ -245,6 +245,13 @@
       "description": "按用户收集的七周年水印海报（162 张源图，MD5 去重 161 张 / 92 位成员）重构板块 6：删除 MemoryObject 单件装框舞台与 ObjectsSection 静物档案（merchandise.json 一并移除），板块 6 只保留两件事——①成员巨片幻灯片墙 PosterSlideshow：滚动引擎新增 posters 工厂只编排入场装框（引言→海报→署名/计数三段 ramp，轨道 320vh/移动 240vh），驻留期由 poster-slideshow.ts 定时器自动轮播（4.5s/帧，两段式换帧：旧帧先整幅淡出、新帧再淡入，避免横竖幅混排交叉淡入叠出拼贴感），展示池=manifest 全量（seed 20260919 确定性洗牌、首帧竖幅精选），任一时刻仅预取当前 ±2 张、decode() 后才换帧、失败帧自动跳过；海报自带相框/水印/二维码 → 固定放映框内 object-fit contain 原比例展示绝不裁切；hover/focus/切后台/滚离板块即暂停（WCAG），reduced-motion/无 JS 静态首帧；manifest 由 scripts/make-7th-posters.mjs 生成（去重→sharp q82 WebP→src/data/anniversary/posters.ts），图片走 R2 activities/7th-anniversary/posters/NNN.webp；②暗房 WatermarkGenerator 原样并入板块 6 下半场（逻辑零改动），新增交接句「你的那一帧，还差你。」承接幻灯片与「你在哪里？」暗房开场，#leave-your-frame 锚点与 _redirects 不变",
       "status": "done",
       "evidence": "commit feat/7th-anniversary 分支；R2 161 张逐一 curl 自定义域全 200（content-type image/webp + immutable 缓存头）；./init.sh 全绿（type-check 0 错 0 警、lint 0 错 60 既有警告、77 页构建）；agent-browser headless 实测：入场装框 ramp 数学正确（p≈0.2 三层到位）、驻留自动轮播推进（NO.028→NO.143 连续 6+ 帧计数器/署名/进度条/槽位 aria 交接全部正确）、两段式换帧任一时刻仅单帧可见、悬停 6s 暂停/移开恢复、出场接交接句→「你在哪里？」→「带上你的光。」暗房初始化正常、1440x900/375x667 零横向溢出、深浅双主题截图核对；隐藏标签页 rAF/timer 节流为自动化环境假象（progress.md 已记录）"
+    },
+    {
+      "id": "feat-032",
+      "name": "追光印记舞台式 3D 节拍（三槽循环走带 + 谢幕）",
+      "description": "按用户口述把追光印记（02 章节）三张项目卡改造成舞台式编排：删除底部三点指示器；projects 工厂重写为三槽循环走带（与留光成物同一 3D 思想）——Part1 主位时 Part2/3 在右/左后方待命（缩小 0.86、变暗 0.45、translateZ -260、rotateY ∓10° 内转、z 分层），滚动节拍 g(p) 推进带子换场（Part2 上场 Part1 退场、Part3 上场 Part2 退场），末段三卡一起后退变暗谢幕（容器 translateZ -300 + brightness 0.45，不用容器 opacity 避免 preserve-3d 压平）；raw 循环取模映射 + |raw|>1 降透明度保证绕行背面不穿帮；保持 progress 连续插值契约（快速/反向滚动严格连续）",
+      "status": "done",
+      "evidence": "commit feat/7th-anniversary；headless 五状态截图（0.15/0.37/0.5/0.78/0.97）全部正确；移动端 375px 零溢出；./init.sh 全绿"
     }
   ]
 }
