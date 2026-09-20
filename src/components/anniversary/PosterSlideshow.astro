@@ -166,8 +166,8 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     inset: 0;
   }
 
-  /* 走带边缘渐隐（呼吸感）：mask 盒比 track 更宽、向右一直铺到文字列下方——
-     照片延展过放映区右缘后渐淡，到文字处已近乎透明；左缘对称微渐隐。
+  /* 走带边缘渐隐（呼吸感）：轻遮——两侧只在贴边一小段轻微减淡、
+     不到全透明；右侧渐变区铺在文字列下方，照片延展到文字处已很淡。
      mask 随 stage 走，入场/离场大编排不受淡出干扰 */
   .pss-track {
     position: absolute;
@@ -178,12 +178,20 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     -webkit-user-select: none;
     -webkit-mask-image: linear-gradient(
       90deg,
-      transparent 0,
-      #000 10vw,
-      #000 52vw,
-      transparent 88vw
+      rgba(0, 0, 0, 0.45) 0,
+      #000 4vw,
+      #000 58vw,
+      rgba(0, 0, 0, 0.35) 66vw,
+      rgba(0, 0, 0, 0.12) 80vw
     );
-    mask-image: linear-gradient(90deg, transparent 0, #000 10vw, #000 52vw, transparent 88vw);
+    mask-image: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.45) 0,
+      #000 4vw,
+      #000 58vw,
+      rgba(0, 0, 0, 0.35) 66vw,
+      rgba(0, 0, 0, 0.12) 80vw
+    );
     -webkit-mask-size: 130vw 100%;
     mask-size: 130vw 100%;
     -webkit-mask-repeat: no-repeat;
