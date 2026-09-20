@@ -88,16 +88,24 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
         </div>
       </section>
 
-      <!-- 02 / 追光印记：三大项目（滚动依次浮现的项目卡片，点击进入主站） -->
+      <!-- 02 / 追光印记：三大项目（钉住节拍吸附——整卡切换，可点击进入主站） -->
       <section aria-labelledby="sec-projects" class="arc-sec">
-        <SectionHead en="Projects" no="02" sub="项目介绍" zh="追光印记" />
-        <ProjectsShowcase />
+        <div class="story-track story-track--projects" data-story-scene="projects">
+          <div class="story-stage">
+            <SectionHead en="Projects" no="02" sub="项目介绍" zh="追光印记" />
+            <ProjectsShowcase />
+          </div>
+        </div>
       </section>
 
-      <!-- 03 / 同行之路：品牌合作 -->
+      <!-- 03 / 同行之路：品牌合作（钉住——关系网络在轨道内生长后驻留） -->
       <section aria-labelledby="sec-road" class="arc-sec">
-        <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
-        <SharedRoad />
+        <div class="story-track story-track--road" data-story-scene="road">
+          <div class="story-stage">
+            <SectionHead en="Brand Partnership" no="03" sub="品牌合作" zh="同行之路" />
+            <SharedRoad />
+          </div>
+        </div>
       </section>
 
       <!-- 04 / 七载光影：留光成物（成员巨片幻灯片墙）+ 暗房（LEAVE YOUR FRAME） -->
@@ -328,6 +336,14 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
     height: 300vh; /* 五拍节拍轮换（bio + 三段寄语 + 落款） */
   }
 
+  .story-on .story-track--projects {
+    height: 340vh; /* 三大项目节拍吸附（整卡切换 × 3 + 进度点） */
+  }
+
+  .story-on .story-track--road {
+    height: 240vh; /* 关系网络生长 + 完成后驻留 */
+  }
+
   .story-on .story-track--posters {
     height: 320vh; /* 入场装框 + 驻留（轮播由定时器接管，滚动只管进出） */
   }
@@ -335,6 +351,14 @@ const heroPhoto = heroPick ? { url: heroPick.src, w: heroPick.w, h: heroPick.h }
   @media (max-width: 48rem) {
     .story-on .story-track--founder {
       height: 240vh;
+    }
+
+    .story-on .story-track--projects {
+      height: 260vh;
+    }
+
+    .story-on .story-track--road {
+      height: 200vh;
     }
 
     .story-on .story-track--posters {

@@ -1,6 +1,9 @@
 ---
 // 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
-// view 滚动模式（不钉住）：下滑依次浮现，出现后保持可见、可 hover、可点击进入主站。
+// 钉住节拍吸附（与主理人寄语同一叙事语言）：track 钉住舞台，滚动只决定
+// 「当前第几张卡」，跨过相邻拍中点即整卡切换（transition 过渡，绝不停在两拍之间）；
+// 停在任意位置都是完整一张卡——可 hover、可点击进入主站。
+// 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
 // 图文数据与首页活动卡同源（R2 代表图 + 主站路由）；图框固定 3:2 裁切，天然无 CLS。
 const PROJECTS = [
   {
@@ -30,19 +33,14 @@ const PROJECTS = [
 ] as const;
 ---
 
-<div class="ps" data-story-mode="view" data-story-scene="projects">
-  <div class="ps-list">
+<div class="ps">
+  <div class="ps-beats">
     {
       PROJECTS.map(p => (
-        <div class="ps-item" data-project-card>
+        <div class="ps-beat" data-project-beat>
           <a class="ps-card" href={p.href}>
             <span class="ps-media">
-              <img
-                alt={p.alt}
-                decoding="async"
-                loading="lazy"
-                src={p.image}
-              />
+              <img alt={p.alt} decoding="async" loading="lazy" src={p.image} />
             </span>
             <span class="ps-body">
               <span class="ps-part">{p.part}</span>
@@ -71,30 +69,86 @@ const PROJECTS = [
       ))
     }
   </div>
+
+  <!-- 节拍进度：当前 PART 标签 + 三刻度点（story-on 下由工厂接管） -->
+  <div aria-hidden="true" class="ps-progress" data-project-progress>
+    <span class="ps-progress-label" data-project-part>{PROJECTS[0]?.part}</span>
+    <span class="ps-dots">
+      {PROJECTS.map((_, i) => (
+        <i class:list={['ps-dot', { 'is-on': i === 0 }]} data-project-dot />
+      ))}
+    </span>
+  </div>
 </div>
 
 <style>
   .ps {
-    max-width: 56rem;
-    margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+    width: 100%;
+    max-width: 46rem;
+    margin: 0 auto;
   }
 
-  .ps-list {
+  /* 无 JS / reduced-motion：普通文档流依次排列（渐进增强契约） */
+  .ps-beats {
     display: flex;
     flex-direction: column;
-    gap: clamp(4rem, 9vw, 7rem);
+    gap: clamp(3rem, 7vw, 5rem);
   }
 
-  /* —— 项目卡：整卡可点，图上文下 ——
-     .ps-item 承载滚动出现动画（引擎写内联样式），.ps-card 承载 hover 上浮，互不覆盖 */
+  .ps-progress {
+    display: none;
+  }
+
+  /* —— story-on：节拍叠放（同格叠放 + 工厂按当前拍接管显隐） —— */
+  :global(.story-on) .ps-beats {
+    display: grid;
+  }
+
+  :global(.story-on) .ps-beat {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* 初始隐藏，工厂按当前拍写内联样式接管 */
+    transition:
+      opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1),
+      transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    will-change: opacity, transform;
+  }
+
+  :global(.story-on) .ps-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+    margin-top: 1.6rem;
+  }
+
+  /* —— 项目卡：整卡可点，图上文下（.ps-beat 管节拍显隐，.ps-card 管 hover 上浮） —— */
   .ps-card {
     display: block;
+    width: min(100%, 34rem);
     text-decoration: none;
     border: 1px solid var(--anniv-border);
     background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
     transition:
       border-color var(--dur-normal) var(--ease-enter),
       transform var(--dur-normal) var(--ease-enter);
+  }
+
+  /* 桌面：图左文右横排，整卡压进钉住舞台一屏 */
+  @media (min-width: 48rem) {
+    .ps-card {
+      display: grid;
+      grid-template-columns: 42% 1fr;
+      width: min(100%, 42rem);
+    }
+
+    .ps-media {
+      height: 100%;
+      border-bottom: none;
+      border-right: 1px solid var(--anniv-border);
+    }
   }
 
   .ps-card:hover {
@@ -114,6 +168,13 @@ const PROJECTS = [
     border-bottom: 1px solid var(--anniv-border);
   }
 
+  @media (min-width: 48rem) {
+    .ps-media {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+  }
+
   .ps-media img {
     width: 100%;
     height: 100%;
@@ -127,13 +188,13 @@ const PROJECTS = [
 
   .ps-body {
     display: block;
-    padding: clamp(1.4rem, 3.5vw, 2.2rem) clamp(1.2rem, 3.5vw, 2.4rem) clamp(1.5rem, 3.5vw, 2.3rem);
+    padding: clamp(1.2rem, 2.6vw, 1.8rem) clamp(1.1rem, 2.6vw, 1.9rem) clamp(1.3rem, 2.6vw, 1.9rem);
   }
 
   .ps-part {
     display: block;
     font-family: 'Archivo', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.4em;
     color: var(--anniv-accent);
@@ -141,20 +202,20 @@ const PROJECTS = [
 
   .ps-title {
     display: block;
-    margin-top: 0.8rem;
+    margin-top: 0.7rem;
     font-family: var(--anniv-serif);
-    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--anniv-fg);
   }
 
   .ps-desc {
-    margin: 1.1rem 0 0;
+    margin: 0.9rem 0 0;
     font-family: var(--anniv-serif);
-    font-size: clamp(0.9rem, 1.8vw, 1rem);
-    line-height: 2;
-    letter-spacing: 0.04em;
+    font-size: clamp(0.84rem, 1.5vw, 0.94rem);
+    line-height: 1.95;
+    letter-spacing: 0.03em;
     text-align: justify;
     color: var(--anniv-fg-secondary);
   }
@@ -163,9 +224,9 @@ const PROJECTS = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 1.4rem;
+    margin-top: 1.1rem;
     font-family: 'Archivo', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 600;
     letter-spacing: 0.3em;
     color: var(--anniv-muted);
@@ -179,24 +240,65 @@ const PROJECTS = [
     color: var(--anniv-accent);
   }
 
+  /* —— 节拍进度指示 —— */
+  .ps-progress-label {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    color: var(--anniv-muted);
+  }
+
+  .ps-dots {
+    display: inline-flex;
+    gap: 0.55rem;
+  }
+
+  .ps-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--anniv-border-strong);
+    transition:
+      background-color 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  .ps-dot.is-on {
+    background: var(--anniv-accent);
+    transform: scale(1.25);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ps-card,
     .ps-media img,
-    .ps-cta {
+    .ps-cta,
+    .ps-dot {
+      transition: none;
+    }
+
+    :global(.story-on) .ps-beat {
       transition: none;
     }
   }
 
-  /* —— 滚动依次浮现：仅 JS 叙事可用时隐藏初始态，引擎 ramp 后保持显示 —— */
-  :global(.story-on) .ps-item {
-    opacity: 0;
-    transform: translateY(28px);
-  }
+  /* 窄屏：卡宽收紧，保证题头 + 卡 + 进度点在 100svh 内同屏 */
+  @media (max-width: 48rem) {
+    .ps {
+      max-width: none;
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    :global(.story-on) .ps-item {
-      opacity: 1;
-      transform: none;
+    .ps-card {
+      width: min(100%, 26rem);
+    }
+
+    .ps-desc {
+      font-size: 0.84rem;
+      line-height: 1.85;
+    }
+
+    .ps-body {
+      padding: 1rem 1.05rem 1.1rem;
     }
   }
 </style>

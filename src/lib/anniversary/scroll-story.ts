@@ -144,24 +144,52 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：三大项目卡依次浮现（view 模式——不钉住，进度=区块穿越视口）。
-   * 卡片滑入视口下部时淡入/上浮，ramp clamp 后保持显示（可 hover、可点击进入主站）。
-   * 出现动画写外层 .ps-item（内联样式），hover 上浮在内层 .ps-card，互不覆盖。
+   * 02 追光印记：三大项目卡节拍吸附（与寄语同一机制——滚动只决定「当前第几张」，
+   * 跨过相邻拍中点即整卡切换，切换过渡由 CSS transition 完成，绝不停在两拍之间；
+   * 停在任意位置都是完整一张卡，可 hover、可点击）。切换时同步更新底部
+   * PART 标签与刻度点。中心点表键为节拍数：3 = 三大项目。
    */
   projects: track => {
-    const cards = [...track.querySelectorAll<HTMLElement>('[data-project-card]')];
-    // 三窗按卡片在文档流中的次序错开（区块穿越进程的前/中/后段）
-    const windows: [number, number][] = [
-      [0.02, 0.12],
-      [0.3, 0.4],
-      [0.58, 0.68],
-    ];
+    const beats = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
+    const part = track.querySelector<HTMLElement>('[data-project-part]');
+    const dots = [...track.querySelectorAll<HTMLElement>('[data-project-dot]')];
+    const CENTERS: Record<number, number[]> = {
+      3: [0.26, 0.56, 0.86],
+    };
+    const centers =
+      CENTERS[beats.length] ??
+      beats.map((_, i) => 0.26 + (0.6 * i) / Math.max(1, beats.length - 1));
+    const thresholds: number[] = [];
+    for (let i = 1; i < centers.length; i++) {
+      const a = centers[i - 1];
+      const b = centers[i];
+      if (a !== undefined && b !== undefined) {
+        thresholds.push((a + b) / 2);
+      }
+    }
+    let active = -1;
     return ({ progress: p }) => {
-      cards.forEach((el, i) => {
-        const [a, b] = windows[i] ?? windows[windows.length - 1] ?? [0, 0.1];
-        const t = ramp(p, a, b);
-        el.style.opacity = t.toFixed(3);
-        el.style.transform = `translateY(${(28 * (1 - t)).toFixed(1)}px)`;
+      let s = 0;
+      for (const th of thresholds) {
+        if (p >= th) {
+          s++;
+        }
+      }
+      if (s === active) {
+        return;
+      }
+      active = s;
+      beats.forEach((el, i) => {
+        const ty = i === s ? 0 : i < s ? -18 : 22;
+        el.style.opacity = i === s ? '1' : '0';
+        el.style.transform = `translateY(${ty}px)`;
+      });
+      const label = beats[s]?.querySelector<HTMLElement>('.ps-part')?.textContent;
+      if (part && label) {
+        part.textContent = label;
+      }
+      dots.forEach((d, i) => {
+        d.classList.toggle('is-on', i === s);
       });
     };
   },
@@ -211,8 +239,9 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 05 同行之路：关系逐渐展开（view 模式——不钉住，进度=区块穿越视口）。
-   * SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长。
+   * 03 同行之路：关系网络在钉住轨道内逐渐展开
+   * （SEEKER → ─ 社区/高校 → │ 品牌/地方分部，细线随进度生长），
+   * 完成于 ~0.72，尾部驻留「待归档」占位后解锁下一章。
    */
   road: track => {
     const center = track.querySelector<HTMLElement>('[data-road-center]');
@@ -226,37 +255,37 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
     const bottom = track.querySelector<HTMLElement>('[data-road-bottom]');
     return ({ progress: p }) => {
       if (center) {
-        const t = ramp(p, 0.02, 0.12);
+        const t = ramp(p, 0.03, 0.16);
         center.style.opacity = t.toFixed(3);
         center.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
       }
       if (h1) {
         h1.style.opacity = '1';
-        h1.style.transform = `scaleX(${ramp(p, 0.12, 0.26).toFixed(3)})`;
+        h1.style.transform = `scaleX(${ramp(p, 0.16, 0.34).toFixed(3)})`;
       }
       if (left) {
-        left.style.opacity = ramp(p, 0.26, 0.36).toFixed(3);
+        left.style.opacity = ramp(p, 0.34, 0.46).toFixed(3);
       }
       if (h2) {
         h2.style.opacity = '1';
-        h2.style.transform = `scaleX(${ramp(p, 0.14, 0.28).toFixed(3)})`;
+        h2.style.transform = `scaleX(${ramp(p, 0.18, 0.36).toFixed(3)})`;
       }
       if (right) {
-        right.style.opacity = ramp(p, 0.28, 0.38).toFixed(3);
+        right.style.opacity = ramp(p, 0.36, 0.48).toFixed(3);
       }
       if (v1) {
         v1.style.opacity = '1';
-        v1.style.transform = `scaleY(${ramp(p, 0.38, 0.48).toFixed(3)})`;
+        v1.style.transform = `scaleY(${ramp(p, 0.48, 0.6).toFixed(3)})`;
       }
       if (top) {
-        top.style.opacity = ramp(p, 0.48, 0.56).toFixed(3);
+        top.style.opacity = ramp(p, 0.6, 0.7).toFixed(3);
       }
       if (v2) {
         v2.style.opacity = '1';
-        v2.style.transform = `scaleY(${ramp(p, 0.4, 0.5).toFixed(3)})`;
+        v2.style.transform = `scaleY(${ramp(p, 0.5, 0.62).toFixed(3)})`;
       }
       if (bottom) {
-        bottom.style.opacity = ramp(p, 0.5, 0.58).toFixed(3);
+        bottom.style.opacity = ramp(p, 0.62, 0.72).toFixed(3);
       }
     };
   },
