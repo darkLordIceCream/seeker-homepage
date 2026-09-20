@@ -36,6 +36,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     </div>
 
     <div class="nav-right">
+      <a class="nav-anniv-mobile" href="/7th/">7周年</a>
       <ThemeToggle />
 
       <button aria-controls="nav-menu" aria-expanded="false" aria-label="切换导航菜单" class="nav-toggle" id="nav-toggle">
@@ -258,6 +259,33 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     color: var(--nav-fg);
   }
 
+  /* 移动端顶栏的 7 周年按钮：桌面隐藏（桌面入口是菜单里的纪念金胶囊） */
+  .nav-anniv-mobile {
+    display: none;
+    align-items: center;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nav-fg);
+    text-decoration: none;
+    background: var(--nav-pill-bg);
+    border: 1px solid var(--nav-pill-border);
+    border-radius: 999px;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .nav-anniv-mobile:hover {
+    color: var(--nav-hover);
+  }
+
+  .nav-anniv-mobile:focus-visible {
+    outline: 2px solid var(--nav-hover);
+    outline-offset: 2px;
+  }
+
   .nav-toggle:focus-visible {
     outline: 2px solid var(--nav-hover);
     outline-offset: 2px;
@@ -288,6 +316,11 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
       justify-content: space-between;
       gap: 0;
       height: 52px;
+    }
+
+    /* 顶栏 7 周年按钮：颜色随导航状态变量自适应（Hero 深色视频上透明白、落地后主题玻璃） */
+    .nav-anniv-mobile {
+      display: inline-flex;
     }
 
     .nav-menu {
