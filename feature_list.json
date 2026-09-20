@@ -248,10 +248,10 @@
     },
     {
       "id": "feat-032",
-      "name": "追光印记段落吸附舞台（4 拍）+ 全站段落化",
-      "description": "按用户完整需求文档定稿：三块方形摄影展板（aspect-ratio 1 恒定、照片 contain 不裁切、题签 PART/标题/三行图注/CTA）同存于一个空间，滚动 = 相机沿微 S 展道前移——PATH 路径表把 progress 连续映射为相机格位 cam（停驻点=每块板面前 0.05-0.26/0.38-0.57/0.69-0.86，行走段 smoothstep），每帧 rel=i-cam 连续写 translate3d(pan±14vw 微 S 错位, -rel·stepPx)/brightness（面前 1→远处 0.55 微光）/opacity（穿过身后渐淡不穿模）/z-index（深度遮挡）；走过 P3 展厅整体变暗退出接 03 同行之路；无 transition/定时器/新依赖，快速反向滚动严格连续；移动端 perspective/位移/重叠降载、reduced-motion 静态降级；定稿追加：全部滚动编排改段落吸附——progress 只决定当前拍（projects 4 拍：面对P1/P2/P3/退场暗场；posters 3 拍：后方/台前/退场+空框浮现），拍间 CSS transition 补间，快速/反向滚动都不会停在中间态；founder 寄语一次一段锁改为手势锁：滚动事件驱动，一次手势只消费一段（±1）并锁定至滚动静止 280ms，即时跟手、绝不连跳也不延迟；追赶为工厂自调度 setTimeout 链（与滚动引擎 dirty 解耦——最初写在滚动回调内会因滚动停止而冻结，已修）",
+      "name": "追光印记空间行走式 Scroll Story（相机位置模型）",
+      "description": "按用户完整需求文档定稿：三块方形摄影展板（aspect-ratio 1 恒定、照片 contain 不裁切、题签 PART/标题/三行图注/CTA）同存于一个空间，滚动 = 相机沿微 S 展道前移——PATH 路径表把 progress 连续映射为相机格位 cam（停驻点=每块板面前 0.05-0.26/0.38-0.57/0.69-0.86，行走段 smoothstep），每帧 rel=i-cam 连续写 translate3d(pan±14vw 微 S 错位, -rel·stepPx)/brightness（面前 1→远处 0.55 微光）/opacity（穿过身后渐淡不穿模）/z-index（深度遮挡）；走过 P3 展厅整体变暗退出接 03 同行之路；无 transition/定时器/新依赖，快速反向滚动严格连续；移动端 perspective/位移/重叠降载、reduced-motion 静态降级",
       "status": "done",
-      "evidence": "commit feat/7th-anniversary；连续行程六截图（面对 P1+P2 露出遮挡/行走过渡/面对 P2/面对 P3/空间退出暗场）符合需求文档验收标准；移动端零溢出；./init.sh 全绿；快速滚到 0.95 采样确认逐段追至退场暗场（三卡 opacity 0.1）；寄语手势锁验证：跨 3 段长滑只停在 seg1、再滑恰好 seg2"
+      "evidence": "commit feat/7th-anniversary；连续行程六截图（面对 P1+P2 露出遮挡/行走过渡/面对 P2/面对 P3/空间退出暗场）符合需求文档验收标准；移动端零溢出；./init.sh 全绿"
     }
   ]
 }

@@ -115,11 +115,6 @@ const PROJECTS = [
     justify-content: center;
     opacity: 0; /* 初始隐藏，工厂按当前进度写内联样式接管 */
     will-change: opacity, transform;
-    /* 段落吸附的切换补间：拍与拍之间由 transition 走完，无中间停留态 */
-    transition:
-      transform 0.7s var(--ease-enter),
-      opacity 0.7s ease,
-      filter 0.7s ease;
   }
 
   /* —— 深色展示卡：图上文下横排；照片区深底 contain 完整显示（绝不裁切）—— */
