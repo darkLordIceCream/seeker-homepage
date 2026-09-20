@@ -3,8 +3,8 @@
 // 舞台式编排（三槽固定站位，与留光成物同一 3D 思想）：从光影札记滑入时，
 // 三张拍立得分别从左、中、右三个站位的后方（深处、缩小、变暗）逐渐走上台前
 // 定格；继续滑动各自对称退回后方；三张都退回后一起集体谢幕（暗场退场）。
-// 编排逻辑在 scroll-story.ts 的 projects 工厂；卡片为拍立得相纸结构——
-// 白框 + 方形照片区（img contain 完整显示，绝不裁切）+ 下方留白写标题。
+// 编排逻辑在 scroll-story.ts 的 projects 工厂；卡片为展示卡结构——
+// 深色卡体 + 方形照片区（img contain 完整显示，绝不裁切）+ 下方题签写标题。
 // 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
 // 图文数据与首页活动卡同源（R2 代表图 + 主站路由）。
 const PROJECTS = [
@@ -114,25 +114,25 @@ const PROJECTS = [
     will-change: opacity, transform;
   }
 
-  /* —— 拍立得相纸：白框 + 方形照片区（contain 完整显示不裁切）+ 下方留白 ——
-     相纸是实体物件，深浅主题下都保持暖白与深色手记文字 */
+  /* —— 展示卡：深色卡体 + 方形照片区（contain 完整显示不裁切）+ 下方题签 ——
+     卡体用 anniv-surface 深蓝融入暗房色彩；照片区更深一档衬图 */
   .pol {
     display: block;
     width: 100%;
     padding: 3.2% 3.2% 0;
-    background: #f7f5ef;
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.5) inset,
-      0 16px 44px rgba(2, 8, 20, 0.5);
+    background: var(--anniv-surface);
+    border: 1px solid var(--anniv-border);
+    box-shadow: 0 16px 44px rgba(2, 8, 20, 0.5);
     text-decoration: none;
     filter: brightness(var(--ps-dim, 1)); /* 3D 纵深：后方待命/退场时由工厂写暗度 */
-    transition: box-shadow var(--dur-normal) var(--ease-enter);
+    transition:
+      border-color var(--dur-normal) var(--ease-enter),
+      box-shadow var(--dur-normal) var(--ease-enter);
   }
 
   .pol:hover {
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.5) inset,
-      0 22px 56px rgba(2, 8, 20, 0.62);
+    border-color: var(--anniv-accent);
+    box-shadow: 0 22px 56px rgba(2, 8, 20, 0.62);
   }
 
   .pol-photo {
@@ -140,7 +140,7 @@ const PROJECTS = [
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
-    background: #fff;
+    background: var(--anniv-bg);
     overflow: hidden;
   }
 
@@ -167,7 +167,7 @@ const PROJECTS = [
     font-size: 0.62rem;
     font-weight: 600;
     letter-spacing: 0.38em;
-    color: #0750a8;
+    color: var(--anniv-accent);
   }
 
   .pol-title {
@@ -178,7 +178,7 @@ const PROJECTS = [
     font-weight: 700;
     letter-spacing: 0.05em;
     line-height: 1.5;
-    color: #1c2430;
+    color: var(--anniv-fg);
   }
 
   .pol-cta {
@@ -190,7 +190,7 @@ const PROJECTS = [
     font-size: 0.66rem;
     font-weight: 600;
     letter-spacing: 0.28em;
-    color: #51606f;
+    color: var(--anniv-muted);
     transition:
       color var(--dur-normal) ease,
       gap var(--dur-normal) ease;
@@ -198,7 +198,7 @@ const PROJECTS = [
 
   .pol:hover .pol-cta {
     gap: 0.7rem;
-    color: #0750a8;
+    color: var(--anniv-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -146,34 +146,45 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：舞台式走位（三张拍立得固定左/中/右三个站位）。
-   * 从光影札记滑入：三卡从各自站位的后方（深处、缩小、变暗）逐渐走上台前
-   * 定格（左中右依次错峰，像点名上场）；台上驻留供阅读；继续滑动各自
-   * 对称退回后方；三张都退回后一起集体谢幕（继续后退 + 暗场退场）。
+   * 02 追光印记：舞台式走位 + 逐个登场特写（三卡固定左/中/右三个站位）。
+   * 从光影札记滑入：三卡从各自站位的后方（深处、缩小、变暗）走上台前定格。
+   * 继续滚动逐个登场——Part 1 先登场：3D 放大（向镜头 translateZ + 放大）
+   * 叠加在相邻卡上、微微提亮并置顶；Part 2 登场时 Part 1 原路返回站位……
+   * 三个都登过一遍后三卡一起退场（对称退回后方 + 集体暗场谢幕）。
    * 所有状态由 progress 直接计算（无 transition/定时器），快速与反向滚动
    * 严格连续。
    */
   projects: track => {
     const cards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
+    // 登场窗口：[开始, 登满, 返回开始, 返回完成]（原路返回 = 原窗口回放）
+    const SHOW: [number, number, number, number][] = [
+      [0.2, 0.3, 0.3, 0.34],
+      [0.38, 0.48, 0.48, 0.52],
+      [0.56, 0.66, 0.66, 0.7],
+    ];
     return ({ progress: P, isDesktop }) => {
-      const depth = isDesktop ? 520 : 340; // 后方站位深度（perspective 透视产生近大远小）
+      const depth = isDesktop ? 520 : 340; // 后方站位深度（透视产生近大远小）
+      const walkIn = smooth(ramp(P, 0, 0.12)); // 走位入场：后方 → 站位
+      const walkOut = smooth(ramp(P, 0.7, 0.84)); // 退场：站位 → 后方
+      const bye = smooth(ramp(P, 0.84, 0.98)); // 集体谢幕：暗场退场
+      const on = walkIn * (1 - walkOut);
       for (let i = 0; i < cards.length; i++) {
         const el = cards[i];
         if (!el) {
           continue;
         }
-        // 走位错峰：左(0) 中(1) 右(2) 依次相差 0.05，像逐个点名上场
-        const off = i * 0.05;
-        const walkIn = smooth(ramp(P, off, 0.24 + off));
-        const walkOut = smooth(ramp(P, 0.58 + off, 0.8 + off));
-        const on = walkIn * (1 - walkOut); // 0=后方深处 1=台前定格
-        const bye = smooth(ramp(P, 0.84, 0.98)); // 集体谢幕：一起继续后退并暗场
-        const z = -depth * (1 - on) - 260 * bye;
-        const dim = 1 - 0.68 * (1 - on) - 0.4 * bye;
+        const w = SHOW[i] ?? [0.2, 0.3, 0.3, 0.34];
+        const focus = smooth(ramp(P, w[0], w[1])) * (1 - smooth(ramp(P, w[2], w[3])));
+        // 3D 登场：向镜头 +180px、放大 32%、向屏幕中心偏 40px（叠加相邻卡）、提亮
+        const shift = i === 0 ? 40 : i === 2 ? -40 : 0;
+        const z = -depth * (1 - on) + 180 * focus - 260 * bye;
+        const scale = (0.78 + 0.22 * on) * (1 + 0.32 * focus);
+        const dim = 1 - 0.68 * (1 - on) + 0.06 * focus;
         const opacity = (0.18 + 0.82 * on) * (1 - bye);
         el.style.opacity = opacity.toFixed(3);
-        el.style.transform = `translate3d(0, ${(26 * (1 - on)).toFixed(1)}px, ${z.toFixed(1)}px) scale(${(0.78 + 0.22 * on).toFixed(4)})`;
-        el.style.setProperty('--ps-dim', dim.toFixed(3));
+        el.style.transform = `translate3d(${(shift * focus).toFixed(1)}px, ${(20 * (1 - on)).toFixed(1)}px, ${z.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+        el.style.zIndex = focus > 0.05 ? '3' : '2';
+        el.style.setProperty('--ps-dim', Math.min(1.06, dim).toFixed(3));
       }
     };
   },
