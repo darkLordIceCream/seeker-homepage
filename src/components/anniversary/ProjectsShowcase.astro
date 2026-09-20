@@ -1,16 +1,16 @@
 ---
-// 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
-// 舞台式三卡节拍（三槽循环走带，与留光成物同一 3D 思想）：进入章节 Part 01
-// 占主位（全亮全尺寸），Part 02/03 在右/左后方待命（缩小、变暗、后退、微转）；
-// 滚动推进节拍——Part 2 上场 Part 1 退场、Part 3 上场 Part 2 退场，
-// 末段三卡一起后退变暗谢幕。编排逻辑在 scroll-story.ts 的 projects 工厂。
+// 02 追光印记 · 项目介绍：三大项目拍立得卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
+// 舞台式编排（三槽固定站位，与留光成物同一 3D 思想）：从光影札记滑入时，
+// 三张拍立得分别从左、中、右三个站位的后方（深处、缩小、变暗）逐渐走上台前
+// 定格；继续滑动各自对称退回后方；三张都退回后一起集体谢幕（暗场退场）。
+// 编排逻辑在 scroll-story.ts 的 projects 工厂；卡片为拍立得相纸结构——
+// 白框 + 方形照片区（img contain 完整显示，绝不裁切）+ 下方留白写标题。
 // 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
-// 图文数据与首页活动卡同源（R2 代表图 + 主站路由）；图框固定 3:2 裁切，天然无 CLS。
+// 图文数据与首页活动卡同源（R2 代表图 + 主站路由）。
 const PROJECTS = [
   {
     part: 'PART. 01',
     title: '时间的故事',
-    desc: '“时间的故事”是 Seeker追光者的核心项目。2026 年，新的时间的故事同样汇聚了多元的摄影主题，参与者都可以通过镜头自由表达他们对时间的理解与诠释。今年，在排版上，我们用“日期”替换了以往的“组别”，强化了时间的概念。这个项目不仅展现了时间流逝中的美好，更为Seeker们提供了一个记录和分享他们独特故事的舞台，无论故事来自何处，皆可在此绽放。',
     href: '/activities/story-of-time/',
     image: 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-08/cover.webp',
     alt: '《时间的故事》八月篇封面——夕光沉远岸，秋意漫画框',
@@ -18,7 +18,6 @@ const PROJECTS = [
   {
     part: 'PART. 02',
     title: '追光之旅',
-    desc: '“追光之旅”是 Seeker 追光者举办的年度摄影大赛，也是属于Seeker摄影人的一次年度回望与共同出发。赛事以镜头为舟，向自然、城市与人间烟火追寻光亮，设置自然户外、城市建筑、人文纪实、商业创意、校园学生等赛道，并评选年度总冠军、赛道冠军和优秀作品。它鼓励创作者记录时代的温度，也珍藏每个人心中的微光。',
     href: '/activities/chasing-light/',
     image: 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/chasing-light/2024/grand-prize/01.webp',
     alt: '2024 追光之旅总冠军《喜马拉雅山的宇宙烟火》——源Dream作品',
@@ -26,7 +25,6 @@ const PROJECTS = [
   {
     part: 'PART. 03',
     title: '「带上她的眼睛」乡村儿童摄影课',
-    desc: '“带上她的眼睛”是我们招募有意愿的乡村教师，在乡村中小学创办摄影社团和开展摄影课，我们将提供所需器材与培训指导，期望将影像作为一种美育的方法，培养儿童发现、记录与分享美的能力，将表达的权利交还给儿童本身，由他们自己来记录更真实的乡村生活与环境。',
     href: '/welfare/',
     image: 'https://r2.xn--seeker-ng2jm403afb4a.club/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
     alt: '「带上她的眼睛」公益项目——乡村摄影课',
@@ -39,26 +37,25 @@ const PROJECTS = [
     {
       PROJECTS.map(p => (
         <div class="ps-beat" data-project-beat>
-          <a class="ps-card" href={p.href}>
-            <span class="ps-media" data-project-media>
+          <a class="pol" href={p.href}>
+            <span class="pol-photo">
               <img alt={p.alt} decoding="async" loading="lazy" src={p.image} />
             </span>
-            <span class="ps-body" data-project-content>
-              <span class="ps-part">{p.part}</span>
-              <span class="ps-title">{p.title}</span>
-              <p class="ps-desc">{p.desc}</p>
-              <span class="ps-cta">
+            <span class="pol-cap">
+              <span class="pol-part">{p.part}</span>
+              <span class="pol-title">{p.title}</span>
+              <span class="pol-cta">
                 进入项目
                 <svg
                   aria-hidden="true"
                   fill="none"
-                  height="14"
+                  height="13"
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   viewBox="0 0 24 24"
-                  width="14"
+                  width="13"
                 >
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
@@ -86,27 +83,30 @@ const PROJECTS = [
     gap: clamp(3rem, 7vw, 5rem);
   }
 
-  /* —— story-on：3D 展厅空间（三场景同时存在，滚动 = 镜头前移）——
-     perspective 在容器层；beats 开 preserve-3d 让场景的 translateZ 相对镜头生效。
-     工厂逐帧写各场景的 translate3d/opacity（连续 progress 插值，无 transition：
-     快速/反向滚动都由当前进度直接计算，不跳帧）。 —— */
+  /* —— story-on：3D 舞台（三张拍立得各占左/中/右一个站位，滚动 = 走位）——
+     perspective 在容器层；beats 开 preserve-3d 让卡片的 translateZ 相对镜头生效。
+     工厂逐帧写各卡的 translate3d/opacity/--ps-dim（连续 progress 插值，无
+     transition：快速/反向滚动都由当前进度直接计算，不跳帧）。 —— */
   :global(.story-on) .ps {
-    perspective: 1400px;
+    max-width: 62rem; /* 舞台放宽：三张拍立得并立有左右呼吸 */
+    perspective: 1500px;
   }
 
   @media (max-width: 48rem) {
     :global(.story-on) .ps {
-      perspective: 1000px; /* 移动端景深收敛 */
+      perspective: 1100px; /* 移动端景深收敛 */
     }
   }
 
   :global(.story-on) .ps-beats {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.1rem, 2.4vw, 2.2rem);
+    align-items: center;
     transform-style: preserve-3d;
   }
 
   :global(.story-on) .ps-beat {
-    grid-area: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -114,149 +114,113 @@ const PROJECTS = [
     will-change: opacity, transform;
   }
 
-  /* —— 项目卡：整卡可点，图上文下（.ps-beat 管节拍显隐，.ps-card 管 hover 上浮） —— */
-  .ps-card {
+  /* —— 拍立得相纸：白框 + 方形照片区（contain 完整显示不裁切）+ 下方留白 ——
+     相纸是实体物件，深浅主题下都保持暖白与深色手记文字 */
+  .pol {
     display: block;
-    width: min(100%, 34rem);
-    text-decoration: none;
-    border: 1px solid var(--anniv-border);
-    background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
-    /* 3D 纵深：侧后待命卡由工厂写 --ps-dim（1 → 0.45）整卡变暗 = 往后退 */
-    filter: brightness(var(--ps-dim, 1));
-    transition:
-      border-color var(--dur-normal) var(--ease-enter),
-      transform var(--dur-normal) var(--ease-enter);
-  }
-
-  /* 桌面：图左文右横排，整卡压进钉住舞台一屏 */
-  @media (min-width: 48rem) {
-    .ps-card {
-      display: grid;
-      grid-template-columns: 42% 1fr;
-      width: min(100%, 42rem);
-    }
-
-    .ps-media {
-      height: 100%;
-      border-bottom: none;
-      border-right: 1px solid var(--anniv-border);
-    }
-  }
-
-  .ps-card:hover {
-    border-color: var(--anniv-accent);
-    transform: translateY(-4px);
-  }
-
-  .ps-card:focus-visible {
-    outline: 2px solid var(--anniv-accent);
-    outline-offset: 4px;
-  }
-
-  .ps-media {
-    display: block;
-    aspect-ratio: 3 / 2;
-    overflow: hidden;
-    border-bottom: 1px solid var(--anniv-border);
-  }
-
-  @media (min-width: 48rem) {
-    .ps-media {
-      aspect-ratio: auto;
-      min-height: 100%;
-    }
-  }
-
-  .ps-media img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    padding: 3.2% 3.2% 0;
+    background: #f7f5ef;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.5) inset,
+      0 16px 44px rgba(2, 8, 20, 0.5);
+    text-decoration: none;
+    filter: brightness(var(--ps-dim, 1)); /* 3D 纵深：后方待命/退场时由工厂写暗度 */
+    transition: box-shadow var(--dur-normal) var(--ease-enter);
+  }
+
+  .pol:hover {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.5) inset,
+      0 22px 56px rgba(2, 8, 20, 0.62);
+  }
+
+  .pol-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .pol-photo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* 完整显示，不裁切 */
     transition: transform 0.5s var(--ease-enter);
   }
 
-  .ps-card:hover .ps-media img {
-    transform: scale(1.03);
+  .pol:hover .pol-photo img {
+    transform: scale(1.02);
   }
 
-  .ps-body {
+  .pol-cap {
     display: block;
-    padding: clamp(1.2rem, 2.6vw, 1.8rem) clamp(1.1rem, 2.6vw, 1.9rem) clamp(1.3rem, 2.6vw, 1.9rem);
+    padding: 0.85rem 0.3rem 1.05rem;
+    text-align: center;
   }
 
-  .ps-part {
+  .pol-part {
     display: block;
     font-family: 'Archivo', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.62rem;
     font-weight: 600;
-    letter-spacing: 0.4em;
-    color: var(--anniv-accent);
+    letter-spacing: 0.38em;
+    color: #0750a8;
   }
 
-  .ps-title {
+  .pol-title {
     display: block;
-    margin-top: 0.7rem;
+    margin-top: 0.45rem;
     font-family: var(--anniv-serif);
-    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-size: clamp(0.92rem, 1.5vw, 1.12rem);
     font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--anniv-fg);
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    color: #1c2430;
   }
 
-  .ps-desc {
-    margin: 0.9rem 0 0;
-    font-family: var(--anniv-serif);
-    font-size: clamp(0.84rem, 1.5vw, 0.94rem);
-    line-height: 1.95;
-    letter-spacing: 0.03em;
-    text-align: justify;
-    color: var(--anniv-fg-secondary);
-  }
-
-  .ps-cta {
+  .pol-cta {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 1.1rem;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
     font-family: 'Archivo', sans-serif;
-    font-size: 0.74rem;
+    font-size: 0.66rem;
     font-weight: 600;
-    letter-spacing: 0.3em;
-    color: var(--anniv-muted);
+    letter-spacing: 0.28em;
+    color: #51606f;
     transition:
       color var(--dur-normal) ease,
       gap var(--dur-normal) ease;
   }
 
-  .ps-card:hover .ps-cta {
-    gap: 0.85rem;
-    color: var(--anniv-accent);
+  .pol:hover .pol-cta {
+    gap: 0.7rem;
+    color: #0750a8;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .ps-card,
-    .ps-media img,
-    .ps-cta {
+    .pol,
+    .pol-photo img,
+    .pol-cta {
       transition: none;
     }
   }
 
-  /* 窄屏：卡宽收紧，保证题头 + 卡 + 进度点在 100svh 内同屏 */
+  /* 窄屏：拍立得收紧，保证题头 + 卡在 100svh 内同屏 */
   @media (max-width: 48rem) {
     .ps {
       max-width: none;
     }
 
-    .ps-card {
-      width: min(100%, 26rem);
+    .pol-title {
+      font-size: 0.88rem;
     }
 
-    .ps-desc {
-      font-size: 0.84rem;
-      line-height: 1.85;
-    }
-
-    .ps-body {
-      padding: 1rem 1.05rem 1.1rem;
+    .pol-cap {
+      padding: 0.6rem 0.2rem 0.8rem;
     }
   }
 </style>

@@ -248,10 +248,10 @@
     },
     {
       "id": "feat-032",
-      "name": "追光印记舞台式 3D 节拍（三槽循环走带 + 谢幕）",
-      "description": "按用户口述把追光印记（02 章节）三张项目卡改造成舞台式编排：删除底部三点指示器；projects 工厂重写为三槽循环走带（与留光成物同一 3D 思想）——Part1 主位时 Part2/3 在右/左后方待命（缩小 0.86、变暗 0.45、translateZ -260、rotateY ∓10° 内转、z 分层），滚动节拍 g(p) 推进带子换场（Part2 上场 Part1 退场、Part3 上场 Part2 退场），末段三卡一起后退变暗谢幕（容器 translateZ -300 + brightness 0.45，不用容器 opacity 避免 preserve-3d 压平）；raw 循环取模映射 + |raw|>1 降透明度保证绕行背面不穿帮；保持 progress 连续插值契约（快速/反向滚动严格连续）",
+      "name": "追光印记拍立得舞台剧（固定站位走位 + 集体谢幕）",
+      "description": "按用户口述再改造：卡片拍立得化（暖白相纸框 + 方形照片区 contain 完整显示不裁切 + 下方 caption：PART/标题/进入项目；desc 移除，详情在项目页）；projects 工厂改为固定站位走位——三张拍立得占左/中/右三个站位（grid 三列），从光影札记滑入时错峰（0.05/卡）从各自后方（translateZ -520/移动 -340、缩小 0.78、变暗、opacity 0.18）走上台前定格，台上驻留后各自对称退回后方，三张都退回后 0.84-0.98 集体谢幕（继续后退 + 暗场）；无左右轮播、无框式裁切；smooth 工具函数提升引擎顶部共享；无 JS 降级竖排全可见",
       "status": "done",
-      "evidence": "commit feat/7th-anniversary；headless 五状态截图（0.15/0.37/0.5/0.78/0.97）全部正确；移动端 375px 零溢出；./init.sh 全绿"
+      "evidence": "commit feat/7th-anniversary；headless 四状态截图（走位中/台上定格/对称退场/谢幕暗场）+ 移动端 375px 零溢出；./init.sh 全绿"
     }
   ]
 }
