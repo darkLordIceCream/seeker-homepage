@@ -170,11 +170,12 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       [0.86, 2],
       [1, 2.9],
     ];
-    // 展道空间错位（克制）：左 → 中 → 右
+    // 展道空间错位：向右斜的走道（左 → 中 → 右）——错位量需让下一块板
+    // 从当前板的侧面露出（遮挡关系的空间前提）
     const PAN = [
-      { x: -6, y: 0 },
+      { x: -14, y: 0 },
       { x: 0, y: -2 },
-      { x: 6, y: 1 },
+      { x: 14, y: 1 },
     ];
     const camAt = (P: number): number => {
       for (let k = 1; k < PATH.length; k++) {

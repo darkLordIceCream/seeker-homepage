@@ -1,10 +1,10 @@
 ---
 // 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
-// 舞台式编排（固定站位，与留光成物同一 3D 思想）：从光影札记滑入时三张卡
-// 按顺序依次从后方走上台（Part 1 先现、Part 2/3 跟上），台上定格供阅读，
-// 然后三卡一起退场（退回后方深处并暗场）。编排逻辑在 scroll-story.ts 的
-// projects 工厂；卡片为深色展示卡——照片区 img contain 完整显示（深底衬图，
-// 绝不裁切），图上文下横排；story-on 舞台内 desc 压缩为两行摘要（全文在项目页）。
+// 空间行走式叙事（三块方形展板同存于一个空间）：滚动 = 相机沿展道前移，
+// 依次走近、面对、经过 Part 01/02/03——遮挡与近大远小由空间深度自然产生，
+// 不是卡片切换。编排逻辑在 scroll-story.ts 的 projects 工厂（相机位置模型）；
+// 卡片为方形摄影展板——深色卡体 + 照片区 img contain 完整显示（绝不裁切）
+// + 题签；story-on 内 desc 压缩为三行图注（全文在项目页）。
 // 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
 // 图文数据与首页活动卡同源（R2 代表图 + 主站路由）。
 const PROJECTS = [
@@ -87,12 +87,13 @@ const PROJECTS = [
     gap: clamp(3rem, 7vw, 5rem);
   }
 
-  /* —— story-on：3D 舞台（三卡纵向三行站位，滚动 = 走位）——
-     perspective 在容器层；beats 开 preserve-3d 让卡片的 translateZ 相对镜头生效。
-     工厂逐帧写各卡的 translate3d/opacity/--ps-dim（连续 progress 插值，无
-     transition：快速/反向滚动都由当前进度直接计算，不跳帧）。 —— */
+  /* —— story-on：3D 展厅（三块方形展板同存于一个空间，滚动 = 相机前移）——
+     perspective 在容器层；beats 开 preserve-3d，三板叠同一格，工厂逐帧写
+     各板的 translate3d/opacity/--ps-dim（相机位置模型：progress → 空间位置，
+     连续插值无 transition，快速/反向滚动严格连续）。遮挡关系由空间深度
+     自然产生：面对 Part 01 时，Part 02 在其后方露出。 —— */
   :global(.story-on) .ps {
-    max-width: 62rem; /* 舞台放宽：图上文下横排卡更舒展 */
+    max-width: 62rem; /* 展厅放宽 */
     perspective: 1500px;
   }
 
@@ -103,12 +104,15 @@ const PROJECTS = [
   }
 
   :global(.story-on) .ps-beats {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(0.7rem, 1.4vh, 1.1rem);
+    display: grid;
+    transform-style: preserve-3d;
   }
 
   :global(.story-on) .ps-beat {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0; /* 初始隐藏，工厂按当前进度写内联样式接管 */
     will-change: opacity, transform;
   }
@@ -212,22 +216,23 @@ const PROJECTS = [
     color: var(--anniv-accent);
   }
 
-  /* story-on 舞台内：三行卡压缩为紧凑摘要卡（全文在项目页） */
+  /* 方形摄影展板：比例恒定（1:1），稳定完整，像真实存在于空间中的展板 */
   :global(.story-on) .ps-card {
     display: grid;
-    grid-template-columns: 36% 1fr;
+    grid-template-rows: 1fr auto;
+    width: min(60vh, 100%, 32rem);
+    aspect-ratio: 1;
   }
 
   :global(.story-on) .ps-media {
     aspect-ratio: auto;
     height: 100%;
-    border-bottom: none;
-    border-right: 1px solid var(--anniv-border);
+    border-bottom: 1px solid var(--anniv-border);
+    border-right: none;
   }
 
-  /* 舞台内三行卡压缩（题头 + 三卡须在一屏内）：摘要两行 + 收紧留白 */
   :global(.story-on) .ps-body {
-    padding: 0.7rem clamp(1rem, 1.8vw, 1.3rem);
+    padding: clamp(0.8rem, 1.6vh, 1.2rem) clamp(1rem, 2vw, 1.4rem);
   }
 
   :global(.story-on) .ps-title {
@@ -241,8 +246,8 @@ const PROJECTS = [
     line-height: 1.7;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     overflow: hidden;
   }
 
@@ -252,21 +257,13 @@ const PROJECTS = [
   }
 
   @media (max-width: 48rem) {
-    :global(.story-on) .ps-beats {
-      gap: clamp(0.7rem, 1.4vh, 1.1rem);
-    }
-
     :global(.story-on) .ps-card {
-      grid-template-columns: 42% 1fr;
+      width: min(42vh, 100%, 21rem);
     }
 
     :global(.story-on) .ps-desc {
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-    }
-
-    :global(.story-on) .ps-cta {
-      display: none; /* 窄屏舞台收纳，点击整卡进项目页 */
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
     }
 
     .ps-desc {
