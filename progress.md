@@ -2,9 +2,10 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-19 **Branch:**
+**Last Updated:** 2026-09-20 **Branch:**
 feat/7th-anniversary（由 feat/photo-watermark 改名，未合并）**Active Feature:**
-feat-026 七周年第二版「光影七载，看见彼此」数字摄影纪念册（独立双主题 + 七章叙事 + 数据底座）—— 地图墙换真实统计（219 人/28 省）并切换中国全图视图，已完成待复核
+并行会话 WIP 收尾（Footer 二维码 / 首页分部地图 BranchMap
+/ 同行之路弹窗卡）+ 七周年页脚制作名单，均已验证提交
 
 ## Status
 
@@ -1944,12 +1945,33 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 
 ### 删空框收束 + 追光印记题头字号统一（2026-09-20 用户反馈续十五）
 
-- 用户：删「光已飘向下一帧」空框，滑动直接到下一板块；追光印记大标题与
-  其他板块字号不一致
-- 删除：PosterSlideshow 空框 DOM/CSS、posters 工厂 ghost 引用——退场拍
-  海报直接向右滑出 + 整体暗场，不再有空框停留
-- 题头：追光印记作用域的 ash-zh/ash-en/ash 覆盖全部删除（当时为挤一屏
-  收紧，卡片自适应后不再需要）——四章节标题字号回归基准 clamp(1.9rem,
+- 用户：删「光已飘向下一帧」空框，滑动直接到下一板块；追光印记大标题与其他板块字号不一致
+- 删除：PosterSlideshow 空框 DOM/CSS、posters 工厂 ghost 引用——退场拍海报直接向右滑出 + 整体暗场，不再有空框停留
+- 题头：追光印记作用域的 ash-zh/ash-en/ash 覆盖全部删除（当时为挤一屏收紧，卡片自适应后不再需要）——四章节标题字号回归基准 clamp(1.9rem,
   5vw, 3.1rem)，实测全部 49.6px 一致
-- 验证：退场拍截图（整体暗场、无空框）；四章节标题 49.6px 一致；
-  ./init.sh 全绿
+- 验证：退场拍截图（整体暗场、无空框）；四章节标题 49.6px 一致；./init.sh 全绿
+
+### 并行会话 WIP 收尾：Footer 二维码 + 首页分部地图 + 同行之路弹窗卡（2026-09-20）
+
+- 另外两个会话留下的未提交改动，检查确认代码完整（无半截逻辑/残留引用）后收尾：
+  - Footer：占位联系方式（占位邮箱 /
+    seeker-photo 微信号 / 全国各地分部）替换为微信公众号二维码（src/assets/images/wechat-qrcode.png，512×512
+    / 144KB，astro:assets 处理）+「扫码关注微信公众号」
+  - 首页 AboutSection：分部 chips 换成 BranchMap 组件——中国全图版式（主图大陆 + 右下角南海诸岛附图），11 个分部圆点 + 引线 + 胶囊按钮；构建期把 public/geo/china-provinces.json（已提交的 DataV
+    GeoJSON）投影 + 简化为静态 SVG（src/lib/branches/china-svg.ts：等距圆柱投影、0.1° 量化去重、Douglas–Peucker 抽稀，零客户端地图库）；分部数据单一来源 src/data/branches.ts（新增分部只改这一处）
+  - SharedRoad（同行之路）：放大镜悬停改为悬浮弹窗卡——mouseenter 克隆卡片内容为 fixed 浮层（完整文案、360px 宽），上排向下弹 / 下排向上弹，水平夹回视口，移出/滚动即销毁；触屏（hover:none）不启用，手机端维持单列完整阅读
+- 修复：SharedRoad lint error（prefer-destructuring，`let left = r.left` →
+  `let { left } = r`）
+- 验证：./init.sh 全绿（type-check 0 错、lint 0 错 59 警、build
+  77 页）；浏览器实测——地图渲染 440×394、11 胶囊 11 圆点、胶囊↔圆点↔引线三方 is-active 联动命中；Footer 二维码正常显示；弹窗卡上排向下弹 / 下排向上弹、360×298 在视口内、文案完整不截断、mouseleave 即销毁
+- 提交：2903ba9（Footer 二维码）、896c3d4（分部地图 + 弹窗卡）
+
+### 七周年页脚新增制作名单（2026-09-20 用户需求）
+
+- AnniversaryFooter 在导航链接与版权行之间加「CREDITS
+  · 制作名单」：周年文章丨赵老师 / 抽奖运营丨月某人 Ted / 周年标语丨SteveZhang
+  LEO / 地图打卡丨LEO
+  / 专题访谈丨WHITE-SCORE 田田 / 海报设计丨肖默（哈姐）/ 网站设计丨黑暗之王；名单收在组件 frontmatter 数组里，沿用 anniv 设计令牌（标题 accent、角色 muted、名字 fg、分隔符 faint），flex-wrap 居中排布
+- 验证：type-check / lint
+  0 错；/7th 页脚截图确认 7 项名单两行居中、暗色主题下对比度正常
+- 提交：dedecea
