@@ -167,27 +167,45 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 06 留光成物：巨片装框入场（引言 → 海报 → 署名/计数）。
-   * 驻留期滚动不干预——轮播由 poster-slideshow.ts 的定时器接管；
-   * 出场无独立编排，sticky 释放后由交接句与暗房开场接棒。
+   * 06 留光成物：巨片飞行编排（全程滚动驱动；驻留缓漂由 poster-slideshow
+   * 的时间驱动层接管，写 [data-poster-drift]，与本工厂写的 [data-poster-stage]
+   * 分层叠加）：
+   * 入场 p .02→.2 照片从屏幕左侧飘入（减速就位）→ 驻留 → 离场 p .82→.96
+   * 随滚动二次加速向右飘出屏幕 → 空框浮现 p .86→.93、收束淡出 p .94→1
+   * （结束动作：光已飘走，框留余温）。
    */
   posters: track => {
     const lead = track.querySelector<HTMLElement>('[data-poster-lead]');
     const stage = track.querySelector<HTMLElement>('[data-poster-stage]');
     const cap = track.querySelector<HTMLElement>('[data-poster-cap]');
+    const ghost = track.querySelector<HTMLElement>('[data-poster-ghost]');
     return ({ progress: p }) => {
-      if (lead) {
-        lead.style.opacity = ramp(p, 0.02, 0.08).toFixed(3);
-      }
+      const vw = window.innerWidth;
       if (stage) {
-        const t = ramp(p, 0.04, 0.13);
-        stage.style.opacity = t.toFixed(3);
-        stage.style.transform = `scale(${(1.04 - 0.04 * t).toFixed(4)})`;
+        // 入场：从左侧 -60vw 减速飘入；(1-t)² 让就位带缓出感
+        const tIn = ramp(p, 0.02, 0.2);
+        // 离场：t² 二次加速飘向右出屏
+        const tOut = ramp(p, 0.82, 0.96);
+        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) + tOut * tOut * 1.15 * vw;
+        stage.style.opacity = ramp(p, 0.05, 0.15).toFixed(3);
+        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(tOut * 1.5).toFixed(2)}deg)`;
+      }
+      if (lead) {
+        const e = ramp(p, 0.82, 0.9);
+        lead.style.opacity = (ramp(p, 0.03, 0.1) * (1 - e)).toFixed(3);
+        lead.style.transform = `translateY(${(-14 * e).toFixed(1)}px)`;
       }
       if (cap) {
-        const t = ramp(p, 0.09, 0.15);
-        cap.style.opacity = t.toFixed(3);
-        cap.style.transform = `translateY(${(8 * (1 - t)).toFixed(1)}px)`;
+        const e = ramp(p, 0.84, 0.92);
+        cap.style.opacity = (ramp(p, 0.1, 0.18) * (1 - e)).toFixed(3);
+        cap.style.transform = `translateY(${(10 * e).toFixed(1)}px)`;
+      }
+      if (ghost) {
+        // 浮现后完整停留（.92→.95），末段再收束淡出
+        const g = ramp(p, 0.84, 0.92);
+        const s = ramp(p, 0.95, 1);
+        ghost.style.opacity = (g * (1 - s)).toFixed(3);
+        ghost.style.transform = `scale(${(1 - 0.06 * s).toFixed(4)})`;
       }
     };
   },

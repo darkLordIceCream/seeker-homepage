@@ -1,12 +1,13 @@
 /**
- * 【06 留光成物 · 巨片轮播】驻留期自动轮播逻辑。
+ * 【06 留光成物 · 巨片轮播】驻留期自动轮播 + 缓右漂移。
  * 由 PosterSlideshow 组件在接近板块 ~600px 时动态 import（页面初始零成本）。
  * 展示池 = manifest 全量（确定性洗牌已烘焙进数组顺序），
  * 任一时刻仅预取当前 ±2 张；悬停/聚焦/切后台/滚离板块即暂停。
  * reduced-motion 下组件不会 import 本模块（保持静态首帧）。
  *
- * 滚动引擎只编排入场与板块高度，驻留期不干预本模块——
- * 引擎写 [data-poster-stage] 外层透明度，交叉淡入走内部 <img> 类切换，互不冲突。
+ * 与滚动引擎的分工：引擎写 [data-poster-stage]（入场左飘入 / 离场加速右飘出，
+ * 滚动驱动），本模块写 [data-poster-drift]（驻留缓右漂移，时间驱动）——
+ * 两个写入面分层，互不覆盖。换帧时漂移归零（每张照片从基线重新起漂）。
  */
 import { POSTERS } from '@/data/anniversary/posters';
 
@@ -18,6 +19,10 @@ const FADE_MS = 450;
 const PRELOAD_AHEAD = 2;
 /** 署名切换的微淡出时长 */
 const CAP_SWAP_MS = 180;
+/** 缓右漂移速度（px/ms ≈ 13px/s）：钉住时照片缓缓向右飘 */
+const DRIFT_SPEED = 0.013;
+/** 漂移上限（后台计时失真兜底，换帧即归零） */
+const DRIFT_MAX = 160;
 
 const pad3 = (n: number): string => String(n).padStart(3, '0');
 
@@ -33,6 +38,7 @@ export function initPosterSlideshow(): void {
   const authorEl = root.querySelector<HTMLElement>('[data-poster-author]');
   const capEl = root.querySelector<HTMLElement>('[data-poster-cap]');
   const barEl = root.querySelector<HTMLElement>('[data-poster-bar]');
+  const driftEl = root.querySelector<HTMLElement>('[data-poster-drift]');
   if (!slotA || !slotB || !noEl || !authorEl || !capEl || !barEl) {
     return;
   }
@@ -63,6 +69,29 @@ export function initPosterSlideshow(): void {
       timer = window.setTimeout(() => {
         void advance();
       }, INTERVAL_MS);
+    }
+  };
+
+  /* —— 缓右漂移（时间驱动）：播放中匀速右移，暂停冻结，换帧归零 —— */
+  let drift = 0;
+  let lastT = 0;
+  const driftLoop = (now: number): void => {
+    if (lastT === 0) {
+      lastT = now;
+    }
+    if (playing() && driftEl && !switching) {
+      drift = Math.min(drift + (now - lastT) * DRIFT_SPEED, DRIFT_MAX);
+      driftEl.style.transform = `translate3d(${drift.toFixed(1)}px, 0, 0)`;
+    }
+    lastT = now;
+    requestAnimationFrame(driftLoop);
+  };
+  requestAnimationFrame(driftLoop);
+
+  const resetDrift = (): void => {
+    drift = 0;
+    if (driftEl) {
+      driftEl.style.transform = 'translate3d(0, 0, 0)';
     }
   };
 
@@ -134,6 +163,7 @@ export function initPosterSlideshow(): void {
         back = prev;
         index = next;
         switching = false;
+        resetDrift();
         updateCaption(index);
         for (let k = 1; k <= PRELOAD_AHEAD; k++) {
           preload(index + k);

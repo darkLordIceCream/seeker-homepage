@@ -1,16 +1,19 @@
 ---
 /**
- * 【06 留光成物 · PosterSlideshow】成员巨片幻灯片。
- * 滚动引擎（data-story-scene="posters"）只编排入场装框（引言 → 海报 → 署名/计数），
- * 驻留期的自动轮播在 poster-slideshow.ts——接近板块 ~600px 才动态 import，
- * 页面初始零图片处理成本。manifest 全量帧为展示池（确定性洗牌），
- * 任一时刻仅预取当前 ±2 张。
- * 海报自带相框/水印/二维码设计 → 原比例 contain 展示，绝不裁切。
+ * 【06 留光成物 · PosterSlideshow】成员巨片幻灯片（左文右图编辑排版）。
+ * 左列 = 章节题 + 引言 + 署名/计数/进度线；右列 = 放映区，海报 contain 原比例
+ * 展示（自带相框/水印/二维码，绝不裁切），占满右侧视口。
+ * 动效分工：滚动引擎（data-story-scene="posters"）写 [data-poster-stage]——
+ * 入场从左侧飘入、离场随滚动加速右飘出；驻留期的缓右漂移（时间驱动）写
+ * [data-poster-drift]，由 poster-slideshow.ts 的 rAF 循环驱动，与轮播同暂停。
+ * 照片飘出后 [data-poster-ghost] 空框浮现再收束（结束动作：光已飘走，框留余温）。
+ * 轮播逻辑在 poster-slideshow.ts，接近板块 ~600px 才动态 import；
+ * manifest 全量帧为展示池（确定性洗牌），任一时刻仅预取当前 ±2 张。
  * 无 JS / reduced-motion：静态展示首帧与署名（渐进增强，与全页引擎一致）。
- * 首帧不用 loading="lazy"：它嵌在 sticky + overflow:hidden 的舞台里，
- * WebKit 对这种组合的懒加载距离计算有 bug，图片请求可能永不发出（用户实测踩坑）。
+ * 首帧不用 loading="lazy"：sticky + overflow:hidden 舞台里 WebKit 懒加载不可靠。
  */
 import { POSTERS } from '@/data/anniversary/posters';
+import SectionHead from './SectionHead.astro';
 
 const total = POSTERS.length;
 const authors = new Set(POSTERS.map(p => p.author)).size;
@@ -19,71 +22,137 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
 ---
 
 <div class="pss" data-poster-slideshow>
-  <p class="pss-lead" data-poster-lead>
-    过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
-    以下每一帧，都是一个人的七周年。
-  </p>
-  <figure class="pss-figure" data-poster-stage>
-    <div class="pss-media">
-      {
-        first && (
-          <img
-            class="pss-img is-current"
-            data-poster-img
-            src={first.src}
-            alt={`Seeker 七周年纪念海报 · @${first.author}`}
-            width={first.w}
-            height={first.h}
-            fetchpriority="high"
-            decoding="async"
-          />
-        )
-      }
-      <img class="pss-img" data-poster-img-b alt="" aria-hidden="true" />
-    </div>
-    <figcaption class="pss-cap" data-poster-cap>
+  <div class="pss-side">
+    <SectionHead en="A FRAME TO KEEP" no="06" zh="留光成物" />
+    <p class="pss-lead" data-poster-lead>
+      过去两周，{authors} 位成员在暗房里把光装进了纪念框。<br />
+      以下每一帧，都是一个人的七周年。
+    </p>
+    <div class="pss-cap" data-poster-cap>
       <span class="pss-no">
         <span data-poster-no>{first ? `NO.${pad3(first.no)}` : 'NO.000'}</span> / {total}
       </span>
       <span class="pss-author" data-poster-author>@{first?.author ?? ''}</span>
-    </figcaption>
-    <div class="pss-bar" aria-hidden="true">
-      <i data-poster-bar style={`width: ${total > 0 ? ((1 / total) * 100).toFixed(2) : 0}%`}></i>
+      <div class="pss-bar" aria-hidden="true">
+        <i data-poster-bar style={`width: ${total > 0 ? ((1 / total) * 100).toFixed(2) : 0}%`}></i>
+      </div>
     </div>
-  </figure>
+  </div>
+  <div class="pss-right">
+    <div class="pss-stage" data-poster-stage>
+      <div class="pss-media" data-poster-drift>
+        {
+          first && (
+            <img
+              class="pss-img is-current"
+              data-poster-img
+              src={first.src}
+              alt={`Seeker 七周年纪念海报 · @${first.author}`}
+              width={first.w}
+              height={first.h}
+              fetchpriority="high"
+              decoding="async"
+            />
+          )
+        }
+        <img class="pss-img" data-poster-img-b alt="" aria-hidden="true" />
+      </div>
+    </div>
+    {/* 空框是放映区的静止兄弟层：照片加速飘出时它原地留下（光已飘走，框留余温） */}
+    <div class="pss-ghost" data-poster-ghost aria-hidden="true">
+      <p class="pss-ghost-text">光已飘向下一帧</p>
+    </div>
+  </div>
 </div>
 
 <style>
   .pss {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(18rem, 31%) 1fr;
+    gap: clamp(1.6rem, 3.5vw, 4rem);
     align-items: center;
     width: 100%;
+  }
+
+  .pss-side {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.2rem, 2.4vw, 2rem);
+    /* 照片飘入时从文字后面穿过（照片 z 在下，标题署名永不被盖） */
+    position: relative;
+    z-index: 2;
+  }
+
+  .pss-side :global(.ash) {
+    margin-bottom: 0;
   }
 
   .pss-lead {
     margin: 0;
-    text-align: center;
-    font-size: clamp(0.86rem, 1.7vw, 1.02rem);
-    line-height: 1.9;
-    letter-spacing: 0.06em;
+    font-size: clamp(0.84rem, 1.35vw, 1rem);
+    line-height: 1.95;
+    letter-spacing: 0.05em;
     color: var(--anniv-muted);
   }
 
-  .pss-figure {
-    margin: 0;
+  .pss-cap {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.9rem;
-    width: 100%;
+    gap: 0.7rem;
+    margin-top: clamp(0.6rem, 2vh, 1.6rem);
   }
 
-  /* 固定放映框：海报原比例 contain 居中（画幅各异，框不动、布局零跳动） */
-  .pss-media {
+  .pss-no {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.26em;
+    color: var(--anniv-muted);
+    transition: opacity 0.18s ease;
+  }
+
+  .pss-author {
+    font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--anniv-fg);
+    transition: opacity 0.18s ease;
+  }
+
+  .pss-cap.is-swap .pss-no,
+  .pss-cap.is-swap .pss-author {
+    opacity: 0;
+  }
+
+  .pss-bar {
+    width: min(100%, 12rem);
+    height: 2px;
+    overflow: hidden;
+    background: var(--anniv-border);
+  }
+
+  .pss-bar i {
+    display: block;
+    height: 100%;
+    background: var(--anniv-accent);
+    transition: width 0.8s ease;
+  }
+
+  /* 放映区：占满右列（滚动引擎写 stage 外层，漂移 rAF 写 media 层，互不干扰）；
+     空框 ghost 是 stage 的静止兄弟层，覆盖同一区域 */
+  .pss-right {
     position: relative;
-    width: min(92vw, 56rem);
-    height: min(44vh, 28rem);
+    z-index: 1;
+    height: min(78vh, 50rem);
+  }
+
+  .pss-stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .pss-media {
+    position: absolute;
+    inset: 0;
   }
 
   .pss-img {
@@ -94,11 +163,11 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     object-fit: contain;
     opacity: 0;
     transition: opacity 0.45s ease;
-    filter: drop-shadow(0 12px 40px rgba(2, 8, 20, 0.55));
+    filter: drop-shadow(0 18px 60px rgba(2, 8, 20, 0.6));
   }
 
   :global([data-theme='light']) .pss-img {
-    filter: drop-shadow(0 10px 30px rgba(20, 40, 61, 0.28));
+    filter: drop-shadow(0 14px 44px rgba(20, 40, 61, 0.3));
   }
 
   .pss-img.is-current {
@@ -117,50 +186,47 @@ const pad3 = (n: number): string => String(n).padStart(3, '0');
     z-index: 2;
   }
 
-  .pss-cap {
+  /* 结束动作：照片加速飘出后，空框浮现再收束——光已飘走，框留余温 */
+  .pss-ghost {
+    position: absolute;
+    inset: 0;
     display: flex;
-    align-items: baseline;
-    gap: 1.1rem;
-  }
-
-  .pss-no {
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.26em;
-    color: var(--anniv-muted);
-    transition: opacity 0.18s ease;
-  }
-
-  .pss-author {
-    font-size: 0.88rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--anniv-fg);
-    transition: opacity 0.18s ease;
-  }
-
-  .pss-cap.is-swap .pss-no,
-  .pss-cap.is-swap .pss-author {
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--anniv-accent) 50%, transparent);
+    box-shadow: inset 0 0 80px color-mix(in srgb, var(--anniv-accent) 12%, transparent);
+    background: linear-gradient(
+      120deg,
+      transparent 25%,
+      color-mix(in srgb, var(--anniv-accent) 10%, transparent) 50%,
+      transparent 75%
+    );
     opacity: 0;
+    pointer-events: none;
   }
 
-  .pss-bar {
-    width: min(46vw, 15rem);
-    height: 2px;
-    overflow: hidden;
-    background: var(--anniv-border);
-  }
-
-  .pss-bar i {
-    display: block;
-    height: 100%;
-    background: var(--anniv-accent);
-    transition: width 0.8s ease;
+  .pss-ghost-text {
+    margin: 0;
+    font-family: var(--anniv-serif);
+    font-size: clamp(1rem, 2vw, 1.45rem);
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: var(--anniv-fg);
   }
 
   @media (max-width: 48rem) {
-    .pss-media {
-      height: min(34vh, 22rem);
+    .pss {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+      align-items: start;
+    }
+
+    .pss-right {
+      height: min(44vh, 26rem);
+    }
+
+    .pss-lead br {
+      display: none;
     }
   }
 </style>
