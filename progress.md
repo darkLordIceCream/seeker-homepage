@@ -2021,3 +2021,11 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 
 - 本改动未提交（当前 main 有未提交改动：global.css +
   Banner.astro）；按用户习惯等确认手感后提交，或转 fix/* 分支
+
+### 移动端导航两项修复（2026-09-20 用户反馈）
+
+- 白条：移动端侧滑菜单 left:-100% 收起后右缘露 8px 玻璃条（width:100% + margin 0
+  8px 超出视口）——宽度改 calc(100% -
+  16px) 含入边距，收回完全离屏；顺带修正展开态右侧溢出 8px，两侧边距对称。提交 11c1fab
+- 7 周年按钮：移动端此前只有抽屉里一项、顶栏无入口——nav-right 新增 .nav-anniv-mobile 胶囊按钮（桌面 display:none 防重复），颜色走导航状态变量（--nav-pill-bg/--nav-fg），Hero 深色视频上透明白、落地玻璃条自适应主题。移动 375px 实测两态可读、桌面无重复
+- 同步：两提交推送 origin/main（Cloudflare Pages 自动部署）
