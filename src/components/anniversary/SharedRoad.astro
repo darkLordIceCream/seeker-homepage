@@ -1,10 +1,10 @@
 ---
 /**
  * 【03 同行之路 · SharedRoad】品牌合作卡片墙——13 张卡片一屏两行（上 6 下 7）。
- * 滚动视觉：卡片 data-reveal 依次浮现（上排先、下排后，行内错峰）；两行随
- * 上下滑动做轻微反向视差（road 工厂 view 模式驱动行容器 transform，transform-only）。
- * hover：卡片上浮点亮、完整合作文案展开（默认截断约 5 行）。
- * 无 JS / reduced-motion：reveal 与视差不生效，卡片直接完整可见（渐进增强契约）。
+ * 卡片品牌名前带 @；滚动视觉：卡片 data-reveal 依次浮现（上排先、下排后，
+ * 行内错峰）+ 两行随上下滑动做轻微反向视差（road 工厂 view 模式驱动）。
+ * hover 放大镜：内层内容以鼠标位置为原点轻微放大（transform-origin 跟随），
+ * 配合镜片高光叠加层；移出恢复。无 JS / reduced-motion：全部直接可见。
  * 文案照录用户提供原文；数据：src/data/anniversary/partners.json。
  */
 import partnersData from '../../data/anniversary/partners.json';
@@ -23,17 +23,22 @@ const ROW_A = partners.slice(0, 6);
 const ROW_B = partners.slice(6, 13);
 ---
 
-<div class="sr" data-story-mode="view" data-story-scene="road">
+<div class="sr">
   <div class="sr-row" data-road-row="top">
     {
       ROW_A.map((p, i) => (
         <article class="sr-card" data-reveal data-reveal-delay={`${i * 0.07}s`}>
-          <p class="sr-card-brand">
-            {p.name}
-            {p.kind === 'platform' && <span class="sr-card-tag">合作平台</span>}
-          </p>
-          {p.title && <p class="sr-card-title">{p.title}</p>}
-          <p class="sr-card-blurb">{p.blurb}</p>
+          <div class="sr-card-inner">
+            <p class="sr-card-brand">
+              <span aria-hidden="true" class="sr-at">
+                @
+              </span>
+              {p.name}
+              {p.kind === 'platform' && <span class="sr-card-tag">合作平台</span>}
+            </p>
+            {p.title && <p class="sr-card-title">{p.title}</p>}
+            <p class="sr-card-blurb">{p.blurb}</p>
+          </div>
         </article>
       ))
     }
@@ -42,12 +47,17 @@ const ROW_B = partners.slice(6, 13);
     {
       ROW_B.map((p, i) => (
         <article class="sr-card" data-reveal data-reveal-delay={`${0.12 + i * 0.06}s`}>
-          <p class="sr-card-brand">
-            {p.name}
-            {p.kind === 'platform' && <span class="sr-card-tag">合作平台</span>}
-          </p>
-          {p.title && <p class="sr-card-title">{p.title}</p>}
-          <p class="sr-card-blurb">{p.blurb}</p>
+          <div class="sr-card-inner">
+            <p class="sr-card-brand">
+              <span aria-hidden="true" class="sr-at">
+                @
+              </span>
+              {p.name}
+              {p.kind === 'platform' && <span class="sr-card-tag">合作平台</span>}
+            </p>
+            {p.title && <p class="sr-card-title">{p.title}</p>}
+            <p class="sr-card-blurb">{p.blurb}</p>
+          </div>
         </article>
       ))
     }
@@ -55,11 +65,30 @@ const ROW_B = partners.slice(6, 13);
   <p class="sr-fineprint" data-reveal>以上排名不分先后。</p>
 </div>
 
+<script>
+  // 放大镜：内层内容以鼠标位置为变换原点轻微放大（跟手），移出恢复。
+  // 委托在卡片墙上，mousemove 频繁写 CSS 变量（廉价），无第三方依赖。
+  const wall = document.querySelector<HTMLElement>('.sr');
+  if (wall) {
+    const cards = [...wall.querySelectorAll<HTMLElement>('.sr-card')];
+    const setLens = (card: HTMLElement, e: MouseEvent) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+      card.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+      card.style.setProperty('--zoom', '1.1');
+    };
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => setLens(card, e));
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--zoom', '1');
+      });
+    });
+  }
+</script>
+
 <style>
   .sr {
     width: 100%;
-    /* 视差由工厂驱动行容器 transform；此处给两行初始同位 */
-    --row-drift: 0px;
   }
 
   /* —— 两行网格：上 6 列 / 下 7 列 —— */
@@ -67,7 +96,6 @@ const ROW_B = partners.slice(6, 13);
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: clamp(0.8rem, 1.4vw, 1.2rem);
-    transform: translateY(var(--row-drift));
   }
 
   .sr-row + .sr-row {
@@ -78,21 +106,53 @@ const ROW_B = partners.slice(6, 13);
     grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
-  /* —— 品牌卡：纯文字小卡（无图片） —— */
+  /* —— 品牌卡：纯文字小卡（无图片）；overflow 裁切放大溢出（放大镜看局部） —— */
   .sr-card {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: clamp(0.9rem, 1.6vw, 1.25rem) clamp(0.85rem, 1.5vw, 1.15rem);
     border: 1px solid var(--anniv-border);
     background: color-mix(in srgb, var(--anniv-surface) 55%, transparent);
     transition:
       border-color var(--dur-normal) var(--ease-enter),
-      transform var(--dur-normal) var(--ease-enter);
+      box-shadow var(--dur-normal) var(--ease-enter);
   }
 
   .sr-card:hover {
     border-color: var(--anniv-accent);
-    transform: translateY(-4px);
+    box-shadow: 0 0 24px rgba(46, 134, 222, 0.18);
+  }
+
+  /* 内层：跟随鼠标原点缩放（工厂/脚本写 --zoom 与 --mx/--my） */
+  .sr-card-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: clamp(0.9rem, 1.6vw, 1.25rem) clamp(0.85rem, 1.5vw, 1.15rem);
+    transform: scale(var(--zoom, 1));
+    transform-origin: var(--mx, 50%) var(--my, 50%);
+    transition: transform 0.18s ease-out;
+    will-change: transform;
+  }
+
+  /* 镜片高光：跟随鼠标的圆形柔光，hover 淡入 */
+  .sr-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle 110px at var(--mx, 50%) var(--my, 50%),
+      rgba(46, 134, 222, 0.14),
+      transparent 72%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .sr-card:hover::after {
+    opacity: 1;
   }
 
   .sr-card-brand {
@@ -102,6 +162,11 @@ const ROW_B = partners.slice(6, 13);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--anniv-fg);
+  }
+
+  .sr-at {
+    margin-right: 0.14em;
+    color: var(--anniv-accent);
   }
 
   .sr-card-tag {
@@ -136,18 +201,10 @@ const ROW_B = partners.slice(6, 13);
     letter-spacing: 0.02em;
     text-align: justify;
     color: var(--anniv-muted);
-    /* 默认截断约 5 行保证一屏两行；hover 展开全文 */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 5;
     overflow: hidden;
-  }
-
-  .sr-card:hover .sr-card-blurb {
-    display: block;
-    overflow: visible;
-    -webkit-line-clamp: unset;
-    color: var(--anniv-fg-secondary);
   }
 
   .sr-fineprint {
@@ -171,11 +228,10 @@ const ROW_B = partners.slice(6, 13);
   }
 
   @media (max-width: 48rem) {
-    /* 手机：单列正常滚动浏览，文案完整展示（一屏 13 卡是桌面形态） */
+    /* 手机：单列正常滚动浏览（触屏无 hover，放大镜不生效） */
     .sr-row,
     .sr-row[data-road-row='bottom'] {
       grid-template-columns: 1fr;
-      transform: none;
     }
 
     .sr-card {
@@ -196,6 +252,11 @@ const ROW_B = partners.slice(6, 13);
 
   @media (prefers-reduced-motion: reduce) {
     .sr-card {
+      transition: none;
+    }
+
+    .sr-card-inner {
+      transform: none;
       transition: none;
     }
   }
