@@ -1975,3 +1975,18 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 验证：type-check / lint
   0 错；/7th 页脚截图确认 7 项名单两行居中、暗色主题下对比度正常
 - 提交：dedecea
+
+### 七载光影修复：三拍切换 transition 补回 + 名单竖排（2026-09-20 用户反馈）
+
+- 用户反馈「七载光影动画僵硬、滑到下一板块有很长空白」。诊断：
+  - 僵硬 = 三拍切换的补间规则丢失：6dce3b5 引入节拍设计时给 .pss-stage/.pss-lead 加过 transition，2279cc6 回退时一并删除，30c7f6a 重新启用三拍工厂却没恢复 CSS——实测 computed
+    transition 为 all 0s，入场/退场均为单帧硬切
+  - 空白 = 退场拍在 P=0.72 触发后轨道还剩 0.28×2.2 屏 ≈
+    554px 纯空舞台（P=0.8 截图整屏黑）；旧版由空框浮现填充，d8f1636 删空框时未同步调拍点/轨道
+- 本轮先修僵硬（用户确认）：PosterSlideshow.astro 补回 .pss-stage（transform
+  0.6s var(--ease-enter) + opacity 0.6s
+  ease）与 .pss-lead（0.45s），并给 .pss-cap 同款 0.45s（署名/进度线同样在三拍里被工厂改写，此前也是硬切）；ghost 相关不恢复（元素已删）
+- 验证：computed
+  transition 恢复 0.6s/0.45s；跨 0.12 阈值抓中间帧——海报就位途中、署名淡入中，1.2s 后落定完整；type-check/lint
+  0 错；提交 cb0fdda
+- 遗留：空白段（拍点 0.72→1 的空轨道）未动，待用户确认方案（推迟退场拍阈值至 ~0.88 + 轨道 320vh→280vh）后实施
