@@ -2,7 +2,8 @@
  * 【06 留光成物 · 巨片轮播】驻留期自动轮播 + 缓右漂移。
  * 由 PosterSlideshow 组件在接近板块 ~600px 时动态 import（页面初始零成本）。
  * 展示池 = manifest 全量（确定性洗牌已烘焙进数组顺序），
- * 任一时刻仅预取当前 ±2 张；悬停/聚焦/切后台/滚离板块即暂停。
+ * 任一时刻仅预取当前 ±2 张；切后台/滚离板块即暂停（不做悬停暂停——
+ * 用户停留观看时鼠标停在大海报上，悬停冻结反而让轮播「看起来坏了」）。
  * reduced-motion 下组件不会 import 本模块（保持静态首帧）。
  *
  * 与滚动引擎的分工：引擎写 [data-poster-stage]（入场左飘入 / 离场加速右飘出，
@@ -11,14 +12,18 @@
  */
 import { POSTERS } from '@/data/anniversary/posters';
 
-/** 每帧驻留时长（含交叉淡入之外的全部停留） */
-const INTERVAL_MS = 4500;
+/** 每帧驻留时长（含换帧之外的全部停留） */
+const INTERVAL_MS = 2000;
 /** 换帧两段各自的时长：旧帧淡出 / 新帧淡入（须与组件内 .pss-img 的 transition 一致） */
 const FADE_MS = 450;
 /** 向前预取张数 */
 const PRELOAD_AHEAD = 2;
 /** 署名切换的微淡出时长 */
 const CAP_SWAP_MS = 180;
+/** 换帧全程（淡出+淡入），从驻留周期内扣除，保证「每 INTERVAL_MS 一张」 */
+const SWAP_TOTAL_MS = FADE_MS * 2;
+/** 单帧解码等待上限：防止个别环境 decode() 永不返回把轮播锁死 */
+const DECODE_TIMEOUT_MS = 1500;
 /** 缓右漂移速度（px/ms ≈ 13px/s）：钉住时照片缓缓向右飘 */
 const DRIFT_SPEED = 0.013;
 /** 漂移上限（后台计时失真兜底，换帧即归零） */
@@ -49,11 +54,10 @@ export function initPosterSlideshow(): void {
   let switching = false;
   let timer = 0;
   let inView = false;
-  let hovered = false;
   let { hidden } = document;
   const failed = new Set<number>();
 
-  const playing = (): boolean => inView && !hovered && !hidden;
+  const playing = (): boolean => inView && !hidden;
 
   const preload = (i: number): void => {
     const poster = POSTERS[i % POSTERS.length];
@@ -66,9 +70,12 @@ export function initPosterSlideshow(): void {
   const schedule = (): void => {
     window.clearTimeout(timer);
     if (playing()) {
-      timer = window.setTimeout(() => {
-        void advance();
-      }, INTERVAL_MS);
+      timer = window.setTimeout(
+        () => {
+          void advance();
+        },
+        Math.max(200, INTERVAL_MS - SWAP_TOTAL_MS),
+      );
     }
   };
 
@@ -129,18 +136,24 @@ export function initPosterSlideshow(): void {
     }
     back.src = poster.src;
     back.alt = `Seeker 七周年纪念海报 · @${poster.author}`;
-    try {
-      // decode() 在老版 Safari 缺失——缺失时等 load/error 事件，失败照常跳帧
+    // decode() 等待加超时上限：个别环境 decode 可能永不返回（卡死轮播），
+    // 超时则照常换帧（fade 的 450ms 还能给解码留缓冲）；失败帧照旧跳过
+    const decoded = ((): Promise<void> => {
       if (typeof back.decode === 'function') {
-        await back.decode();
-      } else if (!back.complete || back.naturalWidth === 0) {
-        await new Promise<void>((resolve, reject) => {
+        return back.decode();
+      }
+      if (!back.complete || back.naturalWidth === 0) {
+        return new Promise<void>((resolve, reject) => {
           back.addEventListener('load', () => resolve(), { once: true });
           back.addEventListener('error', () => reject(new Error('poster load failed')), {
             once: true,
           });
         });
       }
+      return Promise.resolve();
+    })();
+    try {
+      await Promise.race([decoded, new Promise(r => window.setTimeout(r, DECODE_TIMEOUT_MS))]);
     } catch {
       failed.add(next);
       switching = false;
@@ -173,22 +186,9 @@ export function initPosterSlideshow(): void {
     }, FADE_MS);
   }
 
-  root.addEventListener('pointerenter', () => {
-    hovered = true;
-    schedule();
-  });
-  root.addEventListener('pointerleave', () => {
-    hovered = false;
-    schedule();
-  });
-  root.addEventListener('focusin', () => {
-    hovered = true;
-    schedule();
-  });
-  root.addEventListener('focusout', () => {
-    hovered = false;
-    schedule();
-  });
+  // 不做悬停暂停：用户停留观看时鼠标多半停在大海报上，悬停即冻结
+  // 会让「停留反而看不到轮播」（用户实测反馈）。仅保留两类暂停——
+  // 切后台（省资源）与滚离板块（不在视口）
   document.addEventListener('visibilitychange', () => {
     hidden = document.hidden;
     schedule();
