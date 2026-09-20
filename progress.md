@@ -1990,3 +1990,34 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   transition 恢复 0.6s/0.45s；跨 0.12 阈值抓中间帧——海报就位途中、署名淡入中，1.2s 后落定完整；type-check/lint
   0 错；提交 cb0fdda
 - 遗留：空白段（拍点 0.72→1 的空轨道）未动，待用户确认方案（推迟退场拍阈值至 ~0.88 + 轨道 320vh→280vh）后实施
+
+## 会话记录（首页滚轮段落感修复：mandatory → proximity，2026-09-20 续 3）
+
+### 根因（Explore 探索确认，纯 CSS，无 JS 劫持滚轮）
+
+1. `global.css` `html:has(.snap-scroll) { scroll-snap-type: y mandatory }` +
+   `.section`/Banner的
+   `scroll-snap-stop: always`：滚轮每格被硬停到下一屏 → 段落感
+2. About 区（含地图后）自然高约 1.2–1.4×视口，mandatory 对超一屏吸附区会反复回吸 → 加重卡顿
+
+### 改动（当前在 main 分支，未提交）
+
+1. global.css：snap-type `y mandatory` →
+   `y proximity`（就近吸附，滚轮连续自由滚，近边界停下才轻吸附）；`.section` 删
+   `scroll-snap-stop: always`；footer 吸附点注释更新
+2. Banner.astro：`.banner` 删
+   `scroll-snap-stop: always`；顺带修真 bug——「滚动到下一屏」箭头原写死
+   `#about`（跳过作品/活动两屏）→ 改 `#works`
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors / build 77 页全绿
+- preview 实测：html computed scrollSnapType =
+  "y"（Chromium 对 proximity 初始值的序列化省略，即 proximity 生效）、.section
+  snap-stop = normal；点击下滑箭头精确落 `#works` 顶部（offset 0）
+- 手感以用户本机滚轮实际体验为准
+
+### 遗留 / 待办
+
+- 本改动未提交（当前 main 有未提交改动：global.css +
+  Banner.astro）；按用户习惯等确认手感后提交，或转 fix/* 分支
