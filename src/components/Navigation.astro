@@ -7,7 +7,10 @@ const isHome = Astro.url.pathname.replace(/\/+$/, '') === '';
 const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
-<nav aria-label="主导航" class:list={['navigation', { 'navigation--solid': !isHome }]}>
+<nav
+  aria-label="主导航"
+  class:list={['navigation', { 'navigation--solid': !isHome, 'navigation--home': isHome }]}
+>
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
@@ -138,6 +141,9 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     text-decoration: none;
     letter-spacing: -0.02em;
     transition: opacity 0.3s ease;
+    /* 窄屏被右侧按钮挤压时品牌名不许折行 */
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .logo-accent {
@@ -271,6 +277,9 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     background: var(--nav-pill-bg);
     border: 1px solid var(--nav-pill-border);
     border-radius: 999px;
+    /* 窄屏（含子页面带汉堡时）不许被挤压折行 */
+    white-space: nowrap;
+    flex-shrink: 0;
     transition:
       color 0.3s ease,
       background-color 0.3s ease,
@@ -321,6 +330,21 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     /* 顶栏 7 周年按钮：颜色随导航状态变量自适应（Hero 深色视频上透明白、落地后主题玻璃） */
     .nav-anniv-mobile {
       display: inline-flex;
+    }
+
+    /* 右侧按钮组间距收紧，320px 级窄屏也放得下 */
+    .nav-right {
+      gap: 10px;
+    }
+
+    /* 首页移动端：菜单项全是本页锚点（整页滚动即达），汉堡与抽屉一并撤掉，
+       顶栏只留 品牌 | 7周年 | 主题切换 */
+    .navigation--home .nav-toggle {
+      display: none;
+    }
+
+    .navigation--home .nav-menu {
+      display: none;
     }
 
     .nav-menu {

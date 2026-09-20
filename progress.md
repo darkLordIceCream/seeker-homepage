@@ -2029,3 +2029,12 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   16px) 含入边距，收回完全离屏；顺带修正展开态右侧溢出 8px，两侧边距对称。提交 11c1fab
 - 7 周年按钮：移动端此前只有抽屉里一项、顶栏无入口——nav-right 新增 .nav-anniv-mobile 胶囊按钮（桌面 display:none 防重复），颜色走导航状态变量（--nav-pill-bg/--nav-fg），Hero 深色视频上透明白、落地玻璃条自适应主题。移动 375px 实测两态可读、桌面无重复
 - 同步：两提交推送 origin/main（Cloudflare Pages 自动部署）
+
+### 移动端顶栏重排（2026-09-20 用户反馈）
+
+- 7 周年按钮挤压导致品牌名折行 → .nav-logo a 加 white-space:nowrap +
+  flex-shrink:0；胶囊按钮同样加 nowrap（修复子页面 320px 下折成两行）；移动端 nav-right 间距 16→10px
+- 首页移动端撤掉汉堡与抽屉（菜单项全是本页锚点，整页滚动即达）——navigation--home 类驱动，子页面保留完整抽屉导航；首页顶栏 = 品牌 |
+  7周年 | 主题切换
+- 验证：320/375px 首页（无汉堡、单行 logo）+ 子页面（汉堡保留、胶囊单行）截图通过；type-check/lint
+  0 错
