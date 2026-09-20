@@ -144,28 +144,45 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：三大项目的连续滚动叙事（非 Carousel）。
-   * 滚动不决定「当前第几张」，而是决定故事进行到什么程度——三张卡在重叠
-   * 时间轴上进出：上一段退为背景残影（opacity→0.12, scale→0.96）的同时，
-   * 下一段正从它身后成为主体（scale 1.04→1）；图先入、文稍晚；中段安静
-   * 驻留供阅读（HOLD 区间无任何动画）；末段轻微呼气后随舞台自然交棒。
-   * 所有状态由当前 progress 直接计算（无 transition、无定时器）——快速/
-   * 反向滚动都严格连续。PART 标签与刻度点只作进度指示（主导段亮起）。
+   * 02 追光印记：镜头穿过三个项目场景（3D 空间滚动叙事，非 Carousel）。
+   * 三个场景从故事开始就同时存在于空间中——Part 01 离镜头最近，02/03 在
+   * 更远处且带轻微 x/y 错位（空间记忆，不是直线上的三张牌）。滚动推动镜头
+   * 前移：远处场景放大靠近（perspective 自然产生近大远小）→ 镜前驻留供阅读
+   * → 被甩到身后放大穿出消失；末场景只轻微呼气，随舞台交棒下一章。
+   * 进入顺序：图 → PART → 标题 → 描述 → 链接（场景 progress 驱动的克制错峰）。
+   * 所有状态由当前 progress 直接计算（无 transition/定时器），快速与反向滚动
+   * 严格连续。桌面强景深、移动弱景深（z 与错位减半，仍是镜头推进）。
    */
   projects: track => {
     const beats = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
     const medias = beats.map(b => b.querySelector<HTMLElement>('[data-project-media]'));
-    const contents = beats.map(b => b.querySelector<HTMLElement>('[data-project-content]'));
+    const parts = beats.map(b => b.querySelector<HTMLElement>('.ps-part'));
+    const titles = beats.map(b => b.querySelector<HTMLElement>('.ps-title'));
+    const descs = beats.map(b => b.querySelector<HTMLElement>('.ps-desc'));
+    const ctas = beats.map(b => b.querySelector<HTMLElement>('.ps-cta'));
     const part = track.querySelector<HTMLElement>('[data-project-part]');
     const dots = [...track.querySelectorAll<HTMLElement>('[data-project-dot]')];
-    // 三段时间轴（相邻段重叠，保证过渡连续：0.31-0.38 与 0.62-0.69 为共存区）
+    // 三段场景的时间轴（相邻段重叠：0.31-0.38 与 0.62-0.69 为空间共存区）
     const SPANS: [number, number][] = [
       [0, 0.38],
       [0.31, 0.69],
       [0.62, 1],
     ];
+    // 场景的空间锚点：远处初始位姿（x/y 克制错位 + z 纵深），错开避免「三张牌」感
+    const DEPTH_DESKTOP = [
+      { x: 0, y: 0, z: 0 },
+      { x: 92, y: -30, z: -540 },
+      { x: -112, y: 38, z: -1080 },
+    ];
+    const DEPTH_MOBILE = [
+      { x: 0, y: 0, z: 0 },
+      { x: 48, y: -16, z: -300 },
+      { x: -60, y: 20, z: -600 },
+    ];
     let leadPart = -1;
-    return ({ progress: P }) => {
+    return ({ progress: P, isDesktop }) => {
+      const anchors = isDesktop ? DEPTH_DESKTOP : DEPTH_MOBILE;
+      const zExit = isDesktop ? 640 : 400; // 穿过镜头后甩到身后的距离
       const presence: number[] = [];
       let leadOpacity = -1;
       let leadIdx = 0;
@@ -173,30 +190,56 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
         const [a, b] = SPANS[i] ?? [0, 1];
         const q = clamp01((P - a) / (b - a));
         const isLast = i === beats.length - 1;
-        // 进入：整卡淡入+回落缩放；图（translateY）稍早，文（opacity+translateY）稍晚
-        const enter = ramp(q, 0, 0.32);
-        const enterImg = ramp(q, 0, 0.42);
-        const enterTxt = ramp(q, 0.14, 0.55);
-        // 退场：先退为残影（0.88 幅度→0.12），非末段再彻底让位；末段只轻微呼气（0.3 幅度）
-        const exitT = ramp(q, isLast ? 0.88 : 0.72, isLast ? 1 : 0.93);
-        const goneT = isLast ? 0 : ramp(q, 0.93, 1);
-        const beatOpacity = enter * (1 - (isLast ? 0.3 : 0.88) * exitT) * (1 - goneT);
-        const scale = 1.04 - 0.04 * enter - 0.07 * exitT;
-        el.style.opacity = beatOpacity.toFixed(3);
-        el.style.transform = `scale(${scale.toFixed(4)})`;
+        const anchor = anchors[i] ?? { x: 0, y: 0, z: 0 };
+        // 镜头运动三段：靠近（远处位姿 → 镜前，0-0.42）→ 驻留（0.42-0.72/0.82）→ 穿过身后；
+        // 末段窗口更晚、行程更短——只轻微推近收尾，保持「安静下来」的呼吸感
+        const tIn = ramp(q, 0, 0.42);
+        const tOut = isLast ? ramp(q, 0.82, 1) : ramp(q, 0.72, 1);
+        const drift = 1 - tIn - 0.3 * tOut; // 穿过时沿原错位方向继续轻微漂出
+        const x = anchor.x * drift;
+        const y = anchor.y * drift;
+        const z = anchor.z * (1 - tIn) + zExit * (isLast ? 0.45 : 1) * tOut;
+        // opacity：远处淡影 0.1 → 镜前 1；非末段穿过中先残影后消失，末段只呼气
+        const arrive = ramp(q, 0.05, 0.4);
+        const gone = isLast ? 0 : ramp(q, 0.78, 0.95);
+        const fade = isLast ? 0 : ramp(q, 0.95, 1);
+        const breath = isLast ? ramp(q, 0.9, 1) : 0;
+        const opacity = (0.1 + 0.9 * arrive) * (1 - 0.85 * gone) * (1 - fade) * (1 - 0.25 * breath);
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px)`;
+        // 场景内容错峰展开：图 → PART → 标题 → 描述 → 链接（克制小位移）
         const m = medias[i];
         if (m) {
-          m.style.opacity = enterImg.toFixed(3);
-          m.style.transform = `translateY(${(12 * (1 - enterImg)).toFixed(1)}px)`;
+          const t = ramp(q, 0.08, 0.42);
+          m.style.opacity = t.toFixed(3);
+          m.style.transform = `translateY(${(10 * (1 - t)).toFixed(1)}px)`;
         }
-        const c = contents[i];
+        const p = parts[i];
+        if (p) {
+          const t = ramp(q, 0.16, 0.48);
+          p.style.opacity = t.toFixed(3);
+          p.style.transform = `translateY(${(8 * (1 - t)).toFixed(1)}px)`;
+        }
+        const ti = titles[i];
+        if (ti) {
+          const t = ramp(q, 0.2, 0.52);
+          ti.style.opacity = t.toFixed(3);
+          ti.style.transform = `translateY(${(12 * (1 - t)).toFixed(1)}px)`;
+        }
+        const d = descs[i];
+        if (d) {
+          const t = ramp(q, 0.26, 0.6);
+          d.style.opacity = t.toFixed(3);
+          d.style.transform = `translateY(${(16 * (1 - t)).toFixed(1)}px)`;
+        }
+        const c = ctas[i];
         if (c) {
-          c.style.opacity = enterTxt.toFixed(3);
-          c.style.transform = `translateY(${(16 * (1 - enterTxt)).toFixed(1)}px)`;
+          const t = ramp(q, 0.32, 0.66);
+          c.style.opacity = t.toFixed(3);
         }
-        presence[i] = beatOpacity;
-        if (beatOpacity > leadOpacity) {
-          leadOpacity = beatOpacity;
+        presence[i] = opacity;
+        if (opacity > leadOpacity) {
+          leadOpacity = opacity;
           leadIdx = i;
         }
       });
@@ -233,11 +276,11 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
       if (stage) {
         // 入场：从左侧 -60vw 减速飘入；(1-t)² 让就位带缓出感
         const tIn = ramp(p, 0.02, 0.2);
-        // 离场：t² 二次加速向左飘出屏幕（放映区在左半区，照片全程不碰右侧文字）
+        // 离场：t² 二次加速向右飘出屏幕
         const tOut = ramp(p, 0.82, 0.96);
-        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) - tOut * tOut * 1.15 * vw;
+        const x = -0.6 * vw * (1 - tIn) * (1 - tIn) + tOut * tOut * 1.15 * vw;
         stage.style.opacity = ramp(p, 0.05, 0.15).toFixed(3);
-        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(-tOut * 1.5).toFixed(2)}deg)`;
+        stage.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(tOut * 1.5).toFixed(2)}deg)`;
       }
       if (lead) {
         const e = ramp(p, 0.82, 0.9);

@@ -99,10 +99,23 @@ const PROJECTS = [
     display: none;
   }
 
-  /* —— story-on：同格叠放（连续 scroll progress——工厂逐帧插值，无 transition：
-     所有视觉状态由当前进度直接计算，快速/反向滚动都不会跳帧） —— */
+  /* —— story-on：3D 展厅空间（三场景同时存在，滚动 = 镜头前移）——
+     perspective 在容器层；beats 开 preserve-3d 让场景的 translateZ 相对镜头生效。
+     工厂逐帧写各场景的 translate3d/opacity（连续 progress 插值，无 transition：
+     快速/反向滚动都由当前进度直接计算，不跳帧）。 —— */
+  :global(.story-on) .ps {
+    perspective: 1400px;
+  }
+
+  @media (max-width: 48rem) {
+    :global(.story-on) .ps {
+      perspective: 1000px; /* 移动端景深收敛 */
+    }
+  }
+
   :global(.story-on) .ps-beats {
     display: grid;
+    transform-style: preserve-3d;
   }
 
   :global(.story-on) .ps-beat {
@@ -114,9 +127,8 @@ const PROJECTS = [
     will-change: opacity, transform;
   }
 
-  /* 图先入、文稍晚：两层初始态均由工厂按各自时间窗插值 */
-  :global(.story-on) [data-project-media],
-  :global(.story-on) [data-project-content] {
+  /* 图先入：媒体层初始隐藏，工厂按场景进度插值；文字各层由工厂按错峰窗驱动 */
+  :global(.story-on) [data-project-media] {
     opacity: 0;
     will-change: opacity, transform;
   }
