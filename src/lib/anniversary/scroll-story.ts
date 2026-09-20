@@ -167,70 +167,25 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
    * transition/定时器），快速与反向滚动严格连续。
    */
   /**
-   * 02 追光印记：舞台式三卡节拍（三卡固定左/中/右站位，段落吸附）。
-   * 进入章节 Part 01 占主位（全亮全尺寸），Part 02/03 在右/左后方待命（缩小、变暗、后退、微转）；
-   * 滚动推进节拍——Part 2 上场 Part 1 退场、Part 3 上场 Part 2 退场，
-   * 末段三卡一起后退变暗谢幕。编排逻辑在 scroll-story.ts 的 projects 工厂。
-   * 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
-   * 图文数据与首页活动卡同源（R2 代表图 + 主站路由）。
-   * 段落吸附：progress 只决定「当前拍」（面对 P1 / P2 / P3 / 退场谢幕），
-   * 一次最多推进一段（不管滑多长，段落锁 600ms + ±1 步进）；
-   * 拍内姿态 = 该拍的目标状态，切换由 CSS transition 补间——
-   * 滚动不会停在任何中间态上。
+   * 02 追光印记：依次聚焦（三卡纵排在钉住舞台内固定不动）。
+   * 滚动推进焦点轮换——Part 01 → 02 → 03 依次聚焦（放大、提亮、品牌色
+   * 描边），非聚焦卡压暗缩小；拍间由 CSS transition 补间（组件内），
+   * 滚动不停在中间态。progress 三等分映射焦点索引，快速与反向滚动
+   * 都只会切到确定的一张。
    */
   projects: track => {
-    const boards = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
-    // 展道空间错位：向右斜的走道（左 → 中 → 右）——错位量需让下一块板
-    // 从当前板的侧面露出（遮挡关系的空间前提）
-    const PAN = [
-      { x: -14, y: 0 },
-      { x: 0, y: -2 },
-      { x: 14, y: 1 },
-    ];
-    // 各拍相机格位：拍1 面对展板1、拍2 展板2、拍3 展板3、拍4 退场暗场
-    const CAM = [0, 1, 2, 2.9];
-    // 拍切换边界（progress）：面对三段停留均匀铺在行走轨道上
-    const EDGE = [0.18, 0.42, 0.68];
-    let beat = -1;
-    let lastAt = 0;
-    const applyBeat = (b: number, isDesktop: boolean): void => {
-      const step = (isDesktop ? 92 : 105) * (window.innerWidth / 100); // 板间距 px
-      const exit = b >= 3 ? 1 : 0; // 末拍：三卡一起退场暗场
-      const cam = CAM[Math.min(b, 2)] ?? 0;
-      boards.forEach((el, i) => {
-        const pan = PAN[i] ?? { x: 0, y: 0 };
-        const rel = i - cam; // <0 身后（已面对过） >0 前方（等待）
-        const away = Math.abs(rel);
-        // 穿过身后渐淡（不穿模）；前方始终存在——远处微光等待
-        const passed = rel < -0.06 ? Math.min(1, (-rel - 0.06) / 0.42) : 0;
-        const opacity = (1 - 0.92 * passed) * (1 - 0.9 * exit);
-        const dim = Math.max(0.55, 1 - away * 0.42) * (1 - 0.45 * exit);
-        el.style.opacity = opacity.toFixed(3);
-        el.style.transform = `translate3d(${pan.x.toFixed(1)}vw, ${pan.y.toFixed(1)}vh, ${(-rel * step).toFixed(1)}px)`;
-        el.style.zIndex = String(60 - Math.round(rel * 30));
-        el.style.setProperty('--ps-dim', dim.toFixed(3));
-      });
-    };
-    return ({ progress: P, isDesktop }) => {
-      let b = 0;
-      for (const edge of EDGE) {
-        if (P >= edge) {
-          b++;
-        }
-      }
-      if (beat === -1) {
-        // 首帧：直接就位到当前拍（不做段落锁）
-        beat = b;
-        applyBeat(beat, isDesktop);
+    const beats = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
+    let focus = -1;
+    return ({ progress: P }) => {
+      // 三等分映射焦点索引（阈值切换 + transition 补间，无中间停留态）
+      const idx = P < 0.34 ? 0 : P < 0.67 ? 1 : 2;
+      if (idx === focus) {
         return;
       }
-      const now = performance.now();
-      // 段落锁：不管滑多长，一次只推进一段；切换间隔至少 600ms
-      if (b !== beat && now - lastAt >= 600) {
-        beat += b > beat ? 1 : -1;
-        lastAt = now;
-        applyBeat(beat, isDesktop);
-      }
+      focus = idx;
+      beats.forEach((el, i) => {
+        el.classList.toggle('is-focus', i === idx);
+      });
     };
   },
   /**
