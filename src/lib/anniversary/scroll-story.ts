@@ -144,52 +144,73 @@ const SCENE_FACTORIES: Record<string, SceneFactory> = {
   },
 
   /**
-   * 02 追光印记：三大项目卡节拍吸附（与寄语同一机制——滚动只决定「当前第几张」，
-   * 跨过相邻拍中点即整卡切换，切换过渡由 CSS transition 完成，绝不停在两拍之间；
-   * 停在任意位置都是完整一张卡，可 hover、可点击）。切换时同步更新底部
-   * PART 标签与刻度点。中心点表键为节拍数：3 = 三大项目。
+   * 02 追光印记：三大项目的连续滚动叙事（非 Carousel）。
+   * 滚动不决定「当前第几张」，而是决定故事进行到什么程度——三张卡在重叠
+   * 时间轴上进出：上一段退为背景残影（opacity→0.12, scale→0.96）的同时，
+   * 下一段正从它身后成为主体（scale 1.04→1）；图先入、文稍晚；中段安静
+   * 驻留供阅读（HOLD 区间无任何动画）；末段轻微呼气后随舞台自然交棒。
+   * 所有状态由当前 progress 直接计算（无 transition、无定时器）——快速/
+   * 反向滚动都严格连续。PART 标签与刻度点只作进度指示（主导段亮起）。
    */
   projects: track => {
     const beats = [...track.querySelectorAll<HTMLElement>('[data-project-beat]')];
+    const medias = beats.map(b => b.querySelector<HTMLElement>('[data-project-media]'));
+    const contents = beats.map(b => b.querySelector<HTMLElement>('[data-project-content]'));
     const part = track.querySelector<HTMLElement>('[data-project-part]');
     const dots = [...track.querySelectorAll<HTMLElement>('[data-project-dot]')];
-    const CENTERS: Record<number, number[]> = {
-      3: [0.26, 0.56, 0.86],
-    };
-    const centers =
-      CENTERS[beats.length] ??
-      beats.map((_, i) => 0.26 + (0.6 * i) / Math.max(1, beats.length - 1));
-    const thresholds: number[] = [];
-    for (let i = 1; i < centers.length; i++) {
-      const a = centers[i - 1];
-      const b = centers[i];
-      if (a !== undefined && b !== undefined) {
-        thresholds.push((a + b) / 2);
-      }
-    }
-    let active = -1;
-    return ({ progress: p }) => {
-      let s = 0;
-      for (const th of thresholds) {
-        if (p >= th) {
-          s++;
+    // 三段时间轴（相邻段重叠，保证过渡连续：0.31-0.38 与 0.62-0.69 为共存区）
+    const SPANS: [number, number][] = [
+      [0, 0.38],
+      [0.31, 0.69],
+      [0.62, 1],
+    ];
+    let leadPart = -1;
+    return ({ progress: P }) => {
+      const presence: number[] = [];
+      let leadOpacity = -1;
+      let leadIdx = 0;
+      beats.forEach((el, i) => {
+        const [a, b] = SPANS[i] ?? [0, 1];
+        const q = clamp01((P - a) / (b - a));
+        const isLast = i === beats.length - 1;
+        // 进入：整卡淡入+回落缩放；图（translateY）稍早，文（opacity+translateY）稍晚
+        const enter = ramp(q, 0, 0.32);
+        const enterImg = ramp(q, 0, 0.42);
+        const enterTxt = ramp(q, 0.14, 0.55);
+        // 退场：先退为残影（0.88 幅度→0.12），非末段再彻底让位；末段只轻微呼气（0.3 幅度）
+        const exitT = ramp(q, isLast ? 0.88 : 0.72, isLast ? 1 : 0.93);
+        const goneT = isLast ? 0 : ramp(q, 0.93, 1);
+        const beatOpacity = enter * (1 - (isLast ? 0.3 : 0.88) * exitT) * (1 - goneT);
+        const scale = 1.04 - 0.04 * enter - 0.07 * exitT;
+        el.style.opacity = beatOpacity.toFixed(3);
+        el.style.transform = `scale(${scale.toFixed(4)})`;
+        const m = medias[i];
+        if (m) {
+          m.style.opacity = enterImg.toFixed(3);
+          m.style.transform = `translateY(${(12 * (1 - enterImg)).toFixed(1)}px)`;
+        }
+        const c = contents[i];
+        if (c) {
+          c.style.opacity = enterTxt.toFixed(3);
+          c.style.transform = `translateY(${(16 * (1 - enterTxt)).toFixed(1)}px)`;
+        }
+        presence[i] = beatOpacity;
+        if (beatOpacity > leadOpacity) {
+          leadOpacity = beatOpacity;
+          leadIdx = i;
+        }
+      });
+      if (leadIdx !== leadPart) {
+        leadPart = leadIdx;
+        const label = beats[leadIdx]?.querySelector<HTMLElement>('.ps-part')?.textContent;
+        if (part && label) {
+          part.textContent = label;
         }
       }
-      if (s === active) {
-        return;
-      }
-      active = s;
-      beats.forEach((el, i) => {
-        const ty = i === s ? 0 : i < s ? -18 : 22;
-        el.style.opacity = i === s ? '1' : '0';
-        el.style.transform = `translateY(${ty}px)`;
-      });
-      const label = beats[s]?.querySelector<HTMLElement>('.ps-part')?.textContent;
-      if (part && label) {
-        part.textContent = label;
-      }
       dots.forEach((d, i) => {
-        d.classList.toggle('is-on', i === s);
+        const v = presence[i] ?? 0;
+        d.style.opacity = (0.3 + 0.7 * v).toFixed(3);
+        d.style.transform = `scale(${(0.85 + 0.4 * v).toFixed(3)})`;
       });
     };
   },

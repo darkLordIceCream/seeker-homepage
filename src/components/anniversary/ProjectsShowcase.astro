@@ -1,8 +1,8 @@
 ---
 // 02 追光印记 · 项目介绍：三大项目卡片（时间的故事 / 追光之旅 / 带上她的眼睛）。
-// 钉住节拍吸附（与主理人寄语同一叙事语言）：track 钉住舞台，滚动只决定
-// 「当前第几张卡」，跨过相邻拍中点即整卡切换（transition 过渡，绝不停在两拍之间）；
-// 停在任意位置都是完整一张卡——可 hover、可点击进入主站。
+// 连续滚动叙事（非 Carousel）：滚动不决定「当前第几张」，而是决定故事进行到什么
+// 程度——三张卡在重叠时间轴上进出（上一段退为背景残影时，下一段正从它身后成为
+// 主体），图先入、文稍晚，中段安静驻留供阅读，末段轻微呼气后交棒下一章。
 // 无 JS / reduced-motion：不加 story-on，卡片退化为普通文档流依次排列、全部可见。
 // 图文数据与首页活动卡同源（R2 代表图 + 主站路由）；图框固定 3:2 裁切，天然无 CLS。
 const PROJECTS = [
@@ -39,10 +39,10 @@ const PROJECTS = [
       PROJECTS.map(p => (
         <div class="ps-beat" data-project-beat>
           <a class="ps-card" href={p.href}>
-            <span class="ps-media">
+            <span class="ps-media" data-project-media>
               <img alt={p.alt} decoding="async" loading="lazy" src={p.image} />
             </span>
-            <span class="ps-body">
+            <span class="ps-body" data-project-content>
               <span class="ps-part">{p.part}</span>
               <span class="ps-title">{p.title}</span>
               <p class="ps-desc">{p.desc}</p>
@@ -70,12 +70,12 @@ const PROJECTS = [
     }
   </div>
 
-  <!-- 节拍进度：当前 PART 标签 + 三刻度点（story-on 下由工厂接管） -->
+  <!-- 滚动进度指示：只随 progress 连续变化（工厂接管），不承担切换控制 -->
   <div aria-hidden="true" class="ps-progress" data-project-progress>
     <span class="ps-progress-label" data-project-part>{PROJECTS[0]?.part}</span>
     <span class="ps-dots">
-      {PROJECTS.map((_, i) => (
-        <i class:list={['ps-dot', { 'is-on': i === 0 }]} data-project-dot />
+      {PROJECTS.map(() => (
+        <i class="ps-dot" data-project-dot />
       ))}
     </span>
   </div>
@@ -99,7 +99,8 @@ const PROJECTS = [
     display: none;
   }
 
-  /* —— story-on：节拍叠放（同格叠放 + 工厂按当前拍接管显隐） —— */
+  /* —— story-on：同格叠放（连续 scroll progress——工厂逐帧插值，无 transition：
+     所有视觉状态由当前进度直接计算，快速/反向滚动都不会跳帧） —— */
   :global(.story-on) .ps-beats {
     display: grid;
   }
@@ -109,10 +110,14 @@ const PROJECTS = [
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0; /* 初始隐藏，工厂按当前拍写内联样式接管 */
-    transition:
-      opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-      transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    opacity: 0; /* 初始隐藏，工厂按当前进度写内联样式接管 */
+    will-change: opacity, transform;
+  }
+
+  /* 图先入、文稍晚：两层初始态均由工厂按各自时间窗插值 */
+  :global(.story-on) [data-project-media],
+  :global(.story-on) [data-project-content] {
+    opacity: 0;
     will-change: opacity, transform;
   }
 
@@ -258,26 +263,13 @@ const PROJECTS = [
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--anniv-border-strong);
-    transition:
-      background-color 0.4s ease,
-      transform 0.4s ease;
-  }
-
-  .ps-dot.is-on {
     background: var(--anniv-accent);
-    transform: scale(1.25);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .ps-card,
     .ps-media img,
-    .ps-cta,
-    .ps-dot {
-      transition: none;
-    }
-
-    :global(.story-on) .ps-beat {
+    .ps-cta {
       transition: none;
     }
   }
