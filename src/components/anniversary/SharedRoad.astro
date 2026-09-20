@@ -76,11 +76,13 @@ const ROW_B = partners.slice(6, 13);
       card.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
       card.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
       card.style.setProperty('--zoom', '1.1');
+      card.classList.add('is-lens'); // 放大时解除文案截断，完整显示
     };
     cards.forEach(card => {
       card.addEventListener('mousemove', e => setLens(card, e));
       card.addEventListener('mouseleave', () => {
         card.style.setProperty('--zoom', '1');
+        card.classList.remove('is-lens');
       });
     });
   }
@@ -205,6 +207,14 @@ const ROW_B = partners.slice(6, 13);
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 5;
     overflow: hidden;
+  }
+
+  /* 放大镜悬停：解除截断，透过放大的内容层读到完整文案（卡片高度不变不跳动） */
+  .sr-card.is-lens .sr-card-blurb {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    color: var(--anniv-fg-secondary);
   }
 
   .sr-fineprint {
