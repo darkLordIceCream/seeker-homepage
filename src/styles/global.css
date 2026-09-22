@@ -182,7 +182,9 @@
    ============================================================ */
 
 html:has(.snap-scroll) {
-  scroll-snap-type: y mandatory;
+  /* 就近吸附：滚轮可连续滚动（mandatory 的逐屏硬停会产生段落感），
+     靠近区块边界停下时才轻轻吸附归位 */
+  scroll-snap-type: y proximity;
 }
 
 html {
@@ -209,7 +211,6 @@ html {
   position: relative;
   min-height: 100svh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   padding: 96px 24px 64px;
@@ -234,7 +235,7 @@ html {
   margin: auto;
 }
 
-/* 页脚也是吸附点（mandatory 模式下没有吸附点就无法停留在该区域）。
+/* 页脚也是吸附点（proximity 模式下滚近页尾时轻吸附）。
    Footer 在 .snap-scroll 容器之外，用 :has 与 snap-type 同口径限定首页 */
 html:has(.snap-scroll) .footer {
   scroll-snap-align: start;

@@ -41,7 +41,6 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     align-items: center;
     justify-content: center;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
   .video-container {
@@ -214,10 +213,10 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     }
   }
 
-  // 点击下滑箭头，平滑滚动到下一屏（#about）
+  // 点击下滑箭头，平滑滚动到下一屏（作品区）
   const scrollBtn = banner?.querySelector('.scroll-indicator');
   scrollBtn?.addEventListener('click', () => {
-    document.getElementById('about')?.scrollIntoView({
+    document.getElementById('works')?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });

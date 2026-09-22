@@ -7,7 +7,10 @@ const isHome = Astro.url.pathname.replace(/\/+$/, '') === '';
 const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
-<nav aria-label="主导航" class:list={['navigation', { 'navigation--solid': !isHome }]}>
+<nav
+  aria-label="主导航"
+  class:list={['navigation', { 'navigation--solid': !isHome, 'navigation--home': isHome }]}
+>
   <div class="nav-container">
     <div class="nav-left">
       <div class="nav-logo">
@@ -36,6 +39,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     </div>
 
     <div class="nav-right">
+      <a class="nav-anniv-mobile" href="/7th/">7周年</a>
       <ThemeToggle />
 
       <button aria-controls="nav-menu" aria-expanded="false" aria-label="切换导航菜单" class="nav-toggle" id="nav-toggle">
@@ -137,6 +141,9 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     text-decoration: none;
     letter-spacing: -0.02em;
     transition: opacity 0.3s ease;
+    /* 窄屏被右侧按钮挤压时品牌名不许折行 */
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .logo-accent {
@@ -258,6 +265,36 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     color: var(--nav-fg);
   }
 
+  /* 移动端顶栏的 7 周年按钮：桌面隐藏（桌面入口是菜单里的纪念金胶囊） */
+  .nav-anniv-mobile {
+    display: none;
+    align-items: center;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nav-fg);
+    text-decoration: none;
+    background: var(--nav-pill-bg);
+    border: 1px solid var(--nav-pill-border);
+    border-radius: 999px;
+    /* 窄屏（含子页面带汉堡时）不许被挤压折行 */
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .nav-anniv-mobile:hover {
+    color: var(--nav-hover);
+  }
+
+  .nav-anniv-mobile:focus-visible {
+    outline: 2px solid var(--nav-hover);
+    outline-offset: 2px;
+  }
+
   .nav-toggle:focus-visible {
     outline: 2px solid var(--nav-hover);
     outline-offset: 2px;
@@ -290,11 +327,32 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
       height: 52px;
     }
 
+    /* 顶栏 7 周年按钮：颜色随导航状态变量自适应（Hero 深色视频上透明白、落地后主题玻璃） */
+    .nav-anniv-mobile {
+      display: inline-flex;
+    }
+
+    /* 右侧按钮组间距收紧，320px 级窄屏也放得下 */
+    .nav-right {
+      gap: 10px;
+    }
+
+    /* 首页移动端：菜单项全是本页锚点（整页滚动即达），汉堡与抽屉一并撤掉，
+       顶栏只留 品牌 | 7周年 | 主题切换 */
+    .navigation--home .nav-toggle {
+      display: none;
+    }
+
+    .navigation--home .nav-menu {
+      display: none;
+    }
+
     .nav-menu {
       position: fixed;
       top: 64px;
       left: -100%;
-      width: 100%;
+      /* 宽度须含两侧 8px 边距：否则 left:-100% 时面板右缘仍露 8px 在屏幕内 */
+      width: calc(100% - 16px);
       height: calc(100vh - 72px);
 
       /* Mobile glass panel */

@@ -2004,3 +2004,51 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   × 关闭钮，照片本身即视觉提示，悬停/点击行为不变
 - 验证：把手节点已不存在（querySelector
   null）、露出条 128px 正常；type-check/lint 0 错
+
+## 会话记录（首页滚轮段落感修复：mandatory → proximity，2026-09-20 续 3）
+
+### 根因（Explore 探索确认，纯 CSS，无 JS 劫持滚轮）
+
+1. `global.css` `html:has(.snap-scroll) { scroll-snap-type: y mandatory }` +
+   `.section`/Banner的
+   `scroll-snap-stop: always`：滚轮每格被硬停到下一屏 → 段落感
+2. About 区（含地图后）自然高约 1.2–1.4×视口，mandatory 对超一屏吸附区会反复回吸 → 加重卡顿
+
+### 改动（当前在 main 分支，未提交）
+
+1. global.css：snap-type `y mandatory` →
+   `y proximity`（就近吸附，滚轮连续自由滚，近边界停下才轻吸附）；`.section` 删
+   `scroll-snap-stop: always`；footer 吸附点注释更新
+2. Banner.astro：`.banner` 删
+   `scroll-snap-stop: always`；顺带修真 bug——「滚动到下一屏」箭头原写死
+   `#about`（跳过作品/活动两屏）→ 改 `#works`
+
+### 验证
+
+- type-check 0 错误 / lint 0 errors / build 77 页全绿
+- preview 实测：html computed scrollSnapType =
+  "y"（Chromium 对 proximity 初始值的序列化省略，即 proximity 生效）、.section
+  snap-stop = normal；点击下滑箭头精确落 `#works` 顶部（offset 0）
+- 手感以用户本机滚轮实际体验为准
+
+### 遗留 / 待办
+
+- 本改动未提交（当前 main 有未提交改动：global.css +
+  Banner.astro）；按用户习惯等确认手感后提交，或转 fix/* 分支
+
+### 移动端导航两项修复（2026-09-20 用户反馈）
+
+- 白条：移动端侧滑菜单 left:-100% 收起后右缘露 8px 玻璃条（width:100% + margin 0
+  8px 超出视口）——宽度改 calc(100% -
+  16px) 含入边距，收回完全离屏；顺带修正展开态右侧溢出 8px，两侧边距对称。提交 11c1fab
+- 7 周年按钮：移动端此前只有抽屉里一项、顶栏无入口——nav-right 新增 .nav-anniv-mobile 胶囊按钮（桌面 display:none 防重复），颜色走导航状态变量（--nav-pill-bg/--nav-fg），Hero 深色视频上透明白、落地玻璃条自适应主题。移动 375px 实测两态可读、桌面无重复
+- 同步：两提交推送 origin/main（Cloudflare Pages 自动部署）
+
+### 移动端顶栏重排（2026-09-20 用户反馈）
+
+- 7 周年按钮挤压导致品牌名折行 → .nav-logo a 加 white-space:nowrap +
+  flex-shrink:0；胶囊按钮同样加 nowrap（修复子页面 320px 下折成两行）；移动端 nav-right 间距 16→10px
+- 首页移动端撤掉汉堡与抽屉（菜单项全是本页锚点，整页滚动即达）——navigation--home 类驱动，子页面保留完整抽屉导航；首页顶栏 = 品牌 |
+  7周年 | 主题切换
+- 验证：320/375px 首页（无汉堡、单行 logo）+ 子页面（汉堡保留、胶囊单行）截图通过；type-check/lint
+  0 错
