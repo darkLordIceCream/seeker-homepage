@@ -1,7 +1,7 @@
 ---
 /**
  * 【七周年 · 首页角落入口】俏皮版——半张照片斜插在屏幕右缘外。
- * 隐藏态：卡片约一半斜出屏幕（露出照片左半条 + 金色「7」旋钮把手）；
+ * 隐藏态：卡片约一半斜出屏幕（露出照片左半条）；
  * 桌面 hover / 键盘聚焦 → 回弹滑出完整卡片（SEEKER 07 + 主题句 + 进入档案馆）；
  * 移动端两段式：点窄条先弹出，再点内容才进入 /7th/；× 随时可关。
  * 照片每次加载从成员收集作品池（GALLERY_POOL）随机取一张，零 CLS。
@@ -18,7 +18,6 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     ×
   </button>
   <a aria-label="七周年纪念册：SEEKER 07，光影七载，看见彼此" class="ac" href="/7th/">
-    <span aria-hidden="true" class="ac-knob">7</span>
     <span class="ac-photo" data-ac-photo>
       <span class="ac-badge">07</span>
     </span>
@@ -75,7 +74,7 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
 </aside>
 
 <style>
-  /* 位置：右缘偏下；默认半藏斜插（露出左条 + 金色旋钮） */
+  /* 位置：右缘偏下；默认半藏斜插（露出左条） */
   .anniv-corner {
     position: fixed;
     right: 0;
@@ -114,28 +113,6 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
   .anniv-corner.is-open .ac,
   .anniv-corner:focus-within .ac {
     animation: none;
-  }
-
-  /* 金色「7」旋钮：半藏态的视觉把手（外露过半，收起态 7° 旋转会再吃掉几像素） */
-  .ac-knob {
-    position: absolute;
-    left: -1.55rem;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    background: var(--anniv-accent);
-    color: #221b08;
-    font-family: 'Archivo', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.45),
-      inset 0 0 0 2px rgba(0, 0, 0, 0.14);
   }
 
   .ac-photo {

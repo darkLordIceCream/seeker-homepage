@@ -1997,3 +1997,10 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 方案A：left -1.15rem →
   -1.55rem，实测露出 18/39px、「7」字完整可读；展开态 CTA 本就无遮挡，未动
 - 提交至 feat/7th-anniversary 分支（待复核后再并 main）
+
+### 首页七周年角卡删除「7」把手（2026-09-20 用户反馈，续方案A）
+
+- 用户看完外移效果后决定直接删除：.ac-knob 元素与整段 CSS 移除，注释同步更新；半藏态仅剩照片条 +
+  × 关闭钮，照片本身即视觉提示，悬停/点击行为不变
+- 验证：把手节点已不存在（querySelector
+  null）、露出条 128px 正常；type-check/lint 0 错
