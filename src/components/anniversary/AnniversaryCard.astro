@@ -116,10 +116,10 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
     animation: none;
   }
 
-  /* 金色「7」旋钮：半藏态的视觉把手 */
+  /* 金色「7」旋钮：半藏态的视觉把手（外露过半，收起态 7° 旋转会再吃掉几像素） */
   .ac-knob {
     position: absolute;
-    left: -1.15rem;
+    left: -1.55rem;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
