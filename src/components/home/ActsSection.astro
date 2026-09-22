@@ -359,5 +359,31 @@ const events: Act[] = [
     .stack-card:nth-child(n + 3) {
       margin-top: -30px;
     }
+
+    /* 七周年条改纵向堆叠：横排时中间标题体（flex:1 basis 0）会被
+       「07 / SEVEN YEARS」和「ENTER ARCHIVE」挤成一字一行 */
+    .acts-anniv {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 1.3rem 1.25rem 1.4rem;
+    }
+
+    .acts-anniv-body {
+      display: block;
+    }
+
+    .acts-anniv-title,
+    .acts-anniv-range {
+      display: block;
+    }
+
+    .acts-anniv-range {
+      margin-top: 0.45rem;
+    }
+
+    .acts-anniv-cta {
+      margin-top: 0.35rem;
+    }
   }
 </style>

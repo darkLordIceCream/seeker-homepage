@@ -2079,3 +2079,22 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   Safari）确认视频自动播放与手势滚动手感后合入 main
 - 轮换切换图在原生比例格内为 cover 轻微裁切（首图零裁切）；若不可接受可改为移动端停用轮换
 - AnniversaryCard 移动端两段式点击仍会短暂遮挡画廊右缘（用户选择保留）
+
+### 活动区七周年条移动端换行修复（2026-09-22，feat/mobile-magazine-homepage 第二个提交）
+
+- 问题（用户截图反馈，main 同样存在的历史问题）：`.acts-anniv`
+  三段横排 flex（07/SEVEN YEARS + 标题体 + ENTER ARCHIVE），中间
+  `.acts-anniv-body` 为 flex:1（basis
+  0）且 min-width:0，≤768px 被两侧文字挤到几十像素宽，标题「七周年 · 光影七载，看见彼此。」一字一行竖排
+- 修复：≤768px 块内改为纵向堆叠——flex-direction:column +
+  align-items:flex-start，标题/年代/CTA 各占一行自然换行（320px 标题两行整行折行，390/768px 单行）；桌面横排不变
+- 验证：./init.sh 全绿；agent-browser
+  320/390/768 三视口截图（顶栏同时复核为「品牌+7周年胶囊+主题切换」无汉堡）
+
+### 附注：2026-09-22 分支纠缠事故记录
+
+- 用户报告「汉堡+弹出抽屉复现」——排查为工作区被另一会话 checkout 到
+  `feat/7th-anniversary`（分叉点 a2c2caf，早于 main 的 96a8995 移动端导航改版），dev
+  server 伺服的是旧导航代码；本分支（基于 96a8995）导航与 main 完全一致，从未改动。排查期间该会话仍在实时提交（63dd9e5→
+  9f6815d 角卡把手迭代）
+- 为避免干扰，本次修复在独立 worktree /tmp/seeker-mobile-wt 完成后提交回本分支
