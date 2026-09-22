@@ -155,6 +155,23 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     }
   }
 
+  /* 流内定位用的弹跳：不携带 translateX(-50%) 位移 */
+  @keyframes bounce-y {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-8px);
+    }
+    60% {
+      transform: translateY(-4px);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .banner-video {
       display: none;
@@ -165,23 +182,66 @@ import bannerPoster from '../assets/images/banner-poster.jpg';
     }
   }
 
+  /* —— 移动端：杂志式 Hero ——
+     横屏视频以 16:9 完整呈现（contain，不再 cover 裁掉中心画面），
+     Hero 不再占满整屏；slogan 独立到视频下方，单行响应式字号、禁止换行 */
   @media (max-width: 768px) {
-    .slogan {
-      font-size: 2.5rem;
+    .banner {
+      height: auto;
+      display: block;
+    }
+
+    .video-container {
+      position: relative;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      /* 深藏蓝底把视频黑边融进去，poster 兜底时同样成立；
+         视频从屏幕顶端铺起，固定导航照旧覆盖其上（白字对比度不变） */
+      background: var(--seeker-navy, #08294a);
     }
 
     .banner-video {
-      object-position: center center;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .slogan {
-      font-size: 2rem;
+      object-fit: contain;
     }
 
+    /* slogan 已移出视频，遮罩减淡为轻渐变：顶部稍深保导航白字可读 */
+    .video-overlay {
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.42) 0%,
+        rgba(0, 0, 0, 0.08) 32%,
+        rgba(0, 0, 0, 0.22) 100%
+      );
+    }
+
+    /* slogan 落回页面背景上：改用主题感知的品牌渐变（浅色主题下白字不可读） */
     .banner-content {
-      padding: 0 15px;
+      color: var(--foreground);
+      padding: 20px clamp(16px, 5vw, 24px) 0;
+    }
+
+    .slogan {
+      margin: 0;
+      white-space: nowrap;
+      font-size: clamp(20px, 5.5vw, 32px);
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: none;
+    }
+
+    /* 下滑箭头改文档流内居中（button 默认 inline-block，须显式 block 才能 margin 居中）；
+       bounce 关键帧含 translateX(-50%)，流内需无位移版本 */
+    .scroll-indicator {
+      position: static;
+      display: block;
+      margin: 10px auto 20px;
+      animation-name: bounce-y;
+    }
+
+    .scroll-arrow {
+      border-color: var(--muted-foreground);
     }
   }
 </style>

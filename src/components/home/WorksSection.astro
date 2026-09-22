@@ -18,6 +18,13 @@ import {
 /** 入场错峰延迟 */
 const delay = (i: number) => `--reveal-delay:${80 + i * 70}ms`;
 
+/** 图位样式：入场延迟 + 首图真实宽高比（--slot-ar）。
+ *  移动端杂志网格用 --slot-ar 按原生比例展示，替代展墙的固定裁切比例 */
+const slotStyle = (i: number, pool: readonly GalleryImage[]) => {
+  const first = pool[0];
+  return first ? `${delay(i)}; --slot-ar:${first.w} / ${first.h}` : delay(i);
+};
+
 /** 图注：有作品名带名，无题只署名 */
 const credit = (img: GalleryImage) =>
   img.title ? `@${img.author}《${img.title}》` : `@${img.author}`;
@@ -36,7 +43,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
   <div class="gallery-wall">
     {/* 主视觉 + 竖幅一排 */}
     <div class="wall-row wall-row--hero">
-      <div class="wall-slot wall-slot--hero reveal" data-cycle style={delay(0)}>
+      <div class="wall-slot wall-slot--hero reveal" data-cycle style={slotStyle(0, GALLERY_HERO)}>
         <div class="slot-frame">
           {
             GALLERY_HERO.map((img, i) => (
@@ -65,7 +72,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
       </div>
       {
         GALLERY_SUPPORT_TALL.map((pool, slotIndex) => (
-          <div class="wall-slot wall-slot--tall reveal" data-cycle style={delay(slotIndex + 1)}>
+          <div class="wall-slot wall-slot--tall reveal" data-cycle style={slotStyle(slotIndex + 1, pool)}>
             <div class="slot-frame">
               {pool.map((img, i) => (
                 <img
@@ -96,7 +103,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     <div class="wall-row wall-row--square">
       {
         GALLERY_SUPPORT_SQUARE.map((pool, slotIndex) => (
-          <div class="wall-slot wall-slot--square reveal" data-cycle style={delay(slotIndex + 4)}>
+          <div class="wall-slot wall-slot--square reveal" data-cycle style={slotStyle(slotIndex + 4, pool)}>
             <div class="slot-frame">
               {pool.map((img, i) => (
                 <img
@@ -343,31 +350,44 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     }
   }
 
-  @media (max-width: 640px) {
-    .gallery-head {
-      margin-bottom: 16px;
-    }
-
+  /* —— 移动端：两列杂志作品流 ——
+     不再沿用展墙的固定裁切比例：全部图位入列，按首图原生比例（--slot-ar）展示，
+     主图通栏压阵，竖幅与方幅两两成行；间距 8px 保持画册般的紧密排布 */
+  @media (max-width: 768px) {
     .gallery-section {
       padding-top: 72px;
       padding-bottom: 24px;
     }
 
-    /* 主图通栏 + 两张竖幅，收敛在一屏之内（方幅一排让位） */
-    .wall-row--square {
-      display: none;
+    .gallery-head {
+      margin-bottom: 16px;
     }
 
-    .wall-row--hero {
-      grid-template-columns: 1fr 1fr;
+    .gallery-wall {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    /* 两排展墙的行容器并入同一网格流（≤900 的行列规则随之失效） */
+    .wall-row {
+      display: contents;
+    }
+
+    /* ≤900 隐藏的第 3、4 图位全部恢复参展 */
+    .wall-row--hero .wall-slot:nth-child(3),
+    .wall-row--hero .wall-slot:nth-child(4) {
+      display: block;
     }
 
     .wall-slot--hero {
       grid-column: 1 / -1;
     }
 
-    .wall-row--hero .wall-slot:nth-child(4) {
-      display: block;
+    /* 原生比例替代固定裁切；轮换切换图以 cover 轻微裁切，可接受 */
+    .slot-frame {
+      aspect-ratio: var(--slot-ar, 3 / 2);
+      max-height: none;
     }
   }
 </style>
