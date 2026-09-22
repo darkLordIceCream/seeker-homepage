@@ -252,6 +252,14 @@
       "description": "按用户反馈定稿简化：三卡纵排在钉住舞台内固定不动（无 3D 走位/相机模型/段落吸附追赶），滚动三等分推进焦点轮换——Part 01→02→03 依次聚焦（scale 1.02、brightness 1、品牌色描边、阴影加深），非聚焦卡压暗 0.68 缩小 0.965；拍间 CSS transition 0.55s 补间无中间停留态；深色展示卡照片 contain 不裁切；desc 舞台内两行摘要",
       "status": "done",
       "evidence": "commit feat/7th-anniversary；三焦点状态截图全部正确（非聚焦 0.68 亮度可辨识）；./init.sh 全绿"
+    },
+    {
+      "id": "feat-033",
+      "name": "移动端首页杂志式重构（16:9 Hero + 两列作品流 + 自然滚动）",
+      "description": "按《Seeker 首页移动端重构设计规范》重构 ≤768px 首页（桌面端零改动）：①Hero 不再占满整屏——视频容器 16:9 + object-fit contain 完整呈现横屏视频（深藏蓝底融黑边，固定导航仍覆盖其上白字可读），slogan 移到视频下方独立排版：white-space nowrap + clamp(20px,5.5vw,32px) 响应式字号禁止换行，颜色改主题感知品牌渐变 var(--grad-a)→var(--grad-b)（浅色主题下原白字不可读）；遮罩减淡、下滑箭头改文档流居中（block + 无位移 bounce-y）；②移动端关闭 scroll-snap（杂志式自然连续滚动），.section 高度内容自适应 + 水平 padding clamp(16px,5vw,24px)；③WorksSection 全部 8 图位入列两列网格（gap 8px），构建期把每格首图真实宽高比写为 --slot-ar 内联变量，移动端 aspect-ratio: var(--slot-ar) 原生比例展示替代固定裁切（首图零裁切，轮换切换图轻微 cover 可接受），主图通栏；用户决策：导航保留「品牌+7周年胶囊+主题切换」顶栏、7 周年三入口全保留、ActsSection 拍立得塔与 AboutSection 不动",
+      "dependencies": ["feat-030"],
+      "status": "done",
+      "evidence": "分支 feat/mobile-magazine-homepage；./init.sh 全绿（type-check 0 错 0 警、lint 0 错、77 页构建）；agent-browser 多视口实测：320/375/390/414/430/768 首屏视频完整无裁切、slogan 单行（320px 含逗号 10 字不换行）、两列原生比例画廊、无横向溢出（scrollWidth==clientWidth）、html scrollSnapType=none、banner 高 341px ≪ 视口 844px；暗色主题 slogan 渐变可读；桌面 1440×900 无回归（scrollSnapType=y proximity、banner 高=视口 900、白色叠加 slogan、4fr 2fr 2fr 2fr 展墙原样）"
     }
   ]
 }

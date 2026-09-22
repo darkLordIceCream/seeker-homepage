@@ -2038,3 +2038,44 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   7周年 | 主题切换
 - 验证：320/375px 首页（无汉堡、单行 logo）+ 子页面（汉堡保留、胶囊单行）截图通过；type-check/lint
   0 错
+
+### 移动端首页杂志式重构（2026-09-22，feat-033，分支 feat/mobile-magazine-homepage）
+
+按《Seeker 首页移动端重构设计规范》重构 ≤768px 首页（全部改动收敛在
+`@media (max-width: 768px)`，桌面端零改动）。用户三项决策：导航保留「品牌+7周年胶囊+主题切换」顶栏（规范 §5 汉堡方案不采纳）；7 周年三入口（顶栏胶囊/右下角卡/活动区档案条）全保留；移动端改杂志式自然滚动。
+
+#### 改动
+
+1. Banner.astro：`.banner` 移动端 height:auto + display:block（不再占满整屏）；
+   `.video-container` 改 relative + aspect-ratio
+   16/9 + 深藏蓝底（--seeker-navy），视频 object-fit:contain 完整显示横屏画面；slogan 移到视频下方文档流——white-space:nowrap +
+   clamp(20px,5.5vw,32px) + letter-spacing
+   -0.02em，颜色从白色系渐变换成主题感知 var(--grad-a)→var(--grad-b)（浅色主题下白字不可读），去 drop-shadow；遮罩减淡为轻渐变（顶部稍深保导航白字对比度）；下滑箭头改文档流居中（button 需显式 display:block 才能 margin 居中）+ 新增无位移 bounce-y 关键帧 + 主题感知箭头色；删除原 480px 二级缩字号块（clamp 已覆盖）
+2. global.css：新增 ≤768px 块——html:has(.snap-scroll) 关闭 scroll-snap-type（杂志式连续滚动）；.section
+   min-height:0 + padding 72px clamp(16px,5vw,24px) 56px
+3. WorksSection.astro：新增 slotStyle() 把每格首图真实宽高比写为内联
+   `--slot-ar`（noUncheckedIndexedAccess 下判空）；≤768px 网格化——
+   .gallery-wall 两列 grid gap 8px、.wall-row
+   display:contents、全部 8 图位恢复参展（覆盖 ≤900 的 display:none）、主图通栏、.slot-frame
+   aspect-ratio:var(--slot-ar)
+   max-height:none 原生比例替代固定裁切；≤640px 旧块（隐藏方幅/收敛一屏）整体废除
+
+#### 验证
+
+- ./init.sh 全绿：type-check 0 错 0 警 / lint 0 错 / build 77 页
+- agent-browser 多视口实测（dev server）：
+  - 320/375/390/414/430/768：视频 16:9 完整无裁切、slogan 单行不换行（320px 最窄也放得下）、两列原生比例画廊 + 署名、scrollWidth==
+    clientWidth 零横向溢出、html scrollSnapType=none、banner 高 341px
+    ≪ 视口 844px（不再占满整屏）
+  - 暗色主题：slogan 蓝→浅蓝渐变双主题可读
+  - 桌面 1440×900 无回归：scrollSnapType=y
+    proximity、banner 高=视口 900、白色叠加 slogan、4fr 2fr 2fr
+    2fr 展墙、进度圆点均原样
+- 修复迭代一处：箭头首次截图偏左（inline-block 不吃 margin:auto），补 display:block 后居中
+
+#### 遗留 / 待办
+
+- 分支 feat/mobile-magazine-homepage 待用户真机（iOS
+  Safari）确认视频自动播放与手势滚动手感后合入 main
+- 轮换切换图在原生比例格内为 cover 轻微裁切（首图零裁切）；若不可接受可改为移动端停用轮换
+- AnniversaryCard 移动端两段式点击仍会短暂遮挡画廊右缘（用户选择保留）
