@@ -2112,3 +2112,17 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   server 伺服的是旧导航代码；本分支（基于 96a8995）导航与 main 完全一致，从未改动。排查期间该会话仍在实时提交（63dd9e5→
   9f6815d 角卡把手迭代）
 - 为避免干扰，本次修复在独立 worktree /tmp/seeker-mobile-wt 完成后提交回本分支
+
+### 《时间的故事》2026 年九月篇上线（2026-10-08，分支 feat/story-of-time-2026-09）
+
+- 内容源：公众号文章 https://mp.weixin.qq.com/s/Dz6PPIwY_Flputw4LRu7zQ
+  （发布 2026-09-30 19:00）
+- 新增
+  `src/content/activities/story-of-time-2026-09.md`：主题「秋风启序，云落清秋」，24幅作品（8月29日–9月27日），本月组长 嘿嘿嘿 / 编辑 是田田吖，结尾诗与往期回顾按原文照录
+- 图片 26 张（24 作品 + cover +
+  committee）：公众号原图下载（作品图均为 1280 宽，最长边 ≤2560，无需缩放）→
+  cwebp q82 → 上传 R2 `activities/2026-09/`（带 immutable 缓存头，26 个对象 HTTP
+  206 验证通过）；cover 用公众号分享封面图（1280×545，与往期惯例一致）
+- `src/lib/activity-image-meta.ts`
+  追加 2026-09 全部 26 条尺寸（置于 2026-08 与 story-of-time-2021-02 之间，同结构）
+- 验证：./init.sh 全绿（78 页构建，/activities/story-of-time-2026-09/ 生成）；hub 页书架出现九月篇且总数 65 期
