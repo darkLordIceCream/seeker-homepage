@@ -2126,3 +2126,22 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - `src/lib/activity-image-meta.ts`
   追加 2026-09 全部 26 条尺寸（置于 2026-08 与 story-of-time-2021-02 之间，同结构）
 - 验证：./init.sh 全绿（78 页构建，/activities/story-of-time-2026-09/ 生成）；hub 页书架出现九月篇且总数 65 期
+
+### 《时间的故事》更新规范沉淀（2026-10-08，分支 docs/story-of-time-conventions）
+
+- 用户问询后确认：《时间的故事》更新此前无专门规范——约定散落在 AGENTS.md（仅素材存储）、
+  content.config.ts schema 注释、activity-image-meta.ts 文件头、progress.md 历次会话
+  （标注「经验沉淀（待写入 skill）」从未落地），每次更新靠参照上一期实例
+- 本次补齐两项：
+  1. 新增 `.agents/skills/story-of-time-article/SKILL.md`（对齐 welfare-article 结构）：
+     触发词 / 一期一分支 / 抓取要点（原始 HTML data-src、/0 原图、og:image=封面、
+     createTime=pubDate）/ 微信编辑器陷阱对照表（日期位置对齐、一稿多图、png 正文图、
+     «»「」书名号、组委会每月不同、品牌图可缺、装饰图跳过、错别字照搬）/ cwebp q82 与
+     长边规则 / R2 上传与全量验证 / 尺寸登记插入位置 / 期数 md 模板与 YAML 陷阱 / 
+     验证清单（页数+1、书架「新」标、条目数断言、截图等 complete 防误报）/ 交付流程 /
+     并行会话 worktree 注意事项
+  2. 修正 AGENTS.md 活动照片路径约定滞后：写明两代路径并存（2026+ `activities/YYYY-MM/`
+     无前缀 vs 2021-2025 `activities/story-of-time-YYYY-MM/`），并在素材约定末尾补
+     story-of-time-article / welfare-article 双技能指引
+- 实操注意：本次工作区被并行会话检出在 chore/deps-update-2026-10（依赖升级），故按
+  2026-09-22 事故沉淀的做法在独立 worktree /tmp/seeker-docs-wt 完成全部编辑提交

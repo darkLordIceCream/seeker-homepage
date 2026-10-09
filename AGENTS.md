@@ -36,12 +36,16 @@ Tailwind CSS 4 + TypeScript 6 (strict)**, deployed to **Cloudflare Pages**.
   `https://r2.xn--seeker-ng2jm403afb4a.club`），用绝对 URL 引用，不进 git。**现有约定：
   - 公益照片：`welfare/<project-slug>/<article-slug>/n.jpg`（项目「带上她的眼睛」=
     `bring-her-eyes`），一个文章一个文件夹
-  - 活动照片：《时间的故事》各期 `activities/story-of-time-YYYY-MM/n.webp`
+  - 活动照片：《时间的故事》各期——2026 起为 `activities/YYYY-MM/n.webp`（无前缀），
+    2021-2025 旧期为 `activities/story-of-time-YYYY-MM/n.webp`
     （WebP、q82 预压缩；普通图最长边 ≤2560，画幅 ≥3 的长条全景保留原分辨率），一个期数一个文件夹，命名唯一
   - 活动图片的像素尺寸登记在 `src/lib/activity-image-meta.ts`
     （构建期供排版分型与 CLS 尺寸预留）；新增期数需同步追加条目
 - **单文件 >500KB 不入 git**；同一批素材只用一套目录命名，杜绝重复副本
 - 上传素材到 R2 时带缓存头：`wrangler r2 object put <bucket>/<key> --file <f> --remote --content-type <type> --cache-control "public, max-age=31536000, immutable"`
+- 定期内容更新的发布流程用对应 skill：《时间的故事》新一期 →
+  `story-of-time-article`（见 `.agents/skills/story-of-time-article/SKILL.md`），
+  公益板块新文章 → `welfare-article`
 
 ## Startup Workflow
 
