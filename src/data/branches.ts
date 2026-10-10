@@ -24,4 +24,8 @@ export const BRANCHES: Branch[] = [
   { id: 'chuanyu', label: '川渝分部', cities: '成都 / 重庆', lngLat: [104.066, 30.572] },
   { id: 'guangxi', label: '广西分部', cities: '南宁', lngLat: [108.32, 22.821] },
   { id: 'shanghai', label: '上海分部', cities: '上海', lngLat: [121.474, 31.23] },
+  { id: 'shenzhen', label: '深圳分部', cities: '深圳', lngLat: [114.058, 22.543] },
+  { id: 'liaoning', label: '辽宁分部', cities: '沈阳', lngLat: [123.429, 41.796] },
+  { id: 'zhejiang', label: '浙江分部', cities: '杭州', lngLat: [120.155, 30.274] },
+  { id: 'beijing', label: '北京分部', cities: '北京', lngLat: [116.407, 39.904] },
 ];

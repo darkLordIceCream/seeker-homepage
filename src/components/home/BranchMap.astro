@@ -21,18 +21,23 @@ const INSET_TX = INSET_X;
 const INSET_TY = INSET_Y + 2 - INSET_CLIP_TOP * INSET_SCALE;
 const insetProvinces = data.provinces.filter(p => p.maxY >= INSET_CLIP_TOP);
 
-// 地图按钮（胶囊）中心坐标：手工排布避让海岸线/台湾岛/附图，引线互不交叉
+// 地图按钮（胶囊）中心坐标：手工排布避让海岸线/台湾岛/附图，引线互不交叉。
+// 右侧海域自上而下排成一条标注列：辽宁/北京/金陵/上海/浙江。
 const PLACEMENTS: Record<string, { x: number; y: number }> = {
-  shanxi: { x: 490, y: 155 },
+  liaoning: { x: 575, y: 140 },
+  beijing: { x: 570, y: 188 },
+  shanxi: { x: 388, y: 158 },
   shaanxi: { x: 300, y: 190 },
-  anhui: { x: 415, y: 245 },
-  jinling: { x: 565, y: 230 },
-  shanghai: { x: 565, y: 285 },
-  wuhan: { x: 505, y: 320 },
+  anhui: { x: 425, y: 245 },
+  jinling: { x: 570, y: 230 },
+  shanghai: { x: 570, y: 278 },
+  wuhan: { x: 455, y: 325 },
+  zhejiang: { x: 570, y: 333 },
   chuanyu: { x: 225, y: 290 },
   yunnan: { x: 210, y: 375 },
-  guangxi: { x: 270, y: 440 },
-  guangfo: { x: 435, y: 390 },
+  guangxi: { x: 240, y: 425 },
+  guangfo: { x: 345, y: 408 },
+  shenzhen: { x: 435, y: 424 },
   hainan: { x: 388, y: 455 },
 };
 
