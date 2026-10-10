@@ -2143,19 +2143,27 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 
 ### 《时间的故事》更新规范沉淀（2026-10-08，分支 docs/story-of-time-conventions）
 
-- 用户问询后确认：《时间的故事》更新此前无专门规范——约定散落在 AGENTS.md（仅素材存储）、
-  content.config.ts schema 注释、activity-image-meta.ts 文件头、progress.md 历次会话
-  （标注「经验沉淀（待写入 skill）」从未落地），每次更新靠参照上一期实例
+- 用户问询后确认：《时间的故事》更新此前无专门规范——约定散落在 AGENTS.md（仅素材存储）、content.config.ts
+  schema 注释、activity-image-meta.ts 文件头、progress.md 历次会话（标注「经验沉淀（待写入 skill）」从未落地），每次更新靠参照上一期实例
 - 本次补齐两项：
-  1. 新增 `.agents/skills/story-of-time-article/SKILL.md`（对齐 welfare-article 结构）：
-     触发词 / 一期一分支 / 抓取要点（原始 HTML data-src、/0 原图、og:image=封面、
-     createTime=pubDate）/ 微信编辑器陷阱对照表（日期位置对齐、一稿多图、png 正文图、
-     «»「」书名号、组委会每月不同、品牌图可缺、装饰图跳过、错别字照搬）/ cwebp q82 与
-     长边规则 / R2 上传与全量验证 / 尺寸登记插入位置 / 期数 md 模板与 YAML 陷阱 / 
-     验证清单（页数+1、书架「新」标、条目数断言、截图等 complete 防误报）/ 交付流程 /
-     并行会话 worktree 注意事项
-  2. 修正 AGENTS.md 活动照片路径约定滞后：写明两代路径并存（2026+ `activities/YYYY-MM/`
-     无前缀 vs 2021-2025 `activities/story-of-time-YYYY-MM/`），并在素材约定末尾补
-     story-of-time-article / welfare-article 双技能指引
-- 实操注意：本次工作区被并行会话检出在 chore/deps-update-2026-10（依赖升级），故按
-  2026-09-22 事故沉淀的做法在独立 worktree /tmp/seeker-docs-wt 完成全部编辑提交
+  1. 新增
+     `.agents/skills/story-of-time-article/SKILL.md`（对齐 welfare-article 结构）：触发词 / 一期一分支 / 抓取要点（原始 HTML
+     data-src、/0 原图、og:image=封面、createTime=pubDate）/ 微信编辑器陷阱对照表（日期位置对齐、一稿多图、png 正文图、«»「」书名号、组委会每月不同、品牌图可缺、装饰图跳过、错别字照搬）/
+     cwebp q82 与长边规则 /
+     R2 上传与全量验证 / 尺寸登记插入位置 / 期数 md 模板与 YAML 陷阱 / 验证清单（页数+1、书架「新」标、条目数断言、截图等 complete 防误报）/ 交付流程 / 并行会话 worktree 注意事项
+  2. 修正 AGENTS.md 活动照片路径约定滞后：写明两代路径并存（2026+
+     `activities/YYYY-MM/` 无前缀 vs 2021-2025
+     `activities/story-of-time-YYYY-MM/`），并在素材约定末尾补 story-of-time-article
+     / welfare-article 双技能指引
+- 实操注意：本次工作区被并行会话检出在 chore/deps-update-2026-10（依赖升级），故按 2026-09-22 事故沉淀的做法在独立 worktree
+  /tmp/seeker-docs-wt 完成全部编辑提交
+
+### 首页活动卡封面跟随最新一期（2026-10-10，分支 feat/acts-cover-follow-latest）
+
+- 背景：`ActsSection.astro`
+  的「时间的故事」卡封面为写死 URL，停在 2026-08（九月篇上线后未跟）
+- 改动：构建期 `getCollection('activities')`
+  按 order 倒序取最新一期的 cover——新增期数 md 即自动切换，与书架页「新」标同源；组件内注明禁止再写死
+- skill 同步：story-of-time-article 关键事实新增该机制（含"禁止写死回该文件"），验证清单新增首页卡封面断言（dist/index.html
+  stack-card 背景图）
+- 验证：./init.sh 全绿；dist/index.html 时间的故事卡背景图为 activities/2026-09/cover.webp

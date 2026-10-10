@@ -260,6 +260,14 @@
       "dependencies": ["feat-030"],
       "status": "done",
       "evidence": "分支 feat/mobile-magazine-homepage；./init.sh 全绿（type-check 0 错 0 警、lint 0 错、77 页构建）；agent-browser 多视口实测：320/375/390/414/430/768 首屏视频完整无裁切、slogan 单行（320px 含逗号 10 字不换行）、两列原生比例画廊、无横向溢出（scrollWidth==clientWidth）、html scrollSnapType=none、banner 高 341px ≪ 视口 844px；暗色主题 slogan 渐变可读；桌面 1440×900 无回归（scrollSnapType=y proximity、banner 高=视口 900、白色叠加 slogan、4fr 2fr 2fr 2fr 展墙原样）"
+    },
+    {
+      "id": "feat-034",
+      "name": "首页活动卡封面跟随最新一期",
+      "description": "首页 #activities「时间的故事」拍立得卡封面不再写死 URL，构建期从 activities collection 取 order 最大一期的 cover，新增期数 md 即自动切换",
+      "dependencies": ["feat-018"],
+      "status": "done",
+      "evidence": "ActsSection.astro 改为构建期 getCollection 排序取最新；./init.sh 全绿；dist/index.html stack-card 背景图为 activities/2026-09/cover.webp；行为已写入 story-of-time-article skill（关键事实 + 验证清单）"
     }
   ]
 }
