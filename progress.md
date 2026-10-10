@@ -2220,3 +2220,23 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - a11y：作品标题移入按钮 aria-label（查看大图：《标题》（奖项，© 作者））
 - 验证：build 全绿；2025 分组标题 [优胜奖, 特别关注奖]、2022
   [优秀奖]、浮层元素 0 残留、署名数与作品数一致；lightbox 点击回归正常（图注正确）；init.sh 全绿
+
+### 追光之旅年度页阅读流重构（2026-10-10，分支 refactor/light-chasing-reading-flow，未提 PR 待用户预览）
+
+- 用户方向：入页先看公示导语、总冠军 C 位在后；作品赏析并入照片交互避免重复；鸣谢放最末尾
+- 信息架构重构（LightChasingYear.astro）：
+  - 删原全屏 hero（92vh 容器 + cover 裁切）与整个独立赏析区（story-block
+    ~300 行）
+  - 新结构：区头 → 导语列（正文 +
+    stats）→ 总冠军 C 位（cl-grand：原比例 contain、封顶一屏、居中，h1 随迁至 grand-meta）→ 组冠军 win-card
+    → 优胜/特别关注分组网格 → 公示脚注 → 赞助鸣谢（cl-sponsors，最末尾）→
+    pager/foot（移出至 cl-tail）
+  - 故事交互：有故事的作品按钮带 data-story-idx +
+    story-hint 胶囊（桌面 hover 浮现「点击查看作品赏析」+ 图 scale
+    1.02 不裁切——overflow 不隐藏，溢出融入深底；触屏 hover:none 胶囊常显）；点击开 cl-storyview 全屏浮层（桌面图文双栏：左大图可翻页/右衬线故事列；移动 375 堆叠滚动；多图作品浮层内箭头翻页 + 计数；Esc/点背景/关闭钮，锁滚动，焦点管理）
+  - 故事数据构建期内联 JSON（`<`
+    转义防闭合），JS 只做显隐——SEO 保留；无故事作品点击仍走 lightbox 看大图；cl-reveal 观察器随赏析区移除
+- 验证：astro check / type-check / lint /
+  build 全绿；五页断言（图片数=作品数：2022:16、2023:12、2024:14、2025:13、门户:5，object-fit 全 contain、0 超屏 0 溢出）；双浮层实测（grand→storyview
+  22 段、优胜无故事→lightbox、2024《飞行计划》10 图翻页 2/10、Esc 关闭）；移动 375 堆叠浮层截图验证；触屏常显规则确认在产物 CSS
+- 交付：按既定流程本地提交停在分支，preview :4322 供预览，用户同意后再提 PR
