@@ -686,26 +686,24 @@ const jsonLd = JSON.stringify({
   .story-hint {
     position: absolute;
     z-index: 2;
-    left: 50%;
-    bottom: 14px;
+    right: 12px;
+    bottom: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 8px 16px;
-    border-radius: 999px;
-    background: rgba(4, 16, 30, 0.55);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    align-items: flex-end;
+    gap: 1px;
     font-family: 'Archivo', sans-serif;
-    font-size: 12px;
+    font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: 0.12em;
-    line-height: 1.5;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
     color: #eaf4ff;
+    text-shadow:
+      0 1px 4px rgba(4, 16, 30, 0.7),
+      0 0 12px rgba(4, 16, 30, 0.5);
     white-space: nowrap;
     opacity: 0;
-    transform: translate(-50%, 6px);
+    transform: translateY(4px);
     transition:
       opacity 0.3s ease,
       transform 0.3s ease;
@@ -713,10 +711,10 @@ const jsonLd = JSON.stringify({
   }
 
   .story-hint-en {
-    font-size: 8.5px;
+    font-size: 7.5px;
     font-weight: 700;
-    letter-spacing: 0.3em;
-    color: rgba(234, 244, 255, 0.6);
+    letter-spacing: 0.26em;
+    color: rgba(234, 244, 255, 0.62);
   }
 
   @media (hover: hover) {
@@ -745,7 +743,7 @@ const jsonLd = JSON.stringify({
     .tile-shutter[data-story-idx]:focus-visible .story-hint,
     .grand-shutter:focus-visible .story-hint {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translateY(0);
     }
   }
 
@@ -753,7 +751,7 @@ const jsonLd = JSON.stringify({
   @media (hover: none) {
     .story-hint {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translateY(0);
     }
   }
 
