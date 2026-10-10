@@ -4,6 +4,37 @@ import { Image } from 'astro:assets';
 import wechatQrcode from '@/assets/images/wechat-qrcode.png';
 
 const year = new Date().getFullYear();
+
+/** GitHub 贡献者名单：构建期从 GitHub API 拉取，失败时回退到手工名单（构建不依赖外网） */
+const FALLBACK_CONTRIBUTORS = ['darkLordIceCream', 'Wenrh2004'];
+
+const loadContributors = async (): Promise<string[]> => {
+  try {
+    const res = await fetch(
+      'https://api.github.com/repos/darkLordIceCream/seeker-homepage/contributors',
+      { headers: { Accept: 'application/vnd.github+json' }, signal: AbortSignal.timeout(5000) },
+    );
+    if (!res.ok) {
+      return FALLBACK_CONTRIBUTORS;
+    }
+    const data: unknown = await res.json();
+    if (!Array.isArray(data)) {
+      return FALLBACK_CONTRIBUTORS;
+    }
+    const logins = data
+      .map((entry) =>
+        typeof entry === 'object' && entry !== null && 'login' in entry
+          ? (entry as { login?: unknown }).login
+          : null,
+      )
+      .filter((login): login is string => typeof login === 'string' && login.length > 0);
+    return logins.length > 0 ? logins : FALLBACK_CONTRIBUTORS;
+  } catch {
+    return FALLBACK_CONTRIBUTORS;
+  }
+};
+
+const contributors = await loadContributors();
 ---
 
 <footer class="footer">
@@ -86,8 +117,22 @@ const year = new Date().getFullYear();
 
     <div class="footer-bottom">
       <div class="footer-copyright">
-        <p>&copy; {year} Seeker追光者. 保留所有权利.</p>
-        <p class="tech-support">技术支持</p>
+        <p>&copy; {year} Seeker追光者. All Rights Reserved.</p>
+        <p class="tech-support">
+          技术支持
+          {
+            contributors.map((login) => (
+              <a
+                class="tech-name"
+                href={`https://github.com/${login}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                @{login}
+              </a>
+            ))
+          }
+        </p>
       </div>
     </div>
   </div>
@@ -230,6 +275,8 @@ const year = new Date().getFullYear();
 
   .tech-support {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
     gap: 5px;
   }
