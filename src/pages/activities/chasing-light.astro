@@ -13,6 +13,10 @@ const latest = years[0];
 
 const heroDim = latest ? activityImageDims(latest.data.cover) : undefined;
 
+/** 内联 aspect-ratio 样式：照片一律按原始比例渲染 */
+const ratioStyle = (dim?: { w: number; h: number }) =>
+  dim ? `aspect-ratio:${dim.w} / ${dim.h}` : undefined;
+
 const intro = `「追光之旅」是 Seeker追光者 的年度摄影大赛：每年冬天开启征稿，来年春天揭晓结果。大赛设总冠军与自然、城市、人文、商业创意、校园、组图六个组别，另有优秀作品与特别关注奖。历届结果公示与获奖作品赏析收录于此。`;
 
 const jsonLd = JSON.stringify({
@@ -36,7 +40,7 @@ const jsonLd = JSON.stringify({
   <main class="cl-hub" id="main-content">
     <script is:inline set:html={jsonLd} type="application/ld+json" />
 
-    <!-- Hero：最近一届总冠军全出血 -->
+    <!-- Hero：最近一届总冠军（原比例完整展示，不超一屏） -->
     <header class="hub-hero">
       {latest && (
         <img
@@ -46,6 +50,7 @@ const jsonLd = JSON.stringify({
           height={heroDim?.h}
           loading="eager"
           src={latest.data.cover}
+          style={ratioStyle(heroDim)}
           width={heroDim?.w}
         />
       )}
@@ -86,6 +91,7 @@ const jsonLd = JSON.stringify({
                   height={dim?.h}
                   loading="lazy"
                   src={y.data.cover}
+                  style={ratioStyle(dim)}
                   width={dim?.w}
                 />
               </span>
@@ -128,20 +134,20 @@ const jsonLd = JSON.stringify({
     color: var(--cl-fg);
   }
 
-  /* —— Hero —— */
+  /* —— Hero：原比例完整展示，最高不超过一屏 —— */
   .hub-hero {
     position: relative;
-    height: min(92vh, 960px);
     overflow: hidden;
   }
 
   .hub-hero img {
-    position: absolute;
-    inset: 0;
+    display: block;
     z-index: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: calc(100svh - 70px);
+    object-fit: contain;
+    margin: 0 auto;
   }
 
   .hub-scrim {
@@ -307,6 +313,10 @@ const jsonLd = JSON.stringify({
     display: block;
     width: 100%;
     height: auto;
+    /* 原比例完整显示，封顶防竖幅超长 */
+    max-height: min(60svh, 520px);
+    object-fit: contain;
+    margin: 0 auto;
     transition: transform 0.35s ease;
   }
 
@@ -408,11 +418,6 @@ const jsonLd = JSON.stringify({
   }
 
   @media (max-width: 700px) {
-    .hub-hero {
-      height: 78vh;
-      min-height: 480px;
-    }
-
     .hub-caption {
       padding: 0 20px 32px;
     }

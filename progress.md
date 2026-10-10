@@ -2186,3 +2186,37 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   2026'（可核验兜底），待用户确认后可改具体月份
 - 顺手：首页 ActsSection 追光之旅卡封面从写死 2024 改为构建期取 lightChasing 最新届 grandPrize.cover（与时间的故事卡同模式）
 - 已知存量缺口（未动）：meta 清单里 2022/2024 届追光图无尺寸登记（activityImageDims 返回 undefined，页面可渲染但无 CLS 预留），如需要可后续补
+
+### 追光之旅照片原比例展示重构（2026-10-10，分支 refactor/chasing-light-image-ratio，未提 PR 待用户预览）
+
+- 需求：追光之旅模块所有照片尊重原比例、且不超一屏可见；自查全部四届
+- 裁切点修复：年份页 hero 与门户 hero（92vh 固定容器 + object-fit:cover
+  → 图随容器完整展示，max-height: calc(100svh - 70px) +
+  contain）；minor-tile 密集网格（aspect-ratio:3/2 +
+  cover 强裁 → 原比例 + 封顶 contain）；win-card / story-imgs
+  / 门户年份卡（height:auto 无上限 → max-height: min(86svh,900px) /
+  min(72svh,640px) / min(60svh,520px) + contain）
+- 每张 img 输出内联 aspect-ratio（ratioStyle(dims)），CLS 预留保留；移动端断点里 hero 固定高删除
+- 数据：补登记 2022（16 张）/2024（37 张）尺寸——此前 activityImageDims 对这两届全返回 undefined（无宽高属性、加载塌陷），现在四届 78 条全覆盖
+- 明确不动：首页拍立得卡（全站活动卡相框设计，background
+  cover 属相框裁切语义）、七周年 ProjectsShowcase（已 contain）、lightbox（已 contain +
+  80vh）
+- 验证：./init.sh 全绿；五页（门户+四年份）程序化断言——每张 chasing 图 computed
+  object-fit=contain、渲染高度 ≤
+  innerHeight、0 横向溢出、lazy 全加载（2022:32/2023:24/
+  2024:51/2025:26/门户:5）；浏览器截图目检（win-card 竖图原比例、2024 组图水印完整、hero 封顶居中两侧黑厅留边）；lightbox 回归正常
+- 交付：按用户要求本地提交后停在分支，不 push 不建 PR，preview
+  :4322 供预览，同意后再提
+
+### 追光之旅获奖网格重构：分组标题 + 图下署名（2026-10-10，同分支追加提交）
+
+- 用户反馈：minor-tile
+  hover 浮层里「优胜奖」字样与作者名重叠（浮层在 line-height:0 的 button 内，行盒为零所致）
+- 按用户方案重构：去掉整个 hover 文字浮层体系（tile-scrim/tile-info/浮层 hover 规则/
+  hover
+  zoom——zoom 会裁切 contain 留边照片，一并移除）；excellence 与 attention 拆成两组，各带分组小标题（subhead-title 照录该组 award 名 +
+  EN kicker + 细分隔线，数据驱动——
+  2022 显示「优秀奖」、2024/2025 显示「优胜奖」）；每张图片下方 figcaption 署名 © 作者
+- a11y：作品标题移入按钮 aria-label（查看大图：《标题》（奖项，© 作者））
+- 验证：build 全绿；2025 分组标题 [优胜奖, 特别关注奖]、2022
+  [优秀奖]、浮层元素 0 残留、署名数与作品数一致；lightbox 点击回归正常（图注正确）；init.sh 全绿
