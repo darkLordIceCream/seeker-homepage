@@ -276,6 +276,14 @@
       "dependencies": ["feat-030", "feat-034"],
       "status": "done",
       "evidence": "13 张作品图 cwebp q82 入 R2（immutable，200+MD5 验证 13/13）；meta 登记 13 条尺寸；2025.md 复刻 2024 结构（sourceResults/sourceStories 双链接、6 篇冠军故事照录）；ActsSection 追光卡构建期取最新届 grandPrize.cover；./init.sh 全绿"
+    },
+    {
+      "id": "feat-036",
+      "name": "追光之旅照片原比例展示重构",
+      "description": "追光之旅所有页面（门户 + 四个年份页）照片一律尊重原始比例（hero/门户 cover、win-card、minor-tile 去掉 3:2 强制裁切、story-imgs、年份卡），并以 max-height + object-fit:contain 封顶确保不超一屏；补登记 2022/2024 共 53 张图尺寸消除 CLS",
+      "dependencies": ["feat-030", "feat-035"],
+      "status": "done",
+      "evidence": "meta 追加 53 条（78/78 全覆盖）；五页程序化断言全过（object-fit 全 contain、0 超屏、0 横向溢出、lazy 图全加载）；./init.sh 全绿；浏览器 1440/375 截图与 lightbox 回归通过"
     }
   ]
 }

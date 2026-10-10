@@ -27,6 +27,13 @@ const allWinners = [data.grandPrize, ...data.groups, ...data.excellence, ...data
 const newer = years.find(y => y.data.year > data.year);
 const older = years.find(y => y.data.year < data.year);
 
+/** hero 图尺寸：内联 aspect-ratio 预留原比例（封顶缩放时配合 object-fit:contain 不裁切） */
+const heroDim = activityImageDims(data.cover);
+
+/** 内联 aspect-ratio 样式：照片一律按原始比例渲染 */
+const ratioStyle = (dim?: { w: number; h: number }) =>
+  dim ? `aspect-ratio:${dim.w} / ${dim.h}` : undefined;
+
 /** 两位编号：01、02…（组照编号图注，LOBA 式） */
 const num = (i: number) => String(i + 1).padStart(2, '0');
 
@@ -76,10 +83,11 @@ const jsonLd = JSON.stringify({
         alt={`《${data.grandPrize.title}》——${data.grandPrize.author}作品（${data.title}${data.grandPrize.award}）`}
         decoding="async"
         fetchpriority="high"
-        height={activityImageDims(data.cover)?.h}
+        height={heroDim?.h}
         loading="eager"
         src={data.cover}
-        width={activityImageDims(data.cover)?.w}
+        style={ratioStyle(heroDim)}
+        width={heroDim?.w}
       />
       <div aria-hidden="true" class="hero-scrim"></div>
       <p class="hero-credit">Photo: © {data.grandPrize.author}</p>
@@ -127,6 +135,7 @@ const jsonLd = JSON.stringify({
                     height={dim?.h}
                     loading="lazy"
                     src={w.cover}
+                    style={ratioStyle(dim)}
                     width={dim?.w}
                   />
                 </button>
@@ -143,33 +152,37 @@ const jsonLd = JSON.stringify({
 
       {(data.excellence.length > 0 || data.attention.length > 0) && (
         <div class="cl-minor">
-          {[...data.excellence, ...data.attention].map(w => (
-            <figure class="minor-tile">
-              <button
-                aria-label={`查看大图：《${w.title}》`}
-                class="tile-shutter"
-                data-author={w.author}
-                data-full={w.cover}
-                data-title={w.title}
-                type="button"
-              >
-                <img
-                  alt={`《${w.title}》——${w.author}作品（${w.award}）`}
-                  decoding="async"
-                  height={activityImageDims(w.cover)?.h}
-                  loading="lazy"
-                  src={w.cover}
-                  width={activityImageDims(w.cover)?.w}
-                />
-                <span aria-hidden="true" class="tile-scrim"></span>
-                <span class="tile-info">
-                  <span class="tile-award">{w.award}</span>
-                  <span class="tile-title">《{w.title}》</span>
-                  <span class="tile-author">© {w.author}</span>
-                </span>
-              </button>
-            </figure>
-          ))}
+          {[...data.excellence, ...data.attention].map(w => {
+            const dim = activityImageDims(w.cover);
+            return (
+              <figure class="minor-tile">
+                <button
+                  aria-label={`查看大图：《${w.title}》`}
+                  class="tile-shutter"
+                  data-author={w.author}
+                  data-full={w.cover}
+                  data-title={w.title}
+                  type="button"
+                >
+                  <img
+                    alt={`《${w.title}》——${w.author}作品（${w.award}）`}
+                    decoding="async"
+                    height={dim?.h}
+                    loading="lazy"
+                    src={w.cover}
+                    style={ratioStyle(dim)}
+                    width={dim?.w}
+                  />
+                  <span aria-hidden="true" class="tile-scrim"></span>
+                  <span class="tile-info">
+                    <span class="tile-award">{w.award}</span>
+                    <span class="tile-title">《{w.title}》</span>
+                    <span class="tile-author">© {w.author}</span>
+                  </span>
+                </button>
+              </figure>
+            );
+          })}
         </div>
       )}
 
@@ -209,30 +222,34 @@ const jsonLd = JSON.stringify({
               <p class="story-author">{w.author}</p>
             </header>
             <div class="story-imgs" data-count={w.images.length === 1 ? '1' : w.images.length === 2 ? '2' : '3+'}>
-              {w.images.map((img, i) => (
-                <figure class="story-fig">
-                  <button
-                    aria-label={`查看大图：《${w.title}》${w.images.length > 1 ? `（${num(i)}）` : ''}`}
-                    class="story-shutter"
-                    data-author={w.author}
-                    data-full={img}
-                    data-title={w.title}
-                    type="button"
-                  >
-                    <img
-                      alt={w.images.length > 1
-                        ? `《${w.title}》（${num(i)}）——${w.author}作品`
-                        : `《${w.title}》——${w.author}作品`}
-                      decoding="async"
-                      height={activityImageDims(img)?.h}
-                      loading="lazy"
-                      src={img}
-                      width={activityImageDims(img)?.w}
-                    />
-                  </button>
-                  {w.images.length > 1 && <span aria-hidden="true" class="story-num">{num(i)}</span>}
-                </figure>
-              ))}
+              {w.images.map((img, i) => {
+                const dim = activityImageDims(img);
+                return (
+                  <figure class="story-fig">
+                    <button
+                      aria-label={`查看大图：《${w.title}》${w.images.length > 1 ? `（${num(i)}）` : ''}`}
+                      class="story-shutter"
+                      data-author={w.author}
+                      data-full={img}
+                      data-title={w.title}
+                      type="button"
+                    >
+                      <img
+                        alt={w.images.length > 1
+                          ? `《${w.title}》（${num(i)}）——${w.author}作品`
+                          : `《${w.title}》——${w.author}作品`}
+                        decoding="async"
+                        height={dim?.h}
+                        loading="lazy"
+                        src={img}
+                        style={ratioStyle(dim)}
+                        width={dim?.w}
+                      />
+                    </button>
+                    {w.images.length > 1 && <span aria-hidden="true" class="story-num">{num(i)}</span>}
+                  </figure>
+                );
+              })}
             </div>
             {w.story && (
               <div class="story-text">
@@ -463,21 +480,22 @@ const jsonLd = JSON.stringify({
     outline-offset: 4px;
   }
 
-  /* —— Hero：总冠军展示位（LOBA 式黑厅） —— */
+  /* —— Hero：总冠军展示位（LOBA 式黑厅）——
+     照片尊重原比例完整展示，最高不超过一屏（导航高度已由 .cl-page padding 预留） */
   .cl-hero {
     position: relative;
-    height: min(92vh, 960px);
     overflow: hidden;
     background: var(--cl-bg);
   }
 
   .cl-hero img {
-    position: absolute;
-    inset: 0;
+    display: block;
     z-index: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: calc(100svh - 70px);
+    object-fit: contain;
+    margin: 0 auto;
   }
 
   .hero-scrim {
@@ -647,6 +665,10 @@ const jsonLd = JSON.stringify({
     display: block;
     width: 100%;
     height: auto;
+    /* 竖幅封顶一屏，object-fit:contain 保证原比例完整显示（超限时两侧留深底） */
+    max-height: min(86svh, 900px);
+    object-fit: contain;
+    margin: 0 auto;
   }
 
   .win-shutter:focus-visible,
@@ -713,8 +735,11 @@ const jsonLd = JSON.stringify({
 
   .tile-shutter img {
     width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
+    height: auto;
+    /* 原比例完整显示（不再强制 3:2 裁切），超高时封顶居中 */
+    max-height: min(72svh, 640px);
+    object-fit: contain;
+    margin: 0 auto;
     transition: transform 0.35s ease;
   }
 
@@ -936,6 +961,10 @@ const jsonLd = JSON.stringify({
     display: block;
     width: 100%;
     height: auto;
+    /* 竖幅封顶一屏，原比例完整显示 */
+    max-height: min(86svh, 900px);
+    object-fit: contain;
+    margin: 0 auto;
   }
 
   .story-num {
@@ -1229,11 +1258,6 @@ const jsonLd = JSON.stringify({
   }
 
   @media (max-width: 700px) {
-    .cl-hero {
-      height: 74vh;
-      min-height: 460px;
-    }
-
     .hero-caption {
       padding: 0 20px 32px;
     }
