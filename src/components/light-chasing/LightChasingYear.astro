@@ -151,36 +151,53 @@ const jsonLd = JSON.stringify({
       )}
 
       {(data.excellence.length > 0 || data.attention.length > 0) && (
-        <div class="cl-minor">
-          {[...data.excellence, ...data.attention].map(w => {
-            const dim = activityImageDims(w.cover);
+        <div class="cl-minor-groups">
+          {([
+            ['excellence', 'EXCELLENCE'],
+            ['attention', 'SPECIAL MENTION'],
+          ] as const).map(([key, en]) => {
+            const works = data[key];
+            if (works.length === 0) {
+              return null;
+            }
             return (
-              <figure class="minor-tile">
-                <button
-                  aria-label={`查看大图：《${w.title}》`}
-                  class="tile-shutter"
-                  data-author={w.author}
-                  data-full={w.cover}
-                  data-title={w.title}
-                  type="button"
-                >
-                  <img
-                    alt={`《${w.title}》——${w.author}作品（${w.award}）`}
-                    decoding="async"
-                    height={dim?.h}
-                    loading="lazy"
-                    src={w.cover}
-                    style={ratioStyle(dim)}
-                    width={dim?.w}
-                  />
-                  <span aria-hidden="true" class="tile-scrim"></span>
-                  <span class="tile-info">
-                    <span class="tile-award">{w.award}</span>
-                    <span class="tile-title">《{w.title}》</span>
-                    <span class="tile-author">© {w.author}</span>
-                  </span>
-                </button>
-              </figure>
+              <section class="cl-minor-group">
+                <header class="cl-subhead">
+                  <h3 class="subhead-title">{works[0]?.award}</h3>
+                  <span class="subhead-en">{en}</span>
+                  <span aria-hidden="true" class="subhead-line"></span>
+                </header>
+                <div class="cl-minor">
+                  {works.map(w => {
+                    const dim = activityImageDims(w.cover);
+                    return (
+                      <figure class="minor-tile">
+                        <button
+                          aria-label={`查看大图：《${w.title}》（${w.award}，© ${w.author}）`}
+                          class="tile-shutter"
+                          data-author={w.author}
+                          data-full={w.cover}
+                          data-title={w.title}
+                          type="button"
+                        >
+                          <img
+                            alt={`《${w.title}》——${w.author}作品（${w.award}）`}
+                            decoding="async"
+                            height={dim?.h}
+                            loading="lazy"
+                            src={w.cover}
+                            style={ratioStyle(dim)}
+                            width={dim?.w}
+                          />
+                        </button>
+                        <figcaption class="tile-meta">
+                          <p class="tile-author">© {w.author}</p>
+                        </figcaption>
+                      </figure>
+                    );
+                  })}
+                </div>
+              </section>
             );
           })}
         </div>
@@ -709,12 +726,51 @@ const jsonLd = JSON.stringify({
     color: var(--cl-muted);
   }
 
-  /* —— 优秀作品 / 特别关注：3 列密集网格，hover 显注（XMAGE 式） —— */
+  /* —— 优秀作品 / 特别关注：分组小标题 + 3 列密集网格（图下署名） —— */
+  .cl-minor-groups {
+    padding: clamp(48px, 7vw, 80px) var(--edge) 0;
+  }
+
+  .cl-minor-group + .cl-minor-group {
+    margin-top: clamp(48px, 6vw, 72px);
+  }
+
+  .cl-subhead {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-top: 26px;
+    border-top: 1px solid var(--cl-border);
+  }
+
+  .subhead-title {
+    margin: 0;
+    font-family: var(--font-serif-song);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--cl-fg);
+  }
+
+  .subhead-en {
+    font-family: 'Archivo', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--cl-accent);
+  }
+
+  .subhead-line {
+    flex: 1;
+    min-width: 0;
+  }
+
   .cl-minor {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(12px, 1.6vw, 20px);
-    padding: clamp(48px, 7vw, 80px) var(--edge) 0;
+    margin-top: 22px;
   }
 
   .minor-tile {
@@ -740,80 +796,17 @@ const jsonLd = JSON.stringify({
     max-height: min(72svh, 640px);
     object-fit: contain;
     margin: 0 auto;
-    transition: transform 0.35s ease;
   }
 
-  .tile-shutter:hover img {
-    transform: scale(1.05);
-  }
-
-  .tile-scrim {
-    position: absolute;
-    inset: 40% 0 0;
-    background: linear-gradient(180deg, rgba(4, 16, 30, 0) 0%, rgba(4, 16, 30, 0.72) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .tile-info {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    text-align: left;
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  .tile-shutter:hover .tile-scrim,
-  .tile-shutter:focus-visible .tile-scrim,
-  .tile-shutter:focus-within .tile-scrim {
-    opacity: 1;
-  }
-
-  .tile-shutter:hover .tile-info,
-  .tile-shutter:focus-visible .tile-info,
-  .tile-shutter:focus-within .tile-info {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* 触屏设备：信息常显（无 hover） */
-  @media (hover: none) {
-    .tile-scrim,
-    .tile-info {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .tile-award {
-    font-family: 'Archivo', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: rgba(234, 244, 255, 0.72);
-  }
-
-  .tile-title {
-    font-family: var(--font-serif-song);
-    font-size: 14.5px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #eaf4ff;
+  .tile-meta {
+    padding: 10px 2px 0;
   }
 
   .tile-author {
-    font-size: 11.5px;
+    margin: 0;
+    font-size: 12px;
     letter-spacing: 0.08em;
-    color: rgba(234, 244, 255, 0.62);
+    color: var(--cl-muted);
   }
 
   /* —— 公示脚注 —— */
@@ -1229,10 +1222,6 @@ const jsonLd = JSON.stringify({
       animation: none;
     }
 
-    .tile-shutter img {
-      transition: none;
-    }
-
     html.js .cl-reveal {
       opacity: 1;
       transform: none;
@@ -1267,7 +1256,7 @@ const jsonLd = JSON.stringify({
     }
 
     .cl-results,
-    .cl-minor {
+    .cl-minor-groups {
       padding-left: 20px;
       padding-right: 20px;
     }

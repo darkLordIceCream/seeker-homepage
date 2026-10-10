@@ -2207,3 +2207,16 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   2024:51/2025:26/门户:5）；浏览器截图目检（win-card 竖图原比例、2024 组图水印完整、hero 封顶居中两侧黑厅留边）；lightbox 回归正常
 - 交付：按用户要求本地提交后停在分支，不 push 不建 PR，preview
   :4322 供预览，同意后再提
+
+### 追光之旅获奖网格重构：分组标题 + 图下署名（2026-10-10，同分支追加提交）
+
+- 用户反馈：minor-tile
+  hover 浮层里「优胜奖」字样与作者名重叠（浮层在 line-height:0 的 button 内，行盒为零所致）
+- 按用户方案重构：去掉整个 hover 文字浮层体系（tile-scrim/tile-info/浮层 hover 规则/
+  hover
+  zoom——zoom 会裁切 contain 留边照片，一并移除）；excellence 与 attention 拆成两组，各带分组小标题（subhead-title 照录该组 award 名 +
+  EN kicker + 细分隔线，数据驱动——
+  2022 显示「优秀奖」、2024/2025 显示「优胜奖」）；每张图片下方 figcaption 署名 © 作者
+- a11y：作品标题移入按钮 aria-label（查看大图：《标题》（奖项，© 作者））
+- 验证：build 全绿；2025 分组标题 [优胜奖, 特别关注奖]、2022
+  [优秀奖]、浮层元素 0 残留、署名数与作品数一致；lightbox 点击回归正常（图注正确）；init.sh 全绿
