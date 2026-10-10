@@ -398,6 +398,21 @@ const jsonLd = JSON.stringify({
     document.documentElement.style.overflow = locked ? 'hidden' : '';
   };
 
+  /* 浮层打开时压入一条历史：移动端返回键先关浮层，而不是退出整个页面 */
+  let overlayHistoryPushed = false;
+  const pushOverlayHistory = () => {
+    if (!overlayHistoryPushed) {
+      history.pushState({ clOverlay: true }, '');
+      overlayHistoryPushed = true;
+    }
+  };
+  const consumeOverlayHistory = () => {
+    if (overlayHistoryPushed) {
+      overlayHistoryPushed = false;
+      history.back();
+    }
+  };
+
   /* —— 大图 lightbox（无故事作品） —— */
   const renderSlide = () => {
     const img = lightbox?.querySelector<HTMLImageElement>('.lb-img');
@@ -411,12 +426,13 @@ const jsonLd = JSON.stringify({
     count.textContent = `${current + 1} / ${slides.length}`;
   };
 
-  const closeLightbox = () => {
+  const closeLightbox = (viaHistory = true) => {
     if (!lightbox || lightbox.hidden) {return;}
     lightbox.hidden = true;
     lockScroll(false);
     lastFocus?.focus();
     current = -1;
+    if (viaHistory) {consumeOverlayHistory();}
   };
 
   const stepLightbox = (delta: number) => {
@@ -433,6 +449,7 @@ const jsonLd = JSON.stringify({
     lockScroll(true);
     lightbox.hidden = false;
     lightbox.querySelector<HTMLElement>('.lb-close')?.focus();
+    pushOverlayHistory();
   };
 
   /* —— 作品赏析 storyview（有故事作品） —— */
@@ -449,12 +466,13 @@ const jsonLd = JSON.stringify({
     count.textContent = svWork.images.length > 1 ? `${svIndex + 1} / ${svWork.images.length}` : '';
   };
 
-  const closeStory = () => {
+  const closeStory = (viaHistory = true) => {
     if (!storyview || storyview.hidden) {return;}
     storyview.hidden = true;
     svWork = null;
     lockScroll(false);
     lastFocus?.focus();
+    if (viaHistory) {consumeOverlayHistory();}
   };
 
   const stepStory = (delta: number) => {
@@ -488,6 +506,7 @@ const jsonLd = JSON.stringify({
     lockScroll(true);
     storyview.hidden = false;
     storyview.querySelector<HTMLElement>('.sv-close')?.focus();
+    pushOverlayHistory();
   };
 
   shutters.forEach((btn, i) => {
@@ -500,17 +519,30 @@ const jsonLd = JSON.stringify({
       }
     });
   });
-  lightbox?.querySelector('.lb-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.lb-close')?.addEventListener('click', () => closeLightbox());
   lightbox?.querySelector('.lb-prev')?.addEventListener('click', () => stepLightbox(-1));
   lightbox?.querySelector('.lb-next')?.addEventListener('click', () => stepLightbox(1));
   lightbox?.addEventListener('click', e => {
     if (e.target === lightbox) {closeLightbox();}
   });
-  storyview?.querySelector('.sv-close')?.addEventListener('click', closeStory);
+  storyview?.querySelector('.sv-close')?.addEventListener('click', () => closeStory());
   storyview?.querySelector('.sv-prev')?.addEventListener('click', () => stepStory(-1));
   storyview?.querySelector('.sv-next')?.addEventListener('click', () => stepStory(1));
   storyview?.addEventListener('click', e => {
     if (e.target === storyview) {closeStory();}
+  });
+  window.addEventListener('popstate', () => {
+    overlayHistoryPushed = false;
+    if (storyview) {
+      storyview.hidden = true;
+      svWork = null;
+    }
+    if (lightbox) {
+      lightbox.hidden = true;
+      current = -1;
+    }
+    lockScroll(false);
+    lastFocus?.focus();
   });
   document.addEventListener('keydown', e => {
     const lbOpen = lightbox && !lightbox.hidden;
@@ -1109,10 +1141,13 @@ const jsonLd = JSON.stringify({
 
   .sv-close {
     position: absolute;
-    top: 18px;
-    right: 20px;
-    width: 42px;
-    height: 42px;
+    z-index: 6;
+    top: 14px;
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    background: rgba(4, 16, 30, 0.78);
+    border-color: rgba(234, 244, 255, 0.5);
   }
 
   .sv-nav {
@@ -1205,6 +1240,11 @@ const jsonLd = JSON.stringify({
 
     .sv-img {
       max-height: 52svh;
+    }
+
+    .sv-close {
+      top: 10px;
+      right: 12px;
     }
 
     .sv-prev {
