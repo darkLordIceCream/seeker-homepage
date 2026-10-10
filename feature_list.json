@@ -268,6 +268,14 @@
       "dependencies": ["feat-018"],
       "status": "done",
       "evidence": "ActsSection.astro 改为构建期 getCollection 排序取最新；./init.sh 全绿；dist/index.html stack-card 背景图为 activities/2026-09/cover.webp；行为已写入 story-of-time-article skill（关键事实 + 验证清单）"
+    },
+    {
+      "id": "feat-035",
+      "name": "追光之旅 2025 届上架",
+      "description": "/activities/chasing-light/2025/：2025 追光之旅摄影大赛结果公示 + 获奖作品赏析（总冠军凤凰涅槃 + 5 组冠军 + 5 优胜 + 2 特别关注）；首页追光之旅卡封面改自动跟随最新一届",
+      "dependencies": ["feat-030", "feat-034"],
+      "status": "done",
+      "evidence": "13 张作品图 cwebp q82 入 R2（immutable，200+MD5 验证 13/13）；meta 登记 13 条尺寸；2025.md 复刻 2024 结构（sourceResults/sourceStories 双链接、6 篇冠军故事照录）；ActsSection 追光卡构建期取最新届 grandPrize.cover；./init.sh 全绿"
     }
   ]
 }

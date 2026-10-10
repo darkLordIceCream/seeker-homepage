@@ -10,6 +10,12 @@ const latestStory = (await getCollection('activities')).sort(
 )[0];
 const storyCover = latestStory?.data.cover;
 
+// 追光之旅卡封面同理跟随最新一届：取 lightChasing collection 年份最大的总冠军图
+const latestChasing = (await getCollection('lightChasing')).sort(
+  (a, b) => b.data.year - a.data.year,
+)[0];
+const chasingCover = latestChasing?.data.grandPrize.cover;
+
 type Act = {
   name: string;
   desc: string;
@@ -49,7 +55,7 @@ const events: Act[] = [
     href: '/activities/chasing-light/',
     rot: '-1.4deg',
     dy: '18px',
-    img: 'https://r2.xn--seeker-ng2jm403afb4a.club/activities/chasing-light/2024/grand-prize/01.webp',
+    img: chasingCover,
   },
 ];
 ---

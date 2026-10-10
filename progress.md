@@ -2167,3 +2167,22 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - skill 同步：story-of-time-article 关键事实新增该机制（含"禁止写死回该文件"），验证清单新增首页卡封面断言（dist/index.html
   stack-card 背景图）
 - 验证：./init.sh 全绿；dist/index.html 时间的故事卡背景图为 activities/2026-09/cover.webp
+
+### 追光之旅 2025 届上架（2026-10-10，分支 feat/light-chasing-2025）
+
+- 内容源：结果公布 https://mp.weixin.qq.com/s/vp1TX7VbZUPFgWl0p1VDpA（2026-03-09
+  发布，= sourceResults/pubDate）+ 作品赏析
+  https://mp.weixin.qq.com/s/ihNvfUI1NbR-6oiSHwIAxQ（2026-04-02，=
+  sourceStories）
+- 结构解析：公示文按「556×77 装饰分隔条 + 作品图 + 标题」交替排列，13 幅作品（1 总冠军 +
+  5 组冠军 + 5 优胜 +
+  2 特别关注）经 contact-sheet 目检一一对应；赏析文作品图为方裁切版（弃用），6 篇冠军第一人称故事从赏析文照录；优胜/特别关注原文无故事（story 省略，同 2022 先例）
+- 图片：原图（1280~2048 宽，均 ≤2560）cwebp q82 → R2
+  activities/chasing-light/2025/<slug>/01.webp（slug:
+  grand-prize/nature/city/people/campus/creative/excellent-01..05/attention-01..02，immutable 头，13/13
+  HTTP 200 + MD5 一致）
+- 数据：2025.md 复刻 2024 结构，order/pubDate=2025/2026-03-09，组别 award 名照原文（自然户外组/城市建筑组/人文纪实组/校园学生赛道/商业创意组冠军，2025 无组图组），sponsors 腾龙/VIGORBIRD/唯卓仕/联合创新/蒲公英智能科技/富图宝（照录），resultsNote 公示期 3月9日-16日 + 邮箱；⚠️
+  period 原文未提供征稿时间窗，暂用 '2025 —
+  2026'（可核验兜底），待用户确认后可改具体月份
+- 顺手：首页 ActsSection 追光之旅卡封面从写死 2024 改为构建期取 lightChasing 最新届 grandPrize.cover（与时间的故事卡同模式）
+- 已知存量缺口（未动）：meta 清单里 2022/2024 届追光图无尺寸登记（activityImageDims 返回 undefined，页面可渲染但无 CLS 预留），如需要可后续补
