@@ -1,6 +1,6 @@
 ---
 /**
- * 首页第 2 屏「作品 Gallery」：编辑式摄影展墙（feat-016）。
+ * 首页第 2 屏「画廊 Gallery」：编辑式摄影展墙（feat-016）。
  * 设计原则：不模拟摄影，直接展示摄影——照片是唯一视觉主体，UI 极少。
  * 数据来自 src/data/gallery.ts（换作品只改那个文件）；R2 只读。
  * 全部图位轮换：每格持有多张候选，由下方小段脚本以 3~6s/次的独立随机
@@ -36,7 +36,7 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
   <header class="gallery-head reveal">
     <h2 class="gallery-title" id="works-title">
-      作品 <span class="gallery-en">Gallery</span>
+      画廊 <span class="gallery-en">Gallery</span>
     </h2>
   </header>
 
@@ -130,8 +130,6 @@ const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
       }
     </div>
   </div>
-
-  <p class="gallery-note reveal" style={delay(7)}>小组成员摄影作品 · @ 为作者署名</p>
 </section>
 
 <script>
