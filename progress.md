@@ -2,20 +2,34 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-20 **Branch:**
-feat/7th-anniversary（由 feat/photo-watermark 改名，未合并）**Active Feature:**
-并行会话 WIP 收尾（Footer 二维码 / 首页分部地图 BranchMap
-/ 同行之路弹窗卡）+ 七周年页脚制作名单，均已验证提交
+**Last Updated:** 2026-10-09 **Branch:** chore/deps-update-2026-10**Active
+Feature:** 依赖升级收尾（astro 7.3.8 + @astrojs/react 7 + eslint-plugin-astro
+3，TypeScript 暂留 6.x），全部验证通过待合并
 
 ## Status
 
 ### What's Done
 
+- [x] 依赖更新（2026-10-09）
+  - astro 7.2.8 → 7.3.8（多页面构建性能优化）、react/react-dom/@types
+    19.3.0、eslint 10.12.0、maplibre-gl 6.13.0、lucide-react 1.53.0、sharp
+    0.35.5、prettier 3.9.9、typescript-eslint 8.71.1、lint-staged
+    17.6.0 等 in-range 更新
+  - 跨大版本两项：@astrojs/react 6 → 7.0.1（babel 选项移除，项目 `react()`
+    无参调用不受影响）、eslint-plugin-astro 2 →
+    3.2.1（peer 要求 eslint≥10、typescript-eslint≥8.61 已满足，零配置改动，0
+    error）
+  - TypeScript 暂留 6.0.3：typescript-eslint 8.x peer 上限 <6.1.0，TS
+    7 待其支持后再升
+  - 验证：astro check 0 错误、tsc 0 错误、eslint 0 error（60
+    warning，多为 eslint-plugin-astro
+    3 的 astro/sort-attributes 排序提示，按标准保留）、build 78 页成功
 - [x] feat-001 ~
       feat-024（历史会话已完成，详见下方「历史记录」与 feature_list.json）
 - [x] 依赖更新（feat-020 一部分）
   - Astro 7.0.6 → 7.2.8，React 19.2.8，Tailwind 4.3.3，ESLint 10.9.1 等
-  - 跳过跨大版本：TypeScript 7（风险高）、eslint-plugin-astro 3（需改配置）
+  - 跳过跨大版本：TypeScript 7（风险高）、eslint-plugin-astro 3（需改配置）※
+    eslint-plugin-astro 3 已于 2026-10-09 升级，无需改配置
 - [x] 安装 ui-ux-pro-max 设计技能（7 个技能 → .agents/skills/）
   - SKILL.md 中 ${CLAUDE_PLUGIN_ROOT} 路径已改写为 .agents/skills/
   - 搜索脚本冒烟测试通过；ESLint 忽略 .agents/**
