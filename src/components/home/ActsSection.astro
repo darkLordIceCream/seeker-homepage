@@ -155,7 +155,7 @@ const events: Act[] = [
   .acts-link {
     font-size: 13.5px;
     font-weight: 600;
-    color: var(--grad-a);
+    color: var(--link);
     text-decoration: none;
   }
 
@@ -165,7 +165,7 @@ const events: Act[] = [
   }
 
   .acts-link:focus-visible {
-    outline: 2px solid var(--grad-a);
+    outline: 2px solid var(--link);
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -215,7 +215,7 @@ const events: Act[] = [
   }
 
   .stack-card:focus-visible {
-    outline: 2px solid var(--grad-a);
+    outline: 2px solid var(--link);
     outline-offset: 4px;
   }
 
@@ -287,6 +287,9 @@ const events: Act[] = [
     width: 100%;
     margin: 26px auto 0;
     padding: 1.4rem 1.5rem 1.5rem;
+    /* 本条始终为夜色底（--anniv-bg 不随主站主题切换），accent 提亮一档
+       保证小字（07 / SEVEN YEARS、ENTER ARCHIVE）在深底上可读 */
+    --anniv-accent: #8fc9ff;
     background:
       radial-gradient(120% 200% at 85% -50%, color-mix(in srgb, var(--anniv-accent) 14%, transparent), transparent 55%),
       var(--anniv-bg);

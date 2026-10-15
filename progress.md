@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-10-09 **Branch:** chore/deps-update-2026-10**Active
-Feature:** 依赖升级收尾（astro 7.3.8 + @astrojs/react 7 + eslint-plugin-astro
-3，TypeScript 暂留 6.x），全部验证通过待合并
+**Last Updated:** 2026-10-15 **Branch:** fix/dark-small-text-contrast **Active
+Feature:**
+深色模式蓝色小字对比度修复（新增 --link 语义令牌），init.sh 全绿 + 浏览器双主题截图验证通过，本地提交待合并
 
 ## Status
 
@@ -2249,3 +2249,49 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   2. 移动端关闭按钮加强：44px、实底深底 rgba(4,16,30,.78)、边框提亮至 .5 白、z-index 压过滚动内容；≤900px 断点贴边（top10/right12）
 - 验证：375 视口实测——开浮层 → history.back()
   → 浮层关、页面仍在、滚动解锁；sv-close 路径关闭且 history.state 清空；无故事作品（鲸鸣于亲）lightbox 路径回归（开/关/消费历史）全过；build 全绿
+
+## 会话记录（深色模式蓝色小字对比度修复，2026-10-15）
+
+### 交付（分支 fix/dark-small-text-contrast，基于 main 18c12a2）
+
+- 用户反馈：深色模式下蓝色小字看不清，例：首页 #activities 右侧「全部活动 →」
+- 根因：全站蓝色小字/交互文字统一
+  `color: var(--grad-a)`，深色下 --grad-a=#2e86de 在 #061a30 底上对比度 ≈4.6:1，对 10.5~14px 小字偏弱（MemberCard 标题在卡片底上甚至 <4.5:1）
+- 方案：新增语义令牌
+  `--link`（链接/交互小字专用），不直接改深色 --grad-a——它同时是品牌渐变起点（.grad-text 大标题/按钮/进度点/logo），整体提亮会破坏渐变层次
+  - `:root` #06427e（与原 --grad-a 同值，浅色零变化）；`.dark`
+    #8fc9ff（冰蓝，≈10:1 达 WCAG AAA，与深色 --chart-2 同源）；@theme
+    inline 注册 --color-link 暴露 text-link utility
+  - 替换规则（可 grep 验证）：凡 --grad-a 作**文字色 / hover 文字色 /
+    focus-visible 描边** → --link；作**渐变、装饰边框、圆点、光晕、SVG stop**
+    保持不动
+- 修改 15 个文件：
+  - global.css（令牌 + .section-kicker/.mini-cta）
+  - 首页 ActsSection（.acts-link「全部活动 →」+ .acts-anniv 七周年条局部
+    `--anniv-accent: #8fc9ff`——该条常暗底不随主站主题切换，两种主题下小字都提亮，scoped 覆盖不影响 /7th 页面）、AboutSection（.team-link +
+    .join-btn focus）、PageProgress focus
+  - Navigation（落地态 .scrolled/--solid 的 --nav-hover + 移动端菜单 active/hover；悬浮在视频上的硬编码 #2e86de 不动）、Footer（链接 hover——顺带修复深色下 hover 反而比常态 #afc8df 更暗的问题）、MemberCard（.member-title/.specialty-tag）
+  - activities：story-of-time（hero-kicker/year-anchor
+    hover/book-cta/shelf-arrow）、chasing-light（--cl-accent 别名改指 --link，级联修复 ed-cta
+    hover 与 back-link focus）、GalleryStory（pager-kicker
+    10.5px 全站最小蓝字/back-link/item-author/back-top/lightbox
+    focus）、LightChasingYear（--cl-accent
+    - 同款 pager/back-link）
+  - welfare：三模板（back-link/hero-kicker/side-kicker/side-back/next-card
+    hover 标题/focus）、welfare/index（hero-kicker + stack-card focus）
+- 明确不动：品牌渐变（.grad-text/按钮/进度点/logo 渐变）、Footer
+  tech-name渐变字（background-clip 渐变填充，均色对比尚可）、7 周年独立主题体系（--anniv-\*，固定夜色设计语言）
+
+### Evidence
+
+- ./init.sh 全绿：astro check + tsc 0 错误、eslint 0 错误（65
+  warning 为存量 astro/sort-attributes 类，git stash 对比基线一致）、79 页构建
+- 浏览器实测（dev 4321 + IAB 截图）：深色首页 #activities——「全部活动 →」「07 /
+  SEVEN YEARS」「ENTER ARCHIVE
+  →」明亮冰蓝清晰可读；浅色同区域与改前一致零回归；/activities/story-of-time 深色 hero-kicker 清晰、渐变大标题不受影响
+
+### Notes for Next Session
+
+- 7 周年板块（--anniv-accent
+  #2e86de 的常暗页面）存在同类低对比小字，属独立设计体系本次未动，如需统一提亮单独开事项
+- feature_list.json 已新增 feat-038

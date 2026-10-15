@@ -11,6 +11,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-link: var(--link);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -89,6 +90,8 @@
   /* 品牌渐变：藏蓝 → 天蓝（浅底上作大字 ≥3:1、作按钮底配白字 ≥4.5:1） */
   --grad-a: #06427e;
   --grad-b: #2e86de;
+  /* 链接/交互小字专用色：与 --grad-a 同值的墨蓝（浅底对比充足） */
+  --link: #06427e;
   --on-gradient: #ffffff;
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(20, 40, 61, 0.14);
@@ -146,6 +149,9 @@
   /* —— 品牌与界面扩展令牌（深色值）—— */
   --grad-a: #2e86de;
   --grad-b: #6fb4f0;
+  /* 链接/交互小字提亮为冰蓝（与 --chart-2 同源）：#2e86de 在藏蓝黑底上
+     对 10~14px 小字对比不足（≈4.6:1），#8fc9ff ≈10:1 达 AAA */
+  --link: #8fc9ff;
   --on-gradient: #061a30;
   --glass-bg: rgba(8, 36, 63, 0.55);
   --glass-border: rgba(175, 200, 223, 0.12);
@@ -261,7 +267,7 @@ html:has(.snap-scroll) .footer {
   font-weight: 600;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--grad-a);
+  color: var(--link);
   margin: 0 0 12px;
 }
 
@@ -315,7 +321,7 @@ html:has(.snap-scroll) .footer {
   align-items: center;
   gap: 6px;
   margin-top: 36px;
-  color: var(--grad-a);
+  color: var(--link);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
@@ -329,7 +335,7 @@ html:has(.snap-scroll) .footer {
 }
 
 .mini-cta:focus-visible {
-  outline: 2px solid var(--grad-a);
+  outline: 2px solid var(--link);
   outline-offset: 4px;
   border-radius: 4px;
 }

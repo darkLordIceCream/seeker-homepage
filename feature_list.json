@@ -292,6 +292,14 @@
       "dependencies": ["feat-035", "feat-036"],
       "status": "done",
       "evidence": "五页断言全过（各届图片数=作品数、全 contain、0 超屏 0 溢出）；双浮层实测（故事浮层 22 段文字/多图 2/10 翻页/无故事走 lightbox/Esc+背景关闭+锁滚动）；移动 375 堆叠浮层验证；触屏常显规则在产物 CSS；./init.sh 全绿"
+    },
+    {
+      "id": "feat-038",
+      "name": "深色模式蓝色小字对比度修复（--link 语义令牌）",
+      "description": "新增链接/交互小字专用语义令牌 --link（浅色 #06427e 与原 --grad-a 同值零变化、深色 #8fc9ff 冰蓝 ≈10:1 达 WCAG AAA），@theme inline 注册暴露 text-link utility；全站 15 个文件中凡 --grad-a 作为文字色/hover 文字色/focus-visible 描边之处换用 --link；品牌渐变（.grad-text/按钮/进度点/logo）、装饰边框、7 周年独立主题体系不动；首页 #activities 七周年暗底条局部提亮 accent（scoped 覆盖不影响 /7th 页面）",
+      "dependencies": ["feat-029"],
+      "status": "done",
+      "evidence": "./init.sh 全绿（type-check 0 错误、lint 0 错误、79 页构建）；浏览器实测深色首页「全部活动 →」/七周年条小字/story-of-time hero-kicker 清晰可读（#2e86de→#8fc9ff，4.6:1→10:1），浅色全站零回归；分支 fix/dark-small-text-contrast 本地提交"
     }
   ]
 }
