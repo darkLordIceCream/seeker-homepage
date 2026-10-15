@@ -80,7 +80,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
   /* 滚过第一屏后：导航「落地」为玻璃条，与下拉菜单同一材质 */
   .navigation.scrolled {
     --nav-fg: var(--foreground);
-    --nav-hover: var(--grad-a);
+    --nav-hover: var(--link);
     --nav-pill-bg: var(--glass-bg);
     --nav-pill-border: var(--glass-border);
 
@@ -93,7 +93,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
   /* 非首页（无深色视频首屏）：导航常驻玻璃底，前景色始终可读 */
   .navigation--solid {
     --nav-fg: var(--foreground);
-    --nav-hover: var(--grad-a);
+    --nav-hover: var(--link);
     --nav-pill-bg: var(--glass-bg);
     --nav-pill-border: var(--glass-border);
 
@@ -409,7 +409,7 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 
     .nav-link.active,
     .nav-link:hover {
-      color: var(--grad-a);
+      color: var(--link);
     }
 
 
