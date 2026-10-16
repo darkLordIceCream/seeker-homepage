@@ -302,10 +302,11 @@ const fmtDate = (date: Date) =>
       margin-top: -12px;
     }
 
-    /* 触屏无 hover，弹出位移不可感知且上提会压住上一张标题：
-       移动端取消位移，保留抬升阴影作为「当前卡」暗示 */
+    /* 触屏两段式点按的弹出：转正 + 1.03 放大 + 抬升阴影。不做上提位移——
+       scale 的顶边抬升 ≈4.4px，重叠 reach = 12+4.4 = 16.4px 仍 < 标题 18px
+       安全线（rotate 归零后旋转下探同步归零） */
     .stack-card.active {
-      transform: rotate(calc(var(--rot) * 0.25)) translateX(var(--sx));
+      transform: translateX(var(--sx)) scale(1.03);
       box-shadow: var(--paper-shadow-lift);
     }
 
@@ -323,7 +324,9 @@ const fmtDate = (date: Date) =>
 </style>
 
 <script>
-  // 突出状态跟随鼠标/焦点：放到哪张哪张突出，移开后保持，直到放到其他卡片
+  // 桌面：突出状态跟随鼠标/焦点，放到哪张哪张突出，移开后保持，直到放到其他卡片
+  // 触屏：两段式点按——第一段点按弹出卡片（不跳转，动画完整播放），再点已弹出的卡才进入；
+  // 初始渲染即 active 的卡一次点按直达
   const cards = document.querySelectorAll<HTMLElement>('[data-stack-card]');
 
   if (cards.length > 0) {
@@ -331,9 +334,30 @@ const fmtDate = (date: Date) =>
       cards.forEach(c => c.classList.toggle('active', c === card));
     };
 
+    // 触屏判定不能省：安卓点按会先派发 mouseenter/focus 再派发 click，
+    // 若放行会把卡片提前置为 active、两段式被穿透
+    let touchMode = false;
+
     cards.forEach(card => {
-      card.addEventListener('mouseenter', () => setActive(card));
-      card.addEventListener('focus', () => setActive(card));
+      card.addEventListener('pointerdown', e => {
+        touchMode = e.pointerType !== 'mouse';
+      });
+      card.addEventListener('mouseenter', () => {
+        if (!touchMode) {
+          setActive(card);
+        }
+      });
+      card.addEventListener('focus', () => {
+        if (!touchMode) {
+          setActive(card);
+        }
+      });
+      card.addEventListener('click', e => {
+        if (touchMode && !card.classList.contains('active')) {
+          e.preventDefault();
+          setActive(card);
+        }
+      });
     });
   }
 </script>
