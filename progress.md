@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-10-16 **Branch:** feat/webfont-selfhost **Active
-Feature:** Webfont 双方案落地（Archivo 自托管可变字体 + Noto Serif
-SC 中文衬线 webfont），init.sh 全绿 + 浏览器双路径实测通过，本地提交待合并
+**Last Updated:** 2026-10-16 **Branch:** refactor/story-of-time-typography
+**Active Feature:**
+时间的故事排版整改 + 字体栈收敛（本分支已并入含 Webfont 双方案的最新 main），冲突已解、审计文档已回填，PR 审查合并中
 
 ## Status
 
@@ -2296,6 +2296,50 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   #2e86de 的常暗页面）存在同类低对比小字，属独立设计体系本次未动，如需统一提亮单独开事项
 - feature_list.json 已新增 feat-038
 
+## 会话记录（《时间的故事》字体审计与整改，2026-10-16）
+
+### 交付（分支 refactor/story-of-time-typography，基于 main 328309a）
+
+- 用户要求排查 /activities/story-of-time/ 与文章页字体使用：导语段落「略显拥挤」+ 担心页面超三种字体
+- **审计结论**（完整报告 `docs/typography-audit-2026-10-16.md`）：
+  - 两页均恰好 3 族（系统无衬线打底 /
+    Archivo 辅助行 / 宋体衬线标题正文），未超标，符合 2026-08-30 杂志式 pairing 约定
+  - 拥挤根因：`.hero-desc` 14.5px + `text-align: justify` +
+    560px 窄版心，CJK 两端对齐字距不匀
+  - 真正的乱源是 4 处不一致：主页大标题无衬线 vs 文章页宋体；`--font-serif-song`
+    7 文件重复定义 + `--anniv-serif`
+    第 8 套近似变量；Archivo 栈两种写法（`'Archivo', sans-serif`
+    的中文在非苹果设备落浏览器默认 sans）；`.font-display` 死代码 +
+    Archivo 无 preconnect
+- **整改**（用户确认三决策：导语居中 / 主页标题改宋体 / 全站收敛）：
+  - `.hero-desc`：justify→center、14.5→15.5px、行高 2→2.1
+  - 主页 `.hero-title` 加
+    `var(--font-serif-song)`（渐变 accent 保留）；hero-kicker 字距 0.32em→0.22em 与文章页统一
+  - global.css `:root` 新增 `--font-serif-song` /
+    `--font-archivo`（含完整中文回退）唯一定义；`--anniv-serif`
+    改指 var；删 7 处页面级重复定义；删 `.font-display`
+  - 全站 sed 机械替换：106 处 Archivo 字面量 +
+    Hasselblad/ActsSection 宋体字面量 → var() 引用（27 文件）
+  - Layout.astro head 加 Google Fonts
+    preconnect（fonts.googleapis/gstatic；后被 feat-040 自托管取代移除）
+- 已知边界（当时未整改；**已随下节 feat-040 webfont 落地解决**）：宋体栈中 Noto
+  Serif
+  SC 为名义回退无 webfont，无宋体系统（Android）会退黑体渲染；跨平台一致需中文 webfont 子集化（可参照水印工坊 noto-sans-sc-300-subset 做法）
+
+### Evidence
+
+- grep 断言：`font-family: 'Archivo'` / `font-family: 'Songti SC'`
+  字面量全站零残留；`--font-serif-song:` 定义仅 global.css 一处
+- ./init.sh 全绿：type-check 0 错误、lint 0 错误 65
+  warning（与基线一致；期间 preconnect 触发 3 个 astro/sort-attributes 已 eslint
+  --fix 修复）、79 页构建
+- 浏览器实测（dev
+  4321 截图）：活动主页导语居中字距均匀不再拥挤、大标题宋体化与文章页同语言；文章页零回归；首页七周年条宋体（--anniv-serif→var 链路）正常
+
+### Notes for Next Session
+
+- feature_list.json 已新增 feat-039；报告与整改同分支两个 commit
+
 ## 会话记录（Webfont 双方案：Archivo 自托管 + 中文衬线 webfont，2026-10-16）
 
 ### 背景（承接上一节字体审计的跨平台调研）
@@ -2327,8 +2371,7 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   warning（基线一致，preload 属性序已 eslint --fix）、79 页构建；dist 含 archivo
   woff2 + 392 个 noto-serif-sc 切片
 - 浏览器双路径实测（dev 4321）：
-  - 路径 A（macOS 默认）：_*fonts.g*
-    外链请求 0 个_*；Archivo 单文件同域加载且可变字重生效（400/500/600/700 四级宽度单调递增）；衬线 webfont 不下载（Songti
+  - 路径 A（macOS 默认）：**fonts.g\* 外链请求 0 个**；Archivo 单文件同域加载且可变字重生效（400/500/600/700 四级宽度单调递增）；衬线 webfont 不下载（Songti
     SC 命中，serifLoaded=false）——苹果用户零额外体积
   - 路径 B（模拟无 Songti 设备）：document.fonts.load 强制走 webfont，13 个切片约 407KB 按需下载；canvas 像素对比「时」字——Noto
     Serif SC 与 Songti
@@ -2339,5 +2382,5 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 
 ### Notes for Next Session
 
-- feature_list.json 本分支新增 feat-040（feat-039 已被未合并的 typography 分支占用）；两分支都各自在文件尾追加条目，合并时二选一顺序并入、保留两条即可
-- docs/typography-audit-2026-10-16.md 在 typography 分支上，其「已知边界」节（宋体零下载的跨平台代价）随本 PR 合并后已过时，合并完需回填 webfont 方案结论
+- feature_list.json 本分支新增 feat-040，与 typography 分支的 feat-039 尾部冲突已按两条并存解决
+- docs/typography-audit-2026-10-16.md 的「已知边界」节已随本次合并回填 webfont 落地结论

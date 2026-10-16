@@ -184,7 +184,6 @@ const latestId = editions[0]?.id;
     min-height: 100vh;
     background: var(--background);
     padding-top: 70px;
-    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 活动介绍 —— */
@@ -210,10 +209,10 @@ const latestId = editions[0]?.id;
   .hero-kicker {
     position: relative;
     margin: 0 0 18px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--link);
   }
@@ -221,6 +220,8 @@ const latestId = editions[0]?.id;
   .hero-title {
     position: relative;
     margin: 0 0 14px;
+    /* 与各期文章页大标题同一宋体语言（GalleryStory .hero-title） */
+    font-family: var(--font-serif-song);
     font-size: clamp(2.1rem, 5vw, 3.2rem);
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -247,10 +248,11 @@ const latestId = editions[0]?.id;
     position: relative;
     margin: 0 auto;
     max-width: 560px;
-    font-size: 14.5px;
-    line-height: 2;
+    /* 导语为多句长段：CJK 两端对齐会拉出不均字距（观感拥挤），改居中随 hero 同轴 */
+    font-size: 15.5px;
+    line-height: 2.1;
     color: var(--muted-foreground);
-    text-align: justify;
+    text-align: center;
   }
 
   /* —— 往期各期 —— */
@@ -277,7 +279,7 @@ const latestId = editions[0]?.id;
 
   .editions-en {
     margin-left: 6px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 0.65em;
     font-weight: 600;
     letter-spacing: 0.3em;
@@ -304,7 +306,7 @@ const latestId = editions[0]?.id;
 
   .shelf-year {
     margin: 0;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -344,7 +346,7 @@ const latestId = editions[0]?.id;
     padding: 5px 14px;
     border: 1px solid var(--divider);
     border-radius: 999px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -590,7 +592,7 @@ const latestId = editions[0]?.id;
     align-items: baseline;
     justify-content: space-between;
     gap: 10px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 9.5px;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -629,7 +631,7 @@ const latestId = editions[0]?.id;
   }
 
   .book-cta {
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-weight: 600;
     color: var(--link);
     opacity: 0;

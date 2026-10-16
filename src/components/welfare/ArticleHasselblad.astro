@@ -157,7 +157,6 @@ const adjacent =
     /* 头版、正文、图组共用左基线；超宽屏容器居中 */
     --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
     /* 与画册模板一致的字体体系：标题/正文衬线，辅助行 Archivo 无衬线 */
-    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 居中头版 —— */
@@ -170,7 +169,7 @@ const adjacent =
 
   .hero-kicker {
     margin: 0 0 24px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.34em;
@@ -202,7 +201,7 @@ const adjacent =
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12.5px;
     letter-spacing: 0.08em;
     color: var(--muted-foreground);
@@ -250,7 +249,7 @@ const adjacent =
 
   .pull-quote figcaption {
     margin-top: 12px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12.5px;
     letter-spacing: 0.1em;
     color: var(--muted-foreground);
@@ -258,7 +257,7 @@ const adjacent =
 
   /* —— 正文：文字窄列居中，衬线（与站内文章一致） —— */
   .welfare-prose {
-    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+    font-family: var(--font-serif-song);
     font-size: 16px;
     line-height: 2.1;
     color: var(--foreground);
@@ -364,7 +363,7 @@ const adjacent =
   .welfare-prose :global(p:has(> img) + p em) {
     display: block;
     font-style: normal;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.06em;
     line-height: 1.8;
@@ -389,7 +388,7 @@ const adjacent =
   .side-kicker {
     display: block;
     margin: 0 0 16px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.28em;
@@ -452,7 +451,7 @@ const adjacent =
     align-items: center;
     gap: 6px;
     margin-top: 22px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.1em;
