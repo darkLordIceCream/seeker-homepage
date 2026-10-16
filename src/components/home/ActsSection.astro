@@ -359,21 +359,40 @@ const events: Act[] = [
       padding-bottom: 30px;
     }
 
+    /* —— 移动端微重叠：下一张卡只压住白框下缘 + 阴影（12px 重叠 + 旋转下探
+       ≤2.6px，均落在标题文字下方），标题区（距卡底 18px 起）完整可见 —— */
     .stack-card {
       width: min(86%, 380px);
-    }
-
-    .stack-card {
-      width: min(86%, 380px);
+      padding-bottom: 64px; /* 56→64：加高标题区，容下纵向双行标题 */
+      /* 旋转降为 1/4（≤1°）并抵消 ±dy 偏移：内联 style 无法只覆盖变量，整条 transform 覆盖 */
+      transform: rotate(calc(var(--rot) * 0.25));
     }
 
     .stack-card:nth-child(n + 2) {
       margin-left: 0;
-      margin-top: -34px;
+      margin-top: -12px;
     }
 
     .stack-card:nth-child(n + 3) {
-      margin-top: -30px;
+      margin-top: -12px;
+    }
+
+    /* 触屏无 hover，弹出位移不可感知且上提会压住上一张标题：
+       移动端取消位移，保留抬升阴影作为「当前卡」暗示 */
+    .stack-card.active {
+      transform: rotate(calc(var(--rot) * 0.25));
+      box-shadow: var(--paper-shadow-lift);
+    }
+
+    .stack-meta {
+      bottom: 18px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .stack-meta strong {
+      white-space: normal;
     }
 
     /* 七周年条改纵向堆叠：横排时中间标题体（flex:1 basis 0）会被
