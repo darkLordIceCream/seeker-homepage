@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-10-15 **Branch:** fix/dark-small-text-contrast **Active
-Feature:**
-深色模式蓝色小字对比度修复（新增 --link 语义令牌），init.sh 全绿 + 浏览器双主题截图验证通过，本地提交待合并
+**Last Updated:** 2026-10-16 **Branch:** refactor/story-of-time-typography
+**Active Feature:**
+《时间的故事》字体使用审计与整改（导语去 justify 改居中 + 宋体/Archivo 栈收敛为 global.css 唯一变量），init.sh 全绿 + 浏览器截图验证通过，本地提交待合并
 
 ## Status
 
@@ -2295,3 +2295,45 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 7 周年板块（--anniv-accent
   #2e86de 的常暗页面）存在同类低对比小字，属独立设计体系本次未动，如需统一提亮单独开事项
 - feature_list.json 已新增 feat-038
+
+## 会话记录（《时间的故事》字体审计与整改，2026-10-16）
+
+### 交付（分支 refactor/story-of-time-typography，基于 main 328309a）
+
+- 用户要求排查 /activities/story-of-time/ 与文章页字体使用：导语段落「略显拥挤」+ 担心页面超三种字体
+- **审计结论**（完整报告 `docs/typography-audit-2026-10-16.md`）：
+  - 两页均恰好 3 族（系统无衬线打底 /
+    Archivo 辅助行 / 宋体衬线标题正文），未超标，符合 2026-08-30 杂志式 pairing 约定
+  - 拥挤根因：`.hero-desc` 14.5px + `text-align: justify` +
+    560px 窄版心，CJK 两端对齐字距不匀
+  - 真正的乱源是 4 处不一致：主页大标题无衬线 vs 文章页宋体；`--font-serif-song`
+    7 文件重复定义 + `--anniv-serif`
+    第 8 套近似变量；Archivo 栈两种写法（`'Archivo', sans-serif`
+    的中文在非苹果设备落浏览器默认 sans）；`.font-display` 死代码 +
+    Archivo 无 preconnect
+- **整改**（用户确认三决策：导语居中 / 主页标题改宋体 / 全站收敛）：
+  - `.hero-desc`：justify→center、14.5→15.5px、行高 2→2.1
+  - 主页 `.hero-title` 加
+    `var(--font-serif-song)`（渐变 accent 保留）；hero-kicker 字距 0.32em→0.22em 与文章页统一
+  - global.css `:root` 新增 `--font-serif-song` /
+    `--font-archivo`（含完整中文回退）唯一定义；`--anniv-serif`
+    改指 var；删 7 处页面级重复定义；删 `.font-display`
+  - 全站 sed 机械替换：106 处 Archivo 字面量 +
+    Hasselblad/ActsSection 宋体字面量 → var() 引用（27 文件）
+  - Layout.astro head 加 Google Fonts preconnect（fonts.googleapis/gstatic）
+- 已知边界（未整改，报告备查）：宋体栈中 Noto Serif
+  SC 为名义回退无 webfont，无宋体系统（Android）会退黑体渲染；跨平台一致需中文 webfont 子集化（可参照水印工坊 noto-sans-sc-300-subset 做法）
+
+### Evidence
+
+- grep 断言：`font-family: 'Archivo'` / `font-family: 'Songti SC'`
+  字面量全站零残留；`--font-serif-song:` 定义仅 global.css 一处
+- ./init.sh 全绿：type-check 0 错误、lint 0 错误 65
+  warning（与基线一致；期间 preconnect 触发 3 个 astro/sort-attributes 已 eslint
+  --fix 修复）、79 页构建
+- 浏览器实测（dev
+  4321 截图）：活动主页导语居中字距均匀不再拥挤、大标题宋体化与文章页同语言；文章页零回归；首页七周年条宋体（--anniv-serif→var 链路）正常
+
+### Notes for Next Session
+
+- feature_list.json 已新增 feat-039；报告与整改同分支两个 commit，停在本地待用户确认后走 PR

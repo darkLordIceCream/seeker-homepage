@@ -300,6 +300,14 @@
       "dependencies": ["feat-029"],
       "status": "done",
       "evidence": "./init.sh 全绿（type-check 0 错误、lint 0 错误、79 页构建）；浏览器实测深色首页「全部活动 →」/七周年条小字/story-of-time hero-kicker 清晰可读（#2e86de→#8fc9ff，4.6:1→10:1），浅色全站零回归；分支 fix/dark-small-text-contrast 本地提交"
+    },
+    {
+      "id": "feat-039",
+      "name": "《时间的故事》字体审计与整改（导语排版 + 全站字体栈收敛）",
+      "description": "审计 /activities/story-of-time/ 与文章页字体使用（报告 docs/typography-audit-2026-10-16.md）：两页均 3 字体族未超标；导语拥挤根因为 justify+窄版心。整改：①.hero-desc 去 justify 改居中 15.5px/2.1；②主页大标题改宋体与文章页统一、kicker 字距对齐；③宋体/Archivo 栈收敛为 global.css :root 唯一变量（--font-serif-song/--font-archivo），删 7 处重复定义与 .font-display 死代码，--anniv-serif 改指 var；④全站 106 处 Archivo 字面量与宋体字面量统一 var() 引用（修复非苹果设备中文字形落错）；⑤Layout 加 Google Fonts preconnect",
+      "dependencies": ["feat-029"],
+      "status": "done",
+      "evidence": "grep 断言字面量零残留、变量定义仅 global.css 一处；./init.sh 全绿（0 错误、65 存量 warning、79 页）；浏览器截图：主页导语居中不拥挤、大标题宋体与文章页同语言、文章页与首页七周年条零回归；分支 refactor/story-of-time-typography 本地提交"
     }
   ]
 }

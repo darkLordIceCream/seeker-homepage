@@ -52,6 +52,15 @@
   --seeker-sky: #2e86de;
   --seeker-pale-blue: #c7e2f6;
 
+  /* —— 字体体系（全站唯一定义处，页面/组件一律 var() 引用）—— */
+  /* 宋体衬线：标题/引言/正文叙事。系统字体零下载；栈中 Noto Serif SC 仅为名义回退（无 webfont 支撑） */
+  --font-serif-song:
+    'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
+  /* Archivo：英文眉标/meta/数字辅助行。中文回退显式跟随站内系统栈（修复非苹果设备落到浏览器默认 sans） */
+  --font-archivo:
+    'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+
   /* —— Seeker Light（纸张 + 墨水 + 蓝色编辑标记）—— */
   --background: #f7fafd; /* 冷蓝纸 */
   --foreground: #14283d; /* 墨蓝灰，非纯黑 */
@@ -201,15 +210,6 @@ html {
   html {
     scroll-behavior: auto;
   }
-}
-
-.font-display {
-  font-family:
-    'Archivo',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
 }
 
 /* —— 区块骨架：每屏一整屏，顶部 padding 避开固定导航 —— */
@@ -398,7 +398,7 @@ html.js .reveal.in-view {
   --anniv-accent: #2e86de; /* Sky 光：与 Logo 电光蓝同源 */
   --anniv-accent-soft: rgba(46, 134, 222, 0.14);
   --anniv-error: #e88080;
-  --anniv-serif: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+  --anniv-serif: var(--font-serif-song); /* 与主站宋体栈同源 */
 
   /* 地图（MapWall NIGHT 蓝色光点 / PAPER 墨点共用色点） */
   --anniv-map-bg: #04101e;

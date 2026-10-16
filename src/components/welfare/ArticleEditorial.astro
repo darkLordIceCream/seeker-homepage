@@ -157,7 +157,6 @@ const titleLines =
     color: var(--foreground);
     /* 头版与正文共用的左基线：小屏 9vw（往版心收），超宽屏容器居中 */
     --edge: max(9vw, calc((100vw - 1360px) / 2 + 56px));
-    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 头版 —— */
@@ -176,7 +175,7 @@ const titleLines =
 
   .hero-kicker {
     margin: 0 0 26px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.34em;
@@ -214,7 +213,7 @@ const titleLines =
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12.5px;
     letter-spacing: 0.06em;
     color: var(--muted-foreground);
@@ -283,7 +282,7 @@ const titleLines =
 
   .pull-quote figcaption {
     margin-top: 12px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12.5px;
     letter-spacing: 0.06em;
     color: var(--muted-foreground);
@@ -388,7 +387,7 @@ const titleLines =
   .welfare-prose :global(p:has(> img) + p em) {
     display: block;
     font-style: normal;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.05em;
     line-height: 1.8;
@@ -407,7 +406,7 @@ const titleLines =
   .side-kicker {
     display: block;
     margin: 0 0 14px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.28em;
@@ -475,7 +474,7 @@ const titleLines =
     align-items: center;
     gap: 6px;
     margin-top: 14px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.1em;

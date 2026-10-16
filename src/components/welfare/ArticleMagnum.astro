@@ -162,7 +162,6 @@ const adjacent =
     color: var(--foreground);
     /* 头版居中细列 740px；宽幅媒体用 edge；正文列随大 media 出血共用左基线 */
     --edge: max(6vw, calc((100vw - 1360px) / 2 + 56px));
-    --font-serif-song: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', Georgia, serif;
   }
 
   /* —— 居中细列头版 —— */
@@ -175,7 +174,7 @@ const adjacent =
 
   .hero-kicker {
     margin: 0 0 26px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.22em;
@@ -207,7 +206,7 @@ const adjacent =
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -315,7 +314,7 @@ const adjacent =
   .welfare-prose :global(p:has(> img) + p em) {
     display: block;
     font-style: normal;
-    font-family: 'Archivo', -apple-system, sans-serif;
+    font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.05em;
     line-height: 1.8;
@@ -370,7 +369,7 @@ const adjacent =
   .next-kicker {
     display: block;
     margin-bottom: 12px;
-    font-family: 'Archivo', sans-serif;
+    font-family: var(--font-archivo);
     font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.28em;

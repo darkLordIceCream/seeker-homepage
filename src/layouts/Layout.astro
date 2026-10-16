@@ -79,6 +79,9 @@ const {
 
 <html lang="zh-CN">
   <head>
+    <!-- global.css 内以 @import 加载 Google Fonts Archivo：提前建连，避免 CSS 解析后再串行发现字体源 -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
     <SEOHead description={description} image={image} title={title} />
     <slot name="head" />
   </head>
