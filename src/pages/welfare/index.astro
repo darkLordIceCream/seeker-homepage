@@ -280,11 +280,21 @@ const fmtDate = (date: Date) =>
     }
 
     /* —— 移动端微重叠：下一张卡只压住白框下缘 + 阴影（12px 重叠 + 旋转下探
-       ≤2.6px，均落在标题文字下方），标题区（距卡底 18px 起）完整可见 —— */
+       ≤2.6px，均落在标题文字下方），标题区（距卡底 18px 起）完整可见；
+       卡片 ±14px 左右交替错开，竖向瀑布式垂落 —— */
     .stack-card {
+      --sx: 0px; /* 左右错开量，由 nth-child 交替取值 */
       padding-bottom: 64px; /* 56→64：加高标题区，容下纵向双行标题 */
       /* 旋转降为 1/4（≤1°）并抵消 ±dy 偏移：内联 style 无法只覆盖变量，整条 transform 覆盖 */
-      transform: rotate(calc(var(--rot) * 0.25));
+      transform: rotate(calc(var(--rot) * 0.25)) translateX(var(--sx));
+    }
+
+    .stack-card:nth-child(odd) {
+      --sx: -14px;
+    }
+
+    .stack-card:nth-child(even) {
+      --sx: 14px;
     }
 
     .stack-card + .stack-card {
@@ -295,7 +305,7 @@ const fmtDate = (date: Date) =>
     /* 触屏无 hover，弹出位移不可感知且上提会压住上一张标题：
        移动端取消位移，保留抬升阴影作为「当前卡」暗示 */
     .stack-card.active {
-      transform: rotate(calc(var(--rot) * 0.25));
+      transform: rotate(calc(var(--rot) * 0.25)) translateX(var(--sx));
       box-shadow: var(--paper-shadow-lift);
     }
 
