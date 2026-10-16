@@ -86,11 +86,7 @@ const {
     <!-- 预载 Archivo 可变字体（400-700 全档同文件，眉标/导航/数字的主力字体）；
          字体即使同域也必须 crossorigin。Archivo 已自托管，无需 Google Fonts preconnect -->
     <link
-      href="/fonts/archivo/archivo-latin.woff2"
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      crossorigin
+      as="font"       crossorigin       href="/fonts/archivo/archivo-latin.woff2"       rel="preload"       type="font/woff2"
     />
     <SEOHead description={description} image={image} title={title} />
     <slot name="head" />
