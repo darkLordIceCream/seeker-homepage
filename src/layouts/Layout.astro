@@ -1,5 +1,9 @@
 ---
 import '@/styles/global.css';
+// 中文衬线 webfont（unicode-range 切片，按页面用字按需下载）：
+// 苹果设备字体栈命中原生 Songti SC 不下载；安卓/Windows 无系统衬线，落到这两档
+import '@fontsource/noto-serif-sc/400.css';
+import '@fontsource/noto-serif-sc/700.css';
 import SEOHead from '../components/SEOHead.astro';
 
 interface Props {
@@ -79,6 +83,11 @@ const {
 
 <html lang="zh-CN">
   <head>
+    <!-- 预载 Archivo 可变字体（400-700 全档同文件，眉标/导航/数字的主力字体）；
+           字体即使同域也必须 crossorigin -->
+    <link
+      as="font"       crossorigin       href="/fonts/archivo/archivo-latin.woff2"       rel="preload"       type="font/woff2"
+    />
     <SEOHead description={description} image={image} title={title} />
     <slot name="head" />
   </head>

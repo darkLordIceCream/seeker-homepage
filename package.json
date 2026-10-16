@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^7.0.1",
+    "@fontsource/noto-serif-sc": "^5.3.1",
     "@radix-ui/react-dropdown-menu": "^2.1.25",
     "@radix-ui/react-slot": "^1.4.0",
     "@tailwindcss/vite": "^4.3.3",
