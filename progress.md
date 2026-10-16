@@ -2399,7 +2399,7 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
     旋转降为 1/4（≤1°）并抵消 ±dy——rot/dy 是内联 style 只能整条 transform 覆盖
   - padding-bottom 56→64px 加高标题区；.stack-meta 纵向两行 + bottom
     18px + 标题去 nowrap（修掉「Seeker公益 · 带上她的…」截断）
-  - .active 移动端取消弹出位移（触屏不可感知且上提会压住上一张标题），保留抬升阴影
+  - .active 移动端取消弹出位移（触屏不可感知且上提会压住上一张标题），保留抬升阴影（**后随用户反馈改为触屏两段式点按弹出，见下**）
   - 几何安全边距：覆盖 reach = 12px 重叠 + 2.6px 旋转下探 = 14.6px < 标题 18px
   - 顺带：/welfare/
     hero 导语 justify 拥挤（与 story-of-time 同款）按已确认配方修复
@@ -2414,3 +2414,16 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 ### Notes for Next Session
 
 - feature_list.json 已新增 feat-041
+
+### 追加：触屏两段式点按弹出（用户反馈「保留手指点击之后的卡片弹出动画」）
+
+- 约束：卡片是链接，触屏单击立即跳转、动画不可见 → 两段式点按：第一段点未弹出的卡 preventDefault 并播放弹出动画（转正 +
+  scale
+  1.03 + 抬升阴影，常驻弹出态），再点已弹出的卡才进入；初始 active 卡一次点按直达
+- 弹出几何：不做上提位移——scale 1.03 顶边抬升 ≈4.4px，重叠 reach = 12+4.4 =
+  16.4px < 标题 18px 安全线；rotate 归零后旋转下探归零
+- 触屏判定：pointerdown 的 pointerType !==
+  'mouse' 置 touchMode——安卓点按会先派发 mouseenter/focus 再 click，不拦截会提前置 active 穿透两段式；桌面 hover/键盘行为零改动；click 处理器对 mouse 一律放行
+- 验证：合成触屏序列断言——第一段 prevented=true +
+  active 切换 ✓、第二段 prevented=false（放行跳转）✓；用户真机连续两次落在追光之旅页即两段式真实闭环
+- lint 曾报 4 个 curly 错误（单行 if），已补花括号；init.sh 全绿
