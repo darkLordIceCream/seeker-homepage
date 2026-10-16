@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-10-15 **Branch:** fix/dark-small-text-contrast **Active
-Feature:**
-深色模式蓝色小字对比度修复（新增 --link 语义令牌），init.sh 全绿 + 浏览器双主题截图验证通过，本地提交待合并
+**Last Updated:** 2026-10-16 **Branch:** feat/webfont-selfhost **Active
+Feature:** Webfont 双方案落地（Archivo 自托管可变字体 + Noto Serif
+SC 中文衬线 webfont），init.sh 全绿 + 浏览器双路径实测通过，本地提交待合并
 
 ## Status
 
@@ -2295,3 +2295,49 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 7 周年板块（--anniv-accent
   #2e86de 的常暗页面）存在同类低对比小字，属独立设计体系本次未动，如需统一提亮单独开事项
 - feature_list.json 已新增 feat-038
+
+## 会话记录（Webfont 双方案：Archivo 自托管 + 中文衬线 webfont，2026-10-16）
+
+### 背景（承接上一节字体审计的跨平台调研）
+
+- 调研确认三类不一致：①宋体衬线栈在安卓（原生只有 Noto Sans
+  CJK，serif 中文按黑体渲染）与 Windows（落 SimSun，无真粗体、伪加粗发虚）断裂，仅苹果系完整；②Archivo 走 fonts.googleapis.com，中国大陆被阻断（受众为国内微信生态）；③swap
+  FOUT、text-wrap: pretty 降级等轻微项
+- 用户决策：方案①②都做（安卓移动端占比高）
+
+### 交付（分支 feat/webfont-selfhost，基于 main）
+
+- **Archivo 自托管**：从 Google Fonts CSS
+  API 抓 latin 子集——发现 Archivo 是可变字体，**一个 34KB
+  woff2 覆盖全部字重**（fontTools 验证 fvar
+  wght 轴 100-900）。global.css 删 @import 外链，改为单条 @font-face（font-weight:
+  400 700 区间声明）；Layout
+  preload 该文件（字体同域也必须 crossorigin）。附带修正：24 处继承 400 的 Archivo 元素此前被 Google 的 500 顶位，现在真正拿到 400
+- **Noto Serif SC webfont**：pnpm add
+  @fontsource/noto-serif-sc（unicode-range 切片，与 Google
+  Fonts 同源切片），Layout 引入 400/700 两档；字体栈零改动——Songti
+  SC 仍排首（苹果零下载），安卓/Windows 落到 webfont。归一 SharedRoad
+  .sr-card-title 600→700（全站唯一 600 衬线，砍掉 600 档省 ~120 切片）
+- 字体文件经 npm 依赖 +
+  Vite 构建复制进 dist，仓库不入字体文件；Pages 同域分发无 CORS 问题
+
+### Evidence
+
+- ./init.sh 全绿：type-check 0 错误、lint 0 错误 65
+  warning（基线一致，preload 属性序已 eslint --fix）、79 页构建；dist 含 archivo
+  woff2 + 392 个 noto-serif-sc 切片
+- 浏览器双路径实测（dev 4321）：
+  - 路径 A（macOS 默认）：_*fonts.g*
+    外链请求 0 个_*；Archivo 单文件同域加载且可变字重生效（400/500/600/700 四级宽度单调递增）；衬线 webfont 不下载（Songti
+    SC 命中，serifLoaded=false）——苹果用户零额外体积
+  - 路径 B（模拟无 Songti 设备）：document.fonts.load 强制走 webfont，13 个切片约 407KB 按需下载；canvas 像素对比「时」字——Noto
+    Serif SC 与 Songti
+    SC 渲染不同、与 sans 不同，证明安卓/Windows 将真实命中衬线
+  - 文章页截图：macOS 视觉零回归
+- ⚠️ 提醒：Astro 7 dev 守护进程会常驻 4321（pnpm
+  dev 包装层被杀后仍存活），重启用 astro dev stop
+
+### Notes for Next Session
+
+- feature_list.json 本分支新增 feat-040（feat-039 已被未合并的 typography 分支占用）；两分支都各自在文件尾追加条目，合并时二选一顺序并入、保留两条即可
+- docs/typography-audit-2026-10-16.md 在 typography 分支上，其「已知边界」节（宋体零下载的跨平台代价）随本 PR 合并后已过时，合并完需回填 webfont 方案结论
