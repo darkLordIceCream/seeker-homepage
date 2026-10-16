@@ -1,5 +1,9 @@
 ---
 import '@/styles/global.css';
+// 中文衬线 webfont（unicode-range 切片，按页面用字按需下载）：
+// 苹果设备字体栈命中原生 Songti SC 不下载；安卓/Windows 无系统衬线，落到这两档
+import '@fontsource/noto-serif-sc/400.css';
+import '@fontsource/noto-serif-sc/700.css';
 import SEOHead from '../components/SEOHead.astro';
 
 interface Props {
@@ -79,9 +83,15 @@ const {
 
 <html lang="zh-CN">
   <head>
-    <!-- global.css 内以 @import 加载 Google Fonts Archivo：提前建连，避免 CSS 解析后再串行发现字体源 -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+    <!-- 预载 Archivo 可变字体（400-700 全档同文件，眉标/导航/数字的主力字体）；
+         字体即使同域也必须 crossorigin。Archivo 已自托管，无需 Google Fonts preconnect -->
+    <link
+      href="/fonts/archivo/archivo-latin.woff2"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <SEOHead description={description} image={image} title={title} />
     <slot name="head" />
   </head>

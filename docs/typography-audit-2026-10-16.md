@@ -47,8 +47,13 @@ max-width: 560px; /* 每行仅约 38 字 */
 | 6   | Archivo 经 CSS `@import` 加载,无 `preconnect`,浏览器解析到 CSS 才发现字体源,串行建连                                                                                                                           | 首屏字体交换(flash)与 LCP 略劣化 | `Layout.astro` head 加 `preconnect` 到 fonts.googleapis.com / fonts.gstatic.com                     |
 | 7   | 两页 hero-kicker 字距不一:主页 0.32em vs 文章页 0.22em(同一文案 SEEKER · STORY OF TIME)                                                                                                                        | 细节不齐                         | 主页统一为 0.22em                                                                                   |
 
-**已知边界(未整改,记录备查)**:宋体栈中的 `Noto Serif SC` / `Source Han Serif SC`
-只是名义回退,并没有 webfont 支撑——真正下载中文衬线字体需 1.5~8MB(此前已决策放弃)。无宋体的系统(Android 多数机型)会退到泛型 serif/黑体渲染,这是零下载方案的固有代价; 若未来要求跨平台一致的衬线观感,需引入中文 webfont 子集化方案(可参照水印工坊noto-sans-sc 子集的做法,按高频字裁剪)。
+**整改后续(2026-10-16
+webfont 双方案落地,feat-040)**:上表第 1、2 条不一致已解决——①`Noto Serif SC`
+从名义回退升级为真实 webfont(`@fontsource/noto-serif-sc`,unicode-range 切片按需下载):苹果设备仍命中原生 Songti
+SC 零下载,安卓(原生无中文衬线)/Windows(SimSun 伪粗体)落到 webfont,衬线画册语言全平台恢复;②Archivo 从 fonts.googleapis.com 外链(中国大陆被阻断)换为自托管可变字体(单个 34KB
+latin 子集 woff2 覆盖 400~700 全部字重,Layout
+preload,并补齐此前缺失的 400 字重)。验证与体积数据见 progress.md
+feat-040 记录与 PR #36。
 
 ## 四、整改后的全站字体架构
 

@@ -304,10 +304,18 @@
     {
       "id": "feat-039",
       "name": "《时间的故事》字体审计与整改（导语排版 + 全站字体栈收敛）",
-      "description": "审计 /activities/story-of-time/ 与文章页字体使用（报告 docs/typography-audit-2026-10-16.md）：两页均 3 字体族未超标；导语拥挤根因为 justify+窄版心。整改：①.hero-desc 去 justify 改居中 15.5px/2.1；②主页大标题改宋体与文章页统一、kicker 字距对齐；③宋体/Archivo 栈收敛为 global.css :root 唯一变量（--font-serif-song/--font-archivo），删 7 处重复定义与 .font-display 死代码，--anniv-serif 改指 var；④全站 106 处 Archivo 字面量与宋体字面量统一 var() 引用（修复非苹果设备中文字形落错）；⑤Layout 加 Google Fonts preconnect",
+      "description": "审计 /activities/story-of-time/ 与文章页字体使用（报告 docs/typography-audit-2026-10-16.md）：两页均 3 字体族未超标；导语拥挤根因为 justify+窄版心。整改：①.hero-desc 去 justify 改居中 15.5px/2.1；②主页大标题改宋体与文章页统一、kicker 字距对齐；③宋体/Archivo 栈收敛为 global.css :root 唯一变量（--font-serif-song/--font-archivo），删 7 处重复定义与 .font-display 死代码，--anniv-serif 改指 var；④全站 106 处 Archivo 字面量与宋体字面量统一 var() 引用（修复非苹果设备中文字形落错）；⑤Layout 加 Google Fonts preconnect（后被 feat-040 自托管取代移除）",
       "dependencies": ["feat-029"],
       "status": "done",
-      "evidence": "grep 断言字面量零残留、变量定义仅 global.css 一处；./init.sh 全绿（0 错误、65 存量 warning、79 页）；浏览器截图：主页导语居中不拥挤、大标题宋体与文章页同语言、文章页与首页七周年条零回归；分支 refactor/story-of-time-typography 本地提交"
+      "evidence": "grep 断言字面量零残留、变量定义仅 global.css 一处；./init.sh 全绿（0 错误、65 存量 warning、79 页）；浏览器截图：主页导语居中不拥挤、大标题宋体与文章页同语言、文章页与首页七周年条零回归"
+    },
+    {
+      "id": "feat-040",
+      "name": "Webfont 双方案：Archivo 自托管 + Noto Serif SC 中文衬线 webfont",
+      "description": "解决跨平台字体不一致：①Archivo 从 fonts.googleapis.com 外链（大陆被阻断）换为自托管可变字体——单个 34KB latin 子集 woff2 覆盖 400-700 全部字重（fvar 轴验证），单条 @font-face 区间声明 + preload，附带修正 24 处继承 400 元素此前被 500 顶位；②引入 @fontsource/noto-serif-sc（unicode-range 切片）400/700 两档，字体栈零改动——苹果命中原生 Songti SC 零下载，安卓（原生无中文衬线、serif 按黑体渲染）/Windows（SimSun 伪粗体）落到 webfont，文章页衬线画册语言全平台恢复；SharedRoad 卡片标题 600→700 归一衬线字重档位",
+      "dependencies": ["feat-029", "feat-039"],
+      "status": "done",
+      "evidence": "./init.sh 全绿（0 错误、65 存量 warning、79 页构建）；dist 含 archivo woff2 + 392 个切片；浏览器双路径实测：macOS 默认路径 fonts.g* 外链 0 个、Archivo 可变字重四级单调生效、衬线 webfont 零下载；强制 webfont 路径 13 切片约 407KB 按需加载、canvas 像素对比证明 Noto Serif SC 真实渲染（≠Songti、≠sans）；文章页 macOS 视觉零回归"
     }
   ]
 }
