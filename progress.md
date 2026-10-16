@@ -2,9 +2,10 @@
 
 ## Current State
 
-**Last Updated:** 2026-10-16 **Branch:** refactor/story-of-time-typography
-**Active Feature:**
-时间的故事排版整改 + 字体栈收敛（本分支已并入含 Webfont 双方案的最新 main），冲突已解、审计文档已回填，PR 审查合并中
+**Last Updated:** 2026-10-16 **Branch:** fix/mobile-stack-cards **Active
+Feature:**
+移动端堆叠卡片微重叠优化（首页活动区 + 公益主页——标题不再被遮挡，堆叠隐喻保留），init.sh 全绿 +
+390/1280 双端截图验证通过，本地提交待合并
 
 ## Status
 
@@ -2384,3 +2385,45 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 
 - feature_list.json 本分支新增 feat-040，与 typography 分支的 feat-039 尾部冲突已按两条并存解决
 - docs/typography-audit-2026-10-16.md 的「已知边界」节已随本次合并回填 webfont 落地结论
+
+## 会话记录（移动端堆叠卡片微重叠优化，2026-10-16）
+
+### 交付（分支 fix/mobile-stack-cards，基于 main）
+
+- 用户反馈：堆叠卡片的 hover 弹出在移动端不可感知，且堆叠遮挡卡片底部标题；要求调研并出报告（docs/mobile-stack-report.md，含 390px 取证截图 docs/img/）
+- 取证：390×844 实拍确认两页同病——首页「时间的故事」/公益主页《在遥远的地方》标题被下一张卡整张盖住；弹出态由 mouseenter/focus 驱动触屏不触发，只有渲染时写死的一张莫名弹出且标题单行截断
+- 用户选定**微重叠方案**（保留堆叠隐喻，重叠只落白框下缘；平铺/横滑两案被否）
+- 整改（全部收在 @media max-width:768px，桌面逐字节不变；两组件同配方）：
+  - 重叠 -34/-30px → -12px（只压白框下缘 + 阴影）
+  - `transform: rotate(calc(var(--rot) * 0.25))`
+    旋转降为 1/4（≤1°）并抵消 ±dy——rot/dy 是内联 style 只能整条 transform 覆盖
+  - padding-bottom 56→64px 加高标题区；.stack-meta 纵向两行 + bottom
+    18px + 标题去 nowrap（修掉「Seeker公益 · 带上她的…」截断）
+  - .active 移动端取消弹出位移（触屏不可感知且上提会压住上一张标题），保留抬升阴影（**后随用户反馈改为触屏两段式点按弹出，见下**）
+  - 几何安全边距：覆盖 reach = 12px 重叠 + 2.6px 旋转下探 = 14.6px < 标题 18px
+  - 顺带：/welfare/
+    hero 导语 justify 拥挤（与 story-of-time 同款）按已确认配方修复
+- 三方案对比（平铺/微重叠/横滑）与被否原因见报告第二节
+
+### Evidence
+
+- ./init.sh 全绿：0 错误、65 存量 warning、79 页构建
+- 浏览器实测：390 视口两页标题完整可见（「时间的故事」「Seeker公益 · 带上她的眼睛」「第三季」「过春天」均不再遮挡/截断）、微堆叠质感保留；1280 桌面与改前一致（hover 堆叠原样）
+- 报告：docs/mobile-stack-report.md；报告与修复分两个 commit 停在分支
+
+### Notes for Next Session
+
+- feature_list.json 已新增 feat-041
+
+### 追加：触屏两段式点按弹出（用户反馈「保留手指点击之后的卡片弹出动画」）
+
+- 约束：卡片是链接，触屏单击立即跳转、动画不可见 → 两段式点按：第一段点未弹出的卡 preventDefault 并播放弹出动画（转正 +
+  scale
+  1.03 + 抬升阴影，常驻弹出态），再点已弹出的卡才进入；初始 active 卡一次点按直达
+- 弹出几何：不做上提位移——scale 1.03 顶边抬升 ≈4.4px，重叠 reach = 12+4.4 =
+  16.4px < 标题 18px 安全线；rotate 归零后旋转下探归零
+- 触屏判定：pointerdown 的 pointerType !==
+  'mouse' 置 touchMode——安卓点按会先派发 mouseenter/focus 再 click，不拦截会提前置 active 穿透两段式；桌面 hover/键盘行为零改动；click 处理器对 mouse 一律放行
+- 验证：合成触屏序列断言——第一段 prevented=true +
+  active 切换 ✓、第二段 prevented=false（放行跳转）✓；用户真机连续两次落在追光之旅页即两段式真实闭环
+- lint 曾报 4 个 curly 错误（单行 if），已补花括号；init.sh 全绿

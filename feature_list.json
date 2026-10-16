@@ -316,6 +316,14 @@
       "dependencies": ["feat-029", "feat-039"],
       "status": "done",
       "evidence": "./init.sh 全绿（0 错误、65 存量 warning、79 页构建）；dist 含 archivo woff2 + 392 个切片；浏览器双路径实测：macOS 默认路径 fonts.g* 外链 0 个、Archivo 可变字重四级单调生效、衬线 webfont 零下载；强制 webfont 路径 13 切片约 407KB 按需加载、canvas 像素对比证明 Noto Serif SC 真实渲染（≠Songti、≠sans）；文章页 macOS 视觉零回归"
+    },
+    {
+      "id": "feat-041",
+      "name": "移动端堆叠卡片微重叠优化（首页活动区 + 公益主页）",
+      "description": "移动端 ≤768px 堆叠卡片不再遮挡标题：重叠 -34/-30px → -12px（只压白框下缘+阴影）、旋转降为 1/4 并抵消 ±dy（transform 整条覆盖，绕过内联 style）、padding-bottom 64px 加高标题区、.stack-meta 改纵向两行去单行截断、.active 移动端取消弹出位移保留抬升阴影；几何安全边距 = 标题 18px − 覆盖 reach 14.6px ≥ 3.4px；顺带修复 /welfare/ hero 导语 justify 拥挤（与 story-of-time 同款配方）；桌面端零改动，hover 弹出交互原样",
+      "dependencies": ["feat-022"],
+      "status": "done",
+      "evidence": "报告 docs/mobile-stack-report.md（含 390px 取证截图 docs/img/）；./init.sh 全绿（0 错误、65 存量 warning）；390 视口实测两页标题完整可见且微堆叠保留、1280 桌面零回归；分支 fix/mobile-stack-cards 本地提交"
     }
   ]
 }

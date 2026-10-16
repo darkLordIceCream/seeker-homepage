@@ -104,7 +104,9 @@ const events: Act[] = [
 </section>
 
 <script>
-  // 突出状态跟随鼠标/焦点：放到哪张哪张突出，移开后保持，直到放到其他卡片
+  // 桌面：突出状态跟随鼠标/焦点，放到哪张哪张突出，移开后保持，直到放到其他卡片
+  // 触屏：两段式点按——第一段点按弹出卡片（不跳转，动画完整播放），再点已弹出的卡才进入；
+  // 初始渲染即 active 的卡一次点按直达
   const cards = document.querySelectorAll<HTMLElement>('[data-stack-card]');
 
   if (cards.length > 0) {
@@ -112,9 +114,30 @@ const events: Act[] = [
       cards.forEach(c => c.classList.toggle('active', c === card));
     };
 
+    // 触屏判定不能省：安卓点按会先派发 mouseenter/focus 再派发 click，
+    // 若放行会把卡片提前置为 active、两段式被穿透
+    let touchMode = false;
+
     cards.forEach(card => {
-      card.addEventListener('mouseenter', () => setActive(card));
-      card.addEventListener('focus', () => setActive(card));
+      card.addEventListener('pointerdown', e => {
+        touchMode = e.pointerType !== 'mouse';
+      });
+      card.addEventListener('mouseenter', () => {
+        if (!touchMode) {
+          setActive(card);
+        }
+      });
+      card.addEventListener('focus', () => {
+        if (!touchMode) {
+          setActive(card);
+        }
+      });
+      card.addEventListener('click', e => {
+        if (touchMode && !card.classList.contains('active')) {
+          e.preventDefault();
+          setActive(card);
+        }
+      });
     });
   }
 </script>
@@ -359,21 +382,51 @@ const events: Act[] = [
       padding-bottom: 30px;
     }
 
+    /* —— 移动端微重叠：下一张卡只压住白框下缘 + 阴影（12px 重叠 + 旋转下探
+       ≤2.6px，均落在标题文字下方），标题区（距卡底 18px 起）完整可见；
+       卡片 ±14px 左右交替错开，竖向瀑布式垂落 —— */
     .stack-card {
+      --sx: 0px; /* 左右错开量，由 nth-child 交替取值 */
       width: min(86%, 380px);
+      padding-bottom: 64px; /* 56→64：加高标题区，容下纵向双行标题 */
+      /* 旋转降为 1/4（≤1°）并抵消 ±dy 偏移：内联 style 无法只覆盖变量，整条 transform 覆盖 */
+      transform: rotate(calc(var(--rot) * 0.25)) translateX(var(--sx));
     }
 
-    .stack-card {
-      width: min(86%, 380px);
+    .stack-card:nth-child(odd) {
+      --sx: -14px;
+    }
+
+    .stack-card:nth-child(even) {
+      --sx: 14px;
     }
 
     .stack-card:nth-child(n + 2) {
       margin-left: 0;
-      margin-top: -34px;
+      margin-top: -12px;
     }
 
     .stack-card:nth-child(n + 3) {
-      margin-top: -30px;
+      margin-top: -12px;
+    }
+
+    /* 触屏两段式点按的弹出：转正 + 1.03 放大 + 抬升阴影。不做上提位移——
+       scale 的顶边抬升 ≈4.4px，重叠 reach = 12+4.4 = 16.4px 仍 < 标题 18px
+       安全线（rotate 归零后旋转下探同步归零） */
+    .stack-card.active {
+      transform: translateX(var(--sx)) scale(1.03);
+      box-shadow: var(--paper-shadow-lift);
+    }
+
+    .stack-meta {
+      bottom: 18px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .stack-meta strong {
+      white-space: normal;
     }
 
     /* 七周年条改纵向堆叠：横排时中间标题体（flex:1 basis 0）会被
