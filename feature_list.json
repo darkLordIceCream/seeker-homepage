@@ -141,8 +141,8 @@
       "name": "小组活动页面",
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
-      "status": "in-progress",
-      "evidence": "《时间的故事》2021-2026 全部 65 期上线：/activities/story-of-time 书架页 + 各期画廊页；2026-09 九月篇（24 幅作品）随 feat/story-of-time-2026-09 分支上线，./init.sh 全绿（78 页构建）"
+      "status": "done",
+      "evidence": "《时间的故事》2021-2026 全部 65 期上线：/activities/story-of-time 书架页 + 各期画廊页；2026-09 九月篇（24 幅作品）已上线。2026-10-22 首页活动板块（ActsSection）按 huashu-design 两轮三方向门重设计上线：用户在第二轮现代视觉三稿（dir-4 哈苏一屏一图 / dir-5 Area17 模块网格 / dir-6 Locomotive 横滑画幅，design-demos/direction-approved.md 存原话）中选定 dir-4，并要求移动端由纵向堆叠改为横向滑动。落地：桌面满幅单图舞台 + 底部四等分标签兼 6s 自动轮换进度条（悬停交互区/离屏/reduced-motion 暂停，交叉淡入切换，七周年为深底排印幅）；移动端 ≤768px 同一组 DOM 变横向 snap 卡轨 + 圆点跟随；四个入口链接与 #activities 锚点不变，a11y（inert/aria-pressed/键盘可达）+ 深浅双主题核验通过。./init.sh 全绿（type-check 0 错 / lint 0 错 / 79 页构建），浏览器实测 1440 浅/深主题、1280×800、375 横滑（design-demos/verify/）。"
     },
     {
       "id": "feat-019",

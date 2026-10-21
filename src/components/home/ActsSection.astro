@@ -1,66 +1,100 @@
 ---
-// 首页第3层「活动」：拍立得照片堆——白框厚底照片卡错位叠放
-// hover 抽出转正；未落地的活动指向占位页，公益项目直达 /welfare/
+// 首页第3层「活动」：哈苏式「一屏一图」（direction-approved 2026-10-22）
+// 桌面：满幅单图舞台，底部四等分标签兼自动轮换进度条（悬停交互区/离屏暂停，reduced-motion 不轮换）；
+// 移动端：同一组卡片变为横向滑动卡轨（缩短纵向滑动距离，与书架页横滑手势一致），圆点跟随。
+// 四张卡片即四个入口链接；七周年为深底排印幅（无图）。层次：图 z0 → 暗角纱幕 ::after z1 → 文字/「07」 z2。
 import { getCollection } from 'astro:content';
 
-// 时间的故事卡封面跟随最新一期：构建期取 activities collection 中 order 最大的那期
-// （新增期数 md 即自动切换，无需手改本文件；与 /activities/story-of-time/ 的「新」标同源）
-const latestStory = (await getCollection('activities')).sort(
-  (a, b) => b.data.order - a.data.order,
-)[0];
-const storyCover = latestStory?.data.cover;
+// 时间的故事跟随最新一期：构建期取 activities collection 中 order 最大的那期
+// （新增期数 md 即自动切换，无需手改本文件；期数计数 = collection 全量）
+const stories = (await getCollection('activities')).sort((a, b) => b.data.order - a.data.order);
+const latestStory = stories[0];
+const storyCount = stories.length;
 
-// 追光之旅卡封面同理跟随最新一届：取 lightChasing collection 年份最大的总冠军图
+// 追光之旅跟随最新一届：取 lightChasing collection 年份最大的总冠军
 const latestChasing = (await getCollection('lightChasing')).sort(
   (a, b) => b.data.year - a.data.year,
 )[0];
-const chasingCover = latestChasing?.data.grandPrize.cover;
+const chasingYear = latestChasing?.data.year;
+const chasingPrize = latestChasing?.data.grandPrize;
+
+/** 舞台暗化档位：公益图高调逆光需要压得更暗保证白字 4.5:1 */
+type Dim = 'hi' | 'mid' | 'lo';
 
 type Act = {
+  id: string;
+  kicker: string;
   name: string;
-  desc: string;
-  tag: string;
+  fact: string;
+  cta: string;
   href: string;
-  rot: string;
-  dy: string;
-  /** 渐变占位（无真实配图时用） */
-  g?: string;
-  /** 真实封面图 */
   img?: string;
+  alt?: string;
+  dim: Dim;
+  seventh?: boolean;
 };
 
-const events: Act[] = [
+const acts: Act[] = [
   {
+    id: 'story',
+    kicker: 'SEEKER · STORY OF TIME',
     name: '时间的故事',
-    desc: '长期摄影企划',
-    tag: '长期企划',
+    fact: `2021 年起每月一期，已 ${storyCount} 期 · 最新一期「${
+      latestStory?.data.issue ?? ''
+    } · ${latestStory?.data.subtitle ?? ''}」`,
+    cta: '进入',
     href: '/activities/story-of-time/',
-    rot: '-4deg',
-    dy: '12px',
-    img: storyCover,
+    img: latestStory?.data.cover,
+    alt: `《时间的故事》${latestStory?.data.issue ?? ''}封面`,
+    dim: 'mid',
   },
   {
-    name: 'Seeker公益 · 带上她的眼睛',
-    desc: '山村中的摄影课',
-    tag: '公益项目',
+    id: 'welfare',
+    kicker: 'SEEKER · WELFARE',
+    name: '带上她的眼睛',
+    fact: '山村中的摄影课 · 公益项目',
+    cta: '进入',
     href: '/welfare/',
-    rot: '2.2deg',
-    dy: '-8px',
     img: 'https://r2.xn--seeker-ng2jm403afb4a.club/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
+    alt: '「带上她的眼睛」公益项目：山村里孩子们上摄影课',
+    dim: 'hi',
   },
   {
+    id: 'chasing',
+    kicker: 'SEEKER · CHASING THE LIGHT',
     name: '追光之旅 · 摄影大赛',
-    desc: '一年一度的追光者摄影大赛',
-    tag: '赛事',
+    fact: `一年一度的追光者摄影大赛 · ${chasingYear ?? ''} 总冠军《${
+      chasingPrize?.title ?? ''
+    }》${chasingPrize?.author ?? ''}`,
+    cta: '进入',
     href: '/activities/chasing-light/',
-    rot: '-1.4deg',
-    dy: '18px',
-    img: chasingCover,
+    img: chasingPrize?.cover,
+    alt: `${chasingYear ?? ''} 追光之旅总冠军作品《${chasingPrize?.title ?? ''}》`,
+    dim: 'lo',
+  },
+  {
+    id: 'seventh',
+    kicker: 'SEEKER · 2019—2026',
+    name: '七周年 · 光影七载，看见彼此',
+    fact: 'SEEKER 七年影像与故事档案',
+    cta: 'ENTER ARCHIVE',
+    href: '/7th/',
+    dim: 'lo',
+    seventh: true,
   },
 ];
+
+const tabLabel = (act: Act) =>
+  act.seventh ? '七周年' : (act.name.split(' · ')[0] ?? act.name);
+const tabIndexLabel = (act: Act, i: number) =>
+  act.seventh ? '07' : String(i + 1).padStart(2, '0');
 ---
 
-<section aria-labelledby="acts-title" class="section acts-section" id="activities">
+<section
+  aria-labelledby="acts-title"
+  class="section acts-section"
+  data-acts   id="activities"
+>
   <header class="acts-head">
     <h2 class="acts-title" id="acts-title">
       活动 <span class="acts-en">Activities</span>
@@ -68,391 +102,688 @@ const events: Act[] = [
     <a class="acts-link" href="/under-construction">全部活动 →</a>
   </header>
 
-  <div class="photo-stack">
-    {events.map((event, index) => (
-      <a
-        aria-label={`${event.name}：${event.desc}`}
-        class:list={['stack-card', { active: index === 1 }]}
-        data-stack-card
-        href={event.href}
-        style={`--rot:${event.rot};--dy:${event.dy}`}
-      >
-        <span
-          class:list={['stack-img', { 'ph-tile': !event.img }]}
-          style={event.img ? `background-image:url('${event.img}')` : `background:${event.g}`}
+  <div class="acts-stage" data-stage>
+    {
+      acts.map((act, i) => (
+        <a
+          aria-label={`${act.name}：${act.fact}`}
+          class:list={['act', { 'act--seventh': act.seventh, 'is-active': i === 0 }]}
+          data-act
+          data-dim={act.dim}
+          href={act.href}
         >
-          <span class="stack-tag">{event.tag}</span>
-        </span>
-        <span class="stack-meta">
-          <strong>{event.name}</strong>
-          <small>{event.desc}</small>
-        </span>
-      </a>
-    ))}
+          {act.img && (
+            <img
+              alt={act.alt ?? ''}
+              class="act-img"
+              decoding="async"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              src={act.img}
+            />
+          )}
+          {act.seventh && (
+            <span aria-hidden="true" class="act-num-wrap">
+              <span class="act-glow" />
+              <span class="act-num">07</span>
+            </span>
+          )}
+          <span class="act-body">
+            <span class="act-kicker">{act.kicker}</span>
+            <span class="act-name">{act.name}</span>
+            <span class="act-fact">{act.fact}</span>
+            <span class="act-enter">{act.cta}</span>
+          </span>
+        </a>
+      ))
+    }
   </div>
 
-  {/* 七周年特殊入口：Activities 中的非普通活动（理性入口），区别于右下角感性入口 */}
-  <a class="acts-anniv" href="/7th/" aria-label="七周年纪念册：光影七载，看见彼此">
-    <span class="acts-anniv-rule" aria-hidden="true"></span>
-    <span class="acts-anniv-no">07 / SEVEN YEARS</span>
-    <span class="acts-anniv-body">
-      <strong class="acts-anniv-title">七周年 · 光影七载，看见彼此。</strong>
-      <span class="acts-anniv-range">2019 — 2026 · SEEKER 七年影像与故事档案</span>
-    </span>
-    <span class="acts-anniv-cta">ENTER ARCHIVE →</span>
-  </a>
+  <nav aria-label="活动切换" class="acts-tabs">
+    {
+      acts.map((act, i) => (
+        <button
+          aria-pressed={i === 0 ? 'true' : 'false'}
+          class:list={['acts-tab', { 'is-active': i === 0 }]}
+          data-tab={i}
+          type="button"
+        >
+          <span aria-hidden="true" class="tab-ix">
+            {tabIndexLabel(act, i)}
+          </span>
+          <span class="tab-tx">{tabLabel(act)}</span>
+          <span aria-hidden="true" class="tab-bar" />
+        </button>
+      ))
+    }
+  </nav>
+
+  <div aria-hidden="true" class="acts-dots">
+    {acts.map((_, i) => (
+      <i class:list={['dot', { 'is-active': i === 0 }]} data-dot={i} />
+    ))}
+  </div>
 </section>
 
 <script>
-  // 桌面：突出状态跟随鼠标/焦点，放到哪张哪张突出，移开后保持，直到放到其他卡片
-  // 触屏：两段式点按——第一段点按弹出卡片（不跳转，动画完整播放），再点已弹出的卡才进入；
-  // 初始渲染即 active 的卡一次点按直达
-  const cards = document.querySelectorAll<HTMLElement>('[data-stack-card]');
+  // 桌面（>768px）：标签 hover/focus/click 切换当前幅；6s 自动轮换（离屏 / 指针悬在
+  // 标签或正文上 / 键盘焦点在板块内 / 读屏减动效偏好 → 暂停）。
+  // 移动端（≤768px）：同一组卡片改为横向滑动卡轨（CSS scroll-snap），圆点跟随，自动轮换关闭。
+  const section = document.querySelector<HTMLElement>('[data-acts]');
+  const stage = section?.querySelector<HTMLElement>('[data-stage]');
+  const cards = [...(stage?.querySelectorAll<HTMLElement>('[data-act]') ?? [])];
+  const tabs = [...(section?.querySelectorAll<HTMLButtonElement>('[data-tab]') ?? [])];
+  const dots = [...(section?.querySelectorAll<HTMLElement>('[data-dot]') ?? [])];
 
-  if (cards.length > 0) {
-    const setActive = (card: HTMLElement) => {
-      cards.forEach(c => c.classList.toggle('active', c === card));
+  if (section && stage && cards.length > 0 && tabs.length === cards.length) {
+    const desktop = matchMedia('(min-width: 769px)');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let cur = 0;
+    let acc = 0;
+    let last = 0;
+    let raf = 0;
+    let visible = false;
+
+    const show = (i: number) => {
+      cur = i;
+      acc = 0;
+      cards.forEach((card, k) => {
+        const on = k === i;
+        card.classList.toggle('is-active', on);
+        if (desktop.matches) {
+          card.toggleAttribute('inert', !on);
+          card.setAttribute('aria-hidden', String(!on));
+        } else {
+          card.removeAttribute('inert');
+          card.removeAttribute('aria-hidden');
+        }
+      });
+      tabs.forEach((tab, k) => {
+        tab.classList.toggle('is-active', k === i);
+        tab.setAttribute('aria-pressed', String(k === i));
+        if (k !== i) {tab.style.setProperty('--p', '0');}
+      });
     };
 
-    // 触屏判定不能省：安卓点按会先派发 mouseenter/focus 再派发 click，
-    // 若放行会把卡片提前置为 active、两段式被穿透
-    let touchMode = false;
+    const applyMode = () => {
+      if (desktop.matches) {
+        show(cur);
+      } else {
+        cards.forEach((card) => {
+          card.removeAttribute('inert');
+          card.removeAttribute('aria-hidden');
+        });
+      }
+    };
 
-    cards.forEach(card => {
-      card.addEventListener('pointerdown', e => {
-        touchMode = e.pointerType !== 'mouse';
-      });
-      card.addEventListener('mouseenter', () => {
-        if (!touchMode) {
-          setActive(card);
-        }
-      });
-      card.addEventListener('focus', () => {
-        if (!touchMode) {
-          setActive(card);
-        }
-      });
-      card.addEventListener('click', e => {
-        if (touchMode && !card.classList.contains('active')) {
-          e.preventDefault();
-          setActive(card);
-        }
-      });
+    tabs.forEach((tab, k) => {
+      ['pointerenter', 'focus', 'click'].forEach((ev) =>
+        tab.addEventListener(ev, () => show(k)),
+      );
     });
+
+    const startRaf = () => {
+      if (desktop.matches && !reduce.matches && raf === 0) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    const stopRaf = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
+    };
+
+    // 暂停条件：指针悬在标签/正文上，或键盘焦点在标签/当前卡内
+    const pointerPaused = () =>
+      section.querySelector('.acts-tabs:hover, .act.is-active .act-body:hover') !== null;
+    const focusPaused = () =>
+      section.querySelector('.acts-tabs :focus, .act.is-active :focus') !== null;
+
+    function tick(t: number) {
+      if (last > 0) {
+        const paused =
+          !visible ||
+          !desktop.matches ||
+          reduce.matches ||
+          pointerPaused() ||
+          focusPaused();
+        if (!paused) {
+          acc += t - last;
+          if (acc >= 6000) {
+            show((cur + 1) % cards.length);
+          } else {
+            tabs[cur]?.style.setProperty('--p', String(acc / 6000));
+          }
+        }
+      }
+      last = t;
+      raf = requestAnimationFrame(tick);
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry?.isIntersecting ?? false;
+        last = 0;
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(section);
+
+    desktop.addEventListener('change', () => {
+      applyMode();
+      if (desktop.matches) {
+        startRaf();
+      } else {
+        stopRaf();
+      }
+    });
+    startRaf();
+    applyMode();
+
+    // 移动端圆点跟随卡轨滚动
+    if (dots.length === cards.length) {
+      const dotIo = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) {continue;}
+            const i = cards.indexOf(entry.target as HTMLElement);
+            if (i >= 0) {
+              dots.forEach((dot, k) => dot.classList.toggle('is-active', k === i));
+            }
+          }
+        },
+        { root: stage, threshold: 0.6 },
+      );
+      cards.forEach((card) => dotIo.observe(card));
+    }
   }
 </script>
 
 <style>
   .acts-section {
-    background: var(--background);
-    padding-top: 88px;
+    /* 满幅舞台：顶掉 .section 的留白与顶部渐变分隔线，标题行由舞台内部让位 */
+    --head-space: 96px;
+    background: var(--anniv-bg);
+    padding: 0;
+    overflow: hidden;
   }
 
+  .acts-section::before {
+    display: none;
+  }
+
+  /* —— 顶部标题行：桌面悬在图上（白），移动端回落纸底 —— */
   .acts-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto 10px;
-  }
-
-  .acts-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--foreground);
-    margin: 0;
-    letter-spacing: 0.06em;
-  }
-
-  .acts-en {
-    font-family: var(--font-archivo);
-    font-size: 0.65em;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--muted-foreground);
-    margin-left: 6px;
-  }
-
-  .acts-link {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--link);
-    text-decoration: none;
-  }
-
-  .acts-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .acts-link:focus-visible {
-    outline: 2px solid var(--link);
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-
-  /* —— 拍立得照片堆 —— */
-  .photo-stack {
-    flex: 1;
+    position: absolute;
+    top: var(--head-space);
+    left: 0;
+    right: 0;
+    z-index: 6;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 0 36px;
-    min-height: 0;
-  }
-
-  .stack-card {
-    position: relative;
-    width: min(30%, 330px);
-    aspect-ratio: 4 / 3.9;
-    flex-shrink: 0;
-    background: var(--paper-face);
-    padding: 10px 10px 56px;
-    border-radius: 6px;
-    box-shadow: var(--paper-shadow);
-    transform: rotate(var(--rot)) translateY(var(--dy));
-    transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.35s ease;
-    text-decoration: none;
-  }
-
-  .stack-card:nth-child(n + 2) {
-    margin-left: -7%;
-  }
-
-  .stack-card:nth-child(2) {
-    z-index: 2;
-  }
-
-  /* 突出态由 .active 驱动（JS 跟随鼠标/焦点），移开后保持到下一张 */
-  .stack-card.active {
-    transform: rotate(0deg) translateY(calc(var(--dy) - 22px)) scale(1.06);
-    z-index: 10;
-    box-shadow: var(--paper-shadow-lift);
-  }
-
-  .stack-card:focus-visible {
-    outline: 2px solid var(--link);
-    outline-offset: 4px;
-  }
-
-  .stack-img {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    border-radius: 3px;
-  }
-
-  /* 真实封面图铺满拍立得相框 */
-  .stack-img[style*='background-image'] {
-    background-size: cover;
-    background-position: center;
-  }
-
-  .stack-tag {
-    align-self: flex-start;
-    margin: 10px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    /* 深色玻璃底：浅色照片上白字也可读 */
-    background: rgba(30, 34, 46, 0.42);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    font-family: var(--font-archivo);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
-  /* 拍立得下方白边：活动名 + 一句话 */
-  .stack-meta {
-    position: absolute;
-    left: 16px;
-    right: 12px;
-    bottom: 17px;
-    display: flex;
-    align-items: baseline;
     justify-content: space-between;
-    gap: 10px;
-  }
-
-  .stack-meta strong {
-    font-size: 15px;
-    color: var(--paper-ink);
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .stack-meta small {
-    font-size: 11px;
-    color: var(--paper-sub);
-    white-space: nowrap;
-  }
-
-  /* —— 七周年特殊块：暗房底片风格的编辑排版条，非普通活动卡 —— */
-  .acts-anniv {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.9rem 1.6rem;
-    max-width: 1200px;
-    width: 100%;
-    margin: 26px auto 0;
-    padding: 1.4rem 1.5rem 1.5rem;
-    /* 本条始终为夜色底（--anniv-bg 不随主站主题切换），accent 提亮一档
-       保证小字（07 / SEVEN YEARS、ENTER ARCHIVE）在深底上可读 */
-    --anniv-accent: #8fc9ff;
-    background:
-      radial-gradient(120% 200% at 85% -50%, color-mix(in srgb, var(--anniv-accent) 14%, transparent), transparent 55%),
-      var(--anniv-bg);
-    border: 1px solid var(--anniv-border);
-    text-decoration: none;
-    transition: border-color 0.25s ease;
-  }
-
-  .acts-anniv:hover {
-    border-color: color-mix(in srgb, var(--anniv-accent) 55%, transparent);
-  }
-
-  .acts-anniv-rule {
-    position: absolute;
-    top: 0;
-    left: 1.5rem;
-    right: 1.5rem;
-    height: 1px;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--anniv-accent) 60%, transparent), transparent 70%);
-  }
-
-  .acts-anniv-no {
-    font-family: var(--font-archivo);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.32em;
-    color: var(--anniv-accent);
-  }
-
-  .acts-anniv-body {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.4rem 1.2rem;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .acts-anniv-title {
-    font-family: var(--font-serif-song);
-    font-size: clamp(1.02rem, 2.4vw, 1.3rem);
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    padding: 0 clamp(24px, 4vw, 56px);
     color: var(--anniv-fg);
   }
 
-  .acts-anniv-range {
-    font-family: var(--font-archivo);
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    color: rgba(242, 240, 235, 0.55);
-  }
-
-  .acts-anniv-cta {
-    font-family: var(--font-archivo);
-    font-size: 0.74rem;
+  .acts-title {
+    margin: 0;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: 0.22em;
-    color: var(--anniv-accent);
-    white-space: nowrap;
+    letter-spacing: 0.3em;
+    color: inherit;
   }
 
+  .acts-en {
+    margin-left: 6px;
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: color-mix(in srgb, var(--anniv-fg) 72%, transparent);
+  }
+
+  .acts-link {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--anniv-fg);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color 0.3s,
+      border-color 0.3s;
+  }
+
+  .acts-link:hover,
+  .acts-link:focus-visible {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .acts-link:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+  }
+
+  /* —— 桌面舞台：一屏一图 —— */
+  .acts-stage {
+    position: absolute;
+    inset: 0;
+    background: var(--anniv-bg);
+  }
+
+  .act {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    will-change: opacity;
+  }
+
+  .act.is-active {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  .act-img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 暗角纱幕：在图之上、文字之下（每卡自带，移动端换轻遮罩） */
+  .act::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(52% 42% at 50% 47%, rgba(4, 16, 30, 0.5), rgba(4, 16, 30, 0) 100%),
+      radial-gradient(120% 95% at 50% 44%, rgba(4, 16, 30, 0) 40%, rgba(4, 16, 30, 0.58) 100%),
+      linear-gradient(to bottom, rgba(4, 16, 30, 0.58), rgba(4, 16, 30, 0) 17%),
+      linear-gradient(to top, rgba(4, 16, 30, 0.9), rgba(4, 16, 30, 0) 30%);
+  }
+
+  /* 按图曝光分档压暗：hi（高调图）> mid > lo */
+  .act[data-dim='hi'] .act-img {
+    filter: brightness(0.72) saturate(0.96);
+  }
+
+  .act[data-dim='mid'] .act-img {
+    filter: brightness(0.86) saturate(0.98);
+  }
+
+  .act[data-dim='lo'] .act-img {
+    filter: brightness(0.92);
+  }
+
+  /* 七周年：深底排印幅，无图 */
+  .act--seventh {
+    background: var(--anniv-bg);
+  }
+
+  .act-num-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .act-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(46% 40% at 50% 44%, rgba(46, 134, 222, 0.14), transparent 100%);
+  }
+
+  .act-num {
+    align-self: flex-start;
+    margin-top: 18vh;
+    font-family: var(--font-archivo);
+    font-size: clamp(96px, 12vw, 168px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(234, 244, 255, 0.5);
+  }
+
+  .act-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 clamp(24px, 6vw, 96px);
+    color: var(--anniv-fg);
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease;
+  }
+
+  .act.is-active .act-body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .act-kicker {
+    margin-bottom: clamp(14px, 2.4vh, 26px);
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    color: var(--seeker-pale-blue);
+  }
+
+  .act-name {
+    font-family: var(--font-serif-song);
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-shadow:
+      0 2px 34px rgba(4, 16, 30, 0.75),
+      0 1px 5px rgba(4, 16, 30, 0.45);
+    text-wrap: balance;
+  }
+
+  .act-fact {
+    margin-top: clamp(14px, 2.6vh, 26px);
+    max-width: 900px;
+    font-family: var(--font-archivo);
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    line-height: 1.7;
+    color: var(--anniv-fg-secondary);
+    text-shadow:
+      0 1px 22px rgba(4, 16, 30, 0.8),
+      0 1px 4px rgba(4, 16, 30, 0.5);
+    text-wrap: balance;
+  }
+
+  .act-enter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-top: clamp(20px, 4vh, 40px);
+    padding: 0 clamp(32px, 3.6vw, 52px);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    background: rgba(4, 16, 30, 0.12);
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    color: #fff;
+    transition:
+      background 0.35s,
+      color 0.35s,
+      border-color 0.35s;
+  }
+
+  .act:hover .act-enter,
+  .act:focus-visible .act-enter {
+    background: #fff;
+    border-color: #fff;
+    color: var(--seeker-navy);
+  }
+
+  .act:focus-visible {
+    outline: none;
+  }
+
+  .act.is-active:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -6px;
+  }
+
+  /* —— 底部标签行：四等分 + 自动轮换进度（桌面专属） —— */
+  .acts-tabs {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    display: flex;
+  }
+
+  .acts-tab {
+    position: relative;
+    flex: 1;
+    height: clamp(64px, 10vh, 92px);
+    padding: 18px 8px 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    font-family: var(--font-archivo);
+    color: rgba(234, 244, 255, 0.68);
+    transition: color 0.35s;
+  }
+
+  .acts-tab .tab-ix {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    line-height: 1.6;
+  }
+
+  .acts-tab .tab-tx {
+    font-family: var(--font-serif-song);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    line-height: 1.6;
+  }
+
+  .acts-tab:hover,
+  .acts-tab:focus-visible,
+  .acts-tab.is-active {
+    color: #fff;
+    outline: none;
+  }
+
+  .acts-tab:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+  }
+
+  .acts-tab .tab-bar {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #fff;
+    transform: scaleX(var(--p, 0));
+    transform-origin: left;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .acts-tab.is-active .tab-bar {
+    opacity: 1;
+  }
+
+  /* —— 移动端圆点（移动端专属） —— */
+  .acts-dots {
+    display: none;
+  }
+
+  /* ============ 移动端 ≤768px：同一组卡片变横向滑动卡轨 ============ */
   @media (max-width: 768px) {
-    .photo-stack {
-      flex-direction: column;
-      gap: 0;
-      padding-bottom: 30px;
+    .acts-section {
+      --head-space: 0px;
+      padding: 72px clamp(16px, 5vw, 24px) 56px;
     }
 
-    /* —— 移动端微重叠：下一张卡只压住白框下缘 + 阴影（12px 重叠 + 旋转下探
-       ≤2.6px，均落在标题文字下方），标题区（距卡底 18px 起）完整可见；
-       卡片 ±14px 左右交替错开，竖向瀑布式垂落 —— */
-    .stack-card {
-      --sx: 0px; /* 左右错开量，由 nth-child 交替取值 */
-      width: min(86%, 380px);
-      padding-bottom: 64px; /* 56→64：加高标题区，容下纵向双行标题 */
-      /* 旋转降为 1/4（≤1°）并抵消 ±dy 偏移：内联 style 无法只覆盖变量，整条 transform 覆盖 */
-      transform: rotate(calc(var(--rot) * 0.25)) translateX(var(--sx));
+    /* 移动端板块仍是深底色带：标题行回落到流内，沿用深底月光白令牌（不随主站主题切换） */
+    .acts-head {
+      position: static;
+      margin-bottom: 18px;
+      padding: 0;
+      color: var(--anniv-fg);
     }
 
-    .stack-card:nth-child(odd) {
-      --sx: -14px;
+    .acts-en {
+      color: var(--anniv-muted);
     }
 
-    .stack-card:nth-child(even) {
-      --sx: 14px;
+    .acts-link {
+      color: var(--anniv-accent);
     }
 
-    .stack-card:nth-child(n + 2) {
-      margin-left: 0;
-      margin-top: -12px;
+    .acts-link:hover,
+    .acts-link:focus-visible {
+      color: var(--anniv-accent);
+      border-color: transparent;
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
-    .stack-card:nth-child(n + 3) {
-      margin-top: -12px;
+    .acts-link:focus-visible {
+      outline-color: var(--anniv-accent);
     }
 
-    /* 触屏两段式点按的弹出：转正 + 1.03 放大 + 抬升阴影。不做上提位移——
-       scale 的顶边抬升 ≈4.4px，重叠 reach = 12+4.4 = 16.4px 仍 < 标题 18px
-       安全线（rotate 归零后旋转下探同步归零） */
-    .stack-card.active {
-      transform: translateX(var(--sx)) scale(1.03);
-      box-shadow: var(--paper-shadow-lift);
+    /* 卡轨：满宽出血，整宽卡 + 露边提示，与书架页横滑手势一致 */
+    .acts-stage {
+      position: static;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: clamp(16px, 5vw, 24px);
+      margin-inline: calc(-1 * clamp(16px, 5vw, 24px));
+      padding-inline: clamp(16px, 5vw, 24px);
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .stack-meta {
-      bottom: 18px;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
+    .acts-stage::-webkit-scrollbar {
+      display: none;
     }
 
-    .stack-meta strong {
-      white-space: normal;
+    .act {
+      position: relative;
+      inset: auto;
+      flex: 0 0 100%;
+      aspect-ratio: 4 / 4.6;
+      scroll-snap-align: start;
+      opacity: 1;
     }
 
-    /* 七周年条改纵向堆叠：横排时中间标题体（flex:1 basis 0）会被
-       「07 / SEVEN YEARS」和「ENTER ARCHIVE」挤成一字一行 */
-    .acts-anniv {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.55rem;
-      padding: 1.3rem 1.25rem 1.4rem;
+    .act-img {
+      filter: none;
     }
 
-    .acts-anniv-body {
-      display: block;
+    /* 卡内轻遮罩（替换桌面暗角纱幕）：白字可读 */
+    .act::after {
+      background:
+        radial-gradient(90% 70% at 50% 46%, rgba(4, 16, 30, 0.26), rgba(4, 16, 30, 0.55) 100%),
+        linear-gradient(
+          to bottom,
+          rgba(4, 16, 30, 0.32),
+          rgba(4, 16, 30, 0) 22%,
+          rgba(4, 16, 30, 0) 60%,
+          rgba(4, 16, 30, 0.52)
+        );
     }
 
-    .acts-anniv-title,
-    .acts-anniv-range {
-      display: block;
+    .act-body {
+      padding: 0 24px;
+      opacity: 1;
+      transform: none;
     }
 
-    .acts-anniv-range {
-      margin-top: 0.45rem;
+    .act-kicker {
+      font-size: 11px;
+      letter-spacing: 0.3em;
     }
 
-    .acts-anniv-cta {
-      margin-top: 0.35rem;
+    .act-name {
+      font-size: clamp(28px, 8.6vw, 34px);
+      line-height: 1.3;
+    }
+
+    .act-fact {
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      line-height: 1.75;
+      max-width: 320px;
+    }
+
+    .act-enter {
+      min-height: 46px;
+      margin-top: 22px;
+      padding: 0 30px;
+      letter-spacing: 0.3em;
+      text-indent: 0.3em;
+    }
+
+    .act-num {
+      margin-top: 14%;
+      font-size: 88px;
+    }
+
+    /* 桌面标签行退场，圆点进场 */
+    .acts-tabs {
+      display: none;
+    }
+
+    .acts-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .acts-dots .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--anniv-faint);
+      transition:
+        width 0.3s,
+        background 0.3s;
+    }
+
+    .acts-dots .dot.is-active {
+      width: 20px;
+      background: var(--anniv-fg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .act,
+    .act-body {
+      transition: none;
     }
   }
 </style>

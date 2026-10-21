@@ -2427,3 +2427,20 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 验证：合成触屏序列断言——第一段 prevented=true +
   active 切换 ✓、第二段 prevented=false（放行跳转）✓；用户真机连续两次落在追光之旅页即两段式真实闭环
 - lint 曾报 4 个 curly 错误（单行 if），已补花括号；init.sh 全绿
+
+---
+
+## 2026-10-22 · 首页活动板块重设计（哈苏式一屏一图 + 移动端横滑）
+
+- 分支 `feat/activities-visual-redesign`；设计流程用 huashu-design
+  skill 跑了两轮三方向门
+- 第一轮（印刷/编辑向：负片画幅/册页书脊/细线目录）用户整体否决 → 偏好已记入本机品味档案
+- 第二轮按用户要求转向现代视觉（参考哈苏/徕卡/WPP/索尼WPA/阿尔勒/Paris
+  Photo 真实截图拆解），三稿 dir-4/5/6，用户选定 dir-4 并要求移动端改横滑 →
+  design-demos/direction-approved.md 存原话
+- 落地 ActsSection.astro：桌面满幅单图舞台（底部四等分标签兼 6s 自动轮换进度条，悬停交互区/ 离屏/reduced-motion 暂停，交叉淡入，七周年深底排印幅）；移动端同一组 DOM 变横向 snap 卡轨 + 圆点
+- 数据仍来自 content
+  collections（65 期计数、最新一期、最新一届总冠军均构建期自动跟随），四个入口链接不变
+- 验证：./init.sh 全绿（type-check 0 错 / lint 0 错 /
+  79 页构建）；浏览器实测 1440 浅/深主题、1280×800、375 横滑与圆点（design-demos/verify/ 截图）
+- design-demos/（设计草稿与截图，多数 >500KB）加入 .gitignore 不入仓库
