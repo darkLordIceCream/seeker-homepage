@@ -319,15 +319,15 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --stage-fact-shadow:
       0 1px 22px rgba(4, 16, 30, 0.8),
       0 1px 4px rgba(4, 16, 30, 0.5);
-    /* 纱幕：边缘近乎透明，仅底部压暗（白字标签可读） */
-    --veil-core: rgba(4, 16, 30, 0.12);
-    --veil-edge: rgba(4, 16, 30, 0.16);
-    --veil-top: rgba(4, 16, 30, 0.12);
+    /* 纱幕：清晰优先——文字区用收敛的暗 vignette 兜底（实测 WCAG ≥4.5:1），边缘近乎透明 */
+    --veil-core: rgba(4, 16, 30, 0.68);
+    --veil-edge: rgba(4, 16, 30, 0.2);
+    --veil-top: rgba(4, 16, 30, 0.14);
     --veil-bottom: rgba(4, 16, 30, 0.9);
-    --card-veil-core: rgba(4, 16, 30, 0.26);
-    --card-veil-edge: rgba(4, 16, 30, 0.55);
-    --card-veil-top: rgba(4, 16, 30, 0.32);
-    --card-veil-bottom: rgba(4, 16, 30, 0.52);
+    --card-veil-core: rgba(4, 16, 30, 0.66);
+    --card-veil-edge: rgba(4, 16, 30, 0.3);
+    --card-veil-top: rgba(4, 16, 30, 0.25);
+    --card-veil-bottom: rgba(4, 16, 30, 0.6);
     --enter-border: rgba(255, 255, 255, 0.75);
     --enter-bg: rgba(4, 16, 30, 0.12);
     --enter-hover-bg: #ffffff;
@@ -335,9 +335,9 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --tab-line: rgba(255, 255, 255, 0.28);
     --tab-fg: rgba(234, 244, 255, 0.68);
     --tab-bar: #ffffff;
-    --dim-hi: brightness(0.72) saturate(0.96);
-    --dim-mid: brightness(0.86) saturate(0.98);
-    --dim-lo: brightness(0.92);
+    --dim-hi: brightness(0.6) saturate(0.92);
+    --dim-mid: brightness(0.75) saturate(0.95);
+    --dim-lo: brightness(0.88);
 
     /* —— header 一族：随主题切换 —— */
     --acts-bg: var(--background);
@@ -379,7 +379,13 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     align-items: center;
     justify-content: space-between;
     padding: 0 clamp(24px, 4vw, 56px);
+    height: 56px;
     color: var(--acts-fg);
+    /* 玻璃条（与站点导航同语言）：近实底，主题色文字坐在受控底上，任何照片上都清晰 */
+    background: color-mix(in srgb, var(--acts-bg) 95%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid color-mix(in srgb, var(--acts-fg) 10%, transparent);
   }
 
   .acts-title {
@@ -697,12 +703,12 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
   .acts-tab:hover,
   .acts-tab:focus-visible,
   .acts-tab.is-active {
-    color: var(--acts-fg);
+    color: var(--stage-fg);
     outline: none;
   }
 
   .acts-tab:focus-visible {
-    outline: 2px solid var(--acts-fg);
+    outline: 2px solid var(--stage-fg);
     outline-offset: -4px;
   }
 
@@ -759,9 +765,14 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
 
     .acts-head {
       position: static;
+      height: auto;
       margin-bottom: 14px;
       padding: 0;
       color: var(--acts-fg);
+      background: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      border-bottom: none;
     }
 
     .acts-en {
