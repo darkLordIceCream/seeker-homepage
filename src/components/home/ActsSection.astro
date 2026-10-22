@@ -3,8 +3,9 @@
 // 桌面：满幅单图舞台，底部四等分标签兼自动轮换进度条（悬停交互区/离屏暂停，reduced-motion 不轮换）；
 // 移动端：同一组卡片变为横向滑动卡轨（与书架页横滑手势一致），板块 min-height:100svh 满屏 +
 // 移动端唯一吸附点（global.css ≤768px），滚动靠近时刚好铺满整屏。
-// 双主题：DAYLIGHT（浅色，默认）白昼纱幕 + 墨字；NIGHT（html.dark）沉浸藏蓝黑 + 月光白——
-// 全部走组件级 --acts-* 令牌，不使用 --anniv-*（那套只认 7th 页的 data-theme，与主站开关无关）。
+// 双主题：舞台（照片/白字/标签/底部深色渐变）两主题完全一致、无任何柔光；
+// 随主题切换的只有 header 一族——底带、标题行、七周年排印幅、圆点
+// （组件级 --acts-* 令牌，不使用 --anniv-*：那套只认 7th 页的 data-theme，与主站开关无关）。
 // 四张卡片即四个入口链接；七周年为无图排印幅。层次：图 z0 → 纱幕 ::after z1 → 文字/「07」 z2。
 import { getCollection } from 'astro:content';
 
@@ -188,6 +189,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     const show = (i: number) => {
       cur = i;
       acc = 0;
+      // 第七帧是纸底/深底排印幅：激活时让底部标签行跟随 header 一族配色
+      section.classList.toggle('is-seventh', i === cards.length - 1);
       cards.forEach((card, k) => {
         const on = k === i;
         card.classList.toggle('is-active', on);
@@ -301,87 +304,25 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
 </script>
 
 <style>
-  /* ============ 双主题令牌 ============
-     DAYLIGHT（浅色，默认）：纸底 + 墨字 + 白昼纱幕
-     NIGHT（html.dark）：沉浸藏蓝黑 + 月光白 + 暗纱幕（原上线观感） */
+  /* ============ 令牌 ============
+     舞台（照片/文字/标签/按钮/纱幕）两种主题完全一致：夜幕白字 + 底部深色渐变（同深色模式效果）；
+     随主题切换的只有「header 一族」：底带、标题行、七周年排印幅、圆点。
+     无任何柔光：文字只带深色投影（图上）/无投影（排印幅上） */
   .acts-section {
-    /* 底带与标题行 */
-    --acts-bg: var(--background);
-    --acts-fg: var(--foreground);
-    --acts-muted: var(--muted-foreground);
-    --acts-accent: var(--link);
-    /* 舞台文字（照片上）：DAYLIGHT 墨字靠白色柔光 halo 兜底（纱幕近乎透明） */
-    --acts-stage-fg: var(--foreground);
-    --acts-stage-fg-soft: color-mix(in srgb, var(--foreground) 80%, transparent);
-    --acts-kicker: var(--link);
-    --acts-name-shadow:
-      0 1px 10px rgba(247, 250, 253, 0.95),
-      0 0 30px rgba(247, 250, 253, 0.95),
-      0 0 64px rgba(247, 250, 253, 0.8);
-    --acts-fact-shadow:
-      0 1px 8px rgba(247, 250, 253, 0.95),
-      0 0 24px rgba(247, 250, 253, 0.9);
-    --acts-kicker-shadow:
-      0 1px 8px rgba(247, 250, 253, 0.95),
-      0 0 20px rgba(247, 250, 253, 0.9);
-    --acts-head-shadow:
-      0 1px 10px rgba(247, 250, 253, 0.9),
-      0 0 18px rgba(247, 250, 253, 0.8);
-    --acts-tab-shadow:
-      0 1px 10px rgba(247, 250, 253, 0.9),
-      0 0 18px rgba(247, 250, 253, 0.8);
-    /* 纱幕：偏透明，照片原样呈现（透明度只留一点点） */
-    --veil-core: rgba(247, 250, 253, 0.1);
-    --veil-edge: rgba(247, 250, 253, 0.16);
-    --veil-top: rgba(247, 250, 253, 0.12);
-    --veil-bottom: rgba(247, 250, 253, 0.2);
-    /* 移动端卡内轻遮罩：同样偏透明 */
-    --card-veil-core: rgba(247, 250, 253, 0.08);
-    --card-veil-edge: rgba(247, 250, 253, 0.14);
-    --card-veil-top: rgba(247, 250, 253, 0.1);
-    --card-veil-bottom: rgba(247, 250, 253, 0.18);
-    /* 描边按钮 */
-    --enter-border: color-mix(in srgb, var(--foreground) 52%, transparent);
-    --enter-bg: rgba(255, 255, 255, 0.55);
-    --enter-hover-bg: var(--foreground);
-    --enter-hover-fg: var(--background);
-    /* 底部标签行 */
-    --tab-line: color-mix(in srgb, var(--foreground) 26%, transparent);
-    --tab-fg: color-mix(in srgb, var(--foreground) 64%, transparent);
-    --tab-bar: var(--foreground);
-    /* 七周年描边字 */
-    --num-stroke: color-mix(in srgb, var(--foreground) 46%, transparent);
-    /* 图片曝光分档：DAYLIGHT 不压暗（墨字需要亮背景） */
-    --dim-hi: none;
-    --dim-mid: none;
-    --dim-lo: none;
-
-    --head-space: 96px;
-    background: var(--acts-bg);
-    padding: 0;
-    overflow: hidden;
-  }
-
-  :global(.dark) .acts-section {
-    --acts-bg: #04101e;
-    --acts-fg: #eaf4ff;
-    --acts-muted: rgba(234, 244, 255, 0.55);
-    --acts-accent: #8fc9ff;
-    --acts-stage-fg: #ffffff;
-    --acts-stage-fg-soft: rgba(234, 244, 255, 0.78);
-    --acts-kicker: var(--seeker-pale-blue);
-    --acts-name-shadow:
+    /* —— 舞台令牌：不随主题 —— */
+    --stage-fg: #ffffff;
+    --stage-fg-soft: rgba(234, 244, 255, 0.78);
+    --stage-kicker: var(--seeker-pale-blue);
+    --stage-name-shadow:
       0 2px 34px rgba(4, 16, 30, 0.75),
       0 1px 5px rgba(4, 16, 30, 0.45);
-    --acts-fact-shadow:
+    --stage-fact-shadow:
       0 1px 22px rgba(4, 16, 30, 0.8),
       0 1px 4px rgba(4, 16, 30, 0.5);
-    --acts-kicker-shadow: none;
-    --acts-head-shadow: none;
-    --acts-tab-shadow: none;
-    --veil-core: rgba(4, 16, 30, 0.5);
-    --veil-edge: rgba(4, 16, 30, 0.58);
-    --veil-top: rgba(4, 16, 30, 0.58);
+    /* 纱幕：边缘近乎透明，仅底部压暗（白字标签可读） */
+    --veil-core: rgba(4, 16, 30, 0.12);
+    --veil-edge: rgba(4, 16, 30, 0.16);
+    --veil-top: rgba(4, 16, 30, 0.12);
     --veil-bottom: rgba(4, 16, 30, 0.9);
     --card-veil-core: rgba(4, 16, 30, 0.26);
     --card-veil-edge: rgba(4, 16, 30, 0.55);
@@ -394,10 +335,33 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --tab-line: rgba(255, 255, 255, 0.28);
     --tab-fg: rgba(234, 244, 255, 0.68);
     --tab-bar: #ffffff;
-    --num-stroke: rgba(234, 244, 255, 0.5);
     --dim-hi: brightness(0.72) saturate(0.96);
     --dim-mid: brightness(0.86) saturate(0.98);
     --dim-lo: brightness(0.92);
+
+    /* —— header 一族：随主题切换 —— */
+    --acts-bg: var(--background);
+    --acts-fg: var(--foreground);
+    --acts-muted: var(--muted-foreground);
+    --acts-accent: var(--link);
+    --num-stroke: color-mix(in srgb, var(--foreground) 46%, transparent);
+    --dot-bg: var(--border);
+    --dot-active: var(--foreground);
+
+    --head-space: 96px;
+    background: var(--acts-bg);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  :global(.dark) .acts-section {
+    --acts-bg: #04101e;
+    --acts-fg: #eaf4ff;
+    --acts-muted: rgba(234, 244, 255, 0.55);
+    --acts-accent: #8fc9ff;
+    --num-stroke: rgba(234, 244, 255, 0.5);
+    --dot-bg: rgba(234, 244, 255, 0.32);
+    --dot-active: #eaf4ff;
   }
 
   .acts-section::before {
@@ -416,7 +380,6 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     justify-content: space-between;
     padding: 0 clamp(24px, 4vw, 56px);
     color: var(--acts-fg);
-    text-shadow: var(--acts-head-shadow);
   }
 
   .acts-title {
@@ -527,9 +490,13 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     filter: var(--dim-lo);
   }
 
-  /* 七周年：无图排印幅 */
+  /* 七周年：无图排印幅，不需要照片纱幕 */
   .act--seventh {
     background: var(--acts-bg);
+  }
+
+  .act--seventh::after {
+    display: none;
   }
 
   .act-num-wrap {
@@ -568,7 +535,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     align-items: center;
     text-align: center;
     padding: 0 clamp(24px, 6vw, 96px);
-    color: var(--acts-stage-fg-soft);
+    color: var(--stage-fg-soft);
     opacity: 0;
     transform: translateY(10px);
     transition:
@@ -587,8 +554,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.34em;
-    color: var(--acts-kicker);
-    text-shadow: var(--acts-kicker-shadow);
+    color: var(--stage-kicker);
   }
 
   .act-name {
@@ -597,8 +563,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     font-weight: 600;
     line-height: 1.18;
     letter-spacing: 0.04em;
-    color: var(--acts-stage-fg);
-    text-shadow: var(--acts-name-shadow);
+    color: var(--stage-fg);
+    text-shadow: var(--stage-name-shadow);
     text-wrap: balance;
   }
 
@@ -609,8 +575,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     font-size: 16px;
     letter-spacing: 0.1em;
     line-height: 1.7;
-    color: var(--acts-stage-fg-soft);
-    text-shadow: var(--acts-fact-shadow);
+    color: var(--stage-fg-soft);
+    text-shadow: var(--stage-fact-shadow);
     text-wrap: balance;
   }
 
@@ -628,7 +594,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     font-weight: 500;
     letter-spacing: 0.34em;
     text-indent: 0.34em;
-    color: var(--acts-stage-fg);
+    color: var(--stage-fg);
     transition:
       background 0.35s,
       color 0.35s,
@@ -647,6 +613,33 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     background: var(--enter-hover-bg);
     border-color: var(--enter-hover-bg);
     color: var(--enter-hover-fg);
+  }
+
+  /* 七周年排印幅属于 header 一族：随主题切换（纸底墨字 / 深底月光白），无投影 */
+  .act--seventh .act-kicker {
+    color: var(--acts-accent);
+  }
+
+  .act--seventh .act-name {
+    color: var(--acts-fg);
+    text-shadow: none;
+  }
+
+  .act--seventh .act-fact {
+    color: var(--acts-muted);
+    text-shadow: none;
+  }
+
+  .act--seventh .act-enter {
+    border-color: color-mix(in srgb, var(--acts-fg) 52%, transparent);
+    background: transparent;
+    color: var(--acts-fg);
+  }
+
+  .act--seventh .act-enter:hover {
+    background: var(--acts-fg);
+    border-color: var(--acts-fg);
+    color: var(--acts-bg);
   }
 
   .act:focus-visible {
@@ -683,7 +676,6 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     gap: 12px;
     font-family: var(--font-archivo);
     color: var(--tab-fg);
-    text-shadow: var(--acts-tab-shadow);
     transition: color 0.35s;
   }
 
@@ -729,6 +721,26 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
 
   .acts-tab.is-active .tab-bar {
     opacity: 1;
+  }
+
+  /* 第七帧（排印幅）激活时，标签行跟随 header 一族配色（纸底上白字不可见） */
+  .acts-section.is-seventh .acts-tab {
+    border-top-color: color-mix(in srgb, var(--acts-fg) 26%, transparent);
+    color: color-mix(in srgb, var(--acts-fg) 64%, transparent);
+  }
+
+  .acts-section.is-seventh .acts-tab:hover,
+  .acts-section.is-seventh .acts-tab:focus-visible,
+  .acts-section.is-seventh .acts-tab.is-active {
+    color: var(--acts-fg);
+  }
+
+  .acts-section.is-seventh .acts-tab:focus-visible {
+    outline-color: var(--acts-fg);
+  }
+
+  .acts-section.is-seventh .acts-tab .tab-bar {
+    background: var(--acts-fg);
   }
 
   /* —— 移动端圆点（移动端专属） —— */
@@ -790,11 +802,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       opacity: 1;
     }
 
-    .act-img {
-      filter: none;
-    }
-
-    /* 卡内轻遮罩（替换桌面纱幕），颜色随主题 */
+    /* 卡内轻遮罩（替换桌面纱幕），两主题一致 */
     .act::after {
       background:
         radial-gradient(90% 70% at 50% 46%, var(--card-veil-core), var(--card-veil-edge) 100%),
@@ -859,7 +867,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       width: 6px;
       height: 6px;
       border-radius: 999px;
-      background: color-mix(in srgb, var(--acts-fg) 22%, transparent);
+      background: var(--dot-bg);
       transition:
         width 0.3s,
         background 0.3s;
@@ -867,7 +875,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
 
     .acts-dots .dot.is-active {
       width: 20px;
-      background: var(--acts-fg);
+      background: var(--dot-active);
     }
   }
 
