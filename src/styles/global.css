@@ -260,17 +260,31 @@ html:has(.snap-scroll) .footer {
   scroll-snap-stop: normal;
 }
 
-/* —— 移动端：杂志式自然滚动 ——
+/* —— 移动端：杂志式自然滚动 + 活动板块唯一吸附点 ——
    Hero 变矮（16:9 完整视频 + 独立 slogan）后逐屏吸附失去节奏基准，
-   手机上改为连续滚动、区块高度内容自适应（桌面端吸附不受影响） */
+   其他区块保持连续滚动、高度内容自适应（桌面端吸附不受影响）；
+   活动板块（ActsSection 移动端为满屏一屏一图）是唯一例外：
+   恢复就近吸附并只保留它一个吸附点，滚动靠近时刚好铺满整屏 */
 @media (max-width: 768px) {
   html:has(.snap-scroll) {
-    scroll-snap-type: none;
+    scroll-snap-type: y proximity;
+  }
+
+  /* 压过 .section / Banner scoped / .footer 的吸附点（:has 前缀特异性更高） */
+  html:has(.snap-scroll) .section,
+  html:has(.snap-scroll) .banner,
+  html:has(.snap-scroll) .footer {
+    scroll-snap-align: none;
   }
 
   .section {
     min-height: 0;
     padding: 72px clamp(16px, 5vw, 24px) 56px;
+  }
+
+  /* 活动板块：移动端唯一吸附点（在 .section 置 none 之后声明以赢得同特异性竞争） */
+  html:has(.snap-scroll) .acts-section {
+    scroll-snap-align: start;
   }
 }
 

@@ -2444,3 +2444,15 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 验证：./init.sh 全绿（type-check 0 错 / lint 0 错 /
   79 页构建）；浏览器实测 1440 浅/深主题、1280×800、375 横滑与圆点（design-demos/verify/ 截图）
 - design-demos/（设计草稿与截图，多数 >500KB）加入 .gitignore 不入仓库
+
+### 2026-10-23 · 活动板块迭代：双主题 + 移动端满屏吸附（用户两点反馈）
+
+- 反馈①「颜色貌似只有深色」：根因是组件用了 --anniv-* 令牌（只认 7th 页 html[data-theme]，与主站 html.dark 开关无关）→ 重写为组件级 --acts-* 令牌：DAYLIGHT（浅色默认，纸底/白昼纱幕/ 墨字/墨线标签/纸底描边 07）+
+  NIGHT（:global(.dark)，沉浸藏蓝黑，原观感不变）；图片压暗分档仅 NIGHT 生效
+- 反馈②「手机版没占满整屏、要像电脑端那样吸附」：global.css ≤768px 恢复 y
+  proximity 吸附，其他吸附点（.section/.banner/.footer）移动端置 none（html:has 前缀压过 Banner
+  scoped 规则），仅 .acts-section 为唯一吸附点；ActsSection 移动端 min-height:100svh + 卡轨 flex:1 + 卡片撑满轨高（375×812 上约 343×640，一屏一图），吸附对齐后刚好铺满整屏
+- DAYLIGHT 高调照片（公益雪景）白纱幕过曝 → 卡内纱幕白度降档（墨字有白色柔光兜底），实测两张极限卡通过
+- 验证：./init.sh 全绿（0 错误/63 存量警告/79 页构建）；Playwright 实测 1440 浅/深 ×
+  4 帧、375 浅/深吸附位 + 横滑（design-demos/verify2/）
+- 已提交并推送 feat/activities-visual-redesign（不合并不动 main，Preview 自动刷新）
