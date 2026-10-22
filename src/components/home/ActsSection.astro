@@ -379,13 +379,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     align-items: center;
     justify-content: space-between;
     padding: 0 clamp(24px, 4vw, 56px);
-    height: 56px;
+    padding: 0 clamp(24px, 4vw, 56px);
     color: var(--acts-fg);
-    /* 玻璃条（与站点导航同语言）：近实底，主题色文字坐在受控底上，任何照片上都清晰 */
-    background: color-mix(in srgb, var(--acts-bg) 95%, transparent);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid color-mix(in srgb, var(--acts-fg) 10%, transparent);
   }
 
   .acts-title {
