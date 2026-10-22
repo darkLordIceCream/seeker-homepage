@@ -310,29 +310,39 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --acts-fg: var(--foreground);
     --acts-muted: var(--muted-foreground);
     --acts-accent: var(--link);
-    /* 舞台文字（照片上） */
+    /* 舞台文字（照片上）：DAYLIGHT 墨字靠白色柔光 halo 兜底（纱幕近乎透明） */
     --acts-stage-fg: var(--foreground);
     --acts-stage-fg-soft: color-mix(in srgb, var(--foreground) 80%, transparent);
     --acts-kicker: var(--link);
     --acts-name-shadow:
-      0 2px 30px rgba(247, 250, 253, 0.95),
-      0 1px 6px rgba(247, 250, 253, 0.65);
+      0 1px 10px rgba(247, 250, 253, 0.95),
+      0 0 30px rgba(247, 250, 253, 0.95),
+      0 0 64px rgba(247, 250, 253, 0.8);
     --acts-fact-shadow:
-      0 1px 20px rgba(247, 250, 253, 0.9),
-      0 1px 4px rgba(247, 250, 253, 0.6);
-    /* 白昼纱幕（图上、文字下） */
-    --veil-core: rgba(247, 250, 253, 0.55);
-    --veil-edge: rgba(247, 250, 253, 0.62);
-    --veil-top: rgba(247, 250, 253, 0.7);
-    --veil-bottom: rgba(247, 250, 253, 0.85);
-    /* 移动端卡内轻遮罩（白度收一档：高调照片不发白，墨字靠柔光兜底） */
-    --card-veil-core: rgba(247, 250, 253, 0.3);
-    --card-veil-edge: rgba(247, 250, 253, 0.42);
-    --card-veil-top: rgba(247, 250, 253, 0.38);
-    --card-veil-bottom: rgba(247, 250, 253, 0.55);
+      0 1px 8px rgba(247, 250, 253, 0.95),
+      0 0 24px rgba(247, 250, 253, 0.9);
+    --acts-kicker-shadow:
+      0 1px 8px rgba(247, 250, 253, 0.95),
+      0 0 20px rgba(247, 250, 253, 0.9);
+    --acts-head-shadow:
+      0 1px 10px rgba(247, 250, 253, 0.9),
+      0 0 18px rgba(247, 250, 253, 0.8);
+    --acts-tab-shadow:
+      0 1px 10px rgba(247, 250, 253, 0.9),
+      0 0 18px rgba(247, 250, 253, 0.8);
+    /* 纱幕：偏透明，照片原样呈现（透明度只留一点点） */
+    --veil-core: rgba(247, 250, 253, 0.1);
+    --veil-edge: rgba(247, 250, 253, 0.16);
+    --veil-top: rgba(247, 250, 253, 0.12);
+    --veil-bottom: rgba(247, 250, 253, 0.2);
+    /* 移动端卡内轻遮罩：同样偏透明 */
+    --card-veil-core: rgba(247, 250, 253, 0.08);
+    --card-veil-edge: rgba(247, 250, 253, 0.14);
+    --card-veil-top: rgba(247, 250, 253, 0.1);
+    --card-veil-bottom: rgba(247, 250, 253, 0.18);
     /* 描边按钮 */
     --enter-border: color-mix(in srgb, var(--foreground) 52%, transparent);
-    --enter-bg: rgba(255, 255, 255, 0.42);
+    --enter-bg: rgba(255, 255, 255, 0.55);
     --enter-hover-bg: var(--foreground);
     --enter-hover-fg: var(--background);
     /* 底部标签行 */
@@ -366,6 +376,9 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --acts-fact-shadow:
       0 1px 22px rgba(4, 16, 30, 0.8),
       0 1px 4px rgba(4, 16, 30, 0.5);
+    --acts-kicker-shadow: none;
+    --acts-head-shadow: none;
+    --acts-tab-shadow: none;
     --veil-core: rgba(4, 16, 30, 0.5);
     --veil-edge: rgba(4, 16, 30, 0.58);
     --veil-top: rgba(4, 16, 30, 0.58);
@@ -403,6 +416,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     justify-content: space-between;
     padding: 0 clamp(24px, 4vw, 56px);
     color: var(--acts-fg);
+    text-shadow: var(--acts-head-shadow);
   }
 
   .acts-title {
@@ -574,6 +588,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     font-weight: 500;
     letter-spacing: 0.34em;
     color: var(--acts-kicker);
+    text-shadow: var(--acts-kicker-shadow);
   }
 
   .act-name {
@@ -620,7 +635,14 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       border-color 0.35s;
   }
 
-  .act:hover .act-enter,
+  /* 反色只发生在指针/键盘明确指向按钮时——整卡 hover 不再触发，
+     否则满幅舞台上鼠标停在照片任意处都会让按钮"时不时变深色" */
+  .act-enter:hover {
+    background: var(--enter-hover-bg);
+    border-color: var(--enter-hover-bg);
+    color: var(--enter-hover-fg);
+  }
+
   .act:focus-visible .act-enter {
     background: var(--enter-hover-bg);
     border-color: var(--enter-hover-bg);
@@ -661,6 +683,7 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     gap: 12px;
     font-family: var(--font-archivo);
     color: var(--tab-fg);
+    text-shadow: var(--acts-tab-shadow);
     transition: color 0.35s;
   }
 

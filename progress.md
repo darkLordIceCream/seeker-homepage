@@ -2456,3 +2456,10 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 验证：./init.sh 全绿（0 错误/63 存量警告/79 页构建）；Playwright 实测 1440 浅/深 ×
   4 帧、375 浅/深吸附位 + 横滑（design-demos/verify2/）
 - 已提交并推送 feat/activities-visual-redesign（不合并不动 main，Preview 自动刷新）
+
+### 2026-10-23 · 浅色纱幕转透明 + 按钮反色收窄（用户两点反馈）
+
+- 「浅色边缘白色柔光不好看，偏透明就行」：DAYLIGHT 纱幕（桌面 4 层 + 移动卡内 4 层）全部降到 0.08-0.2，照片原样呈现；墨字可读性改由更强白色柔光 halo 兜底——name/fact/kicker/标题行/底部标签五处 text-shadow 令牌化（--acts-*-shadow，NIGHT 为 none 保持原观感）
+- 「中间按钮时不时变深色」：根因是反色挂在 .act:hover（整卡）上——满幅舞台鼠标停在照片任意处即触发；收窄为 .act-enter:hover（按钮自身）+
+  .act:focus-visible（键盘可达性保留）
+- 验证：./init.sh 全绿（0 错误）；实测浅色 4 帧（含暗片 halo）、悬停照片非按钮、NIGHT 回归、375 双卡
