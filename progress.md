@@ -2427,3 +2427,72 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 验证：合成触屏序列断言——第一段 prevented=true +
   active 切换 ✓、第二段 prevented=false（放行跳转）✓；用户真机连续两次落在追光之旅页即两段式真实闭环
 - lint 曾报 4 个 curly 错误（单行 if），已补花括号；init.sh 全绿
+
+---
+
+## 2026-10-22 · 首页活动板块重设计（哈苏式一屏一图 + 移动端横滑）
+
+- 分支 `feat/activities-visual-redesign`；设计流程用 huashu-design
+  skill 跑了两轮三方向门
+- 第一轮（印刷/编辑向：负片画幅/册页书脊/细线目录）用户整体否决 → 偏好已记入本机品味档案
+- 第二轮按用户要求转向现代视觉（参考哈苏/徕卡/WPP/索尼WPA/阿尔勒/Paris
+  Photo 真实截图拆解），三稿 dir-4/5/6，用户选定 dir-4 并要求移动端改横滑 →
+  design-demos/direction-approved.md 存原话
+- 落地 ActsSection.astro：桌面满幅单图舞台（底部四等分标签兼 6s 自动轮换进度条，悬停交互区/ 离屏/reduced-motion 暂停，交叉淡入，七周年深底排印幅）；移动端同一组 DOM 变横向 snap 卡轨 + 圆点
+- 数据仍来自 content
+  collections（65 期计数、最新一期、最新一届总冠军均构建期自动跟随），四个入口链接不变
+- 验证：./init.sh 全绿（type-check 0 错 / lint 0 错 /
+  79 页构建）；浏览器实测 1440 浅/深主题、1280×800、375 横滑与圆点（design-demos/verify/ 截图）
+- design-demos/（设计草稿与截图，多数 >500KB）加入 .gitignore 不入仓库
+
+### 2026-10-23 · 活动板块迭代：双主题 + 移动端满屏吸附（用户两点反馈）
+
+- 反馈①「颜色貌似只有深色」：根因是组件用了 --anniv-* 令牌（只认 7th 页 html[data-theme]，与主站 html.dark 开关无关）→ 重写为组件级 --acts-* 令牌：DAYLIGHT（浅色默认，纸底/白昼纱幕/ 墨字/墨线标签/纸底描边 07）+
+  NIGHT（:global(.dark)，沉浸藏蓝黑，原观感不变）；图片压暗分档仅 NIGHT 生效
+- 反馈②「手机版没占满整屏、要像电脑端那样吸附」：global.css ≤768px 恢复 y
+  proximity 吸附，其他吸附点（.section/.banner/.footer）移动端置 none（html:has 前缀压过 Banner
+  scoped 规则），仅 .acts-section 为唯一吸附点；ActsSection 移动端 min-height:100svh + 卡轨 flex:1 + 卡片撑满轨高（375×812 上约 343×640，一屏一图），吸附对齐后刚好铺满整屏
+- DAYLIGHT 高调照片（公益雪景）白纱幕过曝 → 卡内纱幕白度降档（墨字有白色柔光兜底），实测两张极限卡通过
+- 验证：./init.sh 全绿（0 错误/63 存量警告/79 页构建）；Playwright 实测 1440 浅/深 ×
+  4 帧、375 浅/深吸附位 + 横滑（design-demos/verify2/）
+- 已提交并推送 feat/activities-visual-redesign（不合并不动 main，Preview 自动刷新）
+
+### 2026-10-23 · 浅色纱幕转透明 + 按钮反色收窄（用户两点反馈）
+
+- 「浅色边缘白色柔光不好看，偏透明就行」：DAYLIGHT 纱幕（桌面 4 层 + 移动卡内 4 层）全部降到 0.08-0.2，照片原样呈现；墨字可读性改由更强白色柔光 halo 兜底——name/fact/kicker/标题行/底部标签五处 text-shadow 令牌化（--acts-*-shadow，NIGHT 为 none 保持原观感）
+- 「中间按钮时不时变深色」：根因是反色挂在 .act:hover（整卡）上——满幅舞台鼠标停在照片任意处即触发；收窄为 .act-enter:hover（按钮自身）+
+  .act:focus-visible（键盘可达性保留）
+- 验证：./init.sh 全绿（0 错误）；实测浅色 4 帧（含暗片 halo）、悬停照片非按钮、NIGHT 回归、375 双卡
+
+### 2026-10-23 · 三迭代：取消全部柔光，深浅只差顶部 header（用户反馈）
+
+- 「文字旁边的柔光太丑，取消所有柔光」：删除全部白色 halo；照片上文字回归白字 + 深投影（两主题一致）
+- 「底部换成深色模式一样的效果」：纱幕改为边缘近乎透明 + 仅底部压暗（rgba(4,16,30,.9)），白字标签行/白进度线两主题一致；按钮/压暗分档也统一为深色模式取值
+- 「深浅模式的区别就是顶部 header」：随主题的收敛为 header 一族——底带 --acts-bg、标题行 --acts-fg/--acts-accent、七周年排印幅（纸底墨字/深底月光白，且不再画照片纱幕——修掉浅色下纸底被底部渐变染灰的问题）、圆点 --dot-*；七周年帧激活时 section 挂 .is-seventh，标签行跟随主题配色（修掉纸底上白标签不可见的回归）
+- 验证：./init.sh 全绿（0 错误）；1440 双主题四帧 + 七周年对照、375 双主题（design-demos/verify2/v4-v6）
+
+### 2026-10-23 · 四迭代：以清晰为主的浅色配色（huashu-design 色彩协议 + WCAG 实测）
+
+- 用户反馈「有一些字看不清楚，以清晰为主」→ 偏好已记（对比度实测为准，不做目测调参）
+- 设计决策（论证见 design_lint
+  ledger）：白字永远坐受控暗底（文字区收敛暗 vignette 0.68 + 压暗分档 hi .6/mid
+  .75/lo .88）；主题色文字（header）永远坐实底/玻璃条（blur14 + 95% 主题底）
+- 新增 design-demos/contrast_check.py：Playwright 像素级 WCAG 对比度实测（隐藏字形→采样真实背景→ 最不利分位），两主题×四帧×双端 112/112 达标（≥4.5:1，88px 大字 ≥3:1）
+- 过程中修的问题：① 标签激活态误用 header 令牌（浅色下墨字落暗纱幕 1.19-1.3）→ 回归舞台白；② 测量脚本两处假值——transition 渐变中的半透明字形（先禁用过渡再采样）、冷缓存半载 R2 图（等图后再采）
+- init.sh 全绿（0 错误）；终态对比图 design-demos/final-对比.jpg
+
+### 2026-10-23 · 五迭代：header 撤玻璃条恢复透明（用户选型）
+
+- 用户确认其余文字已清晰，header 恢复为透明悬浮（无玻璃条），vignette/压暗/标签白字等全保留
+- 实测 105/112：7 项不达标均为透明 header 自身（浅色墨字落暗照片顶 1.21-1.59/4.27、深色月光白落雪景亮部 3.12），属透明化已知代价，用户明示选择，数据如实记录
+- init.sh 全绿
+
+### 2026-10-23 · 六迭代：文字适配照片明暗（与站点主题解耦）
+
+- 用户反馈：header 行与底部标签行按图片深浅自动切换文字深浅，与站点深浅模式无关
+- R2 图床无 CORS 头 → 运行时 canvas 采样不可行 → 改离线采样烤定：每个活动卡 data-head-tone
+  / data-tabs-tone / data-veil（top20%/bottom25% 均值，阈值 L 0.227）
+- 激活帧同步调性到板块；桌面端 CSS 按调性切换：暗底→白字+暗底纱，亮底→墨字+白底纱（白纱含 hold 段：盖住 header 行 80-116px，210px 淡出）；移动端与七周年帧不受影响
+- 过程修复：dataset 键名 kebab→camel 转换缺失导致调性同步失效（假值 1.18-1.74）、亮底帧纱幕规则被 tabs-tone 规则覆盖、veil 类型与 Tone 混用
+- WCAG 实测 112/112（welfare 帧墨字 header≈6+、墨字标签≈12+）；init.sh 全绿
+- 服务挂 4322 待用户预览批准，批准后 commit+push
