@@ -25,6 +25,16 @@ const chasingPrize = latestChasing?.data.grandPrize;
 /** 舞台暗化档位：仅 NIGHT 使用（白字需要压图）；DAYLIGHT 墨字需要亮背景，全部为 none */
 type Dim = 'hi' | 'mid' | 'lo';
 
+/**
+ * 文字适配备景（与站点深浅模式无关，按照片自身明暗烤定）：
+ * - headTone/tabsTone：header 行、底部标签行所处条带的明暗 → dark-bg 用浅字，light-bg 用深字
+ * - veil：底部纱幕色调，与 tabsTone 同向（light-bg 用白纱幕托墨字）
+ * 离线采样值（2026-09 封面 / 公益 01 / 2025 总冠军图，16:10 cover 裁切，
+ * top20% / bottom25% 均值，阈值 L 0.227）；更换封面若明暗反转需同步更新
+ */
+type Tone = 'dark-bg' | 'light-bg';
+type Veil = 'dark' | 'light';
+
 type Act = {
   id: string;
   kicker: string;
@@ -35,6 +45,9 @@ type Act = {
   img?: string;
   alt?: string;
   dim: Dim;
+  headTone?: Tone;
+  tabsTone?: Tone;
+  veil?: Veil;
   seventh?: boolean;
 };
 
@@ -51,6 +64,9 @@ const acts: Act[] = [
     img: latestStory?.data.cover,
     alt: `《时间的故事》${latestStory?.data.issue ?? ''}封面`,
     dim: 'mid',
+    headTone: 'dark-bg',
+    tabsTone: 'dark-bg',
+    veil: 'dark',
   },
   {
     id: 'welfare',
@@ -62,6 +78,9 @@ const acts: Act[] = [
     img: 'https://r2.xn--seeker-ng2jm403afb4a.club/welfare/bring-her-eyes/in-a-faraway-place/01.jpg',
     alt: '「带上她的眼睛」公益项目：山村里孩子们上摄影课',
     dim: 'hi',
+    headTone: 'light-bg',
+    tabsTone: 'light-bg',
+    veil: 'light',
   },
   {
     id: 'chasing',
@@ -75,6 +94,9 @@ const acts: Act[] = [
     img: chasingPrize?.cover,
     alt: `${chasingYear ?? ''} 追光之旅总冠军作品《${chasingPrize?.title ?? ''}》`,
     dim: 'lo',
+    headTone: 'dark-bg',
+    tabsTone: 'dark-bg',
+    veil: 'dark',
   },
   {
     id: 'seventh',
@@ -96,6 +118,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
   aria-labelledby="acts-title"
   class="section acts-section"
   data-acts
+  data-head-tone="dark-bg"
+  data-tabs-tone="dark-bg"
   id="activities"
 >
   <header class="acts-head">
@@ -113,6 +137,9 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
           class:list={['act', { 'act--seventh': act.seventh, 'is-active': i === 0 }]}
           data-act
           data-dim={act.dim}
+          data-head-tone={act.headTone}
+          data-tabs-tone={act.tabsTone}
+          data-veil={act.veil}
           href={act.href}
         >
           {act.img && (
@@ -191,6 +218,22 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       acc = 0;
       // 第七帧是纸底/深底排印幅：激活时让底部标签行跟随 header 一族配色
       section.classList.toggle('is-seventh', i === cards.length - 1);
+      // 文字适配备景：把激活卡的烤定调性同步到板块（header 行 / 底部标签行各自独立）。
+      // 第七帧无照片，摘除调性属性，回落到随主题的排印幅配色
+      const active = cards[i] as HTMLElement;
+      const syncTone = (attr: 'data-head-tone' | 'data-tabs-tone') => {
+        const key = attr
+          .slice(5)
+          .replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()) as 'headTone' | 'tabsTone';
+        const tone = active.dataset[key];
+        if (tone) {
+          section.setAttribute(attr, tone);
+        } else {
+          section.removeAttribute(attr);
+        }
+      };
+      syncTone('data-head-tone');
+      syncTone('data-tabs-tone');
       cards.forEach((card, k) => {
         const on = k === i;
         card.classList.toggle('is-active', on);
@@ -348,7 +391,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
     --dot-bg: var(--border);
     --dot-active: var(--foreground);
 
-    --head-space: 96px;
+    /* header 行贴近站点导航之下（导航滚动态高 58px） */
+    --head-space: 80px;
     background: var(--acts-bg);
     padding: 0;
     overflow: hidden;
@@ -742,6 +786,89 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
 
   .acts-section.is-seventh .acts-tab .tab-bar {
     background: var(--acts-fg);
+  }
+
+  /* ============ 文字适配备景（桌面；与站点深浅模式无关） ============
+     按激活照片的烤定调性切换 header 行 / 底部标签行深浅与底部纱幕色调 */
+  @media (min-width: 769px) {
+    /* 暗底 → 浅字 */
+    .acts-section[data-head-tone='dark-bg'] .acts-head {
+      color: #eaf4ff;
+    }
+
+    .acts-section[data-head-tone='dark-bg'] .acts-en {
+      color: rgba(234, 244, 255, 0.72);
+    }
+
+    .acts-section[data-head-tone='dark-bg'] .acts-link {
+      color: #8fc9ff;
+    }
+
+    .acts-section[data-head-tone='dark-bg'] .acts-link:focus-visible {
+      outline-color: #8fc9ff;
+    }
+
+    /* 亮底 → 深字（链接与标题同权墨色——照片上品牌蓝对比不稳） */
+    .acts-section[data-head-tone='light-bg'] .acts-head {
+      color: #14283d;
+    }
+
+    .acts-section[data-head-tone='light-bg'] .acts-en {
+      color: rgba(20, 40, 61, 0.72);
+    }
+
+    .acts-section[data-head-tone='light-bg'] .acts-link {
+      color: #14283d;
+    }
+
+    .acts-section[data-head-tone='light-bg'] .acts-link:focus-visible {
+      outline-color: #14283d;
+    }
+
+    .acts-section[data-tabs-tone='dark-bg'] .acts-tab {
+      color: rgba(234, 244, 255, 0.68);
+      border-top-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .acts-section[data-tabs-tone='dark-bg'] .acts-tab:hover,
+    .acts-section[data-tabs-tone='dark-bg'] .acts-tab:focus-visible,
+    .acts-section[data-tabs-tone='dark-bg'] .acts-tab.is-active {
+      color: #ffffff;
+    }
+
+    .acts-section[data-tabs-tone='dark-bg'] .acts-tab .tab-bar {
+      background: #ffffff;
+    }
+
+    .acts-section[data-tabs-tone='light-bg'] .acts-tab {
+      color: rgba(20, 40, 61, 0.68);
+      border-top-color: rgba(20, 40, 61, 0.28);
+    }
+
+    .acts-section[data-tabs-tone='light-bg'] .acts-tab:hover,
+    .acts-section[data-tabs-tone='light-bg'] .acts-tab:focus-visible,
+    .acts-section[data-tabs-tone='light-bg'] .acts-tab.is-active {
+      color: #14283d;
+    }
+
+    .acts-section[data-tabs-tone='light-bg'] .acts-tab .tab-bar {
+      background: #14283d;
+    }
+
+    /* 亮底帧：顶部白纱带 hold 段（盖住 header 行增强墨字，116px 后于 210px 淡出）
+       + 底部白纱（托住墨字标签）；该帧不再使用暗色顶纱 */
+    .acts-section[data-tabs-tone='light-bg'] .act[data-veil='light']::after {
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(247, 250, 253, 0.5) 0,
+          rgba(247, 250, 253, 0.5) 116px,
+          rgba(247, 250, 253, 0) 210px
+        ),
+        radial-gradient(52% 42% at 50% 47%, var(--veil-core), transparent 100%),
+        radial-gradient(120% 95% at 50% 44%, transparent 40%, var(--veil-edge) 100%),
+        linear-gradient(to top, rgba(247, 250, 253, 0.92), transparent 30%);
+    }
   }
 
   /* —— 移动端圆点（移动端专属） —— */
