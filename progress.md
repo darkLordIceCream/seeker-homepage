@@ -2496,3 +2496,16 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 过程修复：dataset 键名 kebab→camel 转换缺失导致调性同步失效（假值 1.18-1.74）、亮底帧纱幕规则被 tabs-tone 规则覆盖、veil 类型与 Tone 混用
 - WCAG 实测 112/112（welfare 帧墨字 header≈6+、墨字标签≈12+）；init.sh 全绿
 - 服务挂 4322 待用户预览批准，批准后 commit+push
+
+### 2026-10-23 · 七迭代：逐元素文字适配 + 亮图帧纱幕清零（上线版）
+
+- 用户「怎么感觉还是有一层渐变」→ 两个真凶：① 中央暗 radial 椭圆 52%×42% 几乎罩满照片；②
+  preview 服务的是旧 dist（改完源码未重建）——测量/截图一度失真，教训：改完必须 rebuild 再验
+- 亮图帧（带上她的眼睛）：舞台纱幕清零；白标题暗底改为文字块紧凑暗云（-72/-96px
+  radial 0.72）
+- 逐元素调性（用户需求本义）：linkTone +
+  tabsTones[4] 烤定，公益帧 = 标题墨/链接白/标签 墨白白白
+- bug 修复：七周年帧 tab 调性残留（改固定 4 次按位同步）、旧 head-tone 链接规则覆盖 link-tone（删残留）、kicker
+  4.4 压线（暗云加深至 0.72）
+- 实测 144/144（逐元素清单含四个标签列）；init.sh 全绿；用户 4323 批准
+- 流程：fix/activities-adaptive-text 分支 → PR → 自审 → 合并上线
