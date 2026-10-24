@@ -26,11 +26,13 @@ const chasingPrize = latestChasing?.data.grandPrize;
 type Dim = 'hi' | 'mid' | 'lo';
 
 /**
- * 文字适配备景（与站点深浅模式无关，按照片自身明暗烤定）：
- * - headTone/tabsTone：header 行、底部标签行所处条带的明暗 → dark-bg 用浅字，light-bg 用深字
- * - veil：底部纱幕色调，与 tabsTone 同向（light-bg 用白纱幕托墨字）
- * 离线采样值（2026-09 封面 / 公益 01 / 2025 总冠军图，16:10 cover 裁切，
- * top20% / bottom25% 均值，阈值 L 0.227）；更换封面若明暗反转需同步更新
+ * 文字适配备景（与站点深浅模式无关，按照片自身明暗烤定，粒度=逐元素）：
+ * - headTone：header 标题行所处区域 → dark-bg 用浅字，light-bg 用深字
+ * - linkTone：「全部活动」链接所处区域（可能与标题不同调——照片明暗不均匀）
+ * - tabsTones：底部四个标签各自的调性（按列采样）
+ * - veil：舞台纱幕形态，dark=整幅暗纱（暗图），light=无纱+文字块紧凑暗云（亮图）
+ * 离线采样值（2026-09 封面 / 公益 01 / 2025 总冠军图，对真实渲染 1440×900 按
+ * 元素 bbox 区域取 p5/中位，阈值 L≈0.22）；更换封面若明暗反转需同步更新
  */
 type Tone = 'dark-bg' | 'light-bg';
 type Veil = 'dark' | 'light';
@@ -46,7 +48,8 @@ type Act = {
   alt?: string;
   dim: Dim;
   headTone?: Tone;
-  tabsTone?: Tone;
+  linkTone?: Tone;
+  tabsTones?: Tone[];
   veil?: Veil;
   seventh?: boolean;
 };
@@ -65,7 +68,8 @@ const acts: Act[] = [
     alt: `《时间的故事》${latestStory?.data.issue ?? ''}封面`,
     dim: 'mid',
     headTone: 'dark-bg',
-    tabsTone: 'dark-bg',
+    linkTone: 'dark-bg',
+    tabsTones: ['dark-bg', 'dark-bg', 'dark-bg', 'dark-bg'],
     veil: 'dark',
   },
   {
@@ -79,7 +83,8 @@ const acts: Act[] = [
     alt: '「带上她的眼睛」公益项目：山村里孩子们上摄影课',
     dim: 'hi',
     headTone: 'light-bg',
-    tabsTone: 'light-bg',
+    linkTone: 'dark-bg',
+    tabsTones: ['light-bg', 'dark-bg', 'dark-bg', 'dark-bg'],
     veil: 'light',
   },
   {
@@ -95,7 +100,8 @@ const acts: Act[] = [
     alt: `${chasingYear ?? ''} 追光之旅总冠军作品《${chasingPrize?.title ?? ''}》`,
     dim: 'lo',
     headTone: 'dark-bg',
-    tabsTone: 'dark-bg',
+    linkTone: 'dark-bg',
+    tabsTones: ['dark-bg', 'dark-bg', 'dark-bg', 'dark-bg'],
     veil: 'dark',
   },
   {
@@ -119,7 +125,11 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
   class="section acts-section"
   data-acts
   data-head-tone="dark-bg"
-  data-tabs-tone="dark-bg"
+  data-link-tone="dark-bg"
+  data-tab1-tone="dark-bg"
+  data-tab2-tone="dark-bg"
+  data-tab3-tone="dark-bg"
+  data-tab4-tone="dark-bg"
   id="activities"
 >
   <header class="acts-head">
@@ -138,7 +148,8 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
           data-act
           data-dim={act.dim}
           data-head-tone={act.headTone}
-          data-tabs-tone={act.tabsTone}
+          data-link-tone={act.linkTone}
+          data-tab-tones={act.tabsTones?.join(',')}
           data-veil={act.veil}
           href={act.href}
         >
@@ -218,22 +229,23 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       acc = 0;
       // 第七帧是纸底/深底排印幅：激活时让底部标签行跟随 header 一族配色
       section.classList.toggle('is-seventh', i === cards.length - 1);
-      // 文字适配备景：把激活卡的烤定调性同步到板块（header 行 / 底部标签行各自独立）。
-      // 第七帧无照片，摘除调性属性，回落到随主题的排印幅配色
+      // 文字适配备景：把激活卡的烤定调性同步到板块（标题行/链接/四个标签逐元素独立）。
+      // 第七帧无照片，摘除全部调性属性，回落到随主题的排印幅配色
       const active = cards[i] as HTMLElement;
-      const syncTone = (attr: 'data-head-tone' | 'data-tabs-tone') => {
-        const key = attr
-          .slice(5)
-          .replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()) as 'headTone' | 'tabsTone';
-        const tone = active.dataset[key];
-        if (tone) {
-          section.setAttribute(attr, tone);
+      const sync = (attr: string, value?: string) => {
+        if (value) {
+          section.setAttribute(attr, value);
         } else {
           section.removeAttribute(attr);
         }
       };
-      syncTone('data-head-tone');
-      syncTone('data-tabs-tone');
+      sync('data-head-tone', active.dataset.headTone);
+      sync('data-link-tone', active.dataset.linkTone);
+      const tabTones = active.dataset.tabTones?.split(',') ?? [];
+      // 固定按位同步 4 列：无值时移除属性（否则上一帧的调性残留到无图帧）
+      for (let k = 0; k < 4; k++) {
+        sync(`data-tab${k + 1}-tone`, tabTones[k]);
+      }
       cards.forEach((card, k) => {
         const on = k === i;
         card.classList.toggle('is-active', on);
@@ -800,11 +812,16 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       color: rgba(234, 244, 255, 0.72);
     }
 
-    .acts-section[data-head-tone='dark-bg'] .acts-link {
+    .acts-section[data-head-tone='dark-bg'] .acts-link:focus-visible {
+      outline-color: #8fc9ff;
+    }
+
+    /* 「全部活动」链接独立调性：亮图帧里它可能坐在暗块上（与标题相反） */
+    .acts-section[data-link-tone='dark-bg'] .acts-link {
       color: #8fc9ff;
     }
 
-    .acts-section[data-head-tone='dark-bg'] .acts-link:focus-visible {
+    .acts-section[data-link-tone='dark-bg'] .acts-link:focus-visible {
       outline-color: #8fc9ff;
     }
 
@@ -817,57 +834,96 @@ const tabIndexLabel = (act: Act, i: number) => (act.seventh ? '07' : String(i + 
       color: rgba(20, 40, 61, 0.72);
     }
 
-    .acts-section[data-head-tone='light-bg'] .acts-link {
+    .acts-section[data-link-tone='light-bg'] .acts-link {
       color: #14283d;
     }
 
-    .acts-section[data-head-tone='light-bg'] .acts-link:focus-visible {
+    .acts-section[data-link-tone='light-bg'] .acts-link:focus-visible {
       outline-color: #14283d;
     }
 
-    .acts-section[data-tabs-tone='dark-bg'] .acts-tab {
+    /* 底部四个标签逐列调性（照片明暗不均匀，同一行可能深浅混排） */
+    .acts-section[data-tab1-tone='dark-bg'] .acts-tab:nth-child(1),
+    .acts-section[data-tab2-tone='dark-bg'] .acts-tab:nth-child(2),
+    .acts-section[data-tab3-tone='dark-bg'] .acts-tab:nth-child(3),
+    .acts-section[data-tab4-tone='dark-bg'] .acts-tab:nth-child(4) {
       color: rgba(234, 244, 255, 0.68);
       border-top-color: rgba(255, 255, 255, 0.28);
     }
 
-    .acts-section[data-tabs-tone='dark-bg'] .acts-tab:hover,
-    .acts-section[data-tabs-tone='dark-bg'] .acts-tab:focus-visible,
-    .acts-section[data-tabs-tone='dark-bg'] .acts-tab.is-active {
+    .acts-section[data-tab1-tone='dark-bg'] .acts-tab:nth-child(1):hover,
+    .acts-section[data-tab1-tone='dark-bg'] .acts-tab:nth-child(1):focus-visible,
+    .acts-section[data-tab1-tone='dark-bg'] .acts-tab:nth-child(1).is-active,
+    .acts-section[data-tab2-tone='dark-bg'] .acts-tab:nth-child(2):hover,
+    .acts-section[data-tab2-tone='dark-bg'] .acts-tab:nth-child(2):focus-visible,
+    .acts-section[data-tab2-tone='dark-bg'] .acts-tab:nth-child(2).is-active,
+    .acts-section[data-tab3-tone='dark-bg'] .acts-tab:nth-child(3):hover,
+    .acts-section[data-tab3-tone='dark-bg'] .acts-tab:nth-child(3):focus-visible,
+    .acts-section[data-tab3-tone='dark-bg'] .acts-tab:nth-child(3).is-active,
+    .acts-section[data-tab4-tone='dark-bg'] .acts-tab:nth-child(4):hover,
+    .acts-section[data-tab4-tone='dark-bg'] .acts-tab:nth-child(4):focus-visible,
+    .acts-section[data-tab4-tone='dark-bg'] .acts-tab:nth-child(4).is-active {
       color: #ffffff;
     }
 
-    .acts-section[data-tabs-tone='dark-bg'] .acts-tab .tab-bar {
+    .acts-section[data-tab1-tone='dark-bg'] .acts-tab:nth-child(1) .tab-bar,
+    .acts-section[data-tab2-tone='dark-bg'] .acts-tab:nth-child(2) .tab-bar,
+    .acts-section[data-tab3-tone='dark-bg'] .acts-tab:nth-child(3) .tab-bar,
+    .acts-section[data-tab4-tone='dark-bg'] .acts-tab:nth-child(4) .tab-bar {
       background: #ffffff;
     }
 
-    .acts-section[data-tabs-tone='light-bg'] .acts-tab {
+    .acts-section[data-tab1-tone='light-bg'] .acts-tab:nth-child(1),
+    .acts-section[data-tab2-tone='light-bg'] .acts-tab:nth-child(2),
+    .acts-section[data-tab3-tone='light-bg'] .acts-tab:nth-child(3),
+    .acts-section[data-tab4-tone='light-bg'] .acts-tab:nth-child(4) {
       color: rgba(20, 40, 61, 0.68);
       border-top-color: rgba(20, 40, 61, 0.28);
     }
 
-    .acts-section[data-tabs-tone='light-bg'] .acts-tab:hover,
-    .acts-section[data-tabs-tone='light-bg'] .acts-tab:focus-visible,
-    .acts-section[data-tabs-tone='light-bg'] .acts-tab.is-active {
+    .acts-section[data-tab1-tone='light-bg'] .acts-tab:nth-child(1):hover,
+    .acts-section[data-tab1-tone='light-bg'] .acts-tab:nth-child(1):focus-visible,
+    .acts-section[data-tab1-tone='light-bg'] .acts-tab:nth-child(1).is-active,
+    .acts-section[data-tab2-tone='light-bg'] .acts-tab:nth-child(2):hover,
+    .acts-section[data-tab2-tone='light-bg'] .acts-tab:nth-child(2):focus-visible,
+    .acts-section[data-tab2-tone='light-bg'] .acts-tab:nth-child(2).is-active,
+    .acts-section[data-tab3-tone='light-bg'] .acts-tab:nth-child(3):hover,
+    .acts-section[data-tab3-tone='light-bg'] .acts-tab:nth-child(3):focus-visible,
+    .acts-section[data-tab3-tone='light-bg'] .acts-tab:nth-child(3).is-active,
+    .acts-section[data-tab4-tone='light-bg'] .acts-tab:nth-child(4):hover,
+    .acts-section[data-tab4-tone='light-bg'] .acts-tab:nth-child(4):focus-visible,
+    .acts-section[data-tab4-tone='light-bg'] .acts-tab:nth-child(4).is-active {
       color: #14283d;
     }
 
-    .acts-section[data-tabs-tone='light-bg'] .acts-tab .tab-bar {
+    .acts-section[data-tab1-tone='light-bg'] .acts-tab:nth-child(1) .tab-bar,
+    .acts-section[data-tab2-tone='light-bg'] .acts-tab:nth-child(2) .tab-bar,
+    .acts-section[data-tab3-tone='light-bg'] .acts-tab:nth-child(3) .tab-bar,
+    .acts-section[data-tab4-tone='light-bg'] .acts-tab:nth-child(4) .tab-bar {
       background: #14283d;
     }
 
-    /* 亮底帧：顶部白纱带 hold 段（盖住 header 行增强墨字，116px 后于 210px 淡出）
-       + 底部白纱（托住墨字标签）；该帧不再使用暗色顶纱 */
-    .acts-section[data-tabs-tone='light-bg'] .act[data-veil='light']::after {
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(247, 250, 253, 0.5) 0,
-          rgba(247, 250, 253, 0.5) 116px,
-          rgba(247, 250, 253, 0) 210px
-        ),
-        radial-gradient(52% 42% at 50% 47%, var(--veil-core), transparent 100%),
-        radial-gradient(120% 95% at 50% 44%, transparent 40%, var(--veil-edge) 100%),
-        linear-gradient(to top, rgba(247, 250, 253, 0.92), transparent 30%);
+    /* 亮图帧（带上她的眼睛，data-veil='light'）：舞台级纱幕全部撤除，
+       白色大标题的暗底改为文字块自身的紧凑暗云，不再罩整幅照片 */
+    .act[data-veil='light']::after {
+      background: none;
+    }
+
+    .act[data-veil='light'] .act-body::before {
+      content: '';
+      position: absolute;
+      inset: -72px -96px;
+      z-index: -1;
+      background: radial-gradient(
+        50% 50% at 50% 50%,
+        rgba(4, 16, 30, 0.72),
+        rgba(4, 16, 30, 0) 100%
+      );
+    }
+
+    /* 亮图帧 kicker 转纯白（紧凑暗云中心实测 pale blue 仅 4.4，压线） */
+    .act[data-veil='light'] .act-kicker {
+      color: #eaf4ff;
     }
   }
 
