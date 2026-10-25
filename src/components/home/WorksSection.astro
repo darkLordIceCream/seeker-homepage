@@ -187,9 +187,68 @@ const capOf = (img: GalleryImage) =>
   const AUX_MAX = 1100;
   // 固定开销：区块留白 112 + 标题行（默认行高约 51 + 22 间距）+ 两行图注 52 + 带距 24 ≈ 261
   const FIXED_BUDGET = 268;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const rowGap = (row: Element | null) =>
     parseFloat(getComputedStyle(row ?? document.body).columnGap) || 0;
+
+  // —— 槽尺寸动画：rAF 指数平滑（防抖核心）——
+  // CSS transition 在高频换图下被反复重定向（8 槽平均 0.56s 一次 fitWall 全墙
+  // 重设目标 < 1.1s 过渡时长），ease-in-out 重定向时速度瞬间归零再加速——
+  // 全墙每半秒"刹车再起步"，比例差越大位移越大抖感越强。
+  // 指数平滑对目标变化速度天然连续（速度 = k×(tgt−cur)，不归零不超调），
+  // 静止后自动停循环。帧率无关：k = 1 − exp(−dt/τ)，τ = 130ms。
+  interface SlotAnim {
+    el: HTMLElement;
+    cur: { w: number; h: number };
+    tgt: { w: number; h: number };
+    init: boolean;
+  }
+  const anims = new Map<HTMLElement, SlotAnim>();
+  let rafId = 0;
+  let animRunning = false;
+  let lastTick = 0;
+
+  const applySize = (a: SlotAnim) => {
+    a.el.style.width = `${a.cur.w.toFixed(1)}px`;
+    a.el.style.height = `${a.cur.h.toFixed(1)}px`;
+  };
+
+  const tick = () => {
+    const now = performance.now();
+    const dt = Math.min(64, now - lastTick);
+    lastTick = now;
+    const k = 1 - Math.exp(-dt / 130);
+    let settled = true;
+    anims.forEach(a => {
+      const dw = a.tgt.w - a.cur.w;
+      const dh = a.tgt.h - a.cur.h;
+      if (Math.abs(dw) > 0.5 || Math.abs(dh) > 0.5) {
+        settled = false;
+        a.cur.w += dw * k;
+        a.cur.h += dh * k;
+        applySize(a);
+      } else if (a.cur.w !== a.tgt.w || a.cur.h !== a.tgt.h) {
+        a.cur.w = a.tgt.w;
+        a.cur.h = a.tgt.h;
+        applySize(a);
+      }
+    });
+    if (settled) {
+      animRunning = false;
+      return;
+    }
+    rafId = requestAnimationFrame(tick);
+  };
+
+  const kick = () => {
+    if (animRunning || reducedMotion) {
+      return;
+    }
+    animRunning = true;
+    lastTick = performance.now();
+    rafId = requestAnimationFrame(tick);
+  };
 
   const layoutRow = (row: Element | null, rowW: number) => {
     if (!row) {return;}
@@ -207,14 +266,35 @@ const capOf = (img: GalleryImage) =>
     for (const g of slots) {
       const ar = parseFloat(g.style.getPropertyValue('--fg')) || 0;
       if (ar <= 0) {continue;}
+      const w = Math.round(h * ar);
+      const hh = Math.round(h);
       g.style.flex = '0 0 auto';
-      g.style.width = `${Math.round(h * ar)}px`;
-      g.style.height = `${Math.round(h)}px`;
+      let a = anims.get(g);
+      if (!a) {
+        // 首次注册：直接落到目标（无入场动画），后续换图走指数平滑
+        a = { el: g, cur: { w, h: hh }, tgt: { w, h: hh }, init: true };
+        anims.set(g, a);
+        applySize(a);
+        continue;
+      }
+      a.tgt = { w, h: hh };
+      if (reducedMotion) {
+        a.cur = { w, h: hh };
+        applySize(a);
+      }
+    }
+    if (!reducedMotion) {
+      kick();
     }
   };
 
-  /** 跨断点时清掉内联 px 布局，交还给 CSS（移动端 flex + aspect-ratio 兜底） */
+  /** 跨断点时清掉内联 px 布局与动画状态，交还给 CSS（移动端 flex + aspect-ratio 兜底） */
   const clearLayout = () => {
+    if (animRunning) {
+      cancelAnimationFrame(rafId);
+      animRunning = false;
+    }
+    anims.clear();
     wall?.querySelectorAll<HTMLElement>('.gslot').forEach(g => {
       g.style.removeProperty('flex');
       g.style.removeProperty('width');
@@ -464,10 +544,8 @@ const capOf = (img: GalleryImage) =>
     flex: var(--fg) 1 0%;
     min-width: 0;
     margin: 0;
-    /* 与淡入同长 + ease-in-out：起止速度连续，布局与透明度同步呼吸 */
-    transition:
-      width 1.1s ease-in-out,
-      height 1.1s ease-in-out;
+    /* 桌面端槽尺寸由 rAF 指数平滑驱动（见 script），不使用 CSS transition：
+       CSS 过渡在高频换图下被反复重定向，速度归零再起步 = 抖动 */
   }
 
   .shot {
@@ -478,7 +556,9 @@ const capOf = (img: GalleryImage) =>
     aspect-ratio: var(--ar);
     padding: 0;
     border: 0;
-    background: var(--muted);
+    /* 透明底：交叉淡入期旧图的 letterbox 融入页面背景而非露出灰块
+       （比例差大时灰底面积大，是抖动/闪烁感的另一来源） */
+    background: transparent;
     overflow: hidden;
     cursor: pointer;
     /* 悬浮感：近影定边 + 远影抬升；纯 paint 不参与布局（不引发重排抖动） */
