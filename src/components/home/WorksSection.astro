@@ -66,9 +66,9 @@ const capOf = (img: GalleryImage) =>
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
   <header class="gallery-head reveal">
-    <p class="gallery-kicker">Gallery · Featured</p>
-    <h2 class="gallery-title" id="works-title">画廊 · 追光者</h2>
-    <p class="gallery-lead">照片按原始比例随机轮换，等高丝带让任何比例都恰好填满一行——盯着看，它在呼吸。</p>
+    <h2 class="gallery-title" id="works-title">
+      画廊 <span class="gallery-en">Gallery</span>
+    </h2>
   </header>
 
   <div class="gallery-wall reveal" data-wall style="--reveal-delay:120ms">
@@ -181,7 +181,8 @@ const capOf = (img: GalleryImage) =>
   // 约 285px，墙宽 = min(1264, (视口高−285)×Σ1Σ2/(Σ1+Σ2))；轮换改变 Σ 后重算，
   // 墙宽经 max-width 过渡与行呼吸同步。移动端不启用（满宽单竖图布局）。
   const WALL_MAX = 1264;
-  const FIXED_BUDGET = 285;
+  // 固定开销：区块留白 112 + 标题行（默认行高约 51 + 22 间距）+ 两行图注 52 + 行距 16 ≈ 253
+  const FIXED_BUDGET = 260;
   const rowSum = (row: Element | null) =>
     [...(row?.querySelectorAll<HTMLElement>('.gslot') ?? [])]
       .filter(g => g.getBoundingClientRect().width > 0)
@@ -367,35 +368,25 @@ const capOf = (img: GalleryImage) =>
   .gallery-head {
     max-width: 1264px;
     width: 100%;
-    margin: 0 auto 16px;
-    text-align: center;
-  }
-
-  .gallery-kicker {
-    margin: 0 0 6px;
-    font-family: var(--font-archivo);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--link);
+    margin: 0 auto 22px;
   }
 
   .gallery-title {
-    font-size: clamp(1.35rem, 2.6vw, 1.7rem);
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--foreground);
-    margin: 0 0 6px;
-    letter-spacing: 0.02em;
-    line-height: 1.25;
+    margin: 0;
+    letter-spacing: 0.06em;
   }
 
-  .gallery-lead {
-    margin: 0 auto;
-    max-width: 560px;
-    font-size: 13px;
-    line-height: 1.6;
+  .gallery-en {
+    font-family: var(--font-archivo);
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     color: var(--muted-foreground);
+    margin-left: 6px;
   }
 
   /* —— 丝带墙：flex-grow = ar → 等高丝带定理；max-width 由 fitWall 依视口反解 —— */

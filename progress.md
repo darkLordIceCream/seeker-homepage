@@ -2558,3 +2558,11 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   79 页，demo 删除后由 83 回落）
 - 分支 feat/gallery-2.0 两个提交（567a82c 第一轮 +
   5a8e4ff 第二轮 + 本次落地），未推送；方向门记录 design-demos/homepage-gallery/direction-approved.md 待补用户选择原话
+
+### 2026-10-25 · 画廊标题恢复主分支极简版
+
+- 用户反馈「文字全部删掉……一个画廊 Gallery 就可以了」→ 删 kicker（GALLERY ·
+  FEATURED）与导语，标题恢复主分支「画廊 Gallery」左对齐样式（clamp 1.5-2rem +
+  Archivo 眉字）
+- 头部变矮（99→51px）→
+  fitWall 预算 285→260，墙宽进一步放大（1207→1253px），仍恰好一屏（sectionBottom=900）；稳态零裁切 ≤0.77%（含一张过渡态）复验通过
