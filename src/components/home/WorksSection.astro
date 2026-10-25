@@ -480,6 +480,20 @@ const capOf = (img: GalleryImage) =>
     background: var(--muted);
     overflow: hidden;
     cursor: pointer;
+    /* 悬浮感：近影定边 + 远影抬升；纯 paint 不参与布局（不引发重排抖动） */
+    --shot-shadow:
+      0 1px 2px rgba(8, 41, 74, 0.1),
+      0 14px 34px -10px rgba(8, 41, 74, 0.22);
+    box-shadow: var(--shot-shadow);
+    transition:
+      box-shadow 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  :global(.dark) .shot {
+    --shot-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.45),
+      0 14px 34px -10px rgba(0, 0, 0, 0.55);
   }
 
   .shot:focus-visible {
@@ -510,6 +524,20 @@ const capOf = (img: GalleryImage) =>
 
     .gslot:hover .gimg.is-active {
       transform: scale(1.015);
+    }
+
+    /* 悬停：照片轻微上浮、阴影加深，强化悬浮层次 */
+    .gslot:hover .shot {
+      transform: translateY(-4px);
+      --shot-shadow:
+        0 2px 4px rgba(8, 41, 74, 0.1),
+        0 26px 52px -12px rgba(8, 41, 74, 0.3);
+    }
+
+    :global(.dark) .gslot:hover .shot {
+      --shot-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.45),
+        0 26px 52px -12px rgba(0, 0, 0, 0.65);
     }
   }
 
