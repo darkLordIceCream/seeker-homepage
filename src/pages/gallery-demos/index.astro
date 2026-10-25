@@ -1,0 +1,377 @@
+---
+/**
+ * Gallery 2.0 · 方向对比板（gallery-2.0 分支临时 demo 页，整合时删除）。
+ * 同屏缩放预览三个完整 demo + 三个备选方向卡 + 评选维度清单。
+ * 三个 demo 共用同一组策展作品（src/data/gallery.ts GALLERY_FEATURED，
+ * 6 张真实作品、固定顺序），区别只在编排语言——保证公平对比。
+ */
+import Layout from '@/layouts/Layout.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+
+interface Direction {
+  key: string;
+  href: string;
+  name: string;
+  tagline: string;
+  mobile: string;
+  reference: string;
+}
+
+const DIRECTIONS: Direction[] = [
+  {
+    key: 'A',
+    href: '/gallery-demos/stage/',
+    name: 'A · 舞台聚光',
+    tagline: '一张主视觉立于中央舞台，五张作品居中组团、尾排轻错位。最安静、最"品牌官网"的一版，节奏来自宽度与留白。',
+    mobile: '手机：主视觉满幅 + 其余五张横向吸附卡轨（横滑浏览，无长纵滚）',
+    reference: '参照：Hasselblad 官网精选页的舞台式呈现',
+  },
+  {
+    key: 'B',
+    href: '/gallery-demos/matrix/',
+    name: 'B · 精密矩阵',
+    tagline: '按每张作品真实宽高比给列加权，同一行高度天然一致——零裁切下的精密感。主视觉行约占 61% 宽，第二行四联等高横带。',
+    mobile: '手机：宽幅满幅 + 两列严格网格（延续站内既有杂志网格范式）',
+    reference: '参照：Leica / 世界摄影大赛官网的精密网格语言',
+  },
+  {
+    key: 'C',
+    href: '/gallery-demos/mosaic/',
+    name: 'C · 错落长廊',
+    tagline: '三列宽窄不一、顶部错位（0/96/192px），作品像逐张"挂"上墙，整段可超过一屏。最有人味、最像摄影师个人站的一版。',
+    mobile: '手机：宽幅满幅 + 两列错落杂志流（错位小、间距紧）',
+    reference: '参照：2025-26 摄影师个人站的沙龙式悬挂',
+  },
+];
+
+const BACKUPS = [
+  { name: 'D · 接触印样', note: '等高双排横带 + 编号边注，暗房接触印样的隐喻——需要时升级为完整 demo' },
+  { name: 'E · 大字目录', note: '作品名大字目录列表，缩略图随滚动悬浮切换——文字主导、图片点缀' },
+  { name: 'F · 横向胶片墙', note: '整卷胶片横向连续滚动（桌面横滚）——浏览感强但与站内纵向滚动体系冲突最大' },
+];
+---
+
+<Layout description="Seeker Gallery 2.0 方向对比板：三个零裁切精选墙 demo" title="Gallery 2.0 · 方向对比板">
+  <meta content="noindex" name="robots" slot="head" />
+  <header class="board-bar">
+    <p class="board-brand">Seeker · Gallery 2.0 方向对比板</p>
+    <div class="board-theme">
+      <ThemeToggle />
+    </div>
+  </header>
+
+  <main class="board-main" id="main-content">
+    <section class="board-intro">
+      <h1>三个方向，同一组作品</h1>
+      <p>
+        三个 demo 共用同一份策展（6 张真实作品、固定顺序：<a href="/gallery-demos/stage/">方向 A</a>
+        内编号 No.01–06），数据来自 <code>src/data/gallery.ts</code>，R2 只读。可以直接对比编排语言本身。
+      </p>
+      <ul class="rules">
+        <li><strong>零裁切</strong>：所有方向、所有断点、墙与灯箱一律原图比例，不裁切</li>
+        <li><strong>灯箱</strong>：点击任意照片进入；Esc 关闭、←→ 切换、触屏可横滑、焦点归还</li>
+        <li><strong>双主题</strong>：右上角切换明暗，三个方向均适配</li>
+      </ul>
+    </section>
+
+    <section aria-label="三个候选方向" class="board-grid">
+      {
+        DIRECTIONS.map(d => (
+          <article class="dir-card">
+            <a aria-label={`打开完整 demo：${d.name}`} class="pv-frame" href={d.href}>
+              <iframe loading="lazy" src={d.href} title={`${d.name} 预览`} />
+            </a>
+            <div class="dir-body">
+              <h2><a href={d.href}>{d.name}</a></h2>
+              <p class="tagline">{d.tagline}</p>
+              <p class="meta">{d.mobile}</p>
+              <p class="meta meta--ref">{d.reference}</p>
+              <a class="open" href={d.href}>
+                打开完整 demo
+                <svg aria-hidden="true" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </section>
+
+    <section aria-label="备选方向" class="board-backups">
+      <h2>备选方向（未出全稿，需要时可升级）</h2>
+      <ul>
+        {
+          BACKUPS.map(b => (
+            <li>
+              <strong>{b.name}</strong>
+              <span> —— {b.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-label="怎么选" class="board-howto">
+      <h2>建议的评选路径</h2>
+      <ol>
+        <li>先在宽屏看三个方向的第一眼主次关系（主视觉是否立得住）</li>
+        <li>把浏览器窗口缩到手机宽度，对比三种移动端形态（横滑卡轨 / 严格两列 / 错落两列）</li>
+        <li>每个 demo 里点开 2–3 张灯箱，体验键盘 ←→ 与 Esc</li>
+        <li>可以混搭：例如「B 的等高行 + C 的侧签图注」，选定后下一轮落进首页 #works</li>
+      </ol>
+      <p class="gate-note">
+        展示记录与选择将归档在 <code>design-demos/homepage-gallery/direction-approved.md</code>。
+      </p>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  // 预览缩放：iframe 按 1440 宽渲染，缩放至卡片实宽（ResizeObserver 跟随窗口变化）
+  document.querySelectorAll<HTMLElement>('.pv-frame').forEach(frame => {
+    const ifr = frame.querySelector('iframe');
+    if (!ifr) {return;}
+    const fit = () => {
+      const s = frame.clientWidth / 1440;
+      ifr.style.transform = `scale(${s})`;
+    };
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(fit).observe(frame);
+    }
+    fit();
+    window.addEventListener('resize', fit, { passive: true });
+  });
+</script>
+
+<style>
+  .board-bar {
+    --nav-fg: var(--foreground);
+    --nav-pill-bg: var(--muted);
+    --nav-pill-border: var(--border);
+    --nav-hover: var(--link);
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px clamp(16px, 4vw, 32px);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 86%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .board-brand {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+  }
+
+  .board-main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 24px 120px;
+  }
+
+  .board-intro h1 {
+    margin: 0 0 14px;
+    font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .board-intro p {
+    margin: 0 0 14px;
+    max-width: 720px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted-foreground);
+  }
+
+  .board-intro a,
+  .board-grid a {
+    color: var(--link);
+  }
+
+  .rules {
+    margin: 0 0 56px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .rules li {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  .rules strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    margin-bottom: 64px;
+  }
+
+  .dir-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--background);
+  }
+
+  .pv-frame {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1440 / 940;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
+  }
+
+  .pv-frame iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1440px;
+    height: 940px;
+    border: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  .dir-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 22px 24px;
+  }
+
+  .dir-body h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .dir-body h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .dir-body h2 a:hover {
+    color: var(--link);
+  }
+
+  .tagline {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--muted-foreground);
+  }
+
+  .meta {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .meta--ref {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  .open {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .open:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .board-backups,
+  .board-howto {
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .board-backups h2,
+  .board-howto h2 {
+    margin: 0 0 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .board-backups ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .board-backups li {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .board-backups strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .board-howto ol {
+    margin: 0 0 16px;
+    padding-left: 22px;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--muted-foreground);
+  }
+
+  .gate-note {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+
+  code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--muted);
+    font-size: 0.92em;
+    color: var(--foreground);
+  }
+
+  @media (max-width: 640px) {
+    .board-main {
+      padding: 40px 20px 96px;
+    }
+  }
+</style>

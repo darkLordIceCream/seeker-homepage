@@ -1,0 +1,385 @@
+---
+/**
+ * Gallery 2.0 · Demo C「错落长廊」（gallery-2.0 分支临时 demo 页，整合时删除）。
+ * 方向定位：摄影师个人站式沙龙悬挂——三列宽窄不一、顶部错位（0/96/192px），
+ * 作品沿各列纵向"挂"下墙面，整段可超过一屏；节奏来自偏移与悬挂间距。
+ * 零裁切：全部原图比例。图注为侧签式（仅署名，无编号），灯箱计数即悬挂顺序。
+ * 移动端：宽幅满幅 + 两列错落杂志流（站内既有移动端范式的强化版）。
+ */
+import Layout from '@/layouts/Layout.astro';
+import DemoBar from '@/components/gallery-demos/DemoBar.astro';
+import Lightbox from '@/components/gallery-demos/Lightbox.astro';
+import { GALLERY_FEATURED, type GalleryImage } from '@/data/gallery';
+
+const must = (i: number): GalleryImage => {
+  const img = GALLERY_FEATURED[i];
+  if (!img) {
+    throw new Error(`GALLERY_FEATURED[${i}] 缺失`);
+  }
+  return img;
+};
+
+/** 悬挂顺序（视觉自上而下、自左列起）：01 峡谷 → 04 金晨 / 02 满月 → 06 之眼 / 03 市集 → 05 雾都 */
+const [c1a, c1b, c2a, c2b, c3a, c3b] = [must(0), must(3), must(1), must(5), must(2), must(4)];
+
+const credit = (img: GalleryImage) => (img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`);
+const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
+---
+
+<Layout description="Seeker Gallery 2.0 方向 C：错落长廊——三列错位零裁切沙龙悬挂 demo" title="Gallery 2.0 · 方向 C 错落长廊">
+  <meta content="noindex" name="robots" slot="head" />
+  <DemoBar current="mosaic" />
+
+  <main class="demo-main" id="main-content">
+    <header class="wall-head">
+      <p class="kicker">Gallery · Featured</p>
+      <h1 class="wall-title">画廊 · 本季精选</h1>
+      <p class="wall-lead">六张作品沿长廊错落悬挂，慢慢走，慢慢看。点击照片进入沉浸观看。</p>
+    </header>
+
+    <div class="hang">
+      <div class="hang-col hang-col--1">
+        <figure class="work" style="--i:0">
+          <button
+            aria-label={`放大查看 ${credit(c1a)}`}
+            class="shot"
+            data-author={c1a.author}
+            data-full={c1a.src}
+            data-title={c1a.title ?? ''}
+            type="button"
+          >
+            <img
+              alt={altOf(c1a)}
+              decoding="async"
+              fetchpriority="high"
+              height={c1a.h}
+              loading="eager"
+              src={c1a.src}
+              width={c1a.w}
+            />
+          </button>
+          <figcaption>{credit(c1a)}</figcaption>
+        </figure>
+        <figure class="work" style="--i:3">
+          <button
+            aria-label={`放大查看 ${credit(c1b)}`}
+            class="shot"
+            data-author={c1b.author}
+            data-full={c1b.src}
+            data-title={c1b.title ?? ''}
+            type="button"
+          >
+            <img alt={altOf(c1b)} decoding="async" height={c1b.h} loading="lazy" src={c1b.src} width={c1b.w} />
+          </button>
+          <figcaption>{credit(c1b)}</figcaption>
+        </figure>
+      </div>
+
+      <div class="hang-col hang-col--2">
+        <figure class="work" style="--i:1">
+          <button
+            aria-label={`放大查看 ${credit(c2a)}`}
+            class="shot"
+            data-author={c2a.author}
+            data-full={c2a.src}
+            data-title={c2a.title ?? ''}
+            type="button"
+          >
+            <img alt={altOf(c2a)} decoding="async" height={c2a.h} loading="lazy" src={c2a.src} width={c2a.w} />
+          </button>
+          <figcaption>{credit(c2a)}</figcaption>
+        </figure>
+        <figure class="work" style="--i:4">
+          <button
+            aria-label={`放大查看 ${credit(c2b)}`}
+            class="shot"
+            data-author={c2b.author}
+            data-full={c2b.src}
+            data-title={c2b.title ?? ''}
+            type="button"
+          >
+            <img alt={altOf(c2b)} decoding="async" height={c2b.h} loading="lazy" src={c2b.src} width={c2b.w} />
+          </button>
+          <figcaption>{credit(c2b)}</figcaption>
+        </figure>
+      </div>
+
+      <div class="hang-col hang-col--3">
+        <figure class="work" style="--i:2">
+          <button
+            aria-label={`放大查看 ${credit(c3a)}`}
+            class="shot"
+            data-author={c3a.author}
+            data-full={c3a.src}
+            data-title={c3a.title ?? ''}
+            type="button"
+          >
+            <img alt={altOf(c3a)} decoding="async" height={c3a.h} loading="lazy" src={c3a.src} width={c3a.w} />
+          </button>
+          <figcaption>{credit(c3a)}</figcaption>
+        </figure>
+        <figure class="work" style="--i:5">
+          <button
+            aria-label={`放大查看 ${credit(c3b)}`}
+            class="shot"
+            data-author={c3b.author}
+            data-full={c3b.src}
+            data-title={c3b.title ?? ''}
+            type="button"
+          >
+            <img alt={altOf(c3b)} decoding="async" height={c3b.h} loading="lazy" src={c3b.src} width={c3b.w} />
+          </button>
+          <figcaption>{credit(c3b)}</figcaption>
+        </figure>
+
+        <aside class="end-card">
+          <p>墙上只是开始。</p>
+          <a class="explore" href="/#works">
+            探索全部作品
+            <svg aria-hidden="true" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+          </a>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Lightbox />
+</Layout>
+
+<script>
+  // 入场：进入视口一次后定格，按悬挂序错峰（无 IO 或 reduced-motion 时直接可见）
+  const items = document.querySelectorAll('.work');
+  if ('IntersectionObserver' in window) {
+    const reveal = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            reveal.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    items.forEach(item => reveal.observe(item));
+  } else {
+    items.forEach(item => item.classList.add('is-visible'));
+  }
+</script>
+
+<style>
+  .demo-main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 72px 24px 140px;
+  }
+
+  .wall-head {
+    margin-bottom: 24px;
+  }
+
+  .kicker {
+    margin: 0 0 14px;
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--link);
+  }
+
+  .wall-title {
+    margin: 0 0 14px;
+    font-size: clamp(2.1rem, 4.5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--foreground);
+  }
+
+  .wall-lead {
+    margin: 0;
+    max-width: 520px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  /* —— 三列悬挂：宽窄不一 + 顶部错位 —— */
+  .hang {
+    display: grid;
+    grid-template-columns: 32fr 36fr 26fr;
+    column-gap: 56px;
+  }
+
+  .hang-col {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .hang-col--2 {
+    padding-top: 96px;
+  }
+
+  .hang-col--3 {
+    padding-top: 192px;
+  }
+
+  /* —— 作品通用：零裁切 —— */
+  .work {
+    margin: 0;
+  }
+
+  .shot {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--paper-shadow);
+    transition: transform 0.24s ease, box-shadow 0.24s ease;
+  }
+
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .shot:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--paper-shadow-lift);
+  }
+
+  .shot:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+  }
+
+  .work figcaption {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+    text-align: left;
+  }
+
+  /* —— 尾卡 —— */
+  .end-card {
+    margin-top: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .end-card p {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--foreground);
+  }
+
+  .explore {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--link);
+    font-size: 13px;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .explore:hover {
+    border-color: var(--link);
+  }
+
+  .explore:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+  }
+
+  /* —— 入场：按悬挂序错峰 —— */
+  html.js .work {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  html.js .work.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.55s ease-out,
+      transform 0.55s ease-out;
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .work {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .shot,
+    .explore {
+      transition: none;
+    }
+  }
+
+  /* —— 平板 —— */
+  @media (max-width: 1199px) and (min-width: 769px) {
+    .demo-main {
+      padding: 56px 24px 112px;
+    }
+
+    .hang {
+      column-gap: 32px;
+    }
+
+    .hang-col {
+      gap: 52px;
+    }
+
+    .hang-col--2 {
+      padding-top: 64px;
+    }
+
+    .hang-col--3 {
+      padding-top: 128px;
+    }
+  }
+
+  /* —— 手机：宽幅满幅 + 两列错落 —— */
+  @media (max-width: 768px) {
+    .demo-main {
+      padding: 48px 20px 96px;
+    }
+
+    .hang {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .hang-col {
+      display: contents;
+    }
+
+    /* 宽幅作品占满整行，其余两列错落 */
+    .hang-col--1 .work:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .hang-col--2 .work:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .end-card {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

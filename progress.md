@@ -2509,3 +2509,20 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   4.4 压线（暗云加深至 0.72）
 - 实测 144/144（逐元素清单含四个标签列）；init.sh 全绿；用户 4323 批准
 - 流程：fix/activities-adaptive-text 分支 → PR → 自审 → 合并上线
+
+### 2026-10-25 · Gallery 2.0 重构第一轮：三方向 Demo（等待选型）
+
+- 规范来源：用户提供的《Seeker_Gallery_2.0_重构实现规范》（高手编辑方向：编辑式摄影展墙、固定 6 张精选、沉浸灯箱）；用户追加硬约束：**零裁切，尊重原图比例**
+- huashu 偏好档案修正方向谱系：用户曾否掉印刷/拟书感（L1），要现代摄影品牌数字感（哈苏/徕卡/赛事站，L2），移动端偏横滑卡轨（L4），清晰优先（L5）→ 三方向全部走现代品牌谱系而非印刷编辑拟物
+- 新增
+  `GALLERY_FEATURED`（src/data/gallery.ts 末尾，按 src 引用全量池不复制字段；曾因放在 GALLERY_POOL 之前触发 TDZ
+  ReferenceError，已修）
+- demo 页（分支专属、noindex，整合时删）：/gallery-demos/{stage,matrix,mosaic}/ + 对比板 index.astro（ResizeObserver 缩放 iframe 预览）；共享组件 src/components/gallery-demos/{DemoBar,Lightbox}.astro（灯箱零依赖，补触摸横滑/
+  Tab 焦点圈禁/加载失败态）
+- 过程修 bug：① GALLERY_FEATURED TDZ；② matrix
+  `var(--a1) fr`（var 与 fr 间空格）整条 grid-template-columns 失效退化单列 → 改传完整 --cols 值；③
+  DemoBar 标题 nowrap 致 320px 全站 demo 溢出 → ≤420px 隐藏
+- 浏览器验收（IAB 1440/390/320 + 明暗 + 灯箱键盘流）全部通过，数据见 feat-042
+  evidence；截图 design-demos/homepage-gallery/shots/
+- **停在方向门**：等用户从 A/B/C（或混搭）里选，记录将写入 design-demos/homepage-gallery/direction-approved.md；下一轮把选中方向落进 WorksSection（弃随机轮换）并处理 scroll-snap 与 >100vh 整合
+- dev server 挂在 4321（nohup）；分支 feat/gallery-2.0 未推送

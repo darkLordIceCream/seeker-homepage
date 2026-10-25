@@ -307,3 +307,25 @@ export const GALLERY_POOL: readonly GalleryImage[] = [
     alt: '麦田上空的星轨绕成同心圆，一点车灯划过田埂。',
   },
 ] as const;
+
+/** Gallery 2.0 首屏精选（gallery-2.0）：显式策展 6 张，固定顺序，不随机。
+ *  选图兼顾：横竖比例节奏（1 超宽 + 2 横 + 3 竖）、色调冷暖交替（红层暖 → 月夜 →
+ *  日间市集 → 金晨 → 蓝调雨夜 → 霓虹夜）、题材呼吸（风光/人文/城市各占其位）。
+ *  条目按 src 引用全量池（单一事实来源，不复制字段）；换精选只改这里。
+ *  候补（换图时优先考虑）：Michelle_Chen《蓝调下的阳明滩》 */
+const pick = (src: string): GalleryImage => {
+  const hit = GALLERY_POOL.find(img => img.src === src);
+  if (!hit) {
+    throw new Error(`GALLERY_FEATURED 引用了图池中不存在的图片：${src}`);
+  }
+  return hit;
+};
+
+export const GALLERY_FEATURED: readonly GalleryImage[] = [
+  pick(`${R2}/gallery/Feiyu.jpg`),
+  pick(`${R2}/gallery/柠檬茶Jayalt-松韵楼国旗满月.jpg`),
+  pick(`${R2}/gallery/镜中_市井五味.jpg`),
+  pick(`${R2}/gallery/心游万仞_武功山之金晨云海_.jpg`),
+  pick(`${R2}/gallery/柳小丁_雾都雨夜_.jpg`),
+  pick(`${R2}/gallery/月某人_深圳之眼.jpg`),
+] as const;
