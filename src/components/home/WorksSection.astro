@@ -181,8 +181,8 @@ const capOf = (img: GalleryImage) =>
   // 约 285px，墙宽 = min(1264, (视口高−285)×Σ1Σ2/(Σ1+Σ2))；轮换改变 Σ 后重算，
   // 墙宽经 max-width 过渡与行呼吸同步。移动端不启用（满宽单竖图布局）。
   const WALL_MAX = 1264;
-  // 固定开销：区块留白 112 + 标题行（默认行高约 51 + 22 间距）+ 两行图注 52 + 行距 16 ≈ 253
-  const FIXED_BUDGET = 260;
+  // 固定开销：区块留白 112 + 标题行（默认行高约 51 + 22 间距）+ 两行图注 52 + 行距 24 ≈ 261
+  const FIXED_BUDGET = 268;
   const rowSum = (row: Element | null) =>
     [...(row?.querySelectorAll<HTMLElement>('.gslot') ?? [])]
       .filter(g => g.getBoundingClientRect().width > 0)
@@ -402,13 +402,13 @@ const capOf = (img: GalleryImage) =>
 
   .ribbon-row {
     display: flex;
-    gap: 14px;
+    gap: 22px;
     align-items: flex-start;
     min-width: 0;
   }
 
   .ribbon-row--aux {
-    margin-top: 16px;
+    margin-top: 24px;
     max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
@@ -430,7 +430,6 @@ const capOf = (img: GalleryImage) =>
     padding: 0;
     border: 0;
     background: var(--muted);
-    border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
     transition: aspect-ratio 0.9s ease;
@@ -525,7 +524,6 @@ const capOf = (img: GalleryImage) =>
     max-height: 78vh;
     width: auto;
     height: auto;
-    border-radius: 2px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
   }
 
@@ -615,7 +613,7 @@ const capOf = (img: GalleryImage) =>
   /* —— 平板：辅带收窄、间距收紧 —— */
   @media (max-width: 1023px) {
     .ribbon-row {
-      gap: 10px;
+      gap: 16px;
     }
 
     .ribbon-row--aux {
@@ -635,7 +633,7 @@ const capOf = (img: GalleryImage) =>
     }
 
     .ribbon-row {
-      gap: 8px;
+      gap: 12px;
     }
 
     .gslot--mhide {
@@ -652,7 +650,7 @@ const capOf = (img: GalleryImage) =>
     }
 
     .ribbon-row--aux {
-      margin-top: 12px;
+      margin-top: 16px;
       max-width: none;
     }
 
