@@ -2575,3 +2575,16 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 复验：radius=0、gap 22px、bandGap
   24px、sectionBottom 仍恰好 900 一屏、稳态零裁切保持（maxDev
   0.63% 含过渡态）、无溢出
+
+### 2026-10-25 · 画廊防抖重构：三层复合缓动 → 单层数值过渡
+
+- 用户反馈换图时所有照片抖动（怀疑动画不够线性）→ 根因确认：墙 max-width
+  / 槽 flex-grow /
+  aspect-ratio 三层复合 ease 缓动速度叠加不均，且 aspect-ratio 过渡部分浏览器不支持时直接跳变
+- 重构：fitWall 解析几何后 JS 一次性写入每槽目标 width/height（px，flex 置 0 0
+  auto），只过渡这两个数值（0.9s
+  ease 全槽一致）→ 单层插值整墙同起同止同速；max-width 瞬时设置不再过渡；无 JS 仍回退 flex-grow +
+  aspect-ratio 兜底
+- 健壮性：跨断点（桌面→移动）clearLayout 清内联 px 交还 CSS；gap 从 computed
+  style 动态读取（平板 16px 断点自适应）；辅带 1100px 封顶时主带吃剩余高度
+- 实测：14s 窗口 73 个变化采样点，最大单步 6px、跳变 0、方向回摆 0（修复前三层复合存在突跳）；桌面/平板(900px)均恰好一屏（900/800）；跨断点清理生效（390 主槽 351 满宽）；零裁切稳态保持
