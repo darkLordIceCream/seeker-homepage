@@ -464,9 +464,10 @@ const capOf = (img: GalleryImage) =>
     flex: var(--fg) 1 0%;
     min-width: 0;
     margin: 0;
+    /* 与淡入同长 + ease-in-out：起止速度连续，布局与透明度同步呼吸 */
     transition:
-      width 0.9s ease,
-      height 0.9s ease;
+      width 1.1s ease-in-out,
+      height 1.1s ease-in-out;
   }
 
   .shot {

@@ -84,11 +84,15 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
       return;
     }
 
-    // 预载完成才切换（避免半图）；失败则还原占位等下一轮
-    const probe = new Image();
-    probe.onload = () => {
-      standby.src = next.src;
-      standby.alt = `${next.alt}（作者：${next.author}）`;
+    standby.src = next.src;
+    standby.alt = `${next.alt}（作者：${next.author}）`;
+
+    // decode() 确保像素真正解码就绪后才开始交叉淡入——
+    // 否则新图会在淡入中途才"显形"，视觉上闪一下（抖感来源之一）
+    const apply = () => {
+      if (!document.contains(slot.el)) {
+        return;
+      }
       standby.classList.add('is-active');
       active.classList.remove('is-active');
       // 灯箱触发按钮与图注跟随当前图
@@ -104,12 +108,15 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
       }
       opts.onSwap?.(slot.el, next);
     };
-    probe.onerror = () => {
-      if (cur) {
-        state.set(slot.el, cur);
-      }
-    };
-    probe.src = next.src;
+    standby
+      .decode()
+      .then(apply)
+      .catch(() => {
+        // 解码失败（加载失败/槽已移除）：还原预约，等下一轮
+        if (cur) {
+          state.set(slot.el, cur);
+        }
+      });
   };
 
   const timers = new Map<HTMLElement, number>();
