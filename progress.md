@@ -2544,3 +2544,17 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   0%；等高/满宽/一屏/320/390/暗色/灯箱全过；type-check 0 错、lint 0 错、build
   83 页；截图 r2-*.png
 - **停在方向门**：A/B/C 待选（可混搭）；选定后落进 WorksSection 并处理 scroll-snap
+
+### 2026-10-25 · Gallery 2.0 收官：丝带呼吸正式落地首页 #works
+
+- 用户选定方向 A（原话「就选丝带呼吸，直接开干吧」）→
+  demo 页/组件删除，逻辑并入src/components/home/WorksSection.astro（单组件自包含，沿用项目零依赖惯例）
+- 一屏数学（新增 fitWall）：墙宽 = min(1264,
+  (视口高−285)×Σ1Σ2/(Σ1+Σ2))，轮换改变 Σ 后重算 + max-width
+  0.9s 过渡——两行高之和恒等于可用视口高，任何轮换组合不超首屏（实测 sectionBottom=900 恰好一屏）
+- 数据层清理：gallery.ts 删 GALLERY_HERO/SUPPORT_TALL/SUPPORT_SQUARE/GALLERY_FEATURED（feat-016 轮换模型与 feat-042 固定精选均被新机制取代），仅留 GALLERY_POOL；AnniversaryCard/7th 页消费者零改动回归通过
+- 过程修 bug：WorksSection 重写时 onSwap 漏更新槽位 --ar/--fg（demo 里该逻辑在 onSwap 内）——换图后槽比例停留首图导致 letterbox，补上后稳态 0.02%
+- 验收：桌面 1440 稳态零裁切 0.02%/等高/一屏 900 恰好、hash 两次复测落位、scrollspy/进度点/角卡正常、390 主竖满宽稳态 0.06-0.11%、320 无溢出、暗色正常、灯箱 1/8 当前图 matches/←→/Esc、七周年回归；init.sh 全绿（build
+  79 页，demo 删除后由 83 回落）
+- 分支 feat/gallery-2.0 两个提交（567a82c 第一轮 +
+  5a8e4ff 第二轮 + 本次落地），未推送；方向门记录 design-demos/homepage-gallery/direction-approved.md 待补用户选择原话

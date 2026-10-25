@@ -1,17 +1,15 @@
 /**
- * 首页「作品 Gallery」图单（feat-016，2026-09 问卷收集版）—— 唯一的换图入口。
- * 未来更换作品只改这个文件，WorksSection 的布局与交互不动。
+ * 首页「作品 Gallery」图单（2026-09 问卷收集版，39 张）—— 唯一的换图入口。
+ * 未来更换作品只改这个文件；WorksSection 的布局与交互不动。
  *
- * 数据来源（2026-09 成员问卷收集，39 张）：
+ * 数据来源（2026-09 成员问卷收集）：
  * - 全部图片存于 R2 `gallery/<作者ID>.jpg`（文件名即作者 ID），
  *   构建期统一长边 ≤2560 / JPEG q90 / 已去除 EXIF（含位置隐私）；
  * - author 即作者 ID（问卷署名，原样保留）；title 来自文件名中的作品名后缀；
  * - alt 依据真实画面内容撰写；
- * - `GALLERY_POOL` 为全量池（含未上墙作品），七周年板块的 HERO 背景、
- *   首页角卡与「留光成物」纪念物照片均从池中取图（单一来源）。
- *
- * 轮换模型：每个图位持有自己的候选列表，由 WorksSection 的小段脚本
- * 以 3~6s/次的独立随机间隔轮换（各图位节奏互不相同，形成不对称感）。
+ * - GALLERY_POOL 为全量池（单一事实来源）：
+ *   · 首页 Gallery 2.0「丝带呼吸」（WorksSection）按宽高比从中分池随机轮换；
+ *   · 七周年板块的 HERO 背景、首页角卡与「留光成物」纪念物照片均从池中取图。
  */
 export interface GalleryImage {
   /** R2 绝对 URL */
@@ -30,8 +28,8 @@ export interface GalleryImage {
 
 const R2 = 'https://r2.xn--seeker-ng2jm403afb4a.club';
 
-/** 主视觉图位（横幅）：单格轮换列表 */
-export const GALLERY_HERO: readonly GalleryImage[] = [
+/** 全量池（39 张）：首页画廊轮换 / 七周年 HERO 背景 / 首页角卡 / 纪念物取图来源 */
+export const GALLERY_POOL: readonly GalleryImage[] = [
   {
     src: `${R2}/gallery/Feiyu.jpg`,
     w: 2560,
@@ -69,167 +67,140 @@ export const GALLERY_HERO: readonly GalleryImage[] = [
     title: '武功山之金晨云海',
     alt: '金色晨光漫过武功山的草甸山脊，云海在山谷间缓缓铺开。',
   },
-] as const;
-
-/** 竖幅图位 ×3（2:3）：每格一份独立轮换列表 */
-export const GALLERY_SUPPORT_TALL: readonly (readonly GalleryImage[])[] = [
-  [
-    {
-      src: `${R2}/gallery/Rorbin.jpg`,
-      w: 1704,
-      h: 2560,
-      author: 'Rorbin',
-      alt: '夜色河岸边火光连成一片，对岸的城市灯火与浓云倒映在水里。',
-    },
-    {
-      src: `${R2}/gallery/仔仔_济南的夏天.jpg`,
-      w: 1703,
-      h: 2560,
-      author: '仔仔',
-      title: '济南的夏天',
-      alt: '一列列车驶过城市高架，夏夜的楼群与轨道在蓝调里延伸。',
-    },
-    {
-      src: `${R2}/gallery/阿岐.jpg`,
-      w: 1682,
-      h: 2560,
-      author: '阿岐',
-      alt: '夜间的民俗表演上，铁水打向空中炸开漫天金色火花。',
-    },
-  ],
-  [
-    {
-      src: `${R2}/gallery/Henry浩麟.jpg`,
-      w: 1920,
-      h: 2560,
-      author: 'Henry浩麟',
-      alt: '云雾在峭壁孤峰之间流动，山体在薄雾里只露出轮廓。',
-    },
-    {
-      src: `${R2}/gallery/柳小丁_雾都雨夜_.jpg`,
-      w: 1440,
-      h: 2560,
-      author: '柳小丁',
-      title: '雾都雨夜',
-      alt: '仰拍雨夜里的摩天楼直入云层，一把伞悬在两栋楼之间。',
-    },
-    {
-      src: `${R2}/gallery/沐_静谧.jpg`,
-      w: 1706,
-      h: 2560,
-      author: '沐',
-      title: '静谧',
-      alt: '俯瞰被白雪覆盖的滨海小镇，云雾安静地漫过海湾。',
-    },
-  ],
-  [
-    {
-      src: `${R2}/gallery/Ferman.jpg`,
-      w: 1440,
-      h: 2560,
-      author: 'Ferman',
-      alt: '绿色极光在针叶林上空舞动，星空下雪地泛着微光。',
-    },
-    {
-      src: `${R2}/gallery/南山.jpg`,
-      w: 1706,
-      h: 2560,
-      author: '南山',
-      alt: '航拍蓝橙交织的海岸漩涡，一块深色礁石正居涡心。',
-    },
-    {
-      src: `${R2}/gallery/舒克大地瓜.jpg`,
-      w: 1695,
-      h: 2560,
-      author: '舒克大地瓜',
-      alt: '夜色渔港里泊着几艘渔船，远处的灯塔亮着暖光。',
-    },
-  ],
-] as const;
-
-/** 方幅图位 ×3（1:1）：每格一份独立轮换列表 */
-export const GALLERY_SUPPORT_SQUARE: readonly (readonly GalleryImage[])[] = [
-  [
-    {
-      src: `${R2}/gallery/旺旺仙贝.jpg`,
-      w: 2560,
-      h: 2560,
-      author: '旺旺仙贝',
-      alt: '一面素墙前，台灯与落地灯各自亮着一团暖光。',
-    },
-    {
-      src: `${R2}/gallery/拾1_绿鬣蜥.jpg`,
-      w: 2560,
-      h: 1928,
-      author: '拾1',
-      title: '绿鬣蜥',
-      alt: '一只绿鬣蜥趴在沙地上回头张望，皮肤纹理清晰可见。',
-    },
-    {
-      src: `${R2}/gallery/V.ter.jpg`,
-      w: 2560,
-      h: 1707,
-      author: 'V.ter',
-      alt: '夏日海滩的浅浪里，人们弯着腰嬉水，浪花漫过脚踝。',
-    },
-  ],
-  [
-    {
-      src: `${R2}/gallery/Michelle_Chen_蓝调下的阳明滩.jpg`,
-      w: 2560,
-      h: 1707,
-      author: 'Michelle_Chen',
-      title: '蓝调下的阳明滩',
-      alt: '蓝调时刻的大桥亮起灯链，灯光倒映在安静的江面上。',
-    },
-    {
-      src: `${R2}/gallery/南迦巴瓦_恢复的3.jpg`,
-      w: 1707,
-      h: 2560,
-      author: '南迦巴瓦',
-      alt: '晨光落在河谷与雪峰之间，江水在金色山峦里穿行。',
-    },
-    {
-      src: `${R2}/gallery/镜中_市井五味.jpg`,
-      w: 988,
-      h: 1440,
-      author: '镜中',
-      title: '市井五味',
-      alt: '俯拍市集摊位，一格一格的香料五谷前围坐着挑拣的人。',
-    },
-  ],
-  [
-    {
-      src: `${R2}/gallery/纯黑的林桑_怪天气_.jpg`,
-      w: 1440,
-      h: 2560,
-      author: '纯黑的林桑',
-      title: '怪天气',
-      alt: '人物抱着警示条纹的方块，头顶漂浮着一簇绿色气球。',
-    },
-    {
-      src: `${R2}/gallery/Zijie-Chen-大海道拍车.jpg`,
-      w: 1535,
-      h: 2048,
-      author: 'Zijie-Chen',
-      title: '大海道拍车',
-      alt: '沙漠公路上，一辆车正驶向落日的尽头。',
-    },
-    {
-      src: `${R2}/gallery/王哼哼.jpg`,
-      w: 2560,
-      h: 1920,
-      author: '王哼哼',
-      alt: '车站的长阶梯上两个行人擦肩，头顶悬着一面大钟。',
-    },
-  ],
-] as const;
-
-/** 全量池（39 张，含未上墙作品）：七周年 HERO 背景 / 首页角卡 / 纪念物取图来源 */
-export const GALLERY_POOL: readonly GalleryImage[] = [
-  ...GALLERY_HERO,
-  ...GALLERY_SUPPORT_TALL.flat(),
-  ...GALLERY_SUPPORT_SQUARE.flat(),
+  {
+    src: `${R2}/gallery/Rorbin.jpg`,
+    w: 1704,
+    h: 2560,
+    author: 'Rorbin',
+    alt: '夜色河岸边火光连成一片，对岸的城市灯火与浓云倒映在水里。',
+  },
+  {
+    src: `${R2}/gallery/仔仔_济南的夏天.jpg`,
+    w: 1703,
+    h: 2560,
+    author: '仔仔',
+    title: '济南的夏天',
+    alt: '一列列车驶过城市高架，夏夜的楼群与轨道在蓝调里延伸。',
+  },
+  {
+    src: `${R2}/gallery/阿岐.jpg`,
+    w: 1682,
+    h: 2560,
+    author: '阿岐',
+    alt: '夜间的民俗表演上，铁水打向空中炸开漫天金色火花。',
+  },
+  {
+    src: `${R2}/gallery/Henry浩麟.jpg`,
+    w: 1920,
+    h: 2560,
+    author: 'Henry浩麟',
+    alt: '云雾在峭壁孤峰之间流动，山体在薄雾里只露出轮廓。',
+  },
+  {
+    src: `${R2}/gallery/柳小丁_雾都雨夜_.jpg`,
+    w: 1440,
+    h: 2560,
+    author: '柳小丁',
+    title: '雾都雨夜',
+    alt: '仰拍雨夜里的摩天楼直入云层，一把伞悬在两栋楼之间。',
+  },
+  {
+    src: `${R2}/gallery/沐_静谧.jpg`,
+    w: 1706,
+    h: 2560,
+    author: '沐',
+    title: '静谧',
+    alt: '俯瞰被白雪覆盖的滨海小镇，云雾安静地漫过海湾。',
+  },
+  {
+    src: `${R2}/gallery/Ferman.jpg`,
+    w: 1440,
+    h: 2560,
+    author: 'Ferman',
+    alt: '绿色极光在针叶林上空舞动，星空下雪地泛着微光。',
+  },
+  {
+    src: `${R2}/gallery/南山.jpg`,
+    w: 1706,
+    h: 2560,
+    author: '南山',
+    alt: '航拍蓝橙交织的海岸漩涡，一块深色礁石正居涡心。',
+  },
+  {
+    src: `${R2}/gallery/舒克大地瓜.jpg`,
+    w: 1695,
+    h: 2560,
+    author: '舒克大地瓜',
+    alt: '夜色渔港里泊着几艘渔船，远处的灯塔亮着暖光。',
+  },
+  {
+    src: `${R2}/gallery/旺旺仙贝.jpg`,
+    w: 2560,
+    h: 2560,
+    author: '旺旺仙贝',
+    alt: '一面素墙前，台灯与落地灯各自亮着一团暖光。',
+  },
+  {
+    src: `${R2}/gallery/拾1_绿鬣蜥.jpg`,
+    w: 2560,
+    h: 1928,
+    author: '拾1',
+    title: '绿鬣蜥',
+    alt: '一只绿鬣蜥趴在沙地上回头张望，皮肤纹理清晰可见。',
+  },
+  {
+    src: `${R2}/gallery/V.ter.jpg`,
+    w: 2560,
+    h: 1707,
+    author: 'V.ter',
+    alt: '夏日海滩的浅浪里，人们弯着腰嬉水，浪花漫过脚踝。',
+  },
+  {
+    src: `${R2}/gallery/Michelle_Chen_蓝调下的阳明滩.jpg`,
+    w: 2560,
+    h: 1707,
+    author: 'Michelle_Chen',
+    title: '蓝调下的阳明滩',
+    alt: '蓝调时刻的大桥亮起灯链，灯光倒映在安静的江面上。',
+  },
+  {
+    src: `${R2}/gallery/南迦巴瓦_恢复的3.jpg`,
+    w: 1707,
+    h: 2560,
+    author: '南迦巴瓦',
+    alt: '晨光落在河谷与雪峰之间，江水在金色山峦里穿行。',
+  },
+  {
+    src: `${R2}/gallery/镜中_市井五味.jpg`,
+    w: 988,
+    h: 1440,
+    author: '镜中',
+    title: '市井五味',
+    alt: '俯拍市集摊位，一格一格的香料五谷前围坐着挑拣的人。',
+  },
+  {
+    src: `${R2}/gallery/纯黑的林桑_怪天气_.jpg`,
+    w: 1440,
+    h: 2560,
+    author: '纯黑的林桑',
+    title: '怪天气',
+    alt: '人物抱着警示条纹的方块，头顶漂浮着一簇绿色气球。',
+  },
+  {
+    src: `${R2}/gallery/Zijie-Chen-大海道拍车.jpg`,
+    w: 1535,
+    h: 2048,
+    author: 'Zijie-Chen',
+    title: '大海道拍车',
+    alt: '沙漠公路上，一辆车正驶向落日的尽头。',
+  },
+  {
+    src: `${R2}/gallery/王哼哼.jpg`,
+    w: 2560,
+    h: 1920,
+    author: '王哼哼',
+    alt: '车站的长阶梯上两个行人擦肩，头顶悬着一面大钟。',
+  },
   {
     src: `${R2}/gallery/BayMax.jpg`,
     w: 1616,
@@ -306,26 +277,4 @@ export const GALLERY_POOL: readonly GalleryImage[] = [
     title: '麦田里的守望者',
     alt: '麦田上空的星轨绕成同心圆，一点车灯划过田埂。',
   },
-] as const;
-
-/** Gallery 2.0 首屏精选（gallery-2.0）：显式策展 6 张，固定顺序，不随机。
- *  选图兼顾：横竖比例节奏（1 超宽 + 2 横 + 3 竖）、色调冷暖交替（红层暖 → 月夜 →
- *  日间市集 → 金晨 → 蓝调雨夜 → 霓虹夜）、题材呼吸（风光/人文/城市各占其位）。
- *  条目按 src 引用全量池（单一事实来源，不复制字段）；换精选只改这里。
- *  候补（换图时优先考虑）：Michelle_Chen《蓝调下的阳明滩》 */
-const pick = (src: string): GalleryImage => {
-  const hit = GALLERY_POOL.find(img => img.src === src);
-  if (!hit) {
-    throw new Error(`GALLERY_FEATURED 引用了图池中不存在的图片：${src}`);
-  }
-  return hit;
-};
-
-export const GALLERY_FEATURED: readonly GalleryImage[] = [
-  pick(`${R2}/gallery/Feiyu.jpg`),
-  pick(`${R2}/gallery/柠檬茶Jayalt-松韵楼国旗满月.jpg`),
-  pick(`${R2}/gallery/镜中_市井五味.jpg`),
-  pick(`${R2}/gallery/心游万仞_武功山之金晨云海_.jpg`),
-  pick(`${R2}/gallery/柳小丁_雾都雨夜_.jpg`),
-  pick(`${R2}/gallery/月某人_深圳之眼.jpg`),
 ] as const;

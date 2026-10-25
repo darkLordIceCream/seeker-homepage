@@ -1,15 +1,15 @@
 /**
- * Gallery 2.0 demo 共享轮换引擎（gallery-2.0 分支，选型后并入正式实现）。
- * 延续线上 WorksSection「每槽 3~6s 独立随机间隔轮换」的机制，工程升级：
+ * Gallery 2.0「丝带呼吸」轮换引擎（首页 WorksSection 使用）。
+ * 延续上一版展墙「每槽 3~6s 独立随机间隔轮换」的机制，工程升级：
  * - 双 <img> 交叉淡入：下一张预载完成后才切换，避免半图
  * - hover 暂停该槽、document.hidden 全局暂停、prefers-reduced-motion 不启动
- * - 防同屏重复：换图前查重其他槽的当前 src
+ * - 预约制防同屏重复：换图前查重其他槽的当前 src，选定后立即占位（杜绝并发竞态）
  * - 每次换图同步更新灯箱触发按钮的 data-full/data-title/data-author/aria-label
- *   与图注文本，并回调 onSwap 供布局重算（如丝带行几何）
+ *   与图注文本，并回调 onSwap 供布局重算（丝带行几何）
  *
- * 槽位 DOM 约定：
- *   .gslot[data-pool="k"] > button.shot[data-full...] > img.gimg.is-active + img.gimg
- *                          + figcaption.gcap（可选，内含 .gcap-text）
+ * 槽位 DOM 约定（el 必须是包含 img/button/caption 的容器）：
+ *   .gslot > button.shot[data-full...] > img.gimg.is-active + img.gimg
+ *           + figcaption.gcap（可选，内含 .gcap-text）
  */
 import type { GalleryImage } from '@/data/gallery';
 

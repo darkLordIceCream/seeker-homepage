@@ -1,391 +1,687 @@
 ---
 /**
- * 首页第 2 屏「画廊 Gallery」：编辑式摄影展墙（feat-016）。
- * 设计原则：不模拟摄影，直接展示摄影——照片是唯一视觉主体，UI 极少。
- * 数据来自 src/data/gallery.ts（换作品只改那个文件）；R2 只读。
- * 全部图位轮换：每格持有多张候选，由下方小段脚本以 3~6s/次的独立随机
- * 间隔切换（各图位节奏互不相同，形成不对称感）；悬停暂停该格轮换；
- * prefers-reduced-motion 下脚本不启动、全部静态展示首张。
- * 入场复用全局 .reveal 机制（--reveal-delay 错峰）。
+ * 首页第 2 屏「画廊 Gallery」：丝带呼吸（Gallery 2.0，feat-043）。
+ * 等高丝带定理：一行内所有图等高时，行高 = 行宽 ÷ 各图宽高比之和（Σar）。
+ * 实现：槽 flex-grow = 自身 ar、aspect-ratio = 自身 ar → 行永远满宽、等高、
+ * 零裁切，与轮换出什么比例无关；换图时 flex-grow/aspect-ratio 数值过渡，
+ * 整面墙如呼吸般重排。照片按原始比例随机轮换（每槽 3~6s 独立间隔，
+ * 引擎见 src/lib/gallery-cycle.ts：预载交叉淡入、hover 暂停、防同屏重复）。
+ * 一屏数学：墙宽由 JS 依「两行高之和 = 可用视口高」反解并随轮换微调，
+ * 任何轮换组合都不超出首屏（见脚本 fitWall）；无 JS 时静态首图满宽兜底。
+ * 移动端：主带只留一张竖图满宽（竖图在窄屏才有冲击力），辅带 2 横 1 竖矮带。
+ * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（换作品只改那个文件）；R2 只读。
  */
-import {
-  type GalleryImage,
-  GALLERY_HERO,
-  GALLERY_SUPPORT_SQUARE,
-  GALLERY_SUPPORT_TALL,
-} from '@/data/gallery';
+import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
 
-/** 入场错峰延迟 */
-const delay = (i: number) => `--reveal-delay:${80 + i * 70}ms`;
+const arOf = (img: GalleryImage) => img.w / img.h;
 
-/** 图位样式：入场延迟 + 首图真实宽高比（--slot-ar）。
- *  移动端杂志网格用 --slot-ar 按原生比例展示，替代展墙的固定裁切比例 */
-const slotStyle = (i: number, pool: readonly GalleryImage[]) => {
-  const first = pool[0];
-  return first ? `${delay(i)}; --slot-ar:${first.w} / ${first.h}` : delay(i);
+/** 比例分池：横 1.2–2.2 / 竖 0.5–0.85（超宽与近方各成一类不入轮换池）。
+ *  主带竖槽用 V_MAIN（0.6–0.85，排除 0.56 极端竖图），配合 fitWall 保证
+ *  任何轮换组合都不超出首屏 */
+const H_POOL = GALLERY_POOL.filter(i => {
+  const ar = arOf(i);
+  return ar >= 1.2 && ar < 2.2;
+});
+const V_POOL = GALLERY_POOL.filter(i => {
+  const ar = arOf(i);
+  return ar >= 0.5 && ar < 0.85;
+});
+const V_MAIN = V_POOL.filter(i => arOf(i) >= 0.6);
+
+/** 按文件名片段取指定首图（真实池内引用，不复制字段） */
+const pick = (pool: readonly GalleryImage[], key: string): GalleryImage => {
+  const hit = pool.find(i => i.src.includes(key));
+  if (!hit) {
+    throw new Error(`首页画廊首图缺失：${key}`);
+  }
+  return hit;
 };
 
-/** 图注：有作品名带名，无题只署名 */
-const credit = (img: GalleryImage) =>
-  img.title ? `@${img.author}《${img.title}》` : `@${img.author}`;
+interface SlotCfg {
+  kind: 'h' | 'v' | 'v-main';
+  first: GalleryImage;
+  /** 移动端是否隐藏 */
+  mHide?: boolean;
+}
 
-/** 主图池图的无障碍描述附署名（视觉署名随轮换，读屏走 alt） */
-const heroAlt = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
+/** 主带 1 横 2 竖（V_MAIN 池，行高约 371–480px）；辅带 3 横 2 竖（约 161–215px）。
+ *  移动端只保留主带第一张竖图满宽 + 辅带 2 横 1 竖矮带 */
+const MAIN_SLOTS: SlotCfg[] = [
+  { kind: 'h', first: pick(H_POOL, '心游万仞'), mHide: true },
+  { kind: 'v-main', first: pick(V_MAIN, 'Henry浩麟') },
+  { kind: 'v-main', first: pick(V_MAIN, '南迦巴瓦'), mHide: true },
+];
+const AUX_SLOTS: SlotCfg[] = [
+  { kind: 'h', first: pick(H_POOL, 'Michelle_Chen') },
+  { kind: 'h', first: pick(H_POOL, 'Tommic'), mHide: true },
+  { kind: 'v', first: pick(V_POOL, '镜中') },
+  { kind: 'h', first: pick(H_POOL, '王哼哼') },
+  { kind: 'v', first: pick(V_POOL, 'Ferman'), mHide: true },
+];
+
+const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
+const capOf = (img: GalleryImage) =>
+  img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
 ---
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
   <header class="gallery-head reveal">
-    <h2 class="gallery-title" id="works-title">
-      画廊 <span class="gallery-en">Gallery</span>
-    </h2>
+    <p class="gallery-kicker">Gallery · Featured</p>
+    <h2 class="gallery-title" id="works-title">画廊 · 追光者</h2>
+    <p class="gallery-lead">照片按原始比例随机轮换，等高丝带让任何比例都恰好填满一行——盯着看，它在呼吸。</p>
   </header>
 
-  <div class="gallery-wall">
-    {/* 主视觉 + 竖幅一排 */}
-    <div class="wall-row wall-row--hero">
-      <div class="wall-slot wall-slot--hero reveal" data-cycle style={slotStyle(0, GALLERY_HERO)}>
-        <div class="slot-frame">
-          {
-            GALLERY_HERO.map((img, i) => (
-              <img
-                alt={heroAlt(img)}
-                class:list={['slot-img', i === 0 && 'is-active']}
-                data-fade-img
-                decoding="async"
-                height={img.h}
-                loading="lazy"
-                src={img.src}
-                width={img.w}
-              />
-            ))
-          }
-        </div>
-        <p class="slot-credit">
-          {
-            GALLERY_HERO.map((img, i) => (
-              <span class:list={['slot-credit-name', i === 0 && 'is-active']} data-fade-credit>
-                {credit(img)}
-              </span>
-            ))
-          }
-        </p>
-      </div>
+  <div class="gallery-wall reveal" data-wall style="--reveal-delay:120ms">
+    <div class="ribbon-row ribbon-row--main" aria-label="主带作品">
       {
-        GALLERY_SUPPORT_TALL.map((pool, slotIndex) => (
-          <div class="wall-slot wall-slot--tall reveal" data-cycle style={slotStyle(slotIndex + 1, pool)}>
-            <div class="slot-frame">
-              {pool.map((img, i) => (
+        MAIN_SLOTS.map(cfg => {
+          const img = cfg.first;
+          const ar = arOf(img).toFixed(4);
+          return (
+            <figure class:list={['gslot', cfg.mHide && 'gslot--mhide']} data-kind={cfg.kind} style={`--ar:${ar};--fg:${ar}`}>
+              <button
+                aria-label={`放大查看 ${capOf(img)}`}
+                class="shot"
+                data-author={img.author}
+                data-full={img.src}
+                data-title={img.title ?? ''}
+                type="button"
+              >
                 <img
-                  alt={img.alt}
-                  class:list={['slot-img', i === 0 && 'is-active']}
-                  data-fade-img
+                  alt={altOf(img)}
+                  class="gimg is-active"
                   decoding="async"
+                  fetchpriority={cfg.kind === 'h' ? 'high' : undefined}
                   height={img.h}
-                  loading="lazy"
+                  loading={cfg.kind === 'h' ? 'eager' : 'lazy'}
                   src={img.src}
                   width={img.w}
                 />
-              ))}
-            </div>
-            <p class="slot-credit">
-              {pool.map((img, i) => (
-                <span class:list={['slot-credit-name', i === 0 && 'is-active']} data-fade-credit>
-                  {credit(img)}
-                </span>
-              ))}
-            </p>
-          </div>
-        ))
+                <img alt="" aria-hidden="true" class="gimg" decoding="async" />
+              </button>
+              <figcaption class="gcap"><span class="gcap-text">{capOf(img)}</span></figcaption>
+            </figure>
+          );
+        })
       }
     </div>
 
-    {/* 方幅一排 */}
-    <div class="wall-row wall-row--square">
+    <div class="ribbon-row ribbon-row--aux" aria-label="辅带作品">
       {
-        GALLERY_SUPPORT_SQUARE.map((pool, slotIndex) => (
-          <div class="wall-slot wall-slot--square reveal" data-cycle style={slotStyle(slotIndex + 4, pool)}>
-            <div class="slot-frame">
-              {pool.map((img, i) => (
+        AUX_SLOTS.map(cfg => {
+          const img = cfg.first;
+          const ar = arOf(img).toFixed(4);
+          return (
+            <figure class:list={['gslot', cfg.mHide && 'gslot--mhide']} data-kind={cfg.kind} style={`--ar:${ar};--fg:${ar}`}>
+              <button
+                aria-label={`放大查看 ${capOf(img)}`}
+                class="shot"
+                data-author={img.author}
+                data-full={img.src}
+                data-title={img.title ?? ''}
+                type="button"
+              >
                 <img
-                  alt={img.alt}
-                  class:list={['slot-img', i === 0 && 'is-active']}
-                  data-fade-img
+                  alt={altOf(img)}
+                  class="gimg is-active"
                   decoding="async"
                   height={img.h}
                   loading="lazy"
                   src={img.src}
                   width={img.w}
                 />
-              ))}
-            </div>
-            <p class="slot-credit">
-              {pool.map((img, i) => (
-                <span class:list={['slot-credit-name', i === 0 && 'is-active']} data-fade-credit>
-                  {credit(img)}
-                </span>
-              ))}
-            </p>
-          </div>
-        ))
+                <img alt="" aria-hidden="true" class="gimg" decoding="async" />
+              </button>
+              <figcaption class="gcap"><span class="gcap-text">{capOf(img)}</span></figcaption>
+            </figure>
+          );
+        })
       }
     </div>
+  </div>
+
+  <div aria-label="查看大图" aria-modal="true" class="gl-lightbox" hidden role="dialog">
+    <button aria-label="关闭图片查看器" class="gl-btn gl-close" type="button">
+      <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+    </button>
+    <button aria-label="下一张作品" class="gl-btn gl-next" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+    <figure class="gl-stage">
+      <img alt="" class="gl-img" decoding="async" />
+      <figcaption class="gl-cap"></figcaption>
+    </figure>
+    <button aria-label="上一张作品" class="gl-btn gl-prev" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <p aria-live="polite" class="gl-count"></p>
   </div>
 </section>
 
 <script>
-  // 每个图位独立随机轮换：每次切换间隔 3~6s 随机，各格节奏互不相同（不对称感）。
-  // 渐进增强：脚本不运行（含 prefers-reduced-motion）时各格静态展示首张。
-  const slots = document.querySelectorAll<HTMLElement>('[data-cycle]');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  import { startGalleryCycle } from '@/lib/gallery-cycle';
+  import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
 
-  if (!reduced.matches) {
-    for (const slot of slots) {
-      const imgs = slot.querySelectorAll<HTMLElement>('[data-fade-img]');
-      const names = slot.querySelectorAll<HTMLElement>('[data-fade-credit]');
-      if (imgs.length < 2) {
-        continue;
-      }
+  const arOf = (img: GalleryImage) => img.w / img.h;
+  const H_POOL = GALLERY_POOL.filter(i => {
+    const ar = arOf(i);
+    return ar >= 1.2 && ar < 2.2;
+  });
+  const V_POOL = GALLERY_POOL.filter(i => {
+    const ar = arOf(i);
+    return ar >= 0.5 && ar < 0.85;
+  });
+  const V_MAIN = V_POOL.filter(i => arOf(i) >= 0.6);
 
-      let current = 0;
-      let timer = 0;
-      let paused = false;
+  const wall = document.querySelector<HTMLElement>('[data-wall]');
+  const isDesktop = () => window.matchMedia('(min-width: 769px)').matches;
 
-      const show = (next: number) => {
-        imgs[current]?.classList.remove('is-active');
-        names[current]?.classList.remove('is-active');
-        current = next;
-        imgs[current]?.classList.add('is-active');
-        names[current]?.classList.add('is-active');
-      };
+  // —— 一屏数学：两行高之和 = 可用视口高 → 反解墙宽 ——
+  // 行高 = W/Σar，两行总高 = W×(1/Σ1+1/Σ2)。固定开销（标题/图注/间距/区块留白）
+  // 约 285px，墙宽 = min(1264, (视口高−285)×Σ1Σ2/(Σ1+Σ2))；轮换改变 Σ 后重算，
+  // 墙宽经 max-width 过渡与行呼吸同步。移动端不启用（满宽单竖图布局）。
+  const WALL_MAX = 1264;
+  const FIXED_BUDGET = 285;
+  const rowSum = (row: Element | null) =>
+    [...(row?.querySelectorAll<HTMLElement>('.gslot') ?? [])]
+      .filter(g => g.getBoundingClientRect().width > 0)
+      .reduce((acc, g) => acc + (parseFloat(g.style.getPropertyValue('--fg')) || 0), 0);
 
-      // 切换间隔：3~6s 均匀随机
-      const nextDelay = () => 3000 + Math.random() * 3000;
-
-      const schedule = () => {
-        timer = window.setTimeout(() => {
-          show((current + 1) % imgs.length);
-          schedule();
-        }, nextDelay());
-      };
-
-      // 悬停暂停该格轮换，移开后继续（触屏无 hover 语义，不受影响）
-      slot.addEventListener('mouseenter', () => {
-        paused = true;
-        window.clearTimeout(timer);
-      });
-      slot.addEventListener('mouseleave', () => {
-        if (!paused) {
-          return;
-        }
-        paused = false;
-        schedule();
-      });
-
-      schedule();
+  const fitWall = () => {
+    if (!wall || !isDesktop()) {
+      wall?.style.removeProperty('max-width');
+      return;
     }
+    const s1 = rowSum(wall.querySelector('.ribbon-row--main'));
+    const s2 = rowSum(wall.querySelector('.ribbon-row--aux'));
+    if (s1 <= 0 || s2 <= 0) {
+      return;
+    }
+    const avail = Math.max(320, window.innerHeight - FIXED_BUDGET);
+    const w = Math.min(WALL_MAX, (avail * s1 * s2) / (s1 + s2));
+    wall.style.maxWidth = `${Math.round(w)}px`;
+  };
+
+  // —— 轮换：换图后更新槽位比例变量 → flex-grow/aspect-ratio 过渡 → 整墙呼吸重排 ——
+  const slots = [...document.querySelectorAll<HTMLElement>('.gslot')].map(el => ({
+    el,
+    pool:
+      el.dataset.kind === 'h'
+        ? H_POOL
+        : el.dataset.kind === 'v-main'
+          ? V_MAIN
+          : V_POOL,
+  }));
+  startGalleryCycle(slots, {
+    onSwap: (el, img) => {
+      const ar = arOf(img).toFixed(4);
+      el.style.setProperty('--ar', ar);
+      el.style.setProperty('--fg', ar);
+      fitWall();
+    },
+  });
+
+  if (wall) {
+    fitWall();
+    window.addEventListener('resize', fitWall, { passive: true });
   }
+
+  // —— 灯箱：点击照片全屏浏览，Esc 关闭、←→ 切换（渐进增强，无依赖） ——
+  const lightbox = document.querySelector<HTMLElement>('.gl-lightbox');
+  const img = lightbox?.querySelector<HTMLImageElement>('.gl-img');
+  const cap = lightbox?.querySelector<HTMLElement>('.gl-cap');
+  const count = lightbox?.querySelector<HTMLElement>('.gl-count');
+  const shutters = [...document.querySelectorAll<HTMLButtonElement>('.shot')];
+
+  let current = -1;
+  let lastFocus: HTMLElement | null = null;
+
+  // 触发按钮的 dataset 会被轮换引擎实时更新（随机播放），打开/切换时现读
+  const readSlide = (index: number) => {
+    const d = shutters[index]?.dataset;
+    if (!d) {
+      return null;
+    }
+    return { full: d.full ?? '', title: d.title ?? '', author: d.author ?? '' };
+  };
+
+  const renderSlide = () => {
+    const slide = readSlide(current);
+    if (!img || !cap || !count || !slide) {return;}
+    img.classList.remove('gl-img--error');
+    img.src = slide.full;
+    img.alt = slide.title
+      ? `《${slide.title}》——${slide.author}作品`
+      : `${slide.author}作品`;
+    cap.textContent = slide.title
+      ? `《${slide.title}》 @${slide.author}`
+      : `@${slide.author}`;
+    count.textContent = `${current + 1} / ${shutters.length}`;
+  };
+
+  const openLightbox = (index: number) => {
+    if (!lightbox) {return;}
+    current = index;
+    renderSlide();
+    lastFocus = document.activeElement as HTMLElement | null;
+    // 锁定 html 滚动（overflow 方案天然保留滚动位置）
+    document.documentElement.style.overflow = 'hidden';
+    lightbox.hidden = false;
+    lightbox.querySelector<HTMLElement>('.gl-close')?.focus();
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) {return;}
+    lightbox.hidden = true;
+    document.documentElement.style.overflow = '';
+    lastFocus?.focus();
+    current = -1;
+  };
+
+  const step = (delta: number) => {
+    if (current < 0 || shutters.length === 0) {return;}
+    current = (current + delta + shutters.length) % shutters.length;
+    renderSlide();
+  };
+
+  shutters.forEach((btn, i) => {
+    btn.addEventListener('click', () => openLightbox(i));
+  });
+  lightbox?.querySelector('.gl-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.gl-prev')?.addEventListener('click', () => step(-1));
+  lightbox?.querySelector('.gl-next')?.addEventListener('click', () => step(1));
+  // 点背景关闭（点在图片/按钮上不关）
+  lightbox?.addEventListener('click', e => {
+    if (e.target === lightbox) {closeLightbox();}
+  });
+
+  // 键盘：Esc 关闭 / ←→ 切换 / Tab 焦点圈禁在灯箱内
+  const FOCUSABLE = '.gl-close, .gl-prev, .gl-next';
+  document.addEventListener('keydown', e => {
+    if (current < 0 || !lightbox) {return;}
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowRight') {
+      step(1);
+    } else if (e.key === 'ArrowLeft') {
+      step(-1);
+    } else if (e.key === 'Tab') {
+      const items = [...lightbox.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) {return;}
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  // 触屏左右轻滑切换
+  let touchX = 0;
+  let touchY = 0;
+  lightbox?.addEventListener(
+    'touchstart',
+    e => {
+      const t = e.touches[0];
+      if (t) {
+        touchX = t.clientX;
+        touchY = t.clientY;
+      }
+    },
+    { passive: true },
+  );
+  lightbox?.addEventListener(
+    'touchend',
+    e => {
+      const t = e.changedTouches[0];
+      if (!t) {return;}
+      const dx = t.clientX - touchX;
+      const dy = t.clientY - touchY;
+      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        step(dx < 0 ? 1 : -1);
+      }
+    },
+    { passive: true },
+  );
+
+  // 加载失败：可理解的错误态，灯箱仍可关闭/切换
+  img?.addEventListener('error', () => {
+    if (current < 0 || !cap || !count) {return;}
+    img.classList.add('gl-img--error');
+    cap.textContent = '图片加载失败——请检查网络后重试，仍可切换其他作品或关闭查看器。';
+    count.textContent = `${current + 1} / ${shutters.length}`;
+  });
 </script>
 
 <style>
   .gallery-section {
     background: var(--background);
-    padding-top: 88px;
-    padding-bottom: 32px;
+    padding-top: 72px;
+    padding-bottom: 40px;
   }
 
   .gallery-head {
-    max-width: 1280px;
+    max-width: 1264px;
     width: 100%;
-    margin: 0 auto 22px;
+    margin: 0 auto 16px;
+    text-align: center;
+  }
+
+  .gallery-kicker {
+    margin: 0 0 6px;
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--link);
   }
 
   .gallery-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1.35rem, 2.6vw, 1.7rem);
     font-weight: 700;
     color: var(--foreground);
-    margin: 0;
-    letter-spacing: 0.06em;
+    margin: 0 0 6px;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
   }
 
-  .gallery-en {
-    font-family: var(--font-archivo);
-    font-size: 0.65em;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
+  .gallery-lead {
+    margin: 0 auto;
+    max-width: 560px;
+    font-size: 13px;
+    line-height: 1.6;
     color: var(--muted-foreground);
-    margin-left: 6px;
   }
 
-  /* —— 编辑式展墙 —— */
+  /* —— 丝带墙：flex-grow = ar → 等高丝带定理；max-width 由 fitWall 依视口反解 —— */
   .gallery-wall {
-    flex: 1;
-    min-height: 0;
     width: 100%;
-    max-width: 1280px;
+    max-width: 1264px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(14px, 2vh, 20px);
+    transition: max-width 0.9s ease;
   }
 
-  .wall-row {
-    display: grid;
-    gap: clamp(12px, 1.5vw, 18px);
-    align-items: start;
+  .ribbon-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
     min-width: 0;
   }
 
-  /* 主图（4 份宽）+ 三张 2:3 竖幅（各 2 份宽）→ 同行等高 */
-  .wall-row--hero {
-    grid-template-columns: 4fr 2fr 2fr 2fr;
+  .ribbon-row--aux {
+    margin-top: 16px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 
-  /* 方幅一排收窄居中，留出展墙呼吸感 */
-  .wall-row--square {
-    grid-template-columns: repeat(3, 1fr);
-    width: 62%;
-    margin: 0 auto;
+  .gslot {
+    flex: var(--fg) 1 0%;
+    min-width: 0;
+    margin: 0;
+    transition: flex-grow 0.9s ease;
   }
 
-  .slot-frame {
+  .shot {
+    display: block;
     position: relative;
-    border-radius: 10px;
-    overflow: hidden;
+    width: 100%;
+    aspect-ratio: var(--ar);
+    padding: 0;
+    border: 0;
     background: var(--muted);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: aspect-ratio 0.9s ease;
   }
 
-  .wall-slot--hero .slot-frame {
-    aspect-ratio: 4 / 3;
-    max-height: 44vh;
+  .shot:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
   }
 
-  .wall-slot--tall .slot-frame {
-    aspect-ratio: 2 / 3;
-    max-height: 44vh;
-  }
-
-  .wall-slot--square .slot-frame {
-    aspect-ratio: 1 / 1;
-    max-height: 24vh;
-  }
-
-  /* 轮换图层：绝对定位叠放，切换时 opacity 交叉过渡 */
-  .slot-img {
+  .gimg {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     opacity: 0;
     transition: opacity 1.1s ease;
   }
 
-  .slot-img.is-active {
+  .gimg.is-active {
     opacity: 1;
   }
 
-  .slot-credit {
-    position: relative;
-    height: 1.4em;
-    margin: 8px 2px 0;
-    font-size: 12px;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-    color: var(--muted-foreground);
-    overflow: hidden;
-  }
-
-  .slot-credit-name {
-    position: absolute;
-    left: 0;
-    top: 0;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.9s ease;
-  }
-
-  .slot-credit-name.is-active {
-    opacity: 1;
-  }
-
-  /* —— 克制的 hover：图片轻微 scale，仅 opacity/transform —— */
   @media (hover: hover) {
-    .slot-img {
+    .gimg {
       transition:
         opacity 1.1s ease,
         transform 0.5s ease;
     }
 
-    .wall-slot:hover .slot-img.is-active {
-      transform: scale(1.02);
+    .gslot:hover .gimg.is-active {
+      transform: scale(1.015);
     }
   }
 
-  /* —— reduced-motion：无切换（脚本不启动），过渡一并移除 —— */
+  .gcap {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .gcap-text {
+    transition: opacity 0.4s ease;
+  }
+
+  /* —— 灯箱 —— */
+  .gl-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 沉浸式深底：与主题无关，看图优先 */
+    background: rgba(12, 12, 18, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    animation: gl-fade 0.25s ease-out;
+  }
+
+  .gl-lightbox[hidden] {
+    display: none;
+  }
+
+  @keyframes gl-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .gl-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 64px;
+    max-width: 100%;
+  }
+
+  /* 零裁切：完整显示原图，宽高自适应不强制填充 */
+  .gl-img {
+    display: block;
+    max-width: min(92vw, 1400px);
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  .gl-img--error {
+    min-width: 200px;
+    min-height: 120px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .gl-cap {
+    margin-top: 16px;
+    font-family: var(--font-serif-song);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.82);
+    text-align: center;
+  }
+
+  .gl-count {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .gl-btn {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .gl-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .gl-btn:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+  }
+
+  .gl-close {
+    top: 18px;
+    right: 18px;
+  }
+
+  .gl-prev {
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .gl-next {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* —— reduced-motion：无轮换（脚本不启动），过渡一并移除 —— */
   @media (prefers-reduced-motion: reduce) {
-    .slot-img,
-    .slot-credit-name {
+    .gallery-wall,
+    .gslot,
+    .shot,
+    .gimg,
+    .gcap-text,
+    .gl-lightbox {
       transition: none;
+      animation: none;
     }
   }
 
-  /* —— 响应式 —— */
-  @media (max-width: 900px) {
-    /* 主图 + 一张竖幅；方幅一排放开到整行宽 */
-    .wall-row--hero {
-      grid-template-columns: 2fr 1fr;
+  /* —— 平板：辅带收窄、间距收紧 —— */
+  @media (max-width: 1023px) {
+    .ribbon-row {
+      gap: 10px;
     }
 
-    .wall-row--hero .wall-slot:nth-child(3),
-    .wall-row--hero .wall-slot:nth-child(4) {
-      display: none;
-    }
-
-    .wall-row--square {
-      width: 100%;
+    .ribbon-row--aux {
+      max-width: 920px;
     }
   }
 
-  /* —— 移动端：两列杂志作品流 ——
-     不再沿用展墙的固定裁切比例：全部图位入列，按首图原生比例（--slot-ar）展示，
-     主图通栏压阵，竖幅与方幅两两成行；间距 8px 保持画册般的紧密排布 */
+  /* —— 移动端：主带单竖图满宽 + 辅带 2 横 1 竖矮带 —— */
   @media (max-width: 768px) {
     .gallery-section {
-      padding-top: 72px;
-      padding-bottom: 24px;
+      padding-top: 56px;
+      padding-bottom: 32px;
     }
 
     .gallery-head {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    .gallery-wall {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .ribbon-row {
       gap: 8px;
     }
 
-    /* 两排展墙的行容器并入同一网格流（≤900 的行列规则随之失效） */
-    .wall-row {
-      display: contents;
+    .gslot--mhide {
+      display: none;
     }
 
-    /* ≤900 隐藏的第 3、4 图位全部恢复参展 */
-    .wall-row--hero .wall-slot:nth-child(3),
-    .wall-row--hero .wall-slot:nth-child(4) {
-      display: block;
+    .ribbon-row--main .gslot[data-kind='h'] {
+      display: none;
     }
 
-    .wall-slot--hero {
-      grid-column: 1 / -1;
+    /* 移动端主带只剩单槽：绕开单 item flex-grow 分配怪癖，强制满宽 */
+    .ribbon-row--main .gslot:not(.gslot--mhide) {
+      flex: 1 1 100%;
     }
 
-    /* 原生比例替代固定裁切；轮换切换图以 cover 轻微裁切，可接受 */
-    .slot-frame {
-      aspect-ratio: var(--slot-ar, 3 / 2);
-      max-height: none;
+    .ribbon-row--aux {
+      margin-top: 12px;
+      max-width: none;
+    }
+
+    .gcap {
+      font-size: 11px;
+    }
+
+    .gl-stage {
+      margin: 0 12px;
+    }
+
+    .gl-prev,
+    .gl-next {
+      top: auto;
+      bottom: 18px;
+      transform: none;
+    }
+
+    .gl-count {
+      top: 26px;
     }
   }
 </style>
