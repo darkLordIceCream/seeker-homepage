@@ -2526,3 +2526,21 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   evidence；截图 design-demos/homepage-gallery/shots/
 - **停在方向门**：等用户从 A/B/C（或混搭）里选，记录将写入 design-demos/homepage-gallery/direction-approved.md；下一轮把选中方向落进 WorksSection（弃随机轮换）并处理 scroll-snap 与 >100vh 整合
 - dev server 挂在 4321（nohup）；分支 feat/gallery-2.0 未推送
+
+### 2026-10-25 · Gallery 2.0 第二轮：随机轮换三解法 demo（等待选型）
+
+- 用户否掉第一轮静态策展墙：要"一眼抓眼球 + 往下拉就出现 + 随机播放照片素材"，难点是不同比例照片不裁切且在一屏内和谐 + 移动端优化
+- 数据面先行：39 张按宽高比分池（横15/竖15/近方2/超宽1），版式只用横/竖两种池，轮换同池取图使比例波动天然受控；近方/超宽不设轮换槽
+- 共享引擎 src/lib/gallery-cycle.ts：3-6s 独立随机间隔、**预约制防同屏重复**
+  （修并发 swap 竞态：两槽同时换撞图）、预载后交叉淡入、hover/隐藏暂停、reduced-motion 静态、换图同步灯箱触发器
+- 三解法：A 丝带呼吸（等高丝带定理 行高=W/Σar，flex-grow=ar 全数值过渡；主带竖槽限 0.6-0.85 池保证极端组合行高 ≤480px
+  → 一屏 892px）；B 聚光舞台（主视觉 42svh 锁高宽随比例呼吸，移动端 --ar-m 断点变量换竖池+immediate 首换）；C 瀑布长廊（超宽横幅锚点+三列错宽 10 张长墙 2590px，相近比例子池 ±0.08）
+- 过程修 bug：① gallery-cycle 预约制（并发 swap 撞图）；② spotlight
+  `.shot--spot` 被 `.shot{width:100%}` 源序覆盖 → 提特异性
+  `.shot.shot--spot`；③ 引擎槽元素须传容器不能传 button（querySelector 结构依赖）；④ 移动端单 item
+  flex-grow 分配怪癖（free space 未分完 238/358）→ 单槽 `flex:1 1 100%` 兜底；⑤
+  ribbon 主带竖池限 0.6-0.85；⑥ 审计脚本须排除 opacity:0 旧图与过渡中间态（双采样取最小）
+- 实测：稳态零裁切 A 0.02%/B 0%/C
+  0%；等高/满宽/一屏/320/390/暗色/灯箱全过；type-check 0 错、lint 0 错、build
+  83 页；截图 r2-*.png
+- **停在方向门**：A/B/C 待选（可混搭）；选定后落进 WorksSection 并处理 scroll-snap

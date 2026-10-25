@@ -327,11 +327,11 @@
     },
     {
       "id": "feat-042",
-      "name": "Gallery 2.0 首页画廊重构 · 三方向 Demo（选型阶段）",
-      "description": "按《Seeker_Gallery_2.0_重构实现规范》做方向选型：固定 6 张策展（GALLERY_FEATURED，按 src 引用 39 张全量池、单一事实来源）+ 零依赖灯箱（复用 GalleryStory 范式，补触摸横滑/Tab 焦点圈禁/加载失败态）。硬约束：全方向全断点墙与灯箱零裁切（无 object-fit:cover，节奏来自列宽 fr/跨度/留白/错位）。三个 demo：A 舞台聚光（Hasselblad 式中央舞台+居中组团，移动端横滑卡轨）、B 精密矩阵（列 fr=真实宽高比的等高行，主视觉占宽 59%，移动端两列严格网格）、C 错落长廊（三列错位 0/96/192px 沙龙悬挂，移动端两列错落）。对比板 /gallery-demos/ 缩放 iframe 同屏预览 + 备选方向卡（D 接触印样/E 大字目录/F 胶片墙）。demo 页 noindex，分支专属，选定后删除并整合进 #works",
+      "name": "Gallery 2.0 首页画廊重构 · 第二轮三解法 Demo（随机轮换+零裁切+一屏和谐）",
+      "description": "第一轮静态策展墙被否（用户要『一眼抓眼球+延续线上随机轮换』）。第二轮命题：随机轮换播放 + 零裁切 + 比例各异照片一屏和谐 + 移动端优化。共享引擎 src/lib/gallery-cycle.ts（3-6s 独立随机间隔、预约制防同屏重复、预载交叉淡入、hover/页面隐藏暂停、reduced-motion 静态、灯箱触发器同步）。39 张图按宽高比分池（横15/竖15/近方2/超宽1），轮换只在同池取图。三解法：A 丝带呼吸（/gallery-demos/ribbon/，等高丝带定理 行高=W/Σar，flex-grow=ar 数值过渡呼吸，桌面 8 张同屏任何组合不超一屏 892px）；B 聚光舞台（/gallery-demos/spotlight/，主视觉锁高 42svh 宽随比例呼吸，横池轮换，移动端满宽换竖池 --ar-m 断点变量+立即首换）；C 瀑布长廊（/gallery-demos/waterfall/，超宽横幅锚点+三列错宽 10 张长墙，相近比例子池±0.08，移动端两列）。对比板同屏 iframe 预览（/gallery-demos/）。灯箱实时读 dataset（轮换后所见即所点）",
       "dependencies": ["feat-016"],
       "status": "in-progress",
-      "evidence": "浏览器实测（IAB）：三方向零裁切偏差 ≤0.19%（1440）/≤0.37%（390）；B 同行等高 305/305 与 341×4、主视觉占宽 59%；C 列首图错位 +92/+192px；320/390 无横向溢出（修复 DemoBar nowrap 溢出与 matrix var(--a) fr 失效两个 bug）；灯箱开/关/Esc/←→循环/滚动锁/焦点归还（键盘路径）全过；明暗双主题三页过；type-check 0 错误、lint 0 错误（新文件 0 警告）、build 83 页通过。截图 design-demos/homepage-gallery/shots/（14 张）；门记录 design-demos/homepage-gallery/direction-approved.md 待用户选择。分支 feat/gallery-2.0"
+      "evidence": "浏览器实测（IAB 双采样消过渡态）：稳态零裁切偏差 A 0.02% / B 0% / C 0%（呼吸过渡中间态由 contain 保护不裁切）；A 等高丝带轮换后仍严格等高、满宽 100%、一屏 892px≤900；B 主视觉呼吸宽度 594px 正确（修 CSS 特异性覆盖 bug）；320/390/1440 无横向溢出；无同屏重复图（修并发 swap 竞态，预约制）；移动端 A 单竖满宽 358（修单 item flex-grow 分配怪癖）、B 竖图满屏 537px 高（修引擎槽元素传参 bug）；灯箱开/←→循环/Esc/当前图同步（decodedEqual 验证）；暗色三页过；type-check 0 错误、lint 0 错误（新文件 0 警告）、build 83 页。截图 design-demos/homepage-gallery/shots/r2-*；门记录第二轮展示待选 direction-approved.md。分支 feat/gallery-2.0"
     }
   ]
 }

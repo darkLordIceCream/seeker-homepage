@@ -34,17 +34,21 @@
   const cap = lightbox?.querySelector<HTMLElement>('.gl-cap');
   const count = lightbox?.querySelector<HTMLElement>('.gl-count');
   const shutters = [...document.querySelectorAll<HTMLButtonElement>('.shot')];
-  const slides = shutters.map(btn => ({
-    full: btn.dataset.full ?? '',
-    title: btn.dataset.title ?? '',
-    author: btn.dataset.author ?? '',
-  }));
 
   let current = -1;
   let lastFocus: HTMLElement | null = null;
 
+  // 触发按钮的 dataset 可能被轮换引擎实时更新（随机播放），打开/切换时现读
+  const readSlide = (index: number) => {
+    const d = shutters[index]?.dataset;
+    if (!d) {
+      return null;
+    }
+    return { full: d.full ?? '', title: d.title ?? '', author: d.author ?? '' };
+  };
+
   const renderSlide = () => {
-    const slide = slides[current];
+    const slide = readSlide(current);
     if (!img || !cap || !count || !slide) {return;}
     img.classList.remove('gl-img--error');
     img.src = slide.full;
@@ -54,7 +58,7 @@
     cap.textContent = slide.title
       ? `《${slide.title}》 @${slide.author}`
       : `@${slide.author}`;
-    count.textContent = `${current + 1} / ${slides.length}`;
+    count.textContent = `${current + 1} / ${shutters.length}`;
   };
 
   const openLightbox = (index: number) => {
@@ -77,9 +81,9 @@
   };
 
   const step = (delta: number) => {
-    if (current < 0 || slides.length === 0) {return;}
+    if (current < 0 || shutters.length === 0) {return;}
     // 首尾循环切换（规范 §5.2：规则一致）
-    current = (current + delta + slides.length) % slides.length;
+    current = (current + delta + shutters.length) % shutters.length;
     renderSlide();
   };
 
@@ -152,7 +156,7 @@
     if (current < 0 || !cap || !count) {return;}
     img.classList.add('gl-img--error');
     cap.textContent = '图片加载失败——请检查网络后重试，仍可切换其他作品或关闭查看器。';
-    count.textContent = `${current + 1} / ${slides.length}`;
+    count.textContent = `${current + 1} / ${shutters.length}`;
   });
 </script>
 

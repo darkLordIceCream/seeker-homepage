@@ -6,7 +6,7 @@
  */
 import ThemeToggle from '@/components/ThemeToggle.astro';
 
-type Direction = 'stage' | 'matrix' | 'mosaic';
+type Direction = 'ribbon' | 'spotlight' | 'waterfall';
 
 interface Props {
   current: Direction;
@@ -15,14 +15,14 @@ interface Props {
 const { current } = Astro.props;
 
 const LABELS: Record<Direction, string> = {
-  stage: 'A · 舞台聚光',
-  matrix: 'B · 精密矩阵',
-  mosaic: 'C · 错落长廊',
+  ribbon: 'A · 丝带呼吸',
+  spotlight: 'B · 聚光舞台',
+  waterfall: 'C · 瀑布长廊',
 };
 const HREFS: Record<Direction, string> = {
-  stage: '/gallery-demos/stage/',
-  matrix: '/gallery-demos/matrix/',
-  mosaic: '/gallery-demos/mosaic/',
+  ribbon: '/gallery-demos/ribbon/',
+  spotlight: '/gallery-demos/spotlight/',
+  waterfall: '/gallery-demos/waterfall/',
 };
 const others = (Object.keys(LABELS) as Direction[]).filter(key => key !== current);
 ---

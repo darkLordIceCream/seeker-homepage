@@ -1,9 +1,9 @@
 ---
 /**
- * Gallery 2.0 · 方向对比板（gallery-2.0 分支临时 demo 页，整合时删除）。
- * 同屏缩放预览三个完整 demo + 三个备选方向卡 + 评选维度清单。
- * 三个 demo 共用同一组策展作品（src/data/gallery.ts GALLERY_FEATURED，
- * 6 张真实作品、固定顺序），区别只在编排语言——保证公平对比。
+ * Gallery 2.0 · 方向对比板 · 第二轮（gallery-2.0 分支临时 demo 页，整合时删除）。
+ * 本轮命题：随机轮换播放（延续线上机制）+ 零裁切 + 比例各异的照片在一屏内
+ * 和谐展示 + 移动端优化。三个 demo 共享轮换引擎 src/lib/gallery-cycle.ts
+ * 与 39 张真实图池（按比例分池），区别只在编排解法。
  */
 import Layout from '@/layouts/Layout.astro';
 import ThemeToggle from '@/components/ThemeToggle.astro';
@@ -12,49 +12,50 @@ interface Direction {
   key: string;
   href: string;
   name: string;
-  tagline: string;
+  answer: string;
+  detail: string;
   mobile: string;
-  reference: string;
+  tradeoff: string;
 }
 
 const DIRECTIONS: Direction[] = [
   {
     key: 'A',
-    href: '/gallery-demos/stage/',
-    name: 'A · 舞台聚光',
-    tagline: '一张主视觉立于中央舞台，五张作品居中组团、尾排轻错位。最安静、最"品牌官网"的一版，节奏来自宽度与留白。',
-    mobile: '手机：主视觉满幅 + 其余五张横向吸附卡轨（横滑浏览，无长纵滚）',
-    reference: '参照：Hasselblad 官网精选页的舞台式呈现',
+    href: '/gallery-demos/ribbon/',
+    name: 'A · 丝带呼吸',
+    answer: '数学解：行高 = 容器宽 ÷ 各图宽高比之和',
+    detail:
+      '每行所有图严格等高、行永远满宽——不同比例的照片由公式保证恰好拼满一行，零裁切不靠运气。轮换时整面墙如呼吸般重排（flex-grow 数值过渡，全浏览器支持）。桌面 8 张同屏（主带 3 + 辅带 5），任何轮换组合都不超一屏。',
+    mobile: '手机：主带留竖槽满宽（竖图在窄屏才有冲击力），辅带收为 2 横 1 竖矮带',
+    tradeoff: '取舍：等高抹平了主次，没有唯一的"主视觉"',
   },
   {
     key: 'B',
-    href: '/gallery-demos/matrix/',
-    name: 'B · 精密矩阵',
-    tagline: '按每张作品真实宽高比给列加权，同一行高度天然一致——零裁切下的精密感。主视觉行约占 61% 宽，第二行四联等高横带。',
-    mobile: '手机：宽幅满幅 + 两列严格网格（延续站内既有杂志网格范式）',
-    reference: '参照：Leica / 世界摄影大赛官网的精密网格语言',
+    href: '/gallery-demos/spotlight/',
+    name: 'B · 聚光舞台',
+    answer: '主角解：一张主视觉 + 等高丝带配角带',
+    detail:
+      '主视觉锁高约一屏一半、宽随比例呼吸（横池 15 张随机轮换），"一眼抓眼球"由绝对面积保证；下半 4 槽配角用与 A 相同的丝带定理承衬。最接近"品牌官网主视觉"的层级语言。',
+    mobile: '手机：主视觉满宽并换竖池（--ar-m 断点变量，竖图满屏），辅带三槽矮带',
+    tradeoff: '取舍：辅带视觉权重低，图片总数 5 张少于 A/C',
   },
   {
     key: 'C',
-    href: '/gallery-demos/mosaic/',
-    name: 'C · 错落长廊',
-    tagline: '三列宽窄不一、顶部错位（0/96/192px），作品像逐张"挂"上墙，整段可超过一屏。最有人味、最像摄影师个人站的一版。',
-    mobile: '手机：宽幅满幅 + 两列错落杂志流（错位小、间距紧）',
-    reference: '参照：2025-26 摄影师个人站的沙龙式悬挂',
+    href: '/gallery-demos/waterfall/',
+    name: 'C · 瀑布长廊',
+    answer: '密度解：超宽横幅锚点 + 三列错宽瀑布长墙',
+    detail:
+      '顶部满宽超宽横幅（全场唯一 2.47:1，静态主角）压阵，下方三列错宽瀑布 10 张照片——masonry 天然零裁切，任意视口切片内的画面都和谐。照片数量最多、信息量最大，"往下拉才看完"的沉浸长墙。',
+    mobile: '手机：收为两列瀑布，横幅满宽压阵',
+    tradeoff: '取舍：整段超过一屏（长墙定位），没有严格的"一屏收齐"',
   },
-];
-
-const BACKUPS = [
-  { name: 'D · 接触印样', note: '等高双排横带 + 编号边注，暗房接触印样的隐喻——需要时升级为完整 demo' },
-  { name: 'E · 大字目录', note: '作品名大字目录列表，缩略图随滚动悬浮切换——文字主导、图片点缀' },
-  { name: 'F · 横向胶片墙', note: '整卷胶片横向连续滚动（桌面横滚）——浏览感强但与站内纵向滚动体系冲突最大' },
 ];
 ---
 
-<Layout description="Seeker Gallery 2.0 方向对比板：三个零裁切精选墙 demo" title="Gallery 2.0 · 方向对比板">
+<Layout description="Seeker Gallery 2.0 方向对比板（第二轮）：随机轮换零裁切画廊三解法" title="Gallery 2.0 · 方向对比板">
   <meta content="noindex" name="robots" slot="head" />
   <header class="board-bar">
-    <p class="board-brand">Seeker · Gallery 2.0 方向对比板</p>
+    <p class="board-brand">Seeker · Gallery 2.0 方向对比板 · 第二轮</p>
     <div class="board-theme">
       <ThemeToggle />
     </div>
@@ -62,15 +63,18 @@ const BACKUPS = [
 
   <main class="board-main" id="main-content">
     <section class="board-intro">
-      <h1>三个方向，同一组作品</h1>
+      <h1>同一个命题，三种解法</h1>
       <p>
-        三个 demo 共用同一份策展（6 张真实作品、固定顺序：<a href="/gallery-demos/stage/">方向 A</a>
-        内编号 No.01–06），数据来自 <code>src/data/gallery.ts</code>，R2 只读。可以直接对比编排语言本身。
+        命题：<strong>随机轮换播放 + 零裁切 + 比例各异的照片在一屏内和谐展示</strong>。
+        三个 demo 共享轮换引擎（每槽 3–6s 独立随机间隔、预载后交叉淡入、hover 暂停、
+        页面不可见即暂停）与 39 张真实图池（按宽高比分池：横 15 / 竖 15 / 近方 2 / 超宽 1，
+        轮换只在同池取图，比例波动天然受控）。
       </p>
       <ul class="rules">
-        <li><strong>零裁切</strong>：所有方向、所有断点、墙与灯箱一律原图比例，不裁切</li>
-        <li><strong>灯箱</strong>：点击任意照片进入；Esc 关闭、←→ 切换、触屏可横滑、焦点归还</li>
-        <li><strong>双主题</strong>：右上角切换明暗，三个方向均适配</li>
+        <li><strong>零裁切</strong>：墙与灯箱一律原图比例</li>
+        <li><strong>随机播放</strong>：盯着看 10 秒，会看到它呼吸/轮换</li>
+        <li><strong>灯箱</strong>：点击任意照片；Esc 关闭、←→ 切换、焦点归还</li>
+        <li><strong>双主题</strong>：右上角切换明暗</li>
       </ul>
     </section>
 
@@ -83,9 +87,10 @@ const BACKUPS = [
             </a>
             <div class="dir-body">
               <h2><a href={d.href}>{d.name}</a></h2>
-              <p class="tagline">{d.tagline}</p>
+              <p class="answer">{d.answer}</p>
+              <p class="tagline">{d.detail}</p>
               <p class="meta">{d.mobile}</p>
-              <p class="meta meta--ref">{d.reference}</p>
+              <p class="meta meta--ref">{d.tradeoff}</p>
               <a class="open" href={d.href}>
                 打开完整 demo
                 <svg aria-hidden="true" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
@@ -96,27 +101,13 @@ const BACKUPS = [
       }
     </section>
 
-    <section aria-label="备选方向" class="board-backups">
-      <h2>备选方向（未出全稿，需要时可升级）</h2>
-      <ul>
-        {
-          BACKUPS.map(b => (
-            <li>
-              <strong>{b.name}</strong>
-              <span> —— {b.note}</span>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
     <section aria-label="怎么选" class="board-howto">
       <h2>建议的评选路径</h2>
       <ol>
-        <li>先在宽屏看三个方向的第一眼主次关系（主视觉是否立得住）</li>
-        <li>把浏览器窗口缩到手机宽度，对比三种移动端形态（横滑卡轨 / 严格两列 / 错落两列）</li>
-        <li>每个 demo 里点开 2–3 张灯箱，体验键盘 ←→ 与 Esc</li>
-        <li>可以混搭：例如「B 的等高行 + C 的侧签图注」，选定后下一轮落进首页 #works</li>
+        <li>每个页面停留 15 秒以上，看轮换瞬间整面墙是否保持和谐、有没有跳动或裁切</li>
+        <li>把窗口缩到手机宽度：A/B 的移动端是"竖图满屏"方案，C 是两列瀑布</li>
+        <li>点开灯箱确认看到的就是墙上那张，再用 ←→ 多翻几张</li>
+        <li>可以混搭：例如「B 的主视觉 + A 的丝带辅带」，选定后下一轮落进首页 #works</li>
       </ol>
       <p class="gate-note">
         展示记录与选择将归档在 <code>design-demos/homepage-gallery/direction-approved.md</code>。
@@ -185,15 +176,14 @@ const BACKUPS = [
 
   .board-intro p {
     margin: 0 0 14px;
-    max-width: 720px;
+    max-width: 760px;
     font-size: 15px;
     line-height: 1.8;
     color: var(--muted-foreground);
   }
 
-  .board-intro a,
-  .board-grid a {
-    color: var(--link);
+  .board-intro strong {
+    color: var(--foreground);
   }
 
   .rules {
@@ -278,6 +268,13 @@ const BACKUPS = [
     color: var(--link);
   }
 
+  .answer {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--link);
+  }
+
   .tagline {
     margin: 0;
     font-size: 14px;
@@ -312,39 +309,17 @@ const BACKUPS = [
     text-underline-offset: 4px;
   }
 
-  .board-backups,
   .board-howto {
     padding-top: 32px;
     border-top: 1px solid var(--border);
     margin-bottom: 40px;
   }
 
-  .board-backups h2,
   .board-howto h2 {
     margin: 0 0 16px;
     font-size: 17px;
     font-weight: 700;
     color: var(--foreground);
-  }
-
-  .board-backups ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .board-backups li {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--muted-foreground);
-  }
-
-  .board-backups strong {
-    color: var(--foreground);
-    font-weight: 600;
   }
 
   .board-howto ol {
