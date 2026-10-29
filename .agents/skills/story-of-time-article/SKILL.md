@@ -1,12 +1,13 @@
 ---
 name: story-of-time-article
 description: >
-  发布《时间的故事》新一期到 seeker-homepage 网站。当用户提供微信公众号文章
-  链接（标题形如【Seeker 时间的故事】X月篇）并表达更新意图时使用——触发词包括
-  "时间的故事更新了"、"新一期时间的故事"、"把X月篇搬上来"、"更新最新一期"等，
-  即使没有明说"时间的故事"。不适用于：公益板块文章（用 welfare-article）、
-  追光之旅大赛（用 light-chasing 相关流程）、仅抓取内容做参考而不发布、
-  编辑已有期数、单纯上传图片。
+  发布《时间的故事》新一期到 seeker-homepage 网站。两种数据来源皆适用： ①
+  用户提供微信公众号文章链接（标题形如【Seeker 时间的故事】X月篇）； ②
+  用户提供一手数据（本地图片文件夹 + docx 编辑文档）。触发词包括
+  "时间的故事更新了"、"新一期时间的故事"、"把X月篇搬上来"、"更新最新一期"、
+  "X月篇的一手数据在某目录"等，即使没有明说"时间的故事"。不适用于：
+  公益板块文章（用 welfare-article）、追光之旅大赛（用 light-chasing 相关
+  流程）、仅抓取内容做参考而不发布、编辑已有期数、单纯上传图片。
 ---
 
 # 《时间的故事》新一期发布流程
@@ -30,8 +31,21 @@ description: >
 - **首页 #activities 的「时间的故事」卡封面自动跟随最新一期**：
   `src/components/home/ActsSection.astro`
   构建期取 order 最大的那期 cover——新增期数 md 后自动切换，**禁止再把封面 URL 写死回该文件**；发布新一期时在验证清单里确认首页卡片已换成新封面即可
+- **entry.group（投稿组别章节）**：2026-10 起期数可带投稿组别（自然风光/自然户外/城市建筑/人文纪实/人像肖像/商业创意/生态），GalleryStory 渲染为「日期 组别」章节分隔（同日期同组别合并一章）；组别归一：去尾部"组"，自然→自然风光、人文/人文组→人文纪实、人像→人像肖像；占位/乱填组别（如"什么组"）直接省略该字段
 - **参考实例**：`story-of-time-2026-09.md`（最新惯例）与
   `story-of-time-2026-08.md`，字段取值照它们来
+
+## 第零步：确认数据来源（微信推文 or 一手数据）
+
+- **微信推文**：走下面的第一～二步抓取流程
+- **一手数据（本地文件夹 + docx 编辑文档）**：跳过抓取，改走「一手数据解析」：
+  1. 目录约定：图片按「MM.DD 作者」命名文件夹（跨日如「10.01-6 大学」），每文件夹 1 张（或多张）原图；docx 记录文案（每条目：作品名称 / 投稿组别 / 介绍 /
+     ID / 拍摄时间，标签写法有变体：名称：、组别：、作品介绍：、无标签裸行）
+  2. docx 提取：`textutil -stdout -convert txt <docx>`（或 unzip
+     word/document.xml）
+  3. 条目 ↔ 文件夹按「作者名 + 日期」配对（作者名归一：去书名号、去尾部英文句点）；docx 缺拍摄时间的条目用文件夹日期补
+  4. 无标签文案紧跟前一作品 ID 行时会被吞并进相邻条目，解析后必须核对条目数 = 文件夹数，并逐条核对作者序列
+  5. 已知缺口模式：个别条目缺标题/组别（如 BBBronny 十月篇）、占位组别——缺失项列入「发布前置内容清单」交用户补，勿擅自代拟
 
 ## 第一步：抓取公众号文章
 
@@ -96,6 +110,17 @@ description: >
 **YAML 陷阱**：日期一律加引号；含英文直引号/冒号/emoji 的单行标量必须加引号（原文直引号会让裸标量断裂）；多段图注用
 `|-` 块标量保留段落。
 
+**发布前置内容清单**（月度编辑字段不会自动生成，交付前必须逐项与用户确认；缺失项明确留空占位并告知）：
+
+1. subtitle 主题句（必填，页面大标题旁）
+2. quote 金句（可省）
+3. team 本月组长 / 编辑
+4. poem 结尾诗（可省）
+5. committeeImage 组委会品牌图（R2 `activities/YYYY-MM/committee.webp`）
+6. committee 组委会策划团队名单
+7. cover 封面图（1280×545 横幅；往期取公众号分享封面；临时可用首幅作品图占位，上线前必须替换）
+8. pubDate 定档发布时间
+
 ## 第六步：构建验证
 
 1. `./init.sh` 全绿（pnpm install / type-check / lint / build）
@@ -116,6 +141,16 @@ description: >
   `gh pr merge --merge --delete-branch` → 切回 main 拉取同步
 - 合并后生产验证：`https://seeker-homepage.pages.dev/activities/story-of-time-YYYY-MM/`
   返回 200 且内容正确（push main 自动触发部署，等 check-run success 再验）
+
+### 定时发布（与微信推文同步上线）
+
+- 机制：GitHub Actions `scheduled-publish.yml`（每 5 分钟 tick）检查
+  `release/publish-time.txt`（ISO 时间，含 +08:00 时区）——到点且存在
+  `release/story-of-time-YYYY-MM` 分支的开放 PR 即自动合并 → push main →
+  CF 构建上线（误差约 1–3 分钟）；`workflow_dispatch` 可手动立即触发
+- 流程：内容全部就绪 → 推 release 分支 + 开 PR（**保持开放不手动合并**）→把确定的发布时间写进
+  `release/publish-time.txt`（单独小提交）→ 到点自动合并上线
+- 内容 PR 的 pubDate 填发布时间；时间未定时 publish-time.txt 用过去时间占位（workflow 空转，不会误发）
 - 收尾职责：更新 feature_list.json（feat-018 证据的期数总数）与 progress.md
 
 ## 并行会话注意事项
