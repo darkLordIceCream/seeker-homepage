@@ -1,0 +1,45 @@
+name: scheduled publish
+
+# 到点自动合并 release 分支的 PR（发布时间配置在 release/publish-time.txt）。
+# 每 5 分钟检查一次；PR 存在但检查未完成时，后续 tick 会自然重试。
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: scheduled-publish
+  cancel-in-progress: false
+
+jobs:
+  merge-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 到点自动合并 release PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CFG=$(grep -v '^#' release/publish-time.txt 2>/dev/null | sed '/^$/d')
+          SCHEDULE=$(echo "$CFG" | sed -n '1p')
+          BRANCH=$(echo "$CFG" | sed -n '2p')
+          BRANCH=${BRANCH:-release/story-of-time-2026-10}
+
+          if [ -z "$SCHEDULE" ]; then echo "未配置发布时间，跳过"; exit 0; fi
+          if ! [[ "$SCHEDULE" =~ ^[0-9] ]]; then echo "发布时间格式无效，跳过"; exit 0; fi
+
+          NOW=$(date +%s)
+          DUE=$(date -d "$SCHEDULE" +%s)
+          if [ "$NOW" -lt "$DUE" ]; then echo "未到发布时间（$SCHEDULE），跳过"; exit 0; fi
+
+          PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // ""')
+          if [ -z "$PR" ]; then echo "分支 $BRANCH 无开放 PR，跳过"; exit 0; fi
+
+          echo "已到发布时间，合并 PR #$PR（$BRANCH）"
+          gh pr merge "$PR" --merge --delete-branch
