@@ -27,6 +27,18 @@ const fmtDate = new Intl.DateTimeFormat('zh-CN', {
   day: 'numeric',
 }).format(data.pubDate);
 
+/** 图注内联表情：[[emote:名字]] → R2 emotes/名字.webp（替换微信表情占位符 [阴险] 等） */
+const EMOTE_BASE = 'https://r2.xn--seeker-ng2jm403afb4a.club/emotes/';
+function splitEmotes(caption: string): (string | { name: string })[] {
+  return caption
+    .split(/(\[\[emote:[a-z0-9-]+\]\])/)
+    .map(seg => {
+      const m = seg.match(/^\[\[emote:([a-z0-9-]+)\]\]$/);
+      return m ? { name: m[1] ?? '' } : seg;
+    })
+    .filter(seg => seg !== '');
+}
+
 /** 「7月28日」→「JULY 28」（日期章节英文标注） */
 const MONTHS = [
   'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
@@ -200,7 +212,25 @@ const jsonLd = JSON.stringify({
               </span>
               <figcaption class="item-label">
                 {entry.title && <span class="item-title">«{entry.title}»</span>}
-                {entry.caption && <p class="item-caption">{entry.caption}</p>}
+                {entry.caption && (
+                  <p class="item-caption">
+                    {splitEmotes(entry.caption).map(seg =>
+                      typeof seg === 'string' ? (
+                        seg
+                      ) : (
+                        <img
+                          alt={seg.name}
+                          class="item-emote"
+                          decoding="async"
+                          height="28"
+                          loading="lazy"
+                          src={`${EMOTE_BASE}${seg.name}.webp`}
+                          width="28"
+                        />
+                      )
+                    )}
+                  </p>
+                )}
                 <span class="item-author">@{entry.author}</span>
               </figcaption>
             </figure>
@@ -638,6 +668,14 @@ const jsonLd = JSON.stringify({
     /* 防止 CJK 换行末行只剩一两个字（孤字成行） */
     text-wrap: pretty;
     color: var(--muted-foreground);
+  }
+
+  .item-emote {
+    display: inline-block;
+    height: 1.3em;
+    width: auto;
+    vertical-align: -0.28em;
+    margin: 0 1px;
   }
 
   .item-author {
