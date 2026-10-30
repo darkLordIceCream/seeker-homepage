@@ -453,9 +453,10 @@ pastIssues:
   - name: '五月篇'
     line: '风熏林渐静，日永夏初长'
 
+committeeImage: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-09/committee.webp
 committee:
-  name: ''
-  team: ''
+  name: '2026年时间的故事组委会'
+  team: 'Ted、BingChen、是田田吖、滴歪、周云水、Leslin'
 ---
 
 《时间的故事》初心如故，以镜头定格探索的足迹、冒险的悸动，珍藏个人与集体的岁月芳华。从初春的莺啼到凛冬的雪落，日月更迭，星河辗转，我们始终期盼你执笔时光的坚持，以影像为笺，写尽朝暮。待365个晨昏悄然落幕，蓦然回首，才知岁月已绘就满目山河与人间烟火。
