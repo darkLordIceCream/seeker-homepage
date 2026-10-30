@@ -3,12 +3,12 @@ title: 时间的故事
 subtitle: ''
 issue: 十月篇
 period: OCTOBER 2026
-cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/01.webp
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/03.webp?v2
 excerpt:
   '《时间的故事》十月篇：63
   幅作品，从夏天的尾声到清秋的絮语，收藏国庆的烟火、高原的雪线与夜空的星。'
 team:
-  lead: ''
+  lead: '小嗷嗷'
   editor: ''
 pubDate: 2026-10-31
 order: 202610
@@ -30,7 +30,7 @@ entries:
     title: '云开万仞，光落千山'
     author: '钪钇'
     images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/03.webp
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/03.webp?v2
     caption: '拍摄于亚丁波拥错，我在徒步过程中留意到这里不仅有三座神山，周边的群峰也非常有特点，于是爬到山脊升起无人机，做了一个接片，把这种凛冽的山体全部取入作为我的前景，同时又正好碰到满天黑云盖下，金光洒落，幸运地拍下了这一张史诗般的山地影像'
   - date: '9月30日'
     title: '拍摄于葡萄牙旅行渡劫之前'
@@ -229,7 +229,7 @@ entries:
     title: '举头红日近，回首白云低'
     author: '月某人'
     images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/33.webp
+      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/33.webp?v2
     caption: '十月来临，秋日光景所剩不多。趁着周末闲暇，一大早带着无人机上山拍摄。本以为大雾弥漫，这次拍摄要遗憾翻车，没想到日出之后云海慢慢下沉，无人机升空，有幸记录下这片山巅云海与朝阳升腾的蓬勃景象。'
   - date: '10月13日'
     title: '影秋'
@@ -276,6 +276,7 @@ entries:
       夜幕降临，亿万年的红色砂岩巨塔静静矗立在荒漠之中，漫天繁星铺满苍穹。就在按下快门的瞬间，一颗耀眼的火流星划破夜空，留下短暂而璀璨的光迹。远处地平线的微光、薄云与浩瀚星河交织，映衬着纪念碑谷标志性的孤峰剪影。
       历经亿万年风雨雕琢的岩石，与转瞬即逝的天外来客，在这一刻相遇。一个象征着地质岁月的漫长，一个诠释着宇宙瞬间的绚烂。天地之间，时间仿佛凝固，而这场可遇不可求的邂逅，被永远定格在镜头之中。
   - date: '10月17日'
+    title: '油画波兰·餐室旧隅'
     author: 'BBBronny'
     images:
       - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/41.webp
