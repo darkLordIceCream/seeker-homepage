@@ -9,7 +9,7 @@ excerpt:
   幅作品，从夏天的尾声到清秋的絮语，收藏国庆的烟火、高原的雪线与夜空的星。'
 team:
   lead: '小嗷嗷'
-  editor: ''
+  editor: '是田田吖'
 pubDate: 2026-10-31
 order: 202610
 layout: gallery-story
