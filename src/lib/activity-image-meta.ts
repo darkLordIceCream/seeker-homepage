@@ -318,6 +318,7 @@ export const ACTIVITY_IMAGE_META: Readonly<
   'activities/2026-10/61.webp': { w: 1280, h: 1600 },
   'activities/2026-10/62.webp': { w: 1919, h: 1280 },
   'activities/2026-10/63.webp': { w: 1279, h: 1706 },
+  'activities/2026-10/cover.webp': { w: 1080, h: 460 },
   'activities/story-of-time-2021-02/01.webp': { w: 1080, h: 719 },
   'activities/story-of-time-2021-02/02.webp': { w: 1080, h: 1619 },
   'activities/story-of-time-2021-02/03.webp': { w: 1080, h: 720 },

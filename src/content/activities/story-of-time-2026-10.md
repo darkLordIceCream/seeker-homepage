@@ -4,7 +4,7 @@ subtitle: '疏林承晓色，落韵载秋光'
 quote: '每个人的故事，汇成了时间的故事。'
 issue: 十月篇
 period: OCTOBER 2026
-cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/03.webp?v2
+cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-10/cover.webp
 excerpt:
   '《时间的故事》十月篇：疏林承晓色，落韵载秋光。18
   幅作品，从草原金秋到雪线星夜，收藏国庆的烟火、山巅的云海与长夜的流星。'
