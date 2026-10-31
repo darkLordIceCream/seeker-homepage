@@ -142,7 +142,7 @@
       "description": "线上活动（时间的故事、一种关注等）和线下活动（周年庆、年会等）展示",
       "dependencies": ["feat-002", "feat-008"],
       "status": "done",
-      "evidence": "《时间的故事》2021-2026 全部 66 期（线上 65 期 + 十月篇在 release/story-of-time-2026-10 待定时合并）：书架页 + 各期画廊页；十月篇 63 幅作品首次一手数据来源（feat-043）"
+      "evidence": "《时间的故事》2021-2026 全部 66 期上线（2026-10-31 十月篇随 PR #43 上线，首次一手数据来源）：/activities/story-of-time 书架页 + 各期画廊页"
     },
     {
       "id": "feat-019",
@@ -336,10 +336,10 @@
     {
       "id": "feat-043",
       "name": "《时间的故事》十月篇上线（首次一手数据来源）",
-      "description": "release/story-of-time-2026-10 分支：63 幅作品（本地文件夹+docx 一手数据），entry.group 投稿组别章节首次启用；发布前置字段（subtitle/quote/team/poem/committee 等）留空待用户补齐，PR 由 scheduled-publish 到点自动合并",
+      "description": "《时间的故事》十月篇上线（首次一手数据来源）：18 幅精选（对齐微信正式版编排）、entry.group 试用后按用户定版移除、内联表情机制（5 个微信占位符）、封面=微信分享封面；封面/标题/组长/编辑/主题句/结尾诗/组委会全部就位",
       "dependencies": ["feat-018", "feat-042"],
-      "status": "in-progress",
-      "evidence": "63 条目解析配对（两特例修复）；R2 63/63 200+MD5；meta 63 条；init.sh 全绿；五页断言全过；54 章节渲染正常；排版与九月篇同源"
+      "status": "done",
+      "evidence": "PR #43 已合并（fdbd728）生产上线：/activities/story-of-time-2026-10/ 200、书架 66 期、首页卡跟随新封面；与微信 14:07 群发版逐项对齐（18 幅/主题句/结尾诗/封面/金句/组长编辑/组委会）；R2 63 张图（18 幅精选引用）；init.sh 全绿"
     }
   ]
 }
