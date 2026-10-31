@@ -15,7 +15,7 @@ pubDate: 2026-10-31
 order: 202610
 layout: gallery-story
 entries:
-  - date: '10月1日'
+  - date: '9月29日'
     title: '沧岸秋暝'
     author: '小嗷嗷'
     images:
