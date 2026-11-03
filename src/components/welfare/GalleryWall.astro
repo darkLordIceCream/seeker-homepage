@@ -512,6 +512,10 @@ const flow = chapters.map((ch, i) => {
       else {close();}
     });
     lbClose.addEventListener('click', () => close());
+    // 点击遮罩（::backdrop 区域）关闭：仅当点在 dialog 元素本身
+    dialog.addEventListener('click', e => {
+      if (e.target === dialog && !zoomed) { close(); }
+    });
     window.addEventListener('popstate', () => {
       if (dialog.open) {close(true);}
     });
@@ -547,6 +551,25 @@ const flow = chapters.map((ch, i) => {
         if (dialog.open && imageReady) {setZoom(zoomScale);}
       }).observe(lbCanvas, { box: 'border-box' });
     }
+
+    // 触屏滑动翻页：未缩放时横向 >48px 判定（缩放态交给原生滚动平移）
+    let lbTouch: { x: number; y: number; t: number } | null = null;
+    lbCanvas.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' || zoomed) { return; }
+      lbTouch = { x: e.clientX, y: e.clientY, t: Date.now() };
+    });
+    lbCanvas.addEventListener('pointerup', e => {
+      if (!lbTouch) { return; }
+      const dx = e.clientX - lbTouch.x;
+      const dy = e.clientY - lbTouch.y;
+      const dt = Date.now() - lbTouch.t;
+      lbTouch = null;
+      if (dt > 800) { return; }
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        show(index + (dx < 0 ? 1 : -1));
+      }
+    });
+    lbCanvas.addEventListener('pointercancel', () => { lbTouch = null; });
 
     // 拖拽平移（鼠标）：click 与 drag 用位移阈值区分
     let drag: { x: number; y: number; left: number; top: number; moved: boolean } | null = null;
@@ -1076,6 +1099,9 @@ const flow = chapters.map((ch, i) => {
     padding: 0;
     width: min(1280px, 96vw);
     height: min(860px, 92vh);
+    /* UA dialog 样式带 max-width/height 限制，会夹住移动端全屏 */
+    max-width: none;
+    max-height: none;
     border-radius: 12px;
     background: var(--paper-face);
     color: var(--paper-ink);
