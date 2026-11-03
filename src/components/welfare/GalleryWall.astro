@@ -178,6 +178,18 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     let index = 0;
     let thumbsBuilt = false;
 
+    // 换页淡入：新图 load 后淡入，避免生硬跳变（reduced-motion 下 CSS 直接关闭过渡）
+    const fadeInOnLoad = () => {
+      img.classList.add('is-loading');
+      const reveal = () => { img.classList.remove('is-loading'); };
+      if (img.complete && img.naturalWidth > 0) {
+        requestAnimationFrame(reveal);
+      } else {
+        img.addEventListener('load', reveal, { once: true });
+        img.addEventListener('error', reveal, { once: true });
+      }
+    };
+
     // 箭头函数（声明在收窄之后），避免 function 提升破坏 seq 收窄
     const render = (i: number) => {
       index = wrapIndex(i, photos.length);
@@ -189,6 +201,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       schoolEl.textContent = `${p.school} · ${BATCH_SHORT}`;
       counterEl.textContent = `${index + 1} / ${photos.length}`;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
+      fadeInOnLoad();
       viewer
         .querySelectorAll('.g-thumbs [data-photo]')
         .forEach(el => el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index)));
@@ -232,6 +245,27 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     viewer.addEventListener('keydown', e => {
       if (e.key === 'ArrowLeft') { e.preventDefault(); render(index - 1); }
       if (e.key === 'ArrowRight') { e.preventDefault(); render(index + 1); }
+    });
+
+    // 触屏滑动翻页（物理感）：横向位移 >48px 且大于纵向 1.5 倍才算；
+    // 明显滑动后浏览器不会派发 click，不会误开 lightbox，仍加时间戳护栏
+    let touchStart: { x: number; y: number; t: number } | null = null;
+    viewer.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') { return; }
+      touchStart = { x: e.clientX, y: e.clientY, t: Date.now() };
+    });
+    viewer.addEventListener('pointerup', e => {
+      if (!touchStart) { return; }
+      const dx = e.clientX - touchStart.x;
+      const dy = e.clientY - touchStart.y;
+      const dt = Date.now() - touchStart.t;
+      touchStart = null;
+      if (dt > 800) { return; }
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        // 经 dataset 告知 lightbox 入口：滑动余波（400ms 内）不放大
+        viewer.dataset.lastSwipe = String(Date.now());
+        render(index + (dx < 0 ? 1 : -1));
+      }
     });
 
     render(0);
@@ -363,6 +397,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       imageReady = false;
       lbError.hidden = true;
       setZoom(false);
+      lbImg.classList.add('is-loading');
       lbImg.src = p.src;
       lbImg.alt = p.alt;
       lbTitle.textContent = seq.themeTitle;
@@ -435,6 +470,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       imageFailed = false;
       imageReady = true;
       lbError.hidden = true;
+      lbImg.classList.remove('is-loading');
       setZoom(false);
     });
     lbImg.addEventListener('error', () => {
@@ -495,6 +531,9 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       const id = viewer.dataset.theme ?? '';
       const btn = viewer.querySelector<HTMLButtonElement>('[data-enlarge]');
       btn?.addEventListener('click', () => {
+        // 触屏滑动翻页后的余波不打开 lightbox
+        const lastSwipe = Number(viewer.dataset.lastSwipe ?? 0);
+        if (Date.now() - lastSwipe < 400) { return; }
         const cur = Number(viewer.querySelector<HTMLElement>('.g-counter')!.textContent?.split(' / ')[0] ?? 1) - 1;
         openAt(id, cur, btn);
       });
@@ -686,6 +725,11 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     max-width: 100%;
     max-height: min(68vh, 632px);
     object-fit: contain;
+    transition: opacity 0.35s ease;
+  }
+
+  .g-shutter img.is-loading {
+    opacity: 0;
   }
 
   .g-caption {
@@ -1017,6 +1061,11 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     height: 100%;
     object-fit: contain;
     user-select: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .lb-img.is-loading {
+    opacity: 0;
   }
 
   .lb-error {
@@ -1160,8 +1209,15 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     .g-shutter,
     .g-step,
     .g-thumb,
-    .lb-tool {
+    .lb-tool,
+    .g-shutter img,
+    .lb-img {
       transition: none;
+    }
+
+    .g-shutter img.is-loading,
+    .lb-img.is-loading {
+      opacity: 1;
     }
 
     html.js .reveal {

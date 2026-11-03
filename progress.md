@@ -2691,3 +2691,6 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   84 页、浏览器实测桌面/375px + 翻页/放大/缩放/分层 Esc/history 全通过
 - 待办：用户过目 40 张定稿（/tmp/prs-curation/checkpoint.html）→
   R2 上传 → 数据切 R2 URL
+- 2026-11-04
+  01:40 迭代2：GalleryWall 换页淡入（viewer+lightbox，reduced-motion 降级）、触屏滑动翻页（>48px 横向判定 +
+  dataset 时间戳护栏防误开 lightbox）；暗色模式截图核验通过；IAB 截图合成器过期帧伪影再次确认（dlgOpen=false 时仍可截到残影，以 evaluate 状态为准）
