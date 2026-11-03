@@ -2510,6 +2510,44 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 实测 144/144（逐元素清单含四个标签列）；init.sh 全绿；用户 4323 批准
 - 流程：fix/activities-adaptive-text 分支 → PR → 自审 → 合并上线
 
+### 《时间的故事》十月篇一手数据上线（2026-10-28，分支 release/story-of-time-2026-10，PR 开放待定时合并）
+
+- 数据来源首次为一手数据（本地文件夹 +
+  docx），非微信推文抓取：63 个「MM.DD 作者」文件夹
+  - docx 编辑文档（63 条目：作品名称/投稿组别/介绍/ID/拍摄时间），与画廊 schema 完美映射
+- 管线：docx 解析（块级解析器 + 两特例修复：CONST 无标签块、BBBronny 无名称条目曾吞并阿羊舰见福州条目，均按原文锚点拆回）→ 按「作者+日期」与文件夹配对 → 组别归一 7 类（entry.group 章节字段首次启用，GalleryStory 渲染「日期 组别」章节分隔）→
+  cwebp q82（6 张 >2560 缩边；迅雷疾风按用户指定用 jpg）→ R2
+  activities/2026-10/63 张（200+MD5 全过）→ meta 登记 63 条 →
+  story-of-time-2026-10.md（pubDate 2026-10-31 占位）
+- 已知留空（用户将补，见缺口清单）：subtitle/quote/team/poem/committee/committeeImage/
+  cover（临时用 01.webp）/BBBronny 标题
+- 定时发布机制（feat-038）：scheduled-publish
+  workflow 每 5 分钟检查 release/publish-time.txt，到点自动合并 release 分支开放 PR（PR
+  #42 已合入 main）；发布时间定档后改配置文件两行即生效
+- skill 更新：story-of-time-article 新增第零步（一手数据来源解析流程 + 缺口模式）、entry.group 要点、发布前置内容清单（8 项）、定时发布流程
+- 验证：init.sh 全绿；五页断言全过；十月篇详情页章节渲染正常（54 章）、书架 66 期带「新」标、首页卡封面自动跟随（01.webp 占位）；排版与九月篇同源一致
+- 交付：内容 PR 开放（scheduled-publish 到点自动合并），发布时间定档后更新 release/publish-time.txt +
+  pubDate 即完成上线
+
+### 《时间的故事》十月篇正式上线（2026-10-31，PR #43 合并 fdbd728）
+
+- 微信正式版 14:07 群发后抓取对照，站点对齐：63→18 幅精选（微信编排顺序，组长《沧岸秋暝》打头）、主题句「疏林承晓色，落韵载秋光」（正式版 og:title）、结尾诗换微信版「十月是秋光的信札」、封面=微信分享封面（火山湖 1080×460
+  → cover.webp）
+- 定时发布未启用（文章已直接群发，PR 按用户确认手动合并）；scheduled-publish
+  workflow 保留（PR #42），下次期数定档时填 release/publish-time.txt 即用
+- 生产验证：十月篇/书架（66 期）/首页全 200，首页卡跟随新封面，18 幅内容断言通过
+- 十月篇遗留说明：45 幅未选作品图仍存 R2
+  activities/2026-10/（未引用，保留作档案）；meta 清单保留 63 条尺寸登记
+
+### 十月篇未选作品图清理（2026-10-31，用户指示）
+
+- R2 activities/2026-10/ 删除 45 张未入选微信精选的作品图（源存储 wrangler
+  get 验证已删）；保留 18 幅精选 + cover.webp（19/19 源存在验证 ✓）
+- 注意：CDN 边缘缓存（immutable 头）会让被删 URL 短期仍返回 200，属预期，无实际影响（站点零引用）；沿用 zsh 不做单词拆分的教训——本会话曾因 for
+  in $var 整串问题导致首轮删除/验证假执行，改 while read 后正确完成
+- meta 清单同步精简：2026-10 块 64 条 → 19 条（18 幅 +
+  cover），build 恢复全绿，详情页 18 个图片引用与 meta 一一对应
+
 ### 2026-10-25 · Gallery 2.0 重构第一轮：三方向 Demo（等待选型）
 
 - 规范来源：用户提供的《Seeker_Gallery_2.0_重构实现规范》（高手编辑方向：编辑式摄影展墙、固定 6 张精选、沉浸灯箱）；用户追加硬约束：**零裁切，尊重原图比例**

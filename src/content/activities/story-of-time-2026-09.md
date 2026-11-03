@@ -7,7 +7,7 @@ cover: https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-09/cover.webp
 excerpt:
   '《时间的故事》九月篇：秋风启序，云落清秋。24
   幅作品，收藏初秋的清风、霞光与山野。'
-quote: '摄影对我来说就是生活本身，是唯一已知的永恒。——布列松'
+quote: '每个人的故事，汇成了时间的故事。'
 team:
   lead: '嘿嘿嘿'
   editor: '是田田吖'
