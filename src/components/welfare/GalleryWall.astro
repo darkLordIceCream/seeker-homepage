@@ -1057,6 +1057,19 @@ const flow = chapters.map((ch, i) => {
     display: flex;
   }
 
+  /* —— 无 JS 降级：html:not(.js) 下画廊退化为静态照片墙，隐藏依赖 JS 的控件 ——
+     <details> 的缩略图由 JS 构建（无 JS 为空壳）→ 隐藏；
+     照片卡保留纸面外观，仅去点击暗示；交接行是纯锚点链接 → 保留。 —— */
+  html:not(.js) .g-nav,
+  html:not(.js) .g-index {
+    display: none;
+  }
+
+  html:not(.js) .g-shutter {
+    cursor: default;
+    pointer-events: none;
+  }
+
   /* ===== lightbox（移植并重写自 portfolio-site-builder，MIT） ===== */
   .lb {
     border: none;

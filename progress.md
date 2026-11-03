@@ -2708,3 +2708,5 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   ::backdrop 独立过渡，无支持浏览器直开降级）、章间编辑交接行「下一辑 · XX
   ↓」（skill 模板 quiet
   handoff 同款，Fragment 包裹修复 JSX 多根；排障：早期误写块体 map 体导致级联解析错误，重写 map 开头修复）、lightbox 打开时 body 滚动锁定
+- 2026-11-04
+  05:45 迭代7：无 JS 降级审查——html:not(.js) 下隐藏 .g-nav/.g-index（details 缩略图靠 JS 构建），.g-shutter 退化为静态照片卡（去点击暗示），照片/caption/交接行/入口瓷砖全部可用；待办：项目无 sitemap 集成（加 @astrojs/sitemap 属依赖决策，留给用户），og:image 待 R2 上传后接入（当前为相对预览路径不可作 OG）
