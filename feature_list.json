@@ -340,6 +340,22 @@
       "dependencies": ["feat-018", "feat-042"],
       "status": "done",
       "evidence": "PR #43 已合并（fdbd728）生产上线：/activities/story-of-time-2026-10/ 200、书架 66 期、首页卡跟随新封面；与微信 14:07 群发版逐项对齐（18 幅/主题句/结尾诗/封面/金句/组长编辑/组委会）；R2 63 张图（18 幅精选引用）；init.sh 全绿"
+    },
+    {
+      "id": "feat-044",
+      "name": "Gallery 2.0 首页画廊重构 · 第二轮三解法 Demo（随机轮换+零裁切+一屏和谐）",
+      "description": "第一轮静态策展墙被否（用户要『一眼抓眼球+延续线上随机轮换』）。第二轮命题：随机轮换播放 + 零裁切 + 比例各异照片一屏和谐 + 移动端优化。共享引擎 src/lib/gallery-cycle.ts（3-6s 独立随机间隔、预约制防同屏重复、预载交叉淡入、hover/页面隐藏暂停、reduced-motion 静态、灯箱触发器同步）。39 张图按宽高比分池（横15/竖15/近方2/超宽1），轮换只在同池取图。三解法：A 丝带呼吸（/gallery-demos/ribbon/，等高丝带定理 行高=W/Σar，flex-grow=ar 数值过渡呼吸，桌面 8 张同屏任何组合不超一屏 892px）；B 聚光舞台（/gallery-demos/spotlight/，主视觉锁高 42svh 宽随比例呼吸，横池轮换，移动端满宽换竖池 --ar-m 断点变量+立即首换）；C 瀑布长廊（/gallery-demos/waterfall/，超宽横幅锚点+三列错宽 10 张长墙，相近比例子池±0.08，移动端两列）。对比板同屏 iframe 预览（/gallery-demos/）。灯箱实时读 dataset（轮换后所见即所点）",
+      "dependencies": ["feat-016"],
+      "status": "done",
+      "evidence": "浏览器实测（IAB 双采样消过渡态）：稳态零裁切偏差 A 0.02% / B 0% / C 0%（呼吸过渡中间态由 contain 保护不裁切）；A 等高丝带轮换后仍严格等高、满宽 100%、一屏 892px≤900；B 主视觉呼吸宽度 594px 正确（修 CSS 特异性覆盖 bug）；320/390/1440 无横向溢出；无同屏重复图（修并发 swap 竞态，预约制）；移动端 A 单竖满宽 358（修单 item flex-grow 分配怪癖）、B 竖图满屏 537px 高（修引擎槽元素传参 bug）；灯箱开/←→循环/Esc/当前图同步（decodedEqual 验证）；暗色三页过；type-check 0 错误、lint 0 错误（新文件 0 警告）、build 83 页。截图 design-demos/homepage-gallery/shots/r2-*；门记录第二轮展示待选 direction-approved.md。分支 feat/gallery-2.0；用户选定方向 A 丝带呼吸（原话「就选丝带呼吸，直接开干吧」）"
+    },
+    {
+      "id": "feat-045",
+      "name": "Gallery 2.0 丝带呼吸正式落地（首页 WorksSection 重构）",
+      "description": "首页 #works 重构为「丝带呼吸」：等高丝带定理（行高=W/Σar，槽 flex-grow=自身 ar、aspect-ratio=自身 ar）→ 行永远满宽/等高/零裁切，与随机轮换出的比例组合无关；换图时 flex-grow/aspect-ratio 数值过渡整墙呼吸重排。一屏数学：fitWall 依「两行高之和=视口可用高」反解墙宽 max-width（固定开销 285px 预算），轮换改变 Σ 后重算，任何组合不超首屏。轮换引擎 src/lib/gallery-cycle.ts（3-6s 独立随机间隔、预约制防同屏重复、预载交叉淡入、hover/页面隐藏暂停、reduced-motion 静态、灯箱触发器同步）。39 张池按宽高比分池（横1.2-2.2/竖0.5-0.85/主带竖槽 0.6-0.85），首图显式指定。灯箱并入（Esc/←→/触屏横滑/焦点圈禁/错误态，实时读 dataset 所见即所点）。移动端：主带单竖图满宽 + 辅带 2 横 1 竖矮带。数据层：gallery.ts 删除旧槽位导出（GALLERY_HERO/SUPPORT_*/feat-042 的 FEATURED），仅保留 GALLERY_POOL 单一事实来源（七周年/角卡消费者不受影响）；demo 页与 demo 组件删除",
+      "dependencies": ["feat-016", "feat-042"],
+      "status": "done",
+      "evidence": "浏览器实测（IAB）：桌面 1440 稳态零裁切 0.02%（双采样）、两行严格等高、sectionBottom=900 恰好一屏、墙宽 fitWall 1207px 呼吸中；#works hash 跳转两次复测精准落位；scrollspy 高亮「作品展示」、PageProgress 第二点、AnniversaryCard 角卡正常；移动端 390 主竖图满宽 351、稳态 0.06-0.11%、320 无横向溢出；暗色 #works 全形态正常；灯箱 1/8 计数/当前图 matches/←→/Esc 全过；七周年页 GALLERY_POOL 消费回归正常。修复：WorksSection onSwap 漏更 --ar/--fg（换图后槽比例停留首图）。init.sh 全绿（type-check 0 错、lint 0 错 65 存量警告、build 79 页——demo 删除后回落数）。截图 design-demos/homepage-gallery/shots/final-*。分支 feat/gallery-2.0"
     }
   ]
 }

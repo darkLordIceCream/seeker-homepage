@@ -2547,3 +2547,136 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   in $var 整串问题导致首轮删除/验证假执行，改 while read 后正确完成
 - meta 清单同步精简：2026-10 块 64 条 → 19 条（18 幅 +
   cover），build 恢复全绿，详情页 18 个图片引用与 meta 一一对应
+
+### 2026-10-25 · Gallery 2.0 重构第一轮：三方向 Demo（等待选型）
+
+- 规范来源：用户提供的《Seeker_Gallery_2.0_重构实现规范》（高手编辑方向：编辑式摄影展墙、固定 6 张精选、沉浸灯箱）；用户追加硬约束：**零裁切，尊重原图比例**
+- huashu 偏好档案修正方向谱系：用户曾否掉印刷/拟书感（L1），要现代摄影品牌数字感（哈苏/徕卡/赛事站，L2），移动端偏横滑卡轨（L4），清晰优先（L5）→ 三方向全部走现代品牌谱系而非印刷编辑拟物
+- 新增
+  `GALLERY_FEATURED`（src/data/gallery.ts 末尾，按 src 引用全量池不复制字段；曾因放在 GALLERY_POOL 之前触发 TDZ
+  ReferenceError，已修）
+- demo 页（分支专属、noindex，整合时删）：/gallery-demos/{stage,matrix,mosaic}/ + 对比板 index.astro（ResizeObserver 缩放 iframe 预览）；共享组件 src/components/gallery-demos/{DemoBar,Lightbox}.astro（灯箱零依赖，补触摸横滑/
+  Tab 焦点圈禁/加载失败态）
+- 过程修 bug：① GALLERY_FEATURED TDZ；② matrix
+  `var(--a1) fr`（var 与 fr 间空格）整条 grid-template-columns 失效退化单列 → 改传完整 --cols 值；③
+  DemoBar 标题 nowrap 致 320px 全站 demo 溢出 → ≤420px 隐藏
+- 浏览器验收（IAB 1440/390/320 + 明暗 + 灯箱键盘流）全部通过，数据见 feat-042
+  evidence；截图 design-demos/homepage-gallery/shots/
+- **停在方向门**：等用户从 A/B/C（或混搭）里选，记录将写入 design-demos/homepage-gallery/direction-approved.md；下一轮把选中方向落进 WorksSection（弃随机轮换）并处理 scroll-snap 与 >100vh 整合
+- dev server 挂在 4321（nohup）；分支 feat/gallery-2.0 未推送
+
+### 2026-10-25 · Gallery 2.0 第二轮：随机轮换三解法 demo（等待选型）
+
+- 用户否掉第一轮静态策展墙：要"一眼抓眼球 + 往下拉就出现 + 随机播放照片素材"，难点是不同比例照片不裁切且在一屏内和谐 + 移动端优化
+- 数据面先行：39 张按宽高比分池（横15/竖15/近方2/超宽1），版式只用横/竖两种池，轮换同池取图使比例波动天然受控；近方/超宽不设轮换槽
+- 共享引擎 src/lib/gallery-cycle.ts：3-6s 独立随机间隔、**预约制防同屏重复**
+  （修并发 swap 竞态：两槽同时换撞图）、预载后交叉淡入、hover/隐藏暂停、reduced-motion 静态、换图同步灯箱触发器
+- 三解法：A 丝带呼吸（等高丝带定理 行高=W/Σar，flex-grow=ar 全数值过渡；主带竖槽限 0.6-0.85 池保证极端组合行高 ≤480px
+  → 一屏 892px）；B 聚光舞台（主视觉 42svh 锁高宽随比例呼吸，移动端 --ar-m 断点变量换竖池+immediate 首换）；C 瀑布长廊（超宽横幅锚点+三列错宽 10 张长墙 2590px，相近比例子池 ±0.08）
+- 过程修 bug：① gallery-cycle 预约制（并发 swap 撞图）；② spotlight
+  `.shot--spot` 被 `.shot{width:100%}` 源序覆盖 → 提特异性
+  `.shot.shot--spot`；③ 引擎槽元素须传容器不能传 button（querySelector 结构依赖）；④ 移动端单 item
+  flex-grow 分配怪癖（free space 未分完 238/358）→ 单槽 `flex:1 1 100%` 兜底；⑤
+  ribbon 主带竖池限 0.6-0.85；⑥ 审计脚本须排除 opacity:0 旧图与过渡中间态（双采样取最小）
+- 实测：稳态零裁切 A 0.02%/B 0%/C
+  0%；等高/满宽/一屏/320/390/暗色/灯箱全过；type-check 0 错、lint 0 错、build
+  83 页；截图 r2-*.png
+- **停在方向门**：A/B/C 待选（可混搭）；选定后落进 WorksSection 并处理 scroll-snap
+
+### 2026-10-25 · Gallery 2.0 收官：丝带呼吸正式落地首页 #works
+
+- 用户选定方向 A（原话「就选丝带呼吸，直接开干吧」）→
+  demo 页/组件删除，逻辑并入src/components/home/WorksSection.astro（单组件自包含，沿用项目零依赖惯例）
+- 一屏数学（新增 fitWall）：墙宽 = min(1264,
+  (视口高−285)×Σ1Σ2/(Σ1+Σ2))，轮换改变 Σ 后重算 + max-width
+  0.9s 过渡——两行高之和恒等于可用视口高，任何轮换组合不超首屏（实测 sectionBottom=900 恰好一屏）
+- 数据层清理：gallery.ts 删 GALLERY_HERO/SUPPORT_TALL/SUPPORT_SQUARE/GALLERY_FEATURED（feat-016 轮换模型与 feat-042 固定精选均被新机制取代），仅留 GALLERY_POOL；AnniversaryCard/7th 页消费者零改动回归通过
+- 过程修 bug：WorksSection 重写时 onSwap 漏更新槽位 --ar/--fg（demo 里该逻辑在 onSwap 内）——换图后槽比例停留首图导致 letterbox，补上后稳态 0.02%
+- 验收：桌面 1440 稳态零裁切 0.02%/等高/一屏 900 恰好、hash 两次复测落位、scrollspy/进度点/角卡正常、390 主竖满宽稳态 0.06-0.11%、320 无溢出、暗色正常、灯箱 1/8 当前图 matches/←→/Esc、七周年回归；init.sh 全绿（build
+  79 页，demo 删除后由 83 回落）
+- 分支 feat/gallery-2.0 两个提交（567a82c 第一轮 +
+  5a8e4ff 第二轮 + 本次落地），未推送；方向门记录 design-demos/homepage-gallery/direction-approved.md 待补用户选择原话
+
+### 2026-10-25 · 画廊标题恢复主分支极简版
+
+- 用户反馈「文字全部删掉……一个画廊 Gallery 就可以了」→ 删 kicker（GALLERY ·
+  FEATURED）与导语，标题恢复主分支「画廊 Gallery」左对齐样式（clamp 1.5-2rem +
+  Archivo 眉字）
+- 头部变矮（99→51px）→
+  fitWall 预算 285→260，墙宽进一步放大（1207→1253px），仍恰好一屏（sectionBottom=900）；稳态零裁切 ≤0.77%（含一张过渡态）复验通过
+
+### 2026-10-25 · 画廊微调：去圆角 + 拉开间距
+
+- 用户反馈「照片之间贴得太紧……照片不用做圆角，保留原汁原味」→
+  .shot 圆角 8px→0（灯箱图 2px 圆角一并去掉）；桌面 gap
+  14→22px、两带间距 16→24px、平板 10→16、移动端 8→12px；fitWall 预算 260→268 对冲行距增量
+- 复验：radius=0、gap 22px、bandGap
+  24px、sectionBottom 仍恰好 900 一屏、稳态零裁切保持（maxDev
+  0.63% 含过渡态）、无溢出
+
+### 2026-10-25 · 画廊防抖重构：三层复合缓动 → 单层数值过渡
+
+- 用户反馈换图时所有照片抖动（怀疑动画不够线性）→ 根因确认：墙 max-width
+  / 槽 flex-grow /
+  aspect-ratio 三层复合 ease 缓动速度叠加不均，且 aspect-ratio 过渡部分浏览器不支持时直接跳变
+- 重构：fitWall 解析几何后 JS 一次性写入每槽目标 width/height（px，flex 置 0 0
+  auto），只过渡这两个数值（0.9s
+  ease 全槽一致）→ 单层插值整墙同起同止同速；max-width 瞬时设置不再过渡；无 JS 仍回退 flex-grow +
+  aspect-ratio 兜底
+- 健壮性：跨断点（桌面→移动）clearLayout 清内联 px 交还 CSS；gap 从 computed
+  style 动态读取（平板 16px 断点自适应）；辅带 1100px 封顶时主带吃剩余高度
+- 实测：14s 窗口 73 个变化采样点，最大单步 6px、跳变 0、方向回摆 0（修复前三层复合存在突跳）；桌面/平板(900px)均恰好一屏（900/800）；跨断点清理生效（390 主槽 351 满宽）；零裁切稳态保持
+
+### 2026-10-25 · 画廊照片悬浮阴影
+
+- 用户要求「照片做一点阴影，营造悬浮感」→
+  .shot 双层软影（近影 1px 定边 + 远影 14/34px 抬升，浅色用品牌藏蓝 rgba(8,41,74) 低透明度、深色模式纯黑加深）；hover 时上浮 translateY(-4px) + 阴影加深（配合既有 scale
+  1.015）；box-shadow 为纯 paint 不参与布局，不引入重排抖动
+- 复验：阴影 computed 生效、sectionBottom 仍 900 恰好一屏、无溢出
+
+### 2026-10-25 · 画廊抖动二轮排查：解码竞态 + 缓动曲线
+
+- 用户仍感换图抖动 → 帧率诊断 12s 窗口 720 帧平均 60fps、零长帧（最差 18ms），排除性能；定位两个残余源：① 解码竞态——预载 onload 后立即淡入，但
+  <img>
+  自身解码/上纹理未完成，新图淡入中途才显形（闪一下）→ 改 standby.decode()（像素就绪才切换 +
+  onSwap），probe 预载删除（decode 自带下载等待），decode 失败还原预约 ② 缓动曲线/时序——布局 0.9s
+  ease 的起步速度突变（ease
+  t=0 斜率≈2.5×线性）且与淡入 1.1s 不同步 → 布局改 1.1s
+  ease-in-out（起止速度连续的 S 曲线）与淡入同长同步
+- rAF 级采样：过渡窗口每帧步进 0.75px、回摆 0；零裁切 0.58%、恰好一屏 900
+
+### 2026-10-25 · 画廊抖动三轮排查（用户线索：比例差大时更抖）
+
+- 根因推演：① CSS
+  transition 高频重定向——8 槽平均 0.56s 一次 fitWall 全墙重设目标 <
+  1.1s 过渡时长，ease-in-out 重定向速度瞬间归零再加速 = 全墙每半秒"刹车再起步"，比例差大位移大抖感强（与用户观察吻合）；② 交叉淡入期旧图 contain 于新比例槽，露出 .shot 的 muted 灰底（比例差大灰底面积大）
+- 修复：槽尺寸动画改 **rAF 指数平滑**（cur +=
+  (tgt−cur)×(1−exp(−dt/130ms))，帧率无关；目标变化速度天然连续无归零不超调；静止 <0.5px 自动停循环；reduced-motion 直设终值；跨断点 clearLayout 清动画状态）；.shot 背景 muted
+  → transparent（letterbox 融入页面背景）
+- 实测：38s 窗口 67 次换图、12 次大比例差（Δar
+  0.25-0.45）帧级分析——每帧最大步进 5.9px、回摆 0 次；帧率诊断 60fps 零长帧；稳态 letterbox
+  ≤0.27%（早前 15.52% 为采样撞上淡入中间态的瞬态）；恰好一屏 900、type-check
+  0 错
+- 后备未动：若仍有感知抖动可放缓轮换间隔 3-6s → 5-9s（产品节奏决策，待用户定）
+
+### 2026-11-03 · 画廊 6 张满宽版（用户反馈：图太多看不过来 + 屏幕利用率低）
+
+- 用户两条反馈合并处理：8 →
+  6 张（主带 1横2竖 + 辅带 3 横，辅带从 5 减 3）、辅带取消 1100px 限宽居中 → 与主带同宽、墙 max-width
+  1264 → 1728 满宽直出
+- 底层权衡：一屏约束下"减图"与"加宽"数学对抗（Σar 变小 → 行高变大 → 反解 W 更小），故放宽为满宽优先、区块约 1.08 屏——snap 是 proximity 就近吸附，多滚一点自然看完（移动端画廊本就是该模式）
+- fitWall 简化：删反解/预算常量，W =
+  wall.clientWidth 直出，两行各自丝带定理解行高；rAF 指数平滑/防抖/灯箱/无 JS 兜底全保持
+- 实测 1440×900：墙 1392 真满宽（左右仅 padding
+  24）；主带横图 720×444（旧 620×428）辅带横图 485×323（旧 306×172，大 88%）；零裁切 0.05%；区块 976px=1.08 屏；移动端 390 主竖 351 满宽 + 辅 3 横、无溢出；轮换/呼吸重排正常
+
+### 2026-11-03 · 画廊收回严格一屏（用户反馈：底部超出一屏，标题要可见）
+
+- fitWall 恢复反解模型（两行同宽、行高预算 = 视口高 − FIXED_BUDGET 230
+  − 带距 22），6 张组合（辅带 3 横 Σ≈4.3）反解 W ≈
+  1170–1220——比旧 8 张版（1253）相近略窄，但辅带单图大 60%+；固定开销压缩：padding
+  72/40 → 56/24、标题距 22 → 18、带距 24 → 22
+- 实测 1440×900：sectionBottom =
+  900 恰好一屏、标题可见、墙宽 1197、主带横图 659×371
+  / 辅带横图 ~400×278、稳态零裁切 0.15%（截图 2.74% 为换图交叉淡入瞬态）、无溢出；type-check
+  0 错
