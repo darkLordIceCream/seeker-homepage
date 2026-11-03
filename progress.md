@@ -2704,3 +2704,7 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   hover 箭头位移 + 瓷砖 hover 阴影升起（物理手感）
 - 2026-11-04 03:45 迭代5：邻图预热（rIC/300ms
   fallback，±1 张，saveData 跳过，按章 in-view 门控——修复首屏预取 19 请求→6 请求）、目录 scrollspy（35%-45% 视口带判定，手动/同步验证通过；后台标签页 IO 回调挂起是环境限制非代码问题）、观看器大图占比提升（72vh/700px，移动端 60vw）
+- 2026-11-04 05:00 迭代6：lightbox 进出过渡（@starting-style + allow-discrete +
+  ::backdrop 独立过渡，无支持浏览器直开降级）、章间编辑交接行「下一辑 · XX
+  ↓」（skill 模板 quiet
+  handoff 同款，Fragment 包裹修复 JSX 多根；排障：早期误写块体 map 体导致级联解析错误，重写 map 开头修复）、lightbox 打开时 body 滚动锁定

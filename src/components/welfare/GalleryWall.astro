@@ -36,6 +36,12 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     },
   ];
 });
+
+// 章节流：附带下一辑信息（章间编辑交接行用）
+const flow = chapters.map((ch, i) => {
+  const next = chapters[i + 1];
+  return { ...ch, nextId: next?.theme.id, nextTitle: next?.theme.title };
+});
 ---
 
 <section aria-labelledby="bhe-gallery-title" class="bhe-gallery">
@@ -65,7 +71,8 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     </nav>
   </header>
 
-  {chapters.map((ch, ti) => (
+  {flow.map((ch, ti) => (
+    <Fragment key={ch.theme.id}>
     <section aria-label={`主题：${ch.theme.title}`} class="g-chapter" id={ch.theme.id}>
       <header class="g-chapter-head reveal">
         <span aria-hidden="true" class="g-chapter-no">{ch.no}</span>
@@ -103,6 +110,14 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
         </details>
       </div>
     </section>
+      {ch.nextId && (
+        <a class="g-handoff reveal" href={`#${ch.nextId}`}>
+          <span class="g-handoff-label">下一辑</span>
+          <span class="g-handoff-title">{ch.nextTitle}</span>
+          <span class="g-handoff-arrow" aria-hidden="true">↓</span>
+        </a>
+      )}
+    </Fragment>
   ))}
 
   <footer class="g-foot reveal">
@@ -462,6 +477,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       if (firstOpen) {
         buildThumbs();
         setSheet(false);
+        document.body.style.overflow = 'hidden'; // 模态期间锁背景滚动
         dialog.showModal();
         if (!pushed) {
           history.pushState({ bheLb: true }, '');
@@ -473,6 +489,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
 
     const close = (fromPop = false) => {
       if (!dialog.open) {return;}
+      document.body.style.overflow = ''; // 恢复背景滚动
       dialog.close();
       setZoom(false);
       lbImg.removeAttribute('src');
@@ -972,8 +989,56 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     outline-offset: 2px;
   }
 
+  .g-handoff {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: clamp(40px, 7vh, 72px);
+    padding: 18px 0;
+    border-top: 1px solid var(--divider);
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .g-handoff-label {
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--paper-sub);
+  }
+
+  .g-handoff-title {
+    font-family: var(--font-serif-song);
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+  }
+
+  .g-handoff-arrow {
+    font-family: var(--font-archivo);
+    color: var(--link);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) {
+    .g-handoff:hover .g-handoff-title {
+      color: var(--link);
+    }
+
+    .g-handoff:hover .g-handoff-arrow {
+      transform: translateY(3px);
+    }
+  }
+
+  .g-handoff:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
   .g-foot {
-    margin-top: clamp(72px, 12vh, 130px);
+    margin-top: clamp(48px, 8vh, 88px);
     text-align: center;
     border-top: 1px solid var(--divider);
     padding-top: 40px;
@@ -1005,11 +1070,39 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /* 进出过渡：@starting-style 入场，allow-discrete 出场（Chrome DevRel 模式） */
+    opacity: 0;
+    translate: 0 18px;
+    transition:
+      opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      translate 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      overlay 0.32s allow-discrete,
+      display 0.32s allow-discrete;
+  }
+
+  .lb[open] {
+    opacity: 1;
+    translate: 0 0;
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 18px;
+    }
   }
 
   .lb::backdrop {
     background: rgba(8, 16, 26, 0.82);
     backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.32s ease, overlay 0.32s allow-discrete, display 0.32s allow-discrete;
+  }
+
+  .lb[open]::backdrop {
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 
   .lb-bar {
@@ -1319,8 +1412,16 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     .g-thumb,
     .lb-tool,
     .g-shutter img,
-    .lb-img {
+    .lb-img,
+    .lb,
+    .lb::backdrop {
       transition: none;
+    }
+
+    .lb,
+    .lb::backdrop {
+      opacity: 1;
+      translate: none;
     }
 
     .g-shutter img.is-loading,
