@@ -6,9 +6,9 @@
  * 零裁切，与轮换出什么比例无关；换图时槽尺寸走 rAF 指数平滑（防抖，见脚本），
  * 整面墙如呼吸般重排。照片按原始比例随机轮换（每槽 3~6s 独立间隔，
  * 引擎见 src/lib/gallery-cycle.ts：预载交叉淡入、hover 暂停、防同屏重复）。
- * 满宽模型：桌面 6 张（主带 1 横 2 竖 + 辅带 3 横），两行同宽铺满视口
- * （max-width 1728px 防超宽屏行高爆表），区块高约 1.1 屏——少而大，
- * snap 为 proximity 就近吸附；无 JS 时静态首图 flex + aspect-ratio 兜底。
+ * 满宽模型：桌面 6 张（主带 1 横 2 竖 + 辅带 3 横），两行同宽，墙宽由 fitWall
+ * 依「两行高之和 = 视口高 − 固定开销」反解——严格一屏且标题可见（max-width
+ * 1728px 防超宽屏行高爆表）；无 JS 时静态首图 flex + aspect-ratio 兜底。
  * 移动端：主带只留一张竖图满宽（竖图在窄屏才有冲击力），辅带 3 横矮带。
  * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（换作品只改那个文件）；R2 只读。
  */
@@ -182,7 +182,12 @@ const capOf = (img: GalleryImage) =>
   // JS 维护每槽 cur/tgt，rAF 循环指数趋近（速度 = k×(tgt−cur)，帧率无关，
   // τ = 130ms；目标变化速度天然连续，不归零不超调；静止自动停循环）。
   // 行几何 = 等高丝带定理：行高 H = (行宽 − gaps)/Σar，槽宽 = H × ar；
-  // 行宽直接取满容器（满宽模型），无 JS 时槽回退 flex-grow + aspect-ratio 兜底。
+  // 墙宽由 fitWall 依视口高预算反解（严格一屏）；无 JS 时槽回退
+  // flex-grow + aspect-ratio 兜底。
+  const WALL_MAX = 1728;
+  // 固定开销：区块留白 80（56+24）+ 标题行约 51+18 + 两行图注 52 ≈ 201，取 230 留余量
+  const FIXED_BUDGET = 230;
+  const BAND_GAP = 22;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const rowGap = (row: Element | null) =>
@@ -303,13 +308,32 @@ const capOf = (img: GalleryImage) =>
       clearLayout();
       return;
     }
-    // 满宽模型：墙宽直接取满容器（CSS max-width 1728px 防超宽屏爆行高），
-    // 两行各自按等高丝带定理解行高。不再反解压缩墙宽——6 张大图铺满优先，
-    // 区块高度约 1.1 屏（snap 为 proximity 就近吸附，多滚一点自然看完）。
-    const w = wall.clientWidth;
-    if (w < 320) {return;}
-    layoutRow(wall.querySelector('.ribbon-row--main'), w);
-    layoutRow(wall.querySelector('.ribbon-row--aux'), w);
+    // 一屏反解：两行同宽，行高预算 = 视口高 − 固定开销（标题/图注/留白/带距）。
+    // H1+H2 = avail → (W−g1)/s1 + (W−g2)/s2 = avail → W 反解；上限 1728 防
+    // 超宽屏行高爆表。6 张组合（辅带 3 横 Σ≈4.3）反解结果 ≈ 1170–1220，
+    // 比旧 8 张版更宽——少而大与一屏在此组合下兼得。
+    const sOf = (sel: string) => {
+      const slots = [...(wall?.querySelectorAll<HTMLElement>(`${sel} .gslot`) ?? [])].filter(
+        g => getComputedStyle(g).display !== 'none',
+      );
+      const sum = slots.reduce(
+        (acc, g) => acc + (parseFloat(g.style.getPropertyValue('--fg')) || 0),
+        0,
+      );
+      return { sum, gaps: rowGap(wall?.querySelector(sel)) * Math.max(0, slots.length - 1) };
+    };
+    const r1 = sOf('.ribbon-row--main');
+    const r2 = sOf('.ribbon-row--aux');
+    if (r1.sum <= 0 || r2.sum <= 0) {return;}
+    const avail = Math.max(360, window.innerHeight - FIXED_BUDGET - BAND_GAP);
+    const w = Math.min(
+      WALL_MAX,
+      Math.max(320, (avail + r1.gaps / r1.sum + r2.gaps / r2.sum) / (1 / r1.sum + 1 / r2.sum)),
+    );
+    wall.style.maxWidth = `${Math.round(w)}px`;
+    const realW = wall.clientWidth;
+    layoutRow(wall.querySelector('.ribbon-row--main'), realW);
+    layoutRow(wall.querySelector('.ribbon-row--aux'), realW);
   };
 
   // —— 轮换：换图后更新槽位比例变量 → flex-grow/aspect-ratio 过渡 → 整墙呼吸重排 ——
@@ -470,14 +494,14 @@ const capOf = (img: GalleryImage) =>
 <style>
   .gallery-section {
     background: var(--background);
-    padding-top: 72px;
-    padding-bottom: 40px;
+    padding-top: 56px;
+    padding-bottom: 24px;
   }
 
   .gallery-head {
     max-width: 1728px;
     width: 100%;
-    margin: 0 auto 22px;
+    margin: 0 auto 18px;
   }
 
   .gallery-title {
@@ -517,7 +541,7 @@ const capOf = (img: GalleryImage) =>
   }
 
   .ribbon-row--aux {
-    margin-top: 24px;
+    margin-top: 22px;
     width: 100%;
   }
 
