@@ -2702,3 +2702,5 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 2026-11-04 02:45 迭代4：导航回路（Foreground
   Web「清晰回列表之路」）——画廊 hero 返回链「← 带上她的眼睛 · 图文手记」+ 页脚 CTA「回到…读孩子们的故事」双向闭环；第一章首图 fetchpriority=high（LCP 候选）；入口 CTA
   hover 箭头位移 + 瓷砖 hover 阴影升起（物理手感）
+- 2026-11-04 03:45 迭代5：邻图预热（rIC/300ms
+  fallback，±1 张，saveData 跳过，按章 in-view 门控——修复首屏预取 19 请求→6 请求）、目录 scrollspy（35%-45% 视口带判定，手动/同步验证通过；后台标签页 IO 回调挂起是环境限制非代码问题）、观看器大图占比提升（72vh/700px，移动端 60vw）

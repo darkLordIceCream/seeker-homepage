@@ -181,6 +181,27 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
   /* ---------- 观看器：每章一次一张，←/→ 翻页 ---------- */
   const wrapIndex = (n: number, len: number) => ((n % len) + len) % len;
 
+  // 邻图预热：当前图就位后，idle 时把前后张拉进缓存（「预热」模式）
+  // 节流保护：saveData / 慢速连接不预热；Set 去重避免重复请求
+  const preheated = new Set<string>();
+  const navConn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const saveData = navConn?.saveData === true;
+  const preheat = (photos: { src: string }[], i: number, active?: boolean) => {
+    if (saveData || active === false) { return; }
+    const idle = (cb: () => void) =>
+      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
+    idle(() => {
+      [i + 1, i - 1].forEach(j => {
+        const n = photos[((j % photos.length) + photos.length) % photos.length];
+        if (n && !preheated.has(n.src)) {
+          preheated.add(n.src);
+          const im = new Image();
+          im.src = n.src;
+        }
+      });
+    });
+  };
+
   document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
     const seq = seqs.get(viewer.dataset.theme ?? '');
     if (!seq) {return;}
@@ -221,6 +242,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
       fadeInOnLoad();
+      preheat(photos, index, viewer.classList.contains('in-view'));
       viewer
         .querySelectorAll('.g-thumbs [data-photo]')
         .forEach(el => el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index)));
@@ -421,6 +443,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       lbImg.classList.add('is-loading');
       lbImgBtn.style.setProperty('--ph-bg', phBg(p.tone));
       lbImg.src = p.src;
+      preheat(seq.photos, index);
       lbImg.alt = p.alt;
       lbTitle.textContent = seq.themeTitle;
       lbCaption.textContent = `${p.school} · ${BATCH_SHORT}`;
@@ -562,6 +585,25 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     });
   }
 
+  /* ---------- 目录 scrollspy：高亮当前所在主题 ---------- */
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.g-toc a')];
+  if (tocLinks.length) {
+    const byHash = new Map(tocLinks.map(a => [a.getAttribute('href') ?? '', a]));
+    const spy = new IntersectionObserver(
+      entries => {
+        entries.forEach(en => {
+          const link = byHash.get(`#${en.target.id}`);
+          if (!link) { return; }
+          if (en.isIntersecting) {
+            tocLinks.forEach(a => a.classList.toggle('is-active', a === link));
+          }
+        });
+      },
+      { rootMargin: '-35% 0px -55% 0px' },
+    );
+    document.querySelectorAll('.g-chapter').forEach(sec => spy.observe(sec));
+  }
+
   /* ---------- 入场动画：滚动到可视区时加 .in-view ---------- */
   const revealables = document.querySelectorAll('.reveal');
   if (revealables.length) {
@@ -683,8 +725,14 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     transition: color 0.2s ease;
   }
 
-  .g-toc a:hover {
+  .g-toc a:hover,
+  .g-toc a.is-active {
     color: var(--link);
+  }
+
+  .g-toc a.is-active .g-toc-no {
+    -webkit-text-fill-color: initial;
+    font-weight: 700;
   }
 
   .g-toc-no {
@@ -758,7 +806,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: min(72vh, 680px);
+    min-height: min(76vh, 760px);
     padding: 24px;
     background: var(--ph-bg, var(--paper-face));
     border: 1px solid var(--divider);
@@ -778,7 +826,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: min(68vh, 632px);
+    max-height: min(72vh, 700px);
     object-fit: contain;
     transition: opacity 0.35s ease;
   }
@@ -1234,13 +1282,13 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     }
 
     .g-shutter {
-      min-height: 56vw;
+      min-height: 60vw;
       padding: 12px;
       border-radius: 4px;
     }
 
     .g-shutter img {
-      max-height: 56vw;
+      max-height: 60vw;
     }
 
     .lb {
