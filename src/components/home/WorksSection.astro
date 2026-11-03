@@ -3,12 +3,13 @@
  * 首页第 2 屏「画廊 Gallery」：丝带呼吸（Gallery 2.0，feat-043）。
  * 等高丝带定理：一行内所有图等高时，行高 = 行宽 ÷ 各图宽高比之和（Σar）。
  * 实现：槽 flex-grow = 自身 ar、aspect-ratio = 自身 ar → 行永远满宽、等高、
- * 零裁切，与轮换出什么比例无关；换图时 flex-grow/aspect-ratio 数值过渡，
+ * 零裁切，与轮换出什么比例无关；换图时槽尺寸走 rAF 指数平滑（防抖，见脚本），
  * 整面墙如呼吸般重排。照片按原始比例随机轮换（每槽 3~6s 独立间隔，
  * 引擎见 src/lib/gallery-cycle.ts：预载交叉淡入、hover 暂停、防同屏重复）。
- * 一屏数学：墙宽由 JS 依「两行高之和 = 可用视口高」反解并随轮换微调，
- * 任何轮换组合都不超出首屏（见脚本 fitWall）；无 JS 时静态首图满宽兜底。
- * 移动端：主带只留一张竖图满宽（竖图在窄屏才有冲击力），辅带 2 横 1 竖矮带。
+ * 满宽模型：桌面 6 张（主带 1 横 2 竖 + 辅带 3 横），两行同宽铺满视口
+ * （max-width 1728px 防超宽屏行高爆表），区块高约 1.1 屏——少而大，
+ * snap 为 proximity 就近吸附；无 JS 时静态首图 flex + aspect-ratio 兜底。
+ * 移动端：主带只留一张竖图满宽（竖图在窄屏才有冲击力），辅带 3 横矮带。
  * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（换作品只改那个文件）；R2 只读。
  */
 import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
@@ -44,8 +45,9 @@ interface SlotCfg {
   mHide?: boolean;
 }
 
-/** 主带 1 横 2 竖（V_MAIN 池，行高约 371–480px）；辅带 3 横 2 竖（约 161–215px）。
- *  移动端只保留主带第一张竖图满宽 + 辅带 2 横 1 竖矮带 */
+/** 主带 3 张：1 横 2 竖（V_MAIN 池，满宽下行高约 420–470px）；辅带 3 张全横
+ *  （满宽下行高约 280–340px）。桌面共 6 张——少而大，两行同宽铺满视口。
+ *  移动端只保留主带竖图满宽 + 辅带 3 横矮带 */
 const MAIN_SLOTS: SlotCfg[] = [
   { kind: 'h', first: pick(H_POOL, '心游万仞'), mHide: true },
   { kind: 'v-main', first: pick(V_MAIN, 'Henry浩麟') },
@@ -53,10 +55,8 @@ const MAIN_SLOTS: SlotCfg[] = [
 ];
 const AUX_SLOTS: SlotCfg[] = [
   { kind: 'h', first: pick(H_POOL, 'Michelle_Chen') },
-  { kind: 'h', first: pick(H_POOL, 'Tommic'), mHide: true },
-  { kind: 'v', first: pick(V_POOL, '镜中') },
+  { kind: 'h', first: pick(H_POOL, 'Tommic') },
   { kind: 'h', first: pick(H_POOL, '王哼哼') },
-  { kind: 'v', first: pick(V_POOL, 'Ferman'), mHide: true },
 ];
 
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
@@ -176,17 +176,13 @@ const capOf = (img: GalleryImage) =>
   const wall = document.querySelector<HTMLElement>('[data-wall]');
   const isDesktop = () => window.matchMedia('(min-width: 769px)').matches;
 
-  // —— 丝带几何：单层纯数值过渡（防抖动核心）——
-  // 旧实现墙 max-width / 槽 flex-grow / aspect-ratio 三层复合缓动，速度叠加不均
-  // 且 aspect-ratio 过渡部分浏览器不支持 → 换图时整墙抖动。
-  // 现在：JS 一次性解出每槽目标 width/height（px），只过渡这两个数值，
-  // 曲线/时长全槽一致 → 整墙同起同止同速。等高丝带定理不变：
-  // 行高 H = (行宽 − gaps)/Σar，槽宽 = H × ar。fitWall 反解行宽使两行高之和
-  // 恰等于可用视口高；无 JS 时槽回退 flex-grow + aspect-ratio 的静态兜底。
-  const WALL_MAX = 1264;
-  const AUX_MAX = 1100;
-  // 固定开销：区块留白 112 + 标题行（默认行高约 51 + 22 间距）+ 两行图注 52 + 带距 24 ≈ 261
-  const FIXED_BUDGET = 268;
+  // —— 丝带几何：rAF 指数平滑（防抖核心）——
+  // 槽尺寸不使用 CSS transition：高频换图下 transition 被反复重定向，
+  // ease-in-out 重定向时速度瞬间归零再加速 = 全墙"刹车再起步"式抖动。
+  // JS 维护每槽 cur/tgt，rAF 循环指数趋近（速度 = k×(tgt−cur)，帧率无关，
+  // τ = 130ms；目标变化速度天然连续，不归零不超调；静止自动停循环）。
+  // 行几何 = 等高丝带定理：行高 H = (行宽 − gaps)/Σar，槽宽 = H × ar；
+  // 行宽直接取满容器（满宽模型），无 JS 时槽回退 flex-grow + aspect-ratio 兜底。
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const rowGap = (row: Element | null) =>
@@ -304,28 +300,16 @@ const capOf = (img: GalleryImage) =>
 
   const fitWall = () => {
     if (!wall || !isDesktop()) {
-      wall?.style.removeProperty('max-width');
       clearLayout();
       return;
     }
-    const sumOf = (selector: string) =>
-      [...(wall?.querySelectorAll<HTMLElement>(`${selector} .gslot`) ?? [])]
-        .filter(g => getComputedStyle(g).display !== 'none')
-        .reduce((acc, g) => acc + (parseFloat(g.style.getPropertyValue('--fg')) || 0), 0);
-    const s1 = sumOf('.ribbon-row--main');
-    const s2 = sumOf('.ribbon-row--aux');
-    if (s1 <= 0 || s2 <= 0) {return;}
-    const avail = Math.max(320, window.innerHeight - FIXED_BUDGET);
-    // 辅带行宽封顶 AUX_MAX → H2 为定值；主带行吃掉剩余高度：
-    // H1 = avail − 带距 24 − H2 → W = H1×s1 + 主带 gaps
-    const h2 = (AUX_MAX - rowGap(wall.querySelector('.ribbon-row--aux')) * 4) / s2;
-    const w = Math.max(
-      320,
-      Math.min(WALL_MAX, (avail - 24 - h2) * s1 + rowGap(wall.querySelector('.ribbon-row--main')) * 2),
-    );
-    wall.style.maxWidth = `${Math.round(w)}px`;
-    layoutRow(wall.querySelector('.ribbon-row--main'), Math.round(w));
-    layoutRow(wall.querySelector('.ribbon-row--aux'), Math.round(Math.min(AUX_MAX, w)));
+    // 满宽模型：墙宽直接取满容器（CSS max-width 1728px 防超宽屏爆行高），
+    // 两行各自按等高丝带定理解行高。不再反解压缩墙宽——6 张大图铺满优先，
+    // 区块高度约 1.1 屏（snap 为 proximity 就近吸附，多滚一点自然看完）。
+    const w = wall.clientWidth;
+    if (w < 320) {return;}
+    layoutRow(wall.querySelector('.ribbon-row--main'), w);
+    layoutRow(wall.querySelector('.ribbon-row--aux'), w);
   };
 
   // —— 轮换：换图后更新槽位比例变量 → flex-grow/aspect-ratio 过渡 → 整墙呼吸重排 ——
@@ -491,7 +475,7 @@ const capOf = (img: GalleryImage) =>
   }
 
   .gallery-head {
-    max-width: 1264px;
+    max-width: 1728px;
     width: 100%;
     margin: 0 auto 22px;
   }
@@ -515,10 +499,10 @@ const capOf = (img: GalleryImage) =>
   }
 
   /* —— 丝带墙：flex-grow = ar 是无 JS 兜底；JS 布局用槽宽高 px（见 fitWall），
-     只过渡 width/height 单层数值，全槽同曲线同时长 → 换图时整墙同步呼吸不抖动 —— */
+     满宽模型（max-width 1728 防超宽屏行高爆表）—— */
   .gallery-wall {
     width: 100%;
-    max-width: 1264px;
+    max-width: 1728px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -534,9 +518,6 @@ const capOf = (img: GalleryImage) =>
 
   .ribbon-row--aux {
     margin-top: 24px;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
     width: 100%;
   }
 
@@ -771,13 +752,9 @@ const capOf = (img: GalleryImage) =>
     .ribbon-row {
       gap: 16px;
     }
-
-    .ribbon-row--aux {
-      max-width: 920px;
-    }
   }
 
-  /* —— 移动端：主带单竖图满宽 + 辅带 2 横 1 竖矮带 —— */
+  /* —— 移动端：主带单竖图满宽 + 辅带 3 横矮带 —— */
   @media (max-width: 768px) {
     .gallery-section {
       padding-top: 56px;
