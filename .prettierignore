@@ -30,3 +30,4 @@ Thumbs.db
 
 # Generated files
 *.generated.*
+src/data/welfare-gallery.ts

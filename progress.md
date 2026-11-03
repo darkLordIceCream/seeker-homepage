@@ -2680,3 +2680,14 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   900 恰好一屏、标题可见、墙宽 1197、主带横图 659×371
   / 辅带横图 ~400×278、稳态零裁切 0.15%（截图 2.74% 为换图交叉淡入瞬态）、无溢出；type-check
   0 错
+
+## 2026-11-04 00:30-01:15 · feat/bring-her-eyes-portfolio · 小摄影师的作品集 v1
+
+- 编辑五步（接触印样 64 张 / 1280 候选 → 定稿 40 张 /
+  5 主题）+ 素材管线（scripts/welfare-gallery/import.py，PIL 压缩长边 2560 q82 →
+  public/r2-preview 预览，R2 只存入选图）+ 画廊页 /welfare/gallery/（GalleryWall：幽灵期号章头 + 序列观看器 + 移植 photoreason/skills
+  MIT 的锚定缩放/拖拽平移 lightbox）+ 落地页入口 GalleryEntry
+- 验证：type-check 0 错、lint 0 错（93 警告为基线+非空断言）、build
+  84 页、浏览器实测桌面/375px + 翻页/放大/缩放/分层 Esc/history 全通过
+- 待办：用户过目 40 张定稿（/tmp/prs-curation/checkpoint.html）→
+  R2 上传 → 数据切 R2 URL

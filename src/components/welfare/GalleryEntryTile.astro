@@ -1,0 +1,100 @@
+---
+// 入口区块的单张预览瓷砖：拍立得微旋转（沿用上方文章堆叠的 --paper-* 语言）
+import type { WelfareEntryTile } from '@/data/welfare-gallery';
+
+interface Props {
+  tile: WelfareEntryTile;
+  index: number;
+}
+
+const { tile, index } = Astro.props;
+const rotations = [-3.5, 2.5, -1.5, 3, -2];
+const lifts = [0, 10, 2, 12, 4];
+const rot = rotations[index % rotations.length];
+const dy = lifts[index % lifts.length];
+---
+
+<a
+  aria-label={`主题「${tile.title}」首图，进入小摄影师的作品集`}   class="tile reveal"   href="/welfare/gallery/"   style={`--rot:${rot}deg;--dy:${dy}px;--reveal-delay:${index * 0.08}s`}
+>
+  <span class="tile-face">
+    <img alt={tile.alt} decoding="async" height={tile.h} loading="lazy" src={tile.src} width={tile.w} />
+    <span aria-hidden="true" class="tile-no">{tile.no}</span>
+  </span>
+  <span class="tile-name">{tile.title}</span>
+</a>
+
+<style>
+  .tile {
+    display: block;
+    width: clamp(120px, 16vw, 172px);
+    flex: none;
+    text-decoration: none;
+    transform: rotate(var(--rot)) translateY(var(--dy));
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.35s ease;
+    scroll-snap-align: center;
+  }
+
+  @media (hover: hover) {
+    .tile:hover {
+      transform: rotate(0deg) translateY(calc(var(--dy) - 8px)) scale(1.04);
+      z-index: 2;
+    }
+  }
+
+  .tile:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  .tile-face {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: clamp(96px, 12vw, 132px);
+    padding: 8px;
+    background: var(--paper-face);
+    border-radius: 4px;
+    box-shadow: var(--paper-shadow);
+    overflow: hidden;
+  }
+
+  .tile-face img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .tile-no {
+    position: absolute;
+    right: 6px;
+    bottom: 4px;
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--paper-sub);
+  }
+
+  .tile-name {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-serif-song);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--paper-ink);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

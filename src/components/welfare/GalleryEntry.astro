@@ -1,0 +1,122 @@
+---
+// 「带上她的眼睛」落地页入口区块：小摄影师的作品集
+// 预览瓷砖取自各主题首图（编辑定稿的章封面），拍立得微旋转呼应上方文章堆叠
+import GalleryEntryTile from './GalleryEntryTile.astro';
+import {
+  WELFARE_GALLERY_THEMES,
+  WELFARE_GALLERY_BATCH,
+} from '@/data/welfare-gallery';
+
+// 每主题首图 = 入口预览瓷砖（flatMap 处理 noUncheckedIndexedAccess）
+const tiles = WELFARE_GALLERY_THEMES.flatMap((theme, i) => {
+  const first = theme.photos[0];
+  if (!first) {return [];}
+  return [
+    {
+      src: first.src,
+      w: first.w,
+      h: first.h,
+      alt: first.alt,
+      title: theme.title,
+      no: String(i + 1).padStart(2, '0'),
+    },
+  ];
+});
+---
+
+<section aria-labelledby="gallery-entry-title" class="gallery-entry">
+  <header class="entry-head reveal">
+    <p class="section-kicker">SEEKER 公益 · WELFARE</p>
+    <h2 class="entry-title" id="gallery-entry-title">小摄影师的作品集</h2>
+    <p class="entry-lead">
+      孩子们自己拍的照片，按主题编成了五辑。每两周更新一期——
+      本期是第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期，
+      {WELFARE_GALLERY_BATCH.photoCount} 张，来自 {WELFARE_GALLERY_BATCH.schoolCount} 所学校。
+    </p>
+  </header>
+
+  <div class="entry-tiles">
+    {tiles.map((tile, i) => (
+      <GalleryEntryTile index={i} tile={tile} />
+    ))}
+  </div>
+
+  <a class="mini-cta entry-cta" href="/welfare/gallery/">
+    走进小摄影师的作品集 <span aria-hidden="true">→</span>
+  </a>
+</section>
+
+<script>
+  // 入场动画（与画廊页同一套 .reveal 约定）
+  const els = document.querySelectorAll('.gallery-entry .reveal');
+  if (els.length) {
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in-view');
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px' },
+    );
+    els.forEach(el => io.observe(el));
+  }
+</script>
+
+<style>
+  .gallery-entry {
+    max-width: 1080px;
+    margin: 72px auto 0;
+    padding: 0 clamp(16px, 5vw, 24px) 8px;
+    text-align: center;
+  }
+
+  .entry-head {
+    max-width: 620px;
+    margin: 0 auto 40px;
+  }
+
+  .entry-title {
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.7rem, 3.8vw, 2.4rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 14px;
+    line-height: 1.25;
+  }
+
+  .entry-lead {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+
+  .entry-tiles {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(8px, 2.5vw, 22px);
+  }
+
+  .entry-cta {
+    margin-top: 36px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 640px) {
+    .gallery-entry {
+      margin-top: 56px;
+    }
+
+    .entry-tiles {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 8px 4px 20px;
+      scroll-snap-type: x proximity;
+    }
+  }
+</style>

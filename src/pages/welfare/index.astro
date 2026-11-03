@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import Footer from '../../components/Footer.astro';
+import GalleryEntry from '../../components/welfare/GalleryEntry.astro';
 
 // 图文手记按 order（文章顺序）排列：项目开篇在前，后续手记依次在后
 const articles = (await getCollection('welfare')).sort(
@@ -60,6 +61,8 @@ const fmtDate = (date: Date) =>
         ))}
       </div>
     </section>
+
+    <GalleryEntry />
   </main>
 
   <Footer />

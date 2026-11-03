@@ -1,0 +1,1173 @@
+---
+// 「小摄影师的作品集」画廊主体：主题分章 + 序列式观看器 + 缩放 lightbox
+// - 数据来自 src/data/welfare-gallery.ts（脚本生成，40 张定稿 + 5 主题）
+// - 章头排版借鉴杂志画册：超大幽灵期号 + 衬线主题名 + 编辑导语
+// - 观看器：一次一张不裁切（object-fit: contain），←/→ 翻页，可展开缩略图索引
+// - lightbox 移植自 photoreason/skills portfolio-site-builder（MIT）：
+//   点击点锚定缩放 1–4x、拖拽平移、分层 Esc、缩略图条（见脚本头部署名注释）
+import {
+  WELFARE_GALLERY_THEMES,
+  WELFARE_GALLERY_BATCH,
+  type WelfareGalleryPhoto,
+} from '@/data/welfare-gallery';
+
+// 期数短标（「第1-2周」），从完整 label 里截取括号前部分
+const batchShort = WELFARE_GALLERY_BATCH.label.split('（')[0];
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const cap = (p: WelfareGalleryPhoto) => `${p.school} · ${batchShort}`;
+
+// 预解析每章首图与期号（noUncheckedIndexedAccess 下 photos[0] 需要 guard）
+const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
+  const first = theme.photos[0];
+  if (!first) {return [];}
+  return [
+    {
+      theme,
+      first,
+      no: pad(ti + 1),
+      count: theme.photos.length,
+    },
+  ];
+});
+---
+
+<section aria-labelledby="bhe-gallery-title" class="bhe-gallery">
+  <header class="g-hero">
+    <p class="section-kicker">SEEKER 公益 · WELFARE</p>
+    <h1 class="g-title" id="bhe-gallery-title">小摄影师的作品集</h1>
+    <p class="g-dek">
+      每两周，我们把相机交到山里孩子手上，再把他们拍下的世界带回来。
+      这里是每一次快门之后，被留下来的那一张。
+    </p>
+    <p class="g-stats">
+      <strong>第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期</strong>
+      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.label}
+      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.photoCount} 张照片
+      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.schoolCount} 所学校
+    </p>
+    <nav aria-label="主题目录" class="g-toc">
+      {chapters.map(ch => (
+        <a href={`#${ch.theme.id}`}>
+          <span class="g-toc-no">{ch.no}</span>
+          {ch.theme.title}
+        </a>
+      ))}
+    </nav>
+  </header>
+
+  {chapters.map((ch, ti) => (
+    <section aria-label={`主题：${ch.theme.title}`} class="g-chapter" id={ch.theme.id}>
+      <header class="g-chapter-head reveal">
+        <span aria-hidden="true" class="g-chapter-no">{ch.no}</span>
+        <div class="g-chapter-text">
+          <h2 class="g-chapter-title">{ch.theme.title}</h2>
+          <p class="g-chapter-note">{ch.theme.note}</p>
+        </div>
+      </header>
+
+      <div
+        aria-label={`${ch.theme.title}，共 ${ch.count} 张`}         aria-roledescription="图片序列"         class="g-viewer reveal"         data-theme={ch.theme.id}         data-viewer         tabindex="0"
+      >
+        <figure class="g-stage">
+          <button
+            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             type="button"
+          >
+            <img
+              alt={ch.first.alt}               decoding="async"               height={ch.first.h}               loading={ti === 0 ? 'eager' : 'lazy'}               src={ch.first.src}               width={ch.first.w}
+            />
+          </button>
+          <figcaption class="g-caption">
+            <span class="g-caption-school">{cap(ch.first)}</span>
+            <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
+          </figcaption>
+        </figure>
+
+        <div class="g-nav">
+          <button aria-label={`上一张（${ch.theme.title}）`} class="g-step" data-step="-1" type="button">←</button>
+          <button aria-label={`下一张（${ch.theme.title}）`} class="g-step" data-step="1" type="button">→</button>
+        </div>
+
+        <details class="g-index">
+          <summary>全部照片 <span class="g-index-count">{ch.count}</span></summary>
+          <div class="g-thumbs" data-thumbs></div>
+        </details>
+      </div>
+    </section>
+  ))}
+
+  <footer class="g-foot reveal">
+    <p class="g-foot-line">下一期，正在山里曝光。</p>
+  </footer>
+</section>
+
+<dialog aria-labelledby="lb-title" class="lb" id="bhe-lightbox">
+  <header class="lb-bar">
+    <div class="lb-bar-info">
+      <span id="lb-title"></span>
+      <span aria-live="polite" class="lb-count" id="lb-count"></span>
+    </div>
+    <div class="lb-tools">
+      <button aria-expanded="false" class="lb-tool" id="lb-index-btn" type="button">全部照片</button>
+      <button aria-pressed="false" class="lb-tool" id="lb-zoom-btn" type="button">放大</button>
+      <label class="lb-zoom-range">
+        <input aria-label="缩放比例" disabled id="lb-zoom-input" max="400" min="100" step="10" type="range" value="100" />
+        <output for="lb-zoom-input" id="lb-zoom-out">100%</output>
+      </label>
+      <button aria-label="关闭大图" autofocus class="lb-tool lb-close" id="lb-close" type="button">×</button>
+    </div>
+  </header>
+  <div class="lb-stage">
+    <button aria-label="上一张" class="lb-nav lb-prev" id="lb-prev" type="button">‹</button>
+    <div class="lb-canvas" id="lb-canvas">
+      <div class="lb-surface" id="lb-surface">
+        <button aria-label="放大或还原" class="lb-imgbtn" id="lb-imgbtn" type="button">
+          <img alt="" class="lb-img" draggable="false" id="lb-img" />
+        </button>
+      </div>
+      <p class="lb-error" hidden id="lb-error" role="status">这张照片暂时加载不出来。</p>
+    </div>
+    <button aria-label="下一张" class="lb-nav lb-next" id="lb-next" type="button">›</button>
+  </div>
+  <footer class="lb-foot">
+    <p class="lb-caption" id="lb-caption"></p>
+    <div class="lb-thumbs" id="lb-thumbs"></div>
+  </footer>
+  <section aria-labelledby="lb-sheet-title" class="lb-sheet" hidden id="lb-sheet">
+    <h2 id="lb-sheet-title">全部照片</h2>
+    <div class="lb-sheet-grid" id="lb-sheet-grid"></div>
+  </section>
+</dialog>
+
+<script>
+  /*
+   * lightbox 交互移植自 photoreason/skills · portfolio-site-builder（MIT License）
+   * https://github.com/photoreason/skills —— 锚定缩放 / 拖拽平移 / 分层 Esc。
+   * 按「带上她的眼睛」的数据结构与站内 token 重写，样式独立。
+   */
+  import {
+    WELFARE_GALLERY_THEMES,
+    WELFARE_GALLERY_BATCH,
+    type WelfareGalleryPhoto,
+  } from '@/data/welfare-gallery';
+
+  interface Seq { themeTitle: string; photos: WelfareGalleryPhoto[] }
+
+  const seqs = new Map<string, Seq>(
+    WELFARE_GALLERY_THEMES.map(t => [t.id, { themeTitle: t.title, photos: t.photos }]),
+  );
+
+  // 期数短标（「第1-2周」），与模板侧同一截取规则
+  const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
+
+  /* ---------- 观看器：每章一次一张，←/→ 翻页 ---------- */
+  const wrapIndex = (n: number, len: number) => ((n % len) + len) % len;
+
+  document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
+    const seq = seqs.get(viewer.dataset.theme ?? '');
+    if (!seq) {return;}
+    const {photos} = seq;
+
+    const img = viewer.querySelector<HTMLImageElement>('.g-shutter img')!;
+    const shutter = viewer.querySelector<HTMLButtonElement>('[data-enlarge]')!;
+    const schoolEl = viewer.querySelector<HTMLElement>('.g-caption-school')!;
+    const counterEl = viewer.querySelector<HTMLElement>('.g-counter')!;
+    const thumbsBox = viewer.querySelector<HTMLElement>('[data-thumbs]')!;
+    const details = viewer.querySelector<HTMLDetailsElement>('.g-index')!;
+
+    let index = 0;
+    let thumbsBuilt = false;
+
+    // 箭头函数（声明在收窄之后），避免 function 提升破坏 seq 收窄
+    const render = (i: number) => {
+      index = wrapIndex(i, photos.length);
+      const p = photos[index]!;
+      img.src = p.src;
+      img.width = p.w;
+      img.height = p.h;
+      img.alt = p.alt;
+      schoolEl.textContent = `${p.school} · ${BATCH_SHORT}`;
+      counterEl.textContent = `${index + 1} / ${photos.length}`;
+      shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
+      viewer
+        .querySelectorAll('.g-thumbs [data-photo]')
+        .forEach(el => el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index)));
+    };
+
+    const buildThumbs = () => {
+      if (thumbsBuilt) {return;}
+      thumbsBuilt = true;
+      photos.forEach((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.photo = String(i);
+        b.className = 'g-thumb';
+        b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
+        const t = document.createElement('img');
+        t.src = p.src;
+        t.alt = '';
+        t.loading = 'lazy';
+        t.decoding = 'async';
+        t.width = 160;
+        t.height = 120;
+        b.appendChild(t);
+        b.addEventListener('click', () => {
+          render(i);
+          details.open = false;
+          shutter.focus({ preventScroll: true });
+        });
+        thumbsBox.appendChild(b);
+      });
+      render(index);
+    };
+
+    details.addEventListener('toggle', () => {
+      if (details.open) {buildThumbs();}
+    });
+
+    viewer.querySelectorAll<HTMLButtonElement>('[data-step]').forEach(btn => {
+      btn.addEventListener('click', () => render(index + Number(btn.dataset.step)));
+    });
+
+    viewer.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); render(index - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); render(index + 1); }
+    });
+
+    render(0);
+  });
+
+  /* ---------- lightbox ---------- */
+  const dialog = document.getElementById('bhe-lightbox') as HTMLDialogElement | null;
+  if (dialog) {
+    const lbImg = dialog.querySelector<HTMLImageElement>('#lb-img')!;
+    const lbImgBtn = dialog.querySelector<HTMLButtonElement>('#lb-imgbtn')!;
+    const lbCanvas = dialog.querySelector<HTMLElement>('#lb-canvas')!;
+    const lbSurface = dialog.querySelector<HTMLElement>('#lb-surface')!;
+    const lbTitle = dialog.querySelector<HTMLElement>('#lb-title')!;
+    const lbCount = dialog.querySelector<HTMLElement>('#lb-count')!;
+    const lbCaption = dialog.querySelector<HTMLElement>('#lb-caption')!;
+    const lbError = dialog.querySelector<HTMLElement>('#lb-error')!;
+    const lbPrev = dialog.querySelector<HTMLButtonElement>('#lb-prev')!;
+    const lbNext = dialog.querySelector<HTMLButtonElement>('#lb-next')!;
+    const lbClose = dialog.querySelector<HTMLButtonElement>('#lb-close')!;
+    const lbZoomBtn = dialog.querySelector<HTMLButtonElement>('#lb-zoom-btn')!;
+    const lbZoomInput = dialog.querySelector<HTMLInputElement>('#lb-zoom-input')!;
+    const lbZoomOut = dialog.querySelector<HTMLElement>('#lb-zoom-out')!;
+    const lbIndexBtn = dialog.querySelector<HTMLButtonElement>('#lb-index-btn')!;
+    const lbSheet = dialog.querySelector<HTMLElement>('#lb-sheet')!;
+    const lbSheetGrid = dialog.querySelector<HTMLElement>('#lb-sheet-grid')!;
+    const lbThumbs = dialog.querySelector<HTMLElement>('#lb-thumbs')!;
+
+    let seq: Seq | null = null;
+    let index = 0;
+    let zoomed = false;
+    let zoomScale = 1;
+    let imageReady = false;
+    let imageFailed = false;
+    let thumbsBuilt = false;
+    let pushed = false;
+    let opener: HTMLElement | null = null;
+
+    const setZoom = (value: number | boolean, point?: { x: number; y: number }) => {
+      const frame = lbCanvas.getBoundingClientRect();
+      const old = lbImg.getBoundingClientRect();
+      const x = point ? point.x - frame.left : lbCanvas.clientWidth / 2;
+      const y = point ? point.y - frame.top : lbCanvas.clientHeight / 2;
+      const u = old.width ? (frame.left + x - old.left) / old.width : 0.5;
+      const v = old.height ? (frame.top + y - old.top) / old.height : 0.5;
+      zoomScale = typeof value === 'boolean' ? (value ? 2 : 1) : value;
+      zoomScale = Math.max(1, Math.min(4, zoomScale));
+      if (!imageReady || imageFailed) {zoomScale = 1;}
+      zoomed = zoomScale > 1;
+      lbCanvas.classList.toggle('is-zoomed', zoomed);
+      const percent = Math.round(zoomScale * 100);
+      lbZoomInput.value = String(percent);
+      lbZoomInput.setAttribute('aria-valuetext', `${percent}%`);
+      lbZoomOut.textContent = `${percent}%`;
+      lbZoomBtn.textContent = zoomed ? '适应' : '放大';
+      lbZoomBtn.setAttribute('aria-pressed', String(zoomed));
+      lbImgBtn.setAttribute('aria-label', zoomed ? '适应屏幕' : '放大或还原');
+      const disabled = !imageReady || imageFailed || !lbSheet.hidden;
+      lbZoomBtn.disabled = lbZoomInput.disabled = disabled;
+      if (!dialog.open || !lbCanvas.clientWidth || !lbCanvas.clientHeight) {return;}
+      const nw = lbImg.naturalWidth || lbCanvas.clientWidth;
+      const nh = lbImg.naturalHeight || lbCanvas.clientHeight;
+      const fit = Math.min(lbCanvas.clientWidth / nw, lbCanvas.clientHeight / nh);
+      const w = nw * fit * zoomScale;
+      const h = nh * fit * zoomScale;
+      lbSurface.style.width = `${Math.ceil(Math.max(lbCanvas.clientWidth, w))}px`;
+      lbSurface.style.height = `${Math.ceil(Math.max(lbCanvas.clientHeight, h))}px`;
+      lbImgBtn.style.width = `${w}px`;
+      lbImgBtn.style.height = `${h}px`;
+      if (!zoomed) {
+        lbCanvas.scrollLeft = lbCanvas.scrollTop = 0;
+      } else {
+        const cur = lbImg.getBoundingClientRect();
+        lbCanvas.scrollLeft += cur.left - frame.left + u * cur.width - x;
+        lbCanvas.scrollTop += cur.top - frame.top + v * cur.height - y;
+      }
+    };
+
+    const setSheet = (open: boolean) => {
+      lbSheet.hidden = !open;
+      lbIndexBtn.setAttribute('aria-expanded', String(open));
+      dialog.querySelector('.lb-stage')?.setAttribute('inert', open ? 'true' : 'false');
+      dialog.querySelector('.lb-foot')?.setAttribute('inert', open ? 'true' : 'false');
+      if (!open) {lbIndexBtn.focus({ preventScroll: true });}
+      setZoom(zoomScale);
+    };
+
+    const buildThumbs = () => {
+      if (thumbsBuilt || !seq) {return;}
+      thumbsBuilt = true;
+      seq.photos.forEach((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.photo = String(i);
+        b.className = 'lb-thumb';
+        b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
+        const t = document.createElement('img');
+        t.src = p.src;
+        t.alt = '';
+        t.loading = 'lazy';
+        t.decoding = 'async';
+        t.width = 160;
+        t.height = 120;
+        b.appendChild(t);
+        b.addEventListener('click', () => show(i));
+        lbThumbs.appendChild(b);
+        const b2 = b.cloneNode(true) as HTMLButtonElement;
+        b2.addEventListener('click', () => {
+          show(i);
+          setSheet(false);
+        });
+        lbSheetGrid.appendChild(b2);
+      });
+      markThumbs();
+    };
+
+    const markThumbs = () => {
+      dialog.querySelectorAll('[data-photo]').forEach(el => {
+        el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index));
+      });
+      const cur = lbThumbs.children[index] as HTMLElement | undefined;
+      cur?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+    };
+
+    const show = (i: number) => {
+      if (!seq) {return;}
+      index = wrapIndex(i, seq.photos.length);
+      const p = seq.photos[index]!;
+      imageFailed = false;
+      imageReady = false;
+      lbError.hidden = true;
+      setZoom(false);
+      lbImg.src = p.src;
+      lbImg.alt = p.alt;
+      lbTitle.textContent = seq.themeTitle;
+      lbCaption.textContent = `${p.school} · ${BATCH_SHORT}`;
+      lbCount.textContent = `${index + 1} / ${seq.photos.length}`;
+      lbPrev.hidden = lbNext.hidden = seq.photos.length < 2;
+      markThumbs();
+    };
+
+    const openAt = (seqId: string, i: number, from: HTMLElement) => {
+      const s = seqs.get(seqId);
+      if (!s) {return;}
+      const firstOpen = !dialog.open;
+      seq = s;
+      index = i;
+      opener = from;
+      if (firstOpen) {
+        buildThumbs();
+        setSheet(false);
+        dialog.showModal();
+        if (!pushed) {
+          history.pushState({ bheLb: true }, '');
+          pushed = true;
+        }
+      }
+      show(index);
+    };
+
+    const close = (fromPop = false) => {
+      if (!dialog.open) {return;}
+      dialog.close();
+      setZoom(false);
+      lbImg.removeAttribute('src');
+      imageReady = false;
+      if (pushed && !fromPop) {
+        pushed = false;
+        history.back();
+      } else {
+        pushed = false;
+      }
+      opener?.focus({ preventScroll: true });
+      opener = null;
+    };
+
+    // 数据文件里的期数短标（第1-2周）已由 BATCH_SHORT 提供
+    dialog.addEventListener('cancel', e => {
+      e.preventDefault();
+      if (!lbSheet.hidden) {setSheet(false);}
+      else if (zoomed) {setZoom(false);}
+      else {close();}
+    });
+    lbClose.addEventListener('click', () => close());
+    window.addEventListener('popstate', () => {
+      if (dialog.open) {close(true);}
+    });
+
+    lbPrev.addEventListener('click', () => show(index - 1));
+    lbNext.addEventListener('click', () => show(index + 1));
+    lbIndexBtn.addEventListener('click', () => {
+      setZoom(false);
+      setSheet(Boolean(lbSheet.hidden));
+    });
+    lbZoomBtn.addEventListener('click', () => setZoom(!zoomed));
+    lbImgBtn.addEventListener('click', e => {
+      setZoom(!zoomed, e.detail ? { x: e.clientX, y: e.clientY } : undefined);
+    });
+    lbZoomInput.addEventListener('input', () => setZoom(Number(lbZoomInput.value) / 100));
+    lbImg.addEventListener('load', () => {
+      if (!dialog.open) {return;}
+      imageFailed = false;
+      imageReady = true;
+      lbError.hidden = true;
+      setZoom(false);
+    });
+    lbImg.addEventListener('error', () => {
+      if (!dialog.open) {return;}
+      imageFailed = true;
+      imageReady = false;
+      lbError.hidden = false;
+      setZoom(false);
+    });
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(() => {
+        if (dialog.open && imageReady) {setZoom(zoomScale);}
+      }).observe(lbCanvas, { box: 'border-box' });
+    }
+
+    // 拖拽平移（鼠标）：click 与 drag 用位移阈值区分
+    let drag: { x: number; y: number; left: number; top: number; moved: boolean } | null = null;
+    lbCanvas.addEventListener('pointerdown', e => {
+      if (!zoomed || e.pointerType !== 'mouse' || e.button !== 0) {return;}
+      drag = { x: e.clientX, y: e.clientY, left: lbCanvas.scrollLeft, top: lbCanvas.scrollTop, moved: false };
+      lbCanvas.setPointerCapture(e.pointerId);
+    });
+    lbCanvas.addEventListener('pointermove', e => {
+      if (!drag) {return;}
+      if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 5) {drag.moved = true;}
+      lbCanvas.scrollLeft = drag.left + drag.x - e.clientX;
+      lbCanvas.scrollTop = drag.top + drag.y - e.clientY;
+    });
+    lbCanvas.addEventListener('pointerup', e => {
+      if (lbCanvas.hasPointerCapture(e.pointerId)) {lbCanvas.releasePointerCapture(e.pointerId);}
+    });
+    lbCanvas.addEventListener('pointercancel', () => { drag = null; });
+    lbCanvas.addEventListener(
+      'click',
+      e => {
+        if (drag && drag.moved) {
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (drag && (e.target === lbCanvas || e.target === lbSurface)) {
+          setZoom(false);
+        }
+        drag = null;
+      },
+      true,
+    );
+
+    // 全页键盘：lightbox 内 ←/→；Esc 已由 dialog cancel 处理
+    document.addEventListener('keydown', e => {
+      if (!dialog.open) {return;}
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && e.target !== lbZoomInput) {
+        e.preventDefault();
+        show(index + (e.key === 'ArrowLeft' ? -1 : 1));
+      }
+    });
+
+    // 入口绑定：每章的放大按钮 → lightbox
+    document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
+      const id = viewer.dataset.theme ?? '';
+      const btn = viewer.querySelector<HTMLButtonElement>('[data-enlarge]');
+      btn?.addEventListener('click', () => {
+        const cur = Number(viewer.querySelector<HTMLElement>('.g-counter')!.textContent?.split(' / ')[0] ?? 1) - 1;
+        openAt(id, cur, btn);
+      });
+    });
+  }
+
+  /* ---------- 入场动画：滚动到可视区时加 .in-view ---------- */
+  const revealables = document.querySelectorAll('.reveal');
+  if (revealables.length) {
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in-view');
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    revealables.forEach(el => io.observe(el));
+  }
+</script>
+
+<style>
+  /* ===== 页面骨架 ===== */
+  .bhe-gallery {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px clamp(16px, 5vw, 32px) 48px;
+  }
+
+  /* —— 首屏：编辑部刊头 —— */
+  .g-hero {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .g-title {
+    font-family: var(--font-serif-song);
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--foreground);
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+
+  .g-dek {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--muted-foreground);
+    margin: 0 auto 20px;
+  }
+
+  .g-stats {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--paper-sub);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    justify-content: center;
+    margin: 0 0 28px;
+  }
+
+  .g-stats strong {
+    color: var(--link);
+    font-weight: 600;
+  }
+
+  .g-toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--divider);
+  }
+
+  .g-toc a {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    transition: color 0.2s ease;
+  }
+
+  .g-toc a:hover {
+    color: var(--link);
+  }
+
+  .g-toc-no {
+    font-size: 11px;
+    color: var(--link);
+  }
+
+  .g-toc a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* —— 章节：超大幽灵期号 + 衬线标题 —— */
+  .g-chapter {
+    margin-top: clamp(88px, 14vh, 150px);
+  }
+
+  .g-chapter-head {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(16px, 4vw, 36px);
+    margin-bottom: 36px;
+  }
+
+  .g-chapter-no {
+    font-family: var(--font-archivo);
+    font-size: clamp(4rem, 10vw, 7.5rem);
+    font-weight: 700;
+    line-height: 0.82;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--divider);
+    user-select: none;
+    flex: none;
+    transform: translateY(6px);
+  }
+
+  .g-chapter-title {
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 10px;
+    line-height: 1.25;
+  }
+
+  .g-chapter-note {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted-foreground);
+    max-width: 560px;
+    margin: 0;
+  }
+
+  /* —— 观看器：一次一张，不裁切 —— */
+  .g-viewer {
+    outline: none;
+  }
+
+  .g-viewer:focus-visible .g-shutter {
+    outline: 2px solid var(--link);
+    outline-offset: 6px;
+  }
+
+  .g-stage {
+    margin: 0;
+  }
+
+  .g-shutter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: min(72vh, 680px);
+    padding: 24px;
+    background: var(--paper-face);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    box-shadow: var(--paper-shadow);
+    cursor: zoom-in;
+    transition: box-shadow 0.35s ease;
+  }
+
+  @media (hover: hover) {
+    .g-shutter:hover {
+      box-shadow: var(--paper-shadow-lift);
+    }
+  }
+
+  .g-shutter img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(68vh, 632px);
+    object-fit: contain;
+  }
+
+  .g-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 4px 0;
+  }
+
+  .g-caption-school {
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--paper-sub);
+  }
+
+  .g-counter {
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--link);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .g-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .g-step {
+    font-family: var(--font-archivo);
+    width: 44px;
+    height: 36px;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 15px;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .g-step:hover {
+    border-color: var(--link);
+    color: var(--link);
+  }
+
+  .g-step:active {
+    transform: scale(0.94);
+  }
+
+  .g-step:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+  }
+
+  .g-index {
+    margin-top: 18px;
+  }
+
+  .g-index summary {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .g-index summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .g-index summary::before {
+    content: '+';
+    color: var(--link);
+    font-size: 15px;
+  }
+
+  .g-index[open] summary::before {
+    content: '−';
+  }
+
+  .g-index summary:hover {
+    color: var(--link);
+  }
+
+  .g-index-count {
+    color: var(--link);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .g-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .g-thumb {
+    padding: 0;
+    border: 1px solid var(--divider);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--paper-face);
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .g-thumb img {
+    display: block;
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+  }
+
+  .g-thumb:hover {
+    border-color: var(--link);
+    transform: translateY(-2px);
+  }
+
+  .g-thumb[aria-current='true'] {
+    border-color: var(--link);
+    box-shadow: 0 0 0 1px var(--link);
+  }
+
+  .g-thumb:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+
+  .g-foot {
+    margin-top: clamp(72px, 12vh, 130px);
+    text-align: center;
+    border-top: 1px solid var(--divider);
+    padding-top: 40px;
+  }
+
+  .g-foot-line {
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    color: var(--paper-sub);
+    margin: 0;
+  }
+
+  /* ===== lightbox（移植并重写自 portfolio-site-builder，MIT） ===== */
+  .lb {
+    border: none;
+    padding: 0;
+    width: min(1280px, 96vw);
+    height: min(860px, 92vh);
+    border-radius: 12px;
+    background: var(--paper-face);
+    color: var(--paper-ink);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lb::backdrop {
+    background: rgba(8, 16, 26, 0.82);
+    backdrop-filter: blur(6px);
+  }
+
+  .lb-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--divider);
+    flex: none;
+  }
+
+  .lb-bar-info {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-family: var(--font-serif-song);
+    font-size: 15px;
+    min-width: 0;
+  }
+
+  #lb-title {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lb-count {
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    color: var(--paper-sub);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+  }
+
+  .lb-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+  }
+
+  .lb-tool {
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    padding: 6px 10px;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--paper-ink);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .lb-tool:hover:not(:disabled) {
+    border-color: var(--link);
+    color: var(--link);
+  }
+
+  .lb-tool:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .lb-tool:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+
+  .lb-close {
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px 12px;
+  }
+
+  .lb-zoom-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lb-zoom-range input {
+    width: 110px;
+    accent-color: var(--link);
+  }
+
+  .lb-zoom-range output {
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    color: var(--paper-sub);
+    min-width: 38px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lb-stage {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .lb-nav {
+    flex: none;
+    width: 52px;
+    border: none;
+    background: transparent;
+    color: var(--paper-sub);
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .lb-nav:hover:not([hidden]) {
+    color: var(--link);
+  }
+
+  .lb-nav[hidden] {
+    visibility: hidden;
+  }
+
+  .lb-canvas {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper-face);
+    position: relative;
+  }
+
+  .lb-canvas.is-zoomed {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .lb-surface {
+    flex: none;
+  }
+
+  .lb-imgbtn {
+    display: block;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .lb-canvas.is-zoomed .lb-imgbtn {
+    cursor: zoom-out;
+  }
+
+  .lb-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+  }
+
+  .lb-error {
+    position: absolute;
+    inset: auto 0 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--paper-sub);
+    margin: 0;
+  }
+
+  .lb-foot {
+    flex: none;
+    padding: 10px 18px 12px;
+    border-top: 1px solid var(--divider);
+  }
+
+  .lb-caption {
+    font-size: 13px;
+    color: var(--paper-sub);
+    margin: 0 0 8px;
+    font-family: var(--font-archivo);
+    letter-spacing: 0.06em;
+  }
+
+  .lb-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .lb-thumb,
+  .lb-sheet-grid button {
+    flex: none;
+    padding: 0;
+    border: 1px solid var(--divider);
+    border-radius: 4px;
+    overflow: hidden;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .lb-thumb img,
+  .lb-sheet-grid img {
+    display: block;
+    width: 88px;
+    height: 66px;
+    object-fit: cover;
+  }
+
+  .lb-thumb:hover,
+  .lb-sheet-grid button:hover {
+    border-color: var(--link);
+  }
+
+  .lb-thumb[aria-current='true'],
+  .lb-sheet-grid button[aria-current='true'] {
+    border-color: var(--link);
+    box-shadow: 0 0 0 1px var(--link);
+  }
+
+  .lb-sheet {
+    position: absolute;
+    inset: 0;
+    background: var(--paper-face);
+    overflow-y: auto;
+    padding: 56px 24px 24px;
+  }
+
+  .lb-sheet h2 {
+    font-family: var(--font-serif-song);
+    font-size: 20px;
+    margin: 0 0 18px;
+    color: var(--paper-ink);
+  }
+
+  .lb-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .lb-sheet-grid img {
+    width: 100%;
+    height: 110px;
+  }
+
+  /* —— 移动端 —— */
+  @media (max-width: 640px) {
+    .bhe-gallery {
+      padding-top: 72px;
+    }
+
+    .g-chapter-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .g-chapter-no {
+      font-size: 3.4rem;
+      transform: none;
+    }
+
+    .g-shutter {
+      min-height: 56vw;
+      padding: 12px;
+      border-radius: 4px;
+    }
+
+    .g-shutter img {
+      max-height: 56vw;
+    }
+
+    .lb {
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      border-radius: 0;
+    }
+
+    .lb-zoom-range {
+      display: none; /* 移动端用双指/滚动代替滑杆 */
+    }
+
+    .lb-nav {
+      width: 38px;
+      font-size: 24px;
+    }
+
+    .lb-sheet {
+      padding: 64px 16px 16px;
+    }
+  }
+
+  /* —— 减少动效 —— */
+  @media (prefers-reduced-motion: reduce) {
+    .g-shutter,
+    .g-step,
+    .g-thumb,
+    .lb-tool {
+      transition: none;
+    }
+
+    html.js .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
