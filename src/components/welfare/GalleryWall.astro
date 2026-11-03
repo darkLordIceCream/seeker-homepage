@@ -17,6 +17,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 const cap = (p: WelfareGalleryPhoto) => `${p.school} · ${batchShort}`;
 
+// LQIP 占位渐变：tone = "#top,#bottom"
+const phBg = (tone: string) => {
+  const [top, bottom] = tone.split(',');
+  return `linear-gradient(180deg, ${top}, ${bottom})`;
+};
+
 // 预解析每章首图与期号（noUncheckedIndexedAccess 下 photos[0] 需要 guard）
 const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
   const first = theme.photos[0];
@@ -71,7 +77,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       >
         <figure class="g-stage">
           <button
-            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             type="button"
+            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)}`}             type="button"
           >
             <img
               alt={ch.first.alt}               decoding="async"               height={ch.first.h}               loading={ti === 0 ? 'eager' : 'lazy'}               src={ch.first.src}               width={ch.first.w}
@@ -160,6 +166,12 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
   // 期数短标（「第1-2周」），与模板侧同一截取规则
   const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
 
+  // LQIP 占位渐变（与模板侧 phBg 同一规则）
+  const phBg = (tone: string) => {
+    const [top, bottom] = tone.split(',');
+    return `linear-gradient(180deg, ${top}, ${bottom})`;
+  };
+
   /* ---------- 观看器：每章一次一张，←/→ 翻页 ---------- */
   const wrapIndex = (n: number, len: number) => ((n % len) + len) % len;
 
@@ -201,6 +213,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       schoolEl.textContent = `${p.school} · ${BATCH_SHORT}`;
       counterEl.textContent = `${index + 1} / ${photos.length}`;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
+      shutter.style.setProperty('--ph-bg', phBg(p.tone));
       fadeInOnLoad();
       viewer
         .querySelectorAll('.g-thumbs [data-photo]')
@@ -215,6 +228,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
         b.type = 'button';
         b.dataset.photo = String(i);
         b.className = 'g-thumb';
+        b.style.background = phBg(p.tone); // 动态节点无 astro-cid，占位色走内联
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
         t.src = p.src;
@@ -360,6 +374,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
         b.type = 'button';
         b.dataset.photo = String(i);
         b.className = 'lb-thumb';
+        b.style.background = phBg(p.tone); // 动态节点无 astro-cid，占位色走内联
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
         t.src = p.src;
@@ -398,6 +413,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
       lbError.hidden = true;
       setZoom(false);
       lbImg.classList.add('is-loading');
+      lbImgBtn.style.setProperty('--ph-bg', phBg(p.tone));
       lbImg.src = p.src;
       lbImg.alt = p.alt;
       lbTitle.textContent = seq.themeTitle;
@@ -705,7 +721,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     width: 100%;
     min-height: min(72vh, 680px);
     padding: 24px;
-    background: var(--paper-face);
+    background: var(--ph-bg, var(--paper-face));
     border: 1px solid var(--divider);
     border-radius: 6px;
     box-shadow: var(--paper-shadow);
@@ -842,7 +858,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     border: 1px solid var(--divider);
     border-radius: 4px;
     overflow: hidden;
-    background: var(--paper-face);
+    background: var(--ph-bg, var(--paper-face));
     cursor: pointer;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
@@ -1047,7 +1063,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     display: block;
     padding: 0;
     border: none;
-    background: transparent;
+    background: var(--ph-bg, transparent);
     cursor: zoom-in;
   }
 
@@ -1106,7 +1122,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     border: 1px solid var(--divider);
     border-radius: 4px;
     overflow: hidden;
-    background: transparent;
+    background: var(--ph-bg, transparent);
     cursor: pointer;
     transition: border-color 0.2s ease;
   }

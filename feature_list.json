@@ -356,6 +356,14 @@
       "dependencies": ["feat-016", "feat-042"],
       "status": "done",
       "evidence": "浏览器实测（IAB）：桌面 1440 稳态零裁切 0.02%（双采样）、两行严格等高、sectionBottom=900 恰好一屏、墙宽 fitWall 1207px 呼吸中；#works hash 跳转两次复测精准落位；scrollspy 高亮「作品展示」、PageProgress 第二点、AnniversaryCard 角卡正常；移动端 390 主竖图满宽 351、稳态 0.06-0.11%、320 无横向溢出；暗色 #works 全形态正常；灯箱 1/8 计数/当前图 matches/←→/Esc 全过；七周年页 GALLERY_POOL 消费回归正常。修复：WorksSection onSwap 漏更 --ar/--fg（换图后槽比例停留首图）。init.sh 全绿（type-check 0 错、lint 0 错 65 存量警告、build 79 页——demo 删除后回落数）。截图 design-demos/homepage-gallery/shots/final-*。分支 feat/gallery-2.0"
+    },
+    {
+      "id": "feat-046",
+      "name": "小摄影师的作品集——带上她的眼睛作品集画廊",
+      "description": "公益板块新增学生作品集：/welfare/gallery/ 按主题分章（第1期40张/14校/5主题：他们看镜头、操场与游戏、课堂之间、校园一角、窗外），章内序列式观看（一次一张不裁切+缩略图索引+←→/键盘/触屏滑动），lightbox 移植 photoreason/skills MIT（锚定缩放1-4x、拖拽平移、分层Esc、history返回关闭、LQIP 主色占位渐变）。落地页 /welfare/ 新增入口区块（五主题首图拍立得瓷砖+CTA）。素材管线 scripts/welfare-gallery/import.py：每两周一批，精选清单→PIL压缩(长边2560/WebP q82)+主色提取→生成 src/data/welfare-gallery.ts 与 wrangler 上传命令；R2 只存入选图，URL 不含学生姓名；署名保留字段暂不展示。数据文件为生成物（eslint/prettier 忽略）。",
+      "status": "in_progress",
+      "branch": "feat/bring-her-eyes-portfolio",
+      "evidence": "commit bbeb722(v1)+a6d2223(淡入/滑动)+本轮 LQIP；type-check 0 错、lint 0 错、build 81 页、IAB 实测翻页/滑动/缩放/暗色模式通过"
     }
   ]
 }

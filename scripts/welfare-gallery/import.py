@@ -51,6 +51,8 @@ export interface WelfareGalleryPhoto {
   order: number;
   /** 一句平实的画面描述 */
   alt: string;
+  /** LQIP 占位：上/下半部平均色，形如 "#aabbcc,#ddeeff" */
+  tone: string;
 }
 
 export interface WelfareGalleryTheme {
@@ -76,6 +78,7 @@ export interface WelfareEntryTile {
   alt: string;
   title: string;
   no: string;
+  tone: string;
 }
 
 export const WELFARE_GALLERY_BATCH: WelfareGalleryBatch = {batch};
@@ -89,6 +92,7 @@ TS_PHOTO = (
     "        school: {school},\n"
     "        author: {author},\n"
     "        age: {age},\n"
+    "        tone: {tone},\n"
     "        theme: {theme},\n"
     "        order: {order},\n"
     "        alt: {alt},\n"
@@ -131,7 +135,22 @@ def load_picks(path: Path) -> dict:
     return data
 
 
-def compress(src: Path, dst: Path) -> tuple[int, int]:
+def _avg_rgb(im: Image.Image) -> tuple[int, int, int]:
+    im = im.convert("RGB").resize((6, 6), Image.BILINEAR)
+    px = list(im.getdata())
+    n = len(px)
+    r = sum(p[0] for p in px) // n
+    g = sum(p[1] for p in px) // n
+    b = sum(p[2] for p in px) // n
+    return (r, g, b)
+
+
+def _hex(rgb: tuple[int, int, int]) -> str:
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+def compress(src: Path, dst: Path) -> tuple[int, int, str]:
+    """压缩并测量；tone = 上/下半部平均色的 LQIP 渐变（天空/地面结构感）"""
     im = Image.open(src)
     im = ImageOps.exif_transpose(im)
     if im.mode not in ("RGB", "L"):
@@ -140,7 +159,10 @@ def compress(src: Path, dst: Path) -> tuple[int, int]:
         im.thumbnail((LONG_EDGE, LONG_EDGE), Image.LANCZOS)
     dst.parent.mkdir(parents=True, exist_ok=True)
     im.save(dst, "WEBP", quality=QUALITY, method=6)
-    return im.size
+    w, h = im.size
+    top = _avg_rgb(im.crop((0, 0, w, h // 2)))
+    bottom = _avg_rgb(im.crop((0, h // 2, w, h)))
+    return (w, h, f"{_hex(top)},{_hex(bottom)}")
 
 
 def main() -> None:
@@ -169,7 +191,7 @@ def main() -> None:
                 sys.exit(f"找不到素材文件：{src}")
             key = f"welfare/bring-her-eyes/gallery/{batch}/{n_total:03d}.webp"
             dst = REPO / "public" / "r2-preview" / key
-            w, h = compress(src, dst)
+            w, h, tone = compress(src, dst)
             size_kb = dst.stat().st_size // 1024
             print(f"  [{n_total:03d}] {theme['id']} #{pick['order']} <- {src.name} {w}x{h} {size_kb}KB")
             schools.add(pick["school"])
@@ -180,6 +202,7 @@ def main() -> None:
                     school=ts_str(pick["school"]),
                     author=ts_str(pick["author"]) if pick.get("author") else "undefined",
                     age=str(pick["age"]) if pick.get("age") else "undefined",
+                    tone=ts_str(tone),
                     theme=ts_str(theme["id"]),
                     order=pick["order"],
                     alt=ts_str(pick["alt"]),
