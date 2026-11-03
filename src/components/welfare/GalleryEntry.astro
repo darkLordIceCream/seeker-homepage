@@ -107,6 +107,17 @@ const tiles = WELFARE_GALLERY_THEMES.flatMap((theme, i) => {
     font-size: 15px;
   }
 
+  .entry-cta span {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) {
+    .entry-cta:hover span {
+      transform: translateX(4px);
+    }
+  }
+
   @media (max-width: 640px) {
     .gallery-entry {
       margin-top: 56px;

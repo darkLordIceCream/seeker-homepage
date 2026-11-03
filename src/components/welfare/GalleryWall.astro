@@ -40,6 +40,9 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
 
 <section aria-labelledby="bhe-gallery-title" class="bhe-gallery">
   <header class="g-hero">
+    <a class="g-back" href="/welfare/">
+      <span aria-hidden="true">←</span> 带上她的眼睛 · 图文手记
+    </a>
     <p class="section-kicker">SEEKER 公益 · WELFARE</p>
     <h1 class="g-title" id="bhe-gallery-title">小摄影师的作品集</h1>
     <p class="g-dek">
@@ -80,7 +83,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
             aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)}`}             type="button"
           >
             <img
-              alt={ch.first.alt}               decoding="async"               height={ch.first.h}               loading={ti === 0 ? 'eager' : 'lazy'}               src={ch.first.src}               width={ch.first.w}
+              alt={ch.first.alt}               decoding="async"               fetchpriority={ti === 0 ? 'high' : 'auto'}               height={ch.first.h}               loading={ti === 0 ? 'eager' : 'lazy'}               src={ch.first.src}               width={ch.first.w}
             />
           </button>
           <figcaption class="g-caption">
@@ -104,6 +107,9 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
 
   <footer class="g-foot reveal">
     <p class="g-foot-line">下一期，正在山里曝光。</p>
+    <a class="mini-cta g-foot-cta" href="/welfare/">
+      回到「带上她的眼睛」——读孩子们的故事 <span aria-hidden="true">→</span>
+    </a>
   </footer>
 </section>
 
@@ -589,6 +595,39 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     text-align: center;
   }
 
+  .g-back {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    margin-bottom: 26px;
+    transition: color 0.2s ease;
+  }
+
+  .g-back span {
+    transition: transform 0.25s ease;
+  }
+
+  .g-back:hover {
+    color: var(--link);
+  }
+
+  @media (hover: hover) {
+    .g-back:hover span {
+      transform: translateX(-3px);
+    }
+  }
+
+  .g-back:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
   .g-title {
     font-family: var(--font-serif-song);
     font-size: clamp(2.2rem, 6vw, 3.4rem);
@@ -897,7 +936,12 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
     font-size: 15px;
     letter-spacing: 0.12em;
     color: var(--paper-sub);
-    margin: 0;
+    margin: 0 0 8px;
+  }
+
+  .g-foot-cta {
+    justify-content: center;
+    display: flex;
   }
 
   /* ===== lightbox（移植并重写自 portfolio-site-builder，MIT） ===== */

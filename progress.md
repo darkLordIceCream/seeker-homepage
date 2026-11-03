@@ -2694,3 +2694,11 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 2026-11-04
   01:40 迭代2：GalleryWall 换页淡入（viewer+lightbox，reduced-motion 降级）、触屏滑动翻页（>48px 横向判定 +
   dataset 时间戳护栏防误开 lightbox）；暗色模式截图核验通过；IAB 截图合成器过期帧伪影再次确认（dlgOpen=false 时仍可截到残影，以 evaluate 状态为准）
+- 2026-11-04
+  01:55 迭代3：LQIP 主色占位——import.py 提取上/下半部平均色（tone="#top,#bottom"），章图/缩略图/lightbox 大图/入口瓷砖加载期显示照片主色渐变（底片感）；坑：Astro
+  scoped
+  CSS 不匹配 JS 动态创建节点（无 astro-cid），动态缩略图改内联 background；feature_list.json 登记 feat-046（现场取 max=45
+  → 046 防撞号）
+- 2026-11-04 02:45 迭代4：导航回路（Foreground
+  Web「清晰回列表之路」）——画廊 hero 返回链「← 带上她的眼睛 · 图文手记」+ 页脚 CTA「回到…读孩子们的故事」双向闭环；第一章首图 fetchpriority=high（LCP 候选）；入口 CTA
+  hover 箭头位移 + 瓷砖 hover 阴影升起（物理手感）
