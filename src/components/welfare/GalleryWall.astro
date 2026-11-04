@@ -96,13 +96,15 @@ const flow = chapters.map((ch, i) => {
             </span>
           </button>
           <figcaption class="g-caption">
-            <span class="g-caption-school">
-              <b class="g-caption-no" aria-hidden="true">{ch.no}</b>
-              {cap(ch.first)}
+            <span class="g-caption-info">
+              <span class="g-caption-school">
+                <b class="g-caption-no" aria-hidden="true">{ch.no}</b>
+                {cap(ch.first)}
+              </span>
+              <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
             </span>
             <span class="g-controls">
               <button aria-label={`上一张（${ch.theme.title}）`} class="g-step" data-step="-1" type="button" disabled>←</button>
-              <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
               <button aria-label={`下一张（${ch.theme.title}）`} class="g-step" data-step="1" type="button">→</button>
               <span aria-hidden="true" class="g-kbd-hint">← → 键翻页</span>
             </span>
@@ -432,7 +434,7 @@ const flow = chapters.map((ch, i) => {
         b.type = 'button';
         b.dataset.photo = String(i);
         b.className = 'lb-thumb';
-        b.style.background = phBg(p.tone); // 动态节点无 astro-cid，占位色走内联
+        b.style.background = 'var(--paper-face)'; // 印样规格：纸面垫底，不放主色
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
         t.src = p.src;
@@ -920,15 +922,24 @@ const flow = chapters.map((ch, i) => {
     padding: 12px 2px 0;
   }
 
+  .g-caption-info {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+
   .g-caption-school {
     font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--paper-sub);
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    min-width: 0;
+  }
+
+  /* 周次/日期区间不允许拦腰断行 */
+  .g-caption-info,
+  .g-caption-info * {
+    white-space: nowrap;
   }
 
   .g-caption-no {
@@ -1347,6 +1358,8 @@ const flow = chapters.map((ch, i) => {
     justify-content: center;
     background: var(--paper-face);
     position: relative;
+    /* 大图不顶格：上下留呼吸位（zoom 态由 is-zoomed 滚动，不影响） */
+    padding: 18px 0;
   }
 
   .lb-canvas.is-zoomed {
