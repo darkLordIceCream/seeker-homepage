@@ -251,7 +251,8 @@ const flow = chapters.map((ch, i) => {
       img.classList.add('is-loading');
       const reveal = () => { img.classList.remove('is-loading'); };
       if (img.complete && img.naturalWidth > 0) {
-        requestAnimationFrame(reveal);
+        // 已缓存：直接显示（rAF 在后台标签页会被挂起，不能作为恢复通道）
+        reveal();
       } else {
         img.addEventListener('load', reveal, { once: true });
         img.addEventListener('error', reveal, { once: true });
@@ -271,6 +272,8 @@ const flow = chapters.map((ch, i) => {
       counterEl.textContent = `${index + 1} / ${photos.length}`;
       prevBtn.disabled = index === 0;
       nextBtn.disabled = index === photos.length - 1;
+      // 章首图定调：展示规格放大一档（「开篇大作」惯例）
+      shutter.classList.toggle('is-opener', index === 0);
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
       fadeInOnLoad();
@@ -291,7 +294,7 @@ const flow = chapters.map((ch, i) => {
         b.style.background = phBg(p.tone); // 动态节点无 astro-cid，占位色走内联
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
-        t.src = p.src;
+        t.src = p.thumb; // 480px 变体，不拉原图
         t.alt = '';
         t.loading = 'lazy';
         t.decoding = 'async';
@@ -437,7 +440,7 @@ const flow = chapters.map((ch, i) => {
         b.style.background = 'var(--paper-face)'; // 印样规格：纸面垫底，不放主色
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
-        t.src = p.src;
+        t.src = p.thumb; // 480px 变体，不拉原图
         t.alt = '';
         t.loading = 'lazy';
         t.decoding = 'async';
@@ -808,6 +811,8 @@ const flow = chapters.map((ch, i) => {
   /* —— 章节：超大幽灵期号 + 衬线标题 —— */
   .g-chapter {
     margin-top: clamp(88px, 14vh, 150px);
+    /* 锚点跳转时给导航留出高度，章头不被切 */
+    scroll-margin-top: 96px;
   }
 
   .g-chapter-head {
@@ -903,11 +908,16 @@ const flow = chapters.map((ch, i) => {
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: min(64vh, 620px);
+    max-height: min(62vh, 580px);
     object-fit: contain;
     transition: opacity 0.35s ease;
     /* LQIP 只在加载期出现在照片自身位置，画框常驻安静 */
     background: var(--ph-bg, transparent);
+  }
+
+  /* 章首图：开篇大作，规格放大一档 */
+  .g-shutter.is-opener img {
+    max-height: min(72vh, 700px);
   }
 
   .g-shutter img.is-loading {

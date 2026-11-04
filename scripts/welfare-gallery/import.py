@@ -53,6 +53,8 @@ export interface WelfareGalleryPhoto {
   alt: string;
   /** LQIP 占位：上/下半部平均色，形如 "#aabbcc,#ddeeff" */
   tone: string;
+  /** 480px 缩略图变体 URL（印样/索引/入口瓷砖用） */
+  thumb: string;
 }
 
 export interface WelfareGalleryTheme {
@@ -73,6 +75,7 @@ export interface WelfareGalleryBatch {
 /** 落地页入口区块的单张预览瓷砖（各主题首图） */
 export interface WelfareEntryTile {
   src: string;
+  thumb: string;
   w: number;
   h: number;
   alt: string;
@@ -93,6 +96,7 @@ TS_PHOTO = (
     "        author: {author},\n"
     "        age: {age},\n"
     "        tone: {tone},\n"
+    "        thumb: {thumb},\n"
     "        theme: {theme},\n"
     "        order: {order},\n"
     "        alt: {alt},\n"
@@ -150,7 +154,8 @@ def _hex(rgb: tuple[int, int, int]) -> str:
 
 
 def compress(src: Path, dst: Path) -> tuple[int, int, str]:
-    """压缩并测量；tone = 上/下半部平均色的 LQIP 渐变（天空/地面结构感）"""
+    """压缩并测量；tone = 上/下半部平均色的 LQIP 渐变（天空/地面结构感）；
+    同时产出 480px 缩略图变体（<seq>.thumb.webp，供灯箱印样/索引/入口瓷砖）"""
     im = Image.open(src)
     im = ImageOps.exif_transpose(im)
     if im.mode not in ("RGB", "L"):
@@ -162,6 +167,13 @@ def compress(src: Path, dst: Path) -> tuple[int, int, str]:
     w, h = im.size
     top = _avg_rgb(im.crop((0, 0, w, h // 2)))
     bottom = _avg_rgb(im.crop((0, h // 2, w, h)))
+
+    # 缩略图变体：480px 长边 q72（印样/索引用，避免拉原图）
+    thumb_dst = dst.with_name(dst.stem + ".thumb.webp")
+    thumb = im.copy()
+    thumb.thumbnail((480, 480), Image.LANCZOS)
+    thumb.save(thumb_dst, "WEBP", quality=72, method=6)
+
     return (w, h, f"{_hex(top)},{_hex(bottom)}")
 
 
@@ -208,6 +220,7 @@ def main() -> None:
                     author=ts_str(pick["author"]) if pick.get("author") else "undefined",
                     age=str(pick["age"]) if pick.get("age") else "undefined",
                     tone=ts_str(tone),
+                    thumb=ts_str(f"{base}/{key.removesuffix('.webp')}.thumb.webp"),
                     theme=ts_str(theme["id"]),
                     order=pick["order"],
                     alt=ts_str(pick["alt"]),
@@ -217,6 +230,12 @@ def main() -> None:
             wrangler_cmds.append(
                 f"wrangler r2 object put seeker-homepage-assets/{key} "
                 f"--file {dst} --remote --content-type {content_type} "
+                '--cache-control "public, max-age=31536000, immutable"'
+            )
+            thumb_key = key.removesuffix(".webp") + ".thumb.webp"
+            wrangler_cmds.append(
+                f"wrangler r2 object put seeker-homepage-assets/{thumb_key} "
+                f"--file {REPO / 'public' / 'r2-preview' / thumb_key} --remote --content-type {content_type} "
                 '--cache-control "public, max-age=31536000, immutable"'
             )
         themes_ts.append(

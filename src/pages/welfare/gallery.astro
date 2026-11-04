@@ -21,4 +21,14 @@ const description = `「带上她的眼睛」公益摄影课孩子们的作品�
   </main>
 
   <Footer />
+
+  <style>
+    /* 长滚动作品集页：导航底色提至近实心，避免章头幽灵期号透过玻璃底产生鬼影 */
+    :global(html .navigation.navigation--solid),
+    :global(html .navigation.navigation--solid.scrolled) {
+      background: color-mix(in srgb, var(--background) 94%, transparent);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      backdrop-filter: blur(20px) saturate(200%);
+    }
+  </style>
 </Layout>
