@@ -18,7 +18,7 @@ const dy = lifts[index % lifts.length];
   aria-label={`主题「${tile.title}」首图，进入小摄影师的作品集`}   class="tile reveal"   href="/welfare/gallery/"   style={`--rot:${rot}deg;--dy:${dy}px;--reveal-delay:${index * 0.08}s`}
 >
   <span class="tile-face" style={`--ph-bg:linear-gradient(180deg, ${tile.tone.split(',')[0]}, ${tile.tone.split(',')[1]})`}>
-    <img alt={tile.alt} decoding="async" height={tile.h} loading="lazy" src={tile.src} width={tile.w} />
+    <img alt={tile.alt} decoding="async" height={tile.h} loading="lazy" src={tile.thumb} width={tile.w} />
     <span aria-hidden="true" class="tile-no">{tile.no}</span>
   </span>
   <span class="tile-name">{tile.title}</span>
