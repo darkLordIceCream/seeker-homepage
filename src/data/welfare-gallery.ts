@@ -110,7 +110,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#989282,#7e786c",
         theme: "portraits",
         order: 4,
-        alt: "一个男孩对着镜头咧嘴笑",
+        alt: "两个孩子凑在镜头前咧嘴笑",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/005.webp",
@@ -122,7 +122,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#88938d,#6d85a0",
         theme: "portraits",
         order: 5,
-        alt: "夕阳下，一个戴眼镜的女孩露出笑容",
+        alt: "夕阳逆光里眯着眼睛笑的男孩",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/006.webp",
@@ -158,7 +158,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#9f9a8b,#997471",
         theme: "portraits",
         order: 8,
-        alt: "穿红衣的女孩在窗边举起一朵花",
+        alt: "女孩的手抚过石墙上的多肉",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/009.webp",
@@ -213,7 +213,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#867f74,#787a76",
         theme: "playground",
         order: 2,
-        alt: "男孩在操场跳房子游戏中跳起",
+        alt: "男孩们在跳房子的格子上摆姿势",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/013.webp",
@@ -242,14 +242,14 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/015.webp",
         w: 2560,
-        h: 1440,
-        school: "宋园明道路小学",
-        author: "张嘉迅",
-        age: 9,
-        tone: "#756f5e,#7f8780",
+        h: 2560,
+        school: "三角塘镇中心小学",
+        author: "吴俊杰",
+        age: 11,
+        tone: "#aeaeac,#b39488",
         theme: "playground",
         order: 5,
-        alt: "孩子们在操场上玩跨越游戏",
+        alt: "一个孩子在红砖操场上奔跑",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/016.webp",
@@ -261,7 +261,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#7a814d,#7f716c",
         theme: "playground",
         order: 6,
-        alt: "四个孩子从树后探出头来",
+        alt: "孩子们从树后探出头来",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/017.webp",
@@ -292,7 +292,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
   {
     id: "classroom",
     title: "课堂之间",
-    note: "这门课怎么上？相机从老师手里交到孩子手里，从教室走到操场。这些照片里，孩子们第一次成为拍照的人。",
+    note: "这门课怎么上？相机从老师手里交到孩子手里，从操场走回教室。这些照片里，孩子们第一次成为拍照的人。",
     photos: [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/019.webp",
@@ -309,14 +309,14 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/020.webp",
         w: 2560,
-        h: 2560,
-        school: "三角塘镇中心小学",
-        author: "詹梓萱",
-        age: 11,
-        tone: "#9c9e90,#9d908c",
+        h: 1920,
+        school: "七甲坪镇洞溪九校",
+        author: undefined,
+        age: undefined,
+        tone: "#928d7d,#918c81",
         theme: "classroom",
         order: 2,
-        alt: "男孩举起自己的相机向镜头展示",
+        alt: "课桌前男孩的大头特写",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/021.webp",
@@ -333,26 +333,26 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/022.webp",
         w: 2560,
-        h: 1707,
-        school: "安化八中",
-        author: "殷盼",
-        age: 12,
-        tone: "#aba59e,#5a6e72",
-        theme: "classroom",
-        order: 4,
-        alt: "穿条纹衫的女孩在操场上举起相机",
-      },
-      {
-        src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/023.webp",
-        w: 2560,
         h: 1920,
         school: "树林乡管坝小学",
         author: "罗正泉",
         age: 10,
         tone: "#8a9191,#91706d",
         theme: "classroom",
-        order: 5,
+        order: 4,
         alt: "男孩在操场上举着带支架的相机，背后是大山",
+      },
+      {
+        src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/023.webp",
+        w: 2560,
+        h: 1707,
+        school: "安化八中",
+        author: "殷盼",
+        age: 12,
+        tone: "#aba59e,#5a6e72",
+        theme: "classroom",
+        order: 5,
+        alt: "穿条纹衫的女孩在操场上举起相机",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/024.webp",
@@ -395,7 +395,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
   {
     id: "corners",
     title: "校园一角",
-    note: "大人们不会多看一眼的角落，孩子们趴在地上看。摆成彩虹的落叶、夜里开花的一株植物——他们注意到的世界，比我们以为的更细。",
+    note: "大人们不会多看一眼的角落，孩子们趴在地上看、仰起头看、从洞里探头看。摆成彩虹的落叶、夜里开花的一株植物——他们注意到的世界，比我们以为的更细。",
     photos: [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/027.webp",
@@ -486,7 +486,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
   {
     id: "hometown",
     title: "窗外",
-    note: "把镜头带出校门，对准他们每天路过的街道、田地和亲人。这是「带上她的眼睛」最直接的样子：他们看到的家乡，现在你也能看到了。",
+    note: "把镜头带出校门，对准他们每天路过的街道、田地和大人。这是「带上她的眼睛」最直接的样子：他们看到的家乡，现在你也能看到了。",
     photos: [
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/034.webp",
@@ -510,7 +510,7 @@ export const WELFARE_GALLERY_THEMES: WelfareGalleryTheme[] = [
         tone: "#5c5a40,#bab2a7",
         theme: "hometown",
         order: 2,
-        alt: "路边晒着玉米，一只猫经过",
+        alt: "路边晒着玉米和花生，两位大人站在扬起的尘土里",
       },
       {
         src: "/r2-preview/welfare/bring-her-eyes/gallery/w01/036.webp",

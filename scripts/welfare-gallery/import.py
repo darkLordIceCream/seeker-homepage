@@ -183,6 +183,11 @@ def main() -> None:
     wrangler_cmds: list[str] = []
 
     for theme in data["themes"]:
+        # 章内顺序以 order 字段为准（策展对调后数组物理序可能滞后）
+        ordered = sorted(theme["picks"], key=lambda pk: pk["order"])
+        for pk_i, pick in enumerate(ordered, 1):
+            pick["order"] = pk_i  # 连续化（防编辑时漏号）
+        theme["picks"] = ordered
         photos_ts = []
         for pick in theme["picks"]:
             n_total += 1
