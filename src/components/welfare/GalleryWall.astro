@@ -53,7 +53,7 @@ const flow = chapters.map((ch, i) => {
     <h1 class="g-title" id="bhe-gallery-title">小摄影师的作品集</h1>
     <p class="g-dek">
       每两周，我们把相机交到山里孩子手上，再把他们拍下的世界带回来。
-      这里是每一次快门之后，被留下来的那一张。
+      这里，是每一次快门之后被留下来的那一张。
     </p>
     <p class="g-stats">
       <strong>第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期</strong>
@@ -89,20 +89,25 @@ const flow = chapters.map((ch, i) => {
           <button
             aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)}`}             type="button"
           >
-            <img
-              alt={ch.first.alt}               decoding="async"               fetchpriority={ti === 0 ? 'high' : 'auto'}               height={ch.first.h}               loading={ti === 0 ? 'eager' : 'lazy'}               src={ch.first.src}               width={ch.first.w}
-            />
+            <span class="g-mount">
+              <img
+                alt={ch.first.alt}                 decoding="async"                 fetchpriority={ti === 0 ? 'high' : 'auto'}                 height={ch.first.h}                 loading={ti === 0 ? 'eager' : 'lazy'}                 src={ch.first.src}                 width={ch.first.w}
+              />
+            </span>
           </button>
           <figcaption class="g-caption">
-            <span class="g-caption-school">{cap(ch.first)}</span>
-            <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
+            <span class="g-caption-school">
+              <b class="g-caption-no" aria-hidden="true">{ch.no}</b>
+              {cap(ch.first)}
+            </span>
+            <span class="g-controls">
+              <button aria-label={`上一张（${ch.theme.title}）`} class="g-step" data-step="-1" type="button" disabled>←</button>
+              <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
+              <button aria-label={`下一张（${ch.theme.title}）`} class="g-step" data-step="1" type="button">→</button>
+              <span aria-hidden="true" class="g-kbd-hint">← → 键翻页</span>
+            </span>
           </figcaption>
         </figure>
-
-        <div class="g-nav">
-          <button aria-label={`上一张（${ch.theme.title}）`} class="g-step" data-step="-1" type="button">←</button>
-          <button aria-label={`下一张（${ch.theme.title}）`} class="g-step" data-step="1" type="button">→</button>
-        </div>
 
         <details class="g-index">
           <summary>全部照片 <span class="g-index-count">{ch.count}</span></summary>
@@ -178,10 +183,17 @@ const flow = chapters.map((ch, i) => {
     type WelfareGalleryPhoto,
   } from '@/data/welfare-gallery';
 
-  interface Seq { themeTitle: string; photos: WelfareGalleryPhoto[] }
+  interface Seq { themeTitle: string; photos: WelfareGalleryPhoto[]; no: string }
 
   const seqs = new Map<string, Seq>(
-    WELFARE_GALLERY_THEMES.map(t => [t.id, { themeTitle: t.title, photos: t.photos }]),
+    WELFARE_GALLERY_THEMES.map((t, i) => [
+      t.id,
+      {
+        themeTitle: t.title,
+        photos: t.photos,
+        no: String(i + 1).padStart(2, '0'),
+      },
+    ]),
   );
 
   // 期数短标（「第1-2周」），与模板侧同一截取规则
@@ -194,8 +206,6 @@ const flow = chapters.map((ch, i) => {
   };
 
   /* ---------- 观看器：每章一次一张，←/→ 翻页 ---------- */
-  const wrapIndex = (n: number, len: number) => ((n % len) + len) % len;
-
   // 邻图预热：当前图就位后，idle 时把前后张拉进缓存（「预热」模式）
   // 节流保护：saveData / 慢速连接不预热；Set 去重避免重复请求
   const preheated = new Set<string>();
@@ -228,6 +238,8 @@ const flow = chapters.map((ch, i) => {
     const counterEl = viewer.querySelector<HTMLElement>('.g-counter')!;
     const thumbsBox = viewer.querySelector<HTMLElement>('[data-thumbs]')!;
     const details = viewer.querySelector<HTMLDetailsElement>('.g-index')!;
+    const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-step="-1"]')!;
+    const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-step="1"]')!;
 
     let index = 0;
     let thumbsBuilt = false;
@@ -246,14 +258,17 @@ const flow = chapters.map((ch, i) => {
 
     // 箭头函数（声明在收窄之后），避免 function 提升破坏 seq 收窄
     const render = (i: number) => {
-      index = wrapIndex(i, photos.length);
+      index = Math.min(photos.length - 1, Math.max(0, i));
       const p = photos[index]!;
       img.src = p.src;
       img.width = p.w;
       img.height = p.h;
       img.alt = p.alt;
-      schoolEl.textContent = `${p.school} · ${BATCH_SHORT}`;
+      // 重建含章号的结构（textContent 会抹掉 <b> 章号）
+      schoolEl.innerHTML = `<b class="g-caption-no" aria-hidden="true">${seq.no}</b>${p.school} · ${BATCH_SHORT}`;
       counterEl.textContent = `${index + 1} / ${photos.length}`;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
       fadeInOnLoad();
@@ -449,7 +464,7 @@ const flow = chapters.map((ch, i) => {
 
     const show = (i: number) => {
       if (!seq) {return;}
-      index = wrapIndex(i, seq.photos.length);
+      index = Math.min(seq.photos.length - 1, Math.max(0, i));
       const p = seq.photos[index]!;
       imageFailed = false;
       imageReady = false;
@@ -461,9 +476,10 @@ const flow = chapters.map((ch, i) => {
       preheat(seq.photos, index);
       lbImg.alt = p.alt;
       lbTitle.textContent = seq.themeTitle;
-      lbCaption.textContent = `${p.school} · ${BATCH_SHORT}`;
+      lbCaption.textContent = `${seq.no} · ${p.school} · ${BATCH_SHORT}`;
       lbCount.textContent = `${index + 1} / ${seq.photos.length}`;
-      lbPrev.hidden = lbNext.hidden = seq.photos.length < 2;
+      lbPrev.disabled = index === 0;
+      lbNext.disabled = index === seq.photos.length - 1;
       markThumbs();
     };
 
@@ -725,6 +741,7 @@ const flow = chapters.map((ch, i) => {
     line-height: 1.9;
     color: var(--muted-foreground);
     margin: 0 auto 20px;
+    text-wrap: balance;
   }
 
   .g-stats {
@@ -846,14 +863,32 @@ const flow = chapters.map((ch, i) => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: min(76vh, 760px);
-    padding: 24px;
-    background: var(--ph-bg, var(--paper-face));
+    min-height: min(72vh, 700px);
+    padding: clamp(16px, 2vw, 28px);
+    background: var(--paper-face);
     border: 1px solid var(--divider);
     border-radius: 6px;
     box-shadow: var(--paper-shadow);
     cursor: zoom-in;
     transition: box-shadow 0.35s ease;
+  }
+
+  /* 白卡纸装裱：照片悬浮在白色卡纸上，发丝线勾边 */
+  .g-mount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: clamp(10px, 1.2vw, 16px);
+    background: #ffffff;
+    border: 1px solid var(--divider);
+    box-shadow: 0 3px 14px rgba(20, 40, 61, 0.08);
+  }
+
+  :global(.dark) .g-mount {
+    background: #081f36;
+    border-color: rgba(175, 200, 223, 0.2);
+    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.4);
   }
 
   @media (hover: hover) {
@@ -866,9 +901,11 @@ const flow = chapters.map((ch, i) => {
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: min(72vh, 700px);
+    max-height: min(64vh, 620px);
     object-fit: contain;
     transition: opacity 0.35s ease;
+    /* LQIP 只在加载期出现在照片自身位置，画框常驻安静 */
+    background: var(--ph-bg, transparent);
   }
 
   .g-shutter img.is-loading {
@@ -878,9 +915,9 @@ const flow = chapters.map((ch, i) => {
   .g-caption {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: 12px;
-    padding: 12px 4px 0;
+    padding: 12px 2px 0;
   }
 
   .g-caption-school {
@@ -888,20 +925,47 @@ const flow = chapters.map((ch, i) => {
     font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--paper-sub);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .g-caption-no {
+    color: var(--link);
+    font-weight: 600;
+  }
+
+  .g-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
   }
 
   .g-counter {
     font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.14em;
-    color: var(--link);
+    color: var(--paper-sub);
     font-variant-numeric: tabular-nums;
+    min-width: 52px;
+    text-align: center;
   }
 
-  .g-nav {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
+  .g-kbd-hint {
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--paper-sub);
+    opacity: 0.75;
+    margin-left: 4px;
+  }
+
+  @media (hover: none), (max-width: 760px) {
+    .g-kbd-hint {
+      display: none;
+    }
   }
 
   .g-step {
@@ -927,6 +991,12 @@ const flow = chapters.map((ch, i) => {
 
   .g-step:active {
     transform: scale(0.94);
+  }
+
+  .g-step:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
   }
 
   .g-step:focus-visible {
@@ -1398,6 +1468,11 @@ const flow = chapters.map((ch, i) => {
 
   /* —— 移动端 —— */
   @media (max-width: 640px) {
+    .g-caption {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
     .bhe-gallery {
       padding-top: 72px;
     }

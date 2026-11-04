@@ -52,7 +52,7 @@ export interface WelfareEntryTile {
 
 export const WELFARE_GALLERY_BATCH: WelfareGalleryBatch = {
   id: "w01",
-  label: "第1-2周（2026.10.7-2026.10.18）",
+  label: "第 1-2 周（2026.10.7 – 2026.10.18）",
   photoCount: 40,
   schoolCount: 14,
 };
