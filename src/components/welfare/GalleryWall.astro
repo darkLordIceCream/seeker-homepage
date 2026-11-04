@@ -1334,6 +1334,11 @@ const flow = chapters.map((ch, i) => {
     visibility: hidden;
   }
 
+  .lb-nav:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   .lb-canvas {
     flex: 1;
     overflow: auto;
@@ -1351,6 +1356,9 @@ const flow = chapters.map((ch, i) => {
 
   .lb-surface {
     flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .lb-imgbtn {
