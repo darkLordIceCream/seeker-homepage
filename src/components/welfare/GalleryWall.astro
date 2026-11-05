@@ -37,6 +37,10 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
   ];
 });
 
+// 卡宽随照片纵横比收放：恒定高度 × 当前图宽 + 内衬（竖图不再浮在大卡中央）
+const fitW = (p: WelfareGalleryPhoto) =>
+  `calc(min(72vh, 700px) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(16px, 2vw, 28px) + 2 * clamp(10px, 1.2vw, 16px))`;
+
 // 章节流：附带下一辑信息（章间编辑交接行用）
 const flow = chapters.map((ch, i) => {
   const next = chapters[i + 1];
@@ -87,7 +91,7 @@ const flow = chapters.map((ch, i) => {
       >
         <figure class="g-stage">
           <button
-            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)}`}             type="button"
+            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)};--fit-w:${fitW(ch.first)}`}             type="button"
           >
             <span class="g-mount">
               <img
@@ -201,6 +205,10 @@ const flow = chapters.map((ch, i) => {
   // 期数短标（「第1-2周」），与模板侧同一截取规则
   const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
 
+  // 卡宽随照片纵横比收放（与模板侧 fitW 同一公式）
+  const fitW = (p: WelfareGalleryPhoto) =>
+    `calc(min(72vh, 700px) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(16px, 2vw, 28px) + 2 * clamp(10px, 1.2vw, 16px))`;
+
   // LQIP 占位渐变（与模板侧 phBg 同一规则）
   const phBg = (tone: string) => {
     const [top, bottom] = tone.split(',');
@@ -274,6 +282,7 @@ const flow = chapters.map((ch, i) => {
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
+      shutter.style.setProperty('--fit-w', fitW(p));
       fadeInOnLoad();
       preheat(photos, index, viewer.classList.contains('in-view'));
       viewer
@@ -867,8 +876,9 @@ const flow = chapters.map((ch, i) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    /* 恒定画框高度：翻页时照片/按钮不上下漂移 */
+    /* 卡宽随照片收放（水平居中），高度恒定（垂直零漂移） */
+    width: min(100%, var(--fit-w, 100%));
+    margin: 0 auto;
     height: min(72vh, 700px);
     padding: clamp(16px, 2vw, 28px);
     background: var(--paper-face);
@@ -876,7 +886,10 @@ const flow = chapters.map((ch, i) => {
     border-radius: 6px;
     box-shadow: var(--paper-shadow);
     cursor: zoom-in;
-    transition: box-shadow 0.35s ease;
+    /* 宽度随横竖图收放时平滑呼吸（与淡入同时序；reduced-motion 下关闭） */
+    transition:
+      box-shadow 0.35s ease,
+      width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* 白卡纸装裱：照片悬浮在白色卡纸上，发丝线勾边 */
@@ -1508,6 +1521,7 @@ const flow = chapters.map((ch, i) => {
     }
 
     .g-shutter {
+      width: 100%;
       height: 60vw;
       padding: 12px;
       border-radius: 4px;
