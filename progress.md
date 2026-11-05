@@ -2680,3 +2680,19 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   900 恰好一屏、标题可见、墙宽 1197、主带横图 659×371
   / 辅带横图 ~400×278、稳态零裁切 0.15%（截图 2.74% 为换图交叉淡入瞬态）、无溢出；type-check
   0 错
+
+### 2026-11-06 · Gallery 3.0 白盒美术馆门厅 + /gallery 档案馆（feat/gallery-redesign 分支）
+
+- 用户命题：国际摄影展览级观感、Hero 翻下来第一眼是靶心、简洁大气主页 + 内容丰富的二级页（入口点不点两可）；入口文案定「更多精彩 →」
+- GalleryArtCritic 评审 7.5/10：骨架第一次对了，但定妆+轮换+等高满宽互相打架、墙会贴边；P0 六条全采纳，定妆换血为组合 A《不要回答》+《静谧》（原候选两张城市夜景同族单调）
+- WorksSection 重写：两件作品等高满宽零裁切、fitWall 双重反解（视口高预算 + 水平余白下限 clamp(48,6vw,120)）、展厅垂直居中、衬线大标题与墙同格线
+- gallery-cycle.ts 扩展：gateEl 视口门控（t0=进视口，首换 ≥t0+3s）、twoStage 两段式换场（700ms 淡出→150ms 空墙→500ms 淡入）、exclusive 全局错峰、shuffle 每槽洗牌袋（防 7 张小池连重）
+- 新增 /gallery：justified
+  rows（flex-grow/basis 均用 --ar 表达，换行行内等高）、No.01–33 编号（ARCHIVE_LEAD 策展序先行）、作者索引直开灯箱（33 位作者每人 1 件，chips 过滤是死胡同）、统计行
+- 共享化：gallery-lightbox.ts（片单制 getSlides + archiveHref 走廊链接）+
+  gallery-lightbox.css；门厅灯箱翻遍全池且翻页序=藏品编号序
+- 缩略图管线 scripts/make-gallery-thumbs.mjs：33 张长边 960 WebP q82 → R2
+  gallery/thumbs/（immutable 新 key 无缓存坑），网格 ~2.5MB 替代 ~20MB 原图墙
+- 实测：init.sh 全绿；定妆第一眼/门控 8s 不偷跑/墙宽 1267 精确余白/空墙换场/灯箱键盘触屏/作者索引/暗色描边/移动端竖图 56vh 主视觉 + 档案馆单列 全过
+- 待办：ken
+  burns（P2 可选）、导航「作品展示」是否改指 /gallery（等用户拍板，scrollspy 联动）

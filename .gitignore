@@ -51,5 +51,8 @@ __pycache__/
 # 七周年巨片发布暂存（上传 R2 后即可删）
 .posters-stage/
 
+# 画廊缩略图发布暂存（上传 R2 后即可删）
+.gallery-thumbs-stage/
+
 # design drafts & screenshots (huashu-design 流程产物，多数单文件 >500KB 不入 git)
 design-demos/
