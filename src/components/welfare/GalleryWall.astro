@@ -272,8 +272,6 @@ const flow = chapters.map((ch, i) => {
       counterEl.textContent = `${index + 1} / ${photos.length}`;
       prevBtn.disabled = index === 0;
       nextBtn.disabled = index === photos.length - 1;
-      // 章首图定调：展示规格放大一档（「开篇大作」惯例）
-      shutter.classList.toggle('is-opener', index === 0);
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
       fadeInOnLoad();
@@ -870,7 +868,8 @@ const flow = chapters.map((ch, i) => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: min(72vh, 700px);
+    /* 恒定画框高度：翻页时照片/按钮不上下漂移 */
+    height: min(72vh, 700px);
     padding: clamp(16px, 2vw, 28px);
     background: var(--paper-face);
     border: 1px solid var(--divider);
@@ -881,21 +880,14 @@ const flow = chapters.map((ch, i) => {
   }
 
   /* 白卡纸装裱：照片悬浮在白色卡纸上，发丝线勾边 */
+  /* 卡纸即画框内容区（透明底）：整框一层均匀色场托住照片，无「垫张」感 */
   .g-mount {
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
     padding: clamp(10px, 1.2vw, 16px);
-    background: #ffffff;
-    border: 1px solid var(--divider);
-    box-shadow: 0 3px 14px rgba(20, 40, 61, 0.08);
-  }
-
-  :global(.dark) .g-mount {
-    background: #081f36;
-    border-color: rgba(175, 200, 223, 0.2);
-    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.4);
   }
 
   @media (hover: hover) {
@@ -908,17 +900,13 @@ const flow = chapters.map((ch, i) => {
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: min(62vh, 580px);
+    max-height: 100%;
     object-fit: contain;
     transition: opacity 0.35s ease;
     /* LQIP 只在加载期出现在照片自身位置，画框常驻安静 */
     background: var(--ph-bg, transparent);
   }
 
-  /* 章首图：开篇大作，规格放大一档 */
-  .g-shutter.is-opener img {
-    max-height: min(72vh, 700px);
-  }
 
   .g-shutter img.is-loading {
     opacity: 0;
@@ -1520,13 +1508,13 @@ const flow = chapters.map((ch, i) => {
     }
 
     .g-shutter {
-      min-height: 60vw;
+      height: 60vw;
       padding: 12px;
       border-radius: 4px;
     }
 
     .g-shutter img {
-      max-height: 60vw;
+      max-height: 100%;
     }
 
     .lb {
