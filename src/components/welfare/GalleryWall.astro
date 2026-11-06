@@ -39,7 +39,7 @@ const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
 
 // 卡宽随照片纵横比收放：恒定高度 × 当前图宽 + 内衬（竖图不再浮在大卡中央）
 const fitW = (p: WelfareGalleryPhoto) =>
-  `calc(min(72vh, 700px) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(8px, 1vw, 14px))`;
+  `calc((min(72vh, 700px) - 2 * clamp(8px, 1vw, 14px)) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(8px, 1vw, 14px))`;
 
 // 章节流：附带下一辑信息（章间编辑交接行用）
 const flow = chapters.map((ch, i) => {
@@ -205,9 +205,17 @@ const flow = chapters.map((ch, i) => {
   // 期数短标（「第1-2周」），与模板侧同一截取规则
   const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
 
-  // 卡宽随照片纵横比收放（与模板侧 fitW 同一公式）
-  const fitW = (p: WelfareGalleryPhoto) =>
-    `calc(min(72vh, 700px) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(8px, 1vw, 14px))`;
+  // 卡宽随照片纵横比收放：桌面以 72vh 内容高为基准，移动端以 60vw 为基准
+  // （两套都用「内容高度 × 宽高比 + 衬边」公式，保证四边等宽）
+  const mobileMq = window.matchMedia('(max-width: 640px)');
+  const fitW = (p: WelfareGalleryPhoto) => {
+    const ar = (p.w / p.h).toFixed(4);
+    return mobileMq.matches
+      ? `calc((60vw - 16px) * ${ar} + 16px)`
+      : `calc((min(72vh, 700px) - 2 * clamp(8px, 1vw, 14px)) * ${ar} + 2 * clamp(8px, 1vw, 14px))`;
+  };
+  const rerenderAll: Array<() => void> = [];
+  mobileMq.addEventListener('change', () => rerenderAll.forEach(fn => fn()));
 
   // LQIP 占位渐变（与模板侧 phBg 同一规则）
   const phBg = (tone: string) => {
@@ -1520,7 +1528,7 @@ const flow = chapters.map((ch, i) => {
     }
 
     .g-shutter {
-      width: 100%;
+      /* 宽度沿用 base 的 min(100%, var(--fit-w))：移动端公式以 60vw 为基准 */
       height: 60vw;
       padding: 8px;
       border-radius: 4px;
