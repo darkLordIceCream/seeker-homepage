@@ -2712,3 +2712,20 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 非阻塞遗留（后续优化清单）：① 灯箱开启时底部 dock 极淡微透，可令其隐没 ② 档案馆顶部留白可再压半档 ③ 导航「作品展示」是否改指 /gallery 待用户拍板
 - 环境备注：主工作区被并行会话切至 feat/bring-her-eyes-portfolio，gallery 全程在 worktree（seeker-gallery-worktree）+
   4322 端口隔离开发
+
+### 2026-11-07 · Gallery 3.1 素材池扩容 + 随机播放（feat/gallery-random-pool 分支，未推送）
+
+- 用户三条裁决：①
+  R2 除公益外全部图片可作画廊素材 ② 点进去就是随机播放 ③ 第一张图别挂太久
+- ARCHIVE_POOL = 问卷 33 + 《时间的故事》全部期数 + 追光之旅（meta 2185
+  key 合成，剔长卷条幅 60 + committee 拼贴 64）→ 2094 件全池
+- randomizeFirst：hydration 即随机换首图（门厅 SSR 首图仅 CLS 兜底）；firstDelay 门控后首轮 2.5–4.5s，此后 6–10s
+- 档案馆全池上墙（justified rows +
+  PL 四位编号 + 缩略图 thumbs/<key>.webp 镜像 2094 张已传 R2）
+- Critic 3.1 评审 7.6 not-satisfied
+  → 放行集三项 P0 修复（aa1591f）：firstDelay 死代码真接线（自报数据被 Critic 复现证伪——首换实测当时是 randomizeFirst 时长误读）、墙序期数数值降序（src 直排把 2026-XX 垫底）、committee 剔除；随车 P1 首抽精选层（firstPool：问卷 ∪
+  cover，随机下限）+ P2 图注 series 去书名号
+- 复测全过：门控后首换落窗、墙序 2061 项零违规（故事降序 + 追光后置）、墙面 committee 零残留、首抽抽中问卷精选；astro
+  check 0 错
+- Critic 协议：凭复测数据放行，无需再走完整评审
+- P2 遗留：移动端隐藏槽仍拉原图、懒加载空框内衬色、404 缩略图 CDN 缓存自愈、墙尾长卷专条

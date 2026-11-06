@@ -364,6 +364,14 @@
       "dependencies": ["feat-044"],
       "status": "done",
       "evidence": "./init.sh 全绿（type-check 0 错/lint 0 错/build 81 页）；浏览器实测：定妆第一眼亮色白盒成立、Hero 停 8s 门控不偷跑、墙宽 1267=1440−2×86.4 余白下限精确、两槽等高 575px 零裁切、竖图带内轮换+空墙换场实测、灯箱 25/33 翻页与 Esc/滚动锁、作者索引点沐开 2/33《静谧》、暗色内描边保直角、移动端竖图 56vh 主视觉+档案馆单列；缩略图 33 张已上传 R2 gallery/thumbs/（长边 960 WebP q82，网格加载 ~2.5MB 对比原图 ~20MB）；Critic 三轮迭代闭环：7.5→8.2→9.1 satisfied 放行（空墙幽灵框/灯箱熄灯/共线/PL.编号/6-10s/角卡让位/索引横滑/导航落地八项修复，用户删统计行+索引为最终形态 0a8f503）"
+    },
+    {
+      "id": "feat-047",
+      "name": "Gallery 3.1 素材池扩容 + 门厅随机播放 + 档案馆全池上墙",
+      "description": "用户三条裁决：R2 除公益外全部图片入池（ARCHIVE_POOL 2094 件 = 问卷 33 + 活动期数 + 追光之旅，剔条幅与 committee 拼贴）；门厅随机播放（randomizeFirst hydration 首抽精选层 + firstDelay 门控后首轮 2.5–4.5s）；档案馆全池上墙（缩略图镜像 thumbs/<key>.webp 2094 张）",
+      "dependencies": ["feat-046"],
+      "status": "done",
+      "evidence": "astro check 0 错；Critic 3.1 评审 7.6 not-satisfied → 放行集 P0×3 修复后按协议凭复测数据放行：门控后首换落 2.5–4.5s 窗口、墙序 2061 项零违规、committee 零残留、首抽抽中精选层"
     }
   ]
 }
