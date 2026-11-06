@@ -4,7 +4,8 @@
 .gl-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 1010;
+  /* 压过壳层全部元素：导航 1002 / 进度点 1000 / 七周年角卡 1200 */
+  z-index: 1400;
   display: flex;
   align-items: center;
   justify-content: center;

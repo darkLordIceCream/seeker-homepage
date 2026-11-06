@@ -248,6 +248,7 @@ const SLOTS = [
       g.style.removeProperty('width');
       g.style.removeProperty('height');
     });
+    document.querySelector<HTMLElement>('.gallery-head')?.style.removeProperty('max-width');
   };
 
   // —— fitWall：双重反解（P0-3 视口高预算 + 白盒余白下限）——
@@ -278,6 +279,11 @@ const SLOTS = [
     const byMargin = window.innerWidth - margin * 2;
     const w = Math.min(WALL_MAX, Math.max(320, byHeight), Math.max(320, byMargin));
     wall.style.maxWidth = `${Math.round(w)}px`;
+    // 标题牌与展墙共享同一条光学边线（P1-1：美术馆的基本礼貌）
+    const head = document.querySelector<HTMLElement>('.gallery-head');
+    if (head) {
+      head.style.maxWidth = `${Math.round(w)}px`;
+    }
     layoutRow(wall.querySelector('.gallery-row'), wall.clientWidth);
   };
 
@@ -288,6 +294,10 @@ const SLOTS = [
   }));
   startGalleryCycle(cycleSlots, {
     gateEl: document.getElementById('works') ?? undefined,
+    // 6–10s：门厅是「少而大」的策展，节奏是策展语气——3–6s 双槽错峰
+    // 平均约 2.2s 一次事件像轮播广告，单件 6–10s 才像展厅（Critic P1-3）
+    min: 6000,
+    max: 10000,
     twoStage: { outMs: 700, gapMs: 150, inMs: 500 },
     exclusive: true,
     shuffle: true,
@@ -446,6 +456,8 @@ const SLOTS = [
     position: absolute;
     inset: 0;
     box-shadow: inset 0 0 0 1px rgba(234, 244, 255, 0.08);
+    opacity: 1;
+    transition: opacity 700ms ease;
     pointer-events: none;
   }
 
@@ -453,6 +465,19 @@ const SLOTS = [
     --shot-shadow:
       0 1px 3px rgba(0, 0, 0, 0.45),
       0 14px 34px -10px rgba(0, 0, 0, 0.55);
+  }
+
+  /* 空墙纪律（两段式换场）：画框随旧画一起退场——阴影与暗色内描边
+     淡出到零，空墙期真的是墙，不残留幽灵框（Critic P0-1） */
+  .gslot.is-swapping .shot {
+    box-shadow: none;
+    transition:
+      box-shadow 700ms ease,
+      transform 0.4s ease;
+  }
+
+  :global(.dark) .gslot.is-swapping .shot::after {
+    opacity: 0;
   }
 
   .shot:focus-visible {

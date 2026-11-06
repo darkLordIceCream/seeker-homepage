@@ -181,6 +181,8 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
           if (!document.contains(slot.el)) {
             return;
           }
+          // 空墙纪律：画框（阴影/描边）随旧画一起退场，空墙期不残留幽灵框
+          slot.el.classList.add('is-swapping');
           // 旧帧整幅淡出：页面底透出 = 空墙（避免交叉淡入中点的双曝叠影）
           active.style.transition = `opacity ${OUT_MS}ms ease`;
           active.style.opacity = '0';
@@ -194,16 +196,18 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
             active.classList.remove('is-active');
             commit();
             window.setTimeout(() => {
-              // 收尾：清内联样式交还 CSS 类控制
+              // 收尾：清内联样式、画框随新画回场
               active.style.transition = '';
               active.style.opacity = '';
               standby.style.transition = '';
+              slot.el.classList.remove('is-swapping');
               swapping = false;
             }, IN_MS);
           }, OUT_MS + GAP_MS);
         })
         .catch(() => {
           // 解码失败（加载失败/槽已移除）：还原预约，等下一轮
+          slot.el.classList.remove('is-swapping');
           swapping = false;
           if (cur) {
             state.set(slot.el, cur);

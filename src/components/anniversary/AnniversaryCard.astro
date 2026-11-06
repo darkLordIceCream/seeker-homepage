@@ -66,6 +66,20 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
         e.preventDefault();
         card.classList.add('is-open');
       });
+      // 看展让位：门厅画廊在视口时滑出屏幕，离开后回到半藏位——
+      // 观众看展时，入口立牌收起来（Gallery 3.0 策展纪律）
+      const works = document.getElementById('works');
+      if (works && 'IntersectionObserver' in window) {
+        const dock = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              card.classList.toggle('is-docked', en.isIntersecting);
+            });
+          },
+          { threshold: 0.2 },
+        );
+        dock.observe(works);
+      }
       close.addEventListener('click', () => {
         card.remove();
       });
@@ -94,6 +108,17 @@ const pool = GALLERY_POOL.map(img => ({ url: img.src }));
   .anniv-corner.is-shown:focus-within,
   .anniv-corner.is-open {
     transform: translateX(0) rotate(-2deg);
+  }
+
+  /* 看展让位（JS 加 is-docked）：完全滑出屏幕并停住摆动 */
+  .anniv-corner.is-docked,
+  .anniv-corner.is-docked.is-shown {
+    transform: translateX(112%) rotate(10deg);
+    transition: transform 0.45s ease;
+  }
+
+  .anniv-corner.is-docked .ac {
+    animation: none;
   }
 
   .ac {

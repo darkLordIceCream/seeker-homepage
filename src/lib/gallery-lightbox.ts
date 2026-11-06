@@ -46,6 +46,13 @@ export function initGalleryLightbox({
   getSlides,
   archiveHref,
 }: GalleryLightboxOptions): GalleryLightboxHandle {
+  // Portal 到 body：页面容器（如首页 main 的 z-index 层叠上下文）会把灯箱
+  // 困在局部层级里，被导航/进度点/角卡压住——灯下看片必须全馆熄灯，
+  // 灯箱只能听命于根层叠上下文
+  if (root.parentElement !== document.body) {
+    document.body.appendChild(root);
+  }
+
   const img = root.querySelector<HTMLImageElement>('.gl-img');
   const capText = root.querySelector<HTMLElement>('.gl-cap-text');
   const cap = root.querySelector<HTMLElement>('.gl-cap');
