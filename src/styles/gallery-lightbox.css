@@ -1,0 +1,178 @@
+/* 画廊灯箱共享样式（首页门厅与档案馆 /gallery 共用，由两处 import）。
+ * 沉浸式深底：与主题无关，看图优先。 */
+
+.gl-lightbox {
+  position: fixed;
+  inset: 0;
+  /* 压过壳层全部元素：导航 1002 / 进度点 1000 / 七周年角卡 1200 */
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 12, 18, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: gl-fade 0.25s ease-out;
+}
+
+.gl-lightbox[hidden] {
+  display: none;
+}
+
+@keyframes gl-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.gl-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 64px;
+  max-width: 100%;
+}
+
+/* 零裁切：完整显示原图，宽高自适应不强制填充 */
+.gl-img {
+  display: block;
+  max-width: min(92vw, 1400px);
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  /* 深底上夜景照片边缘会融进背景：极轻的 1px 内描边保住直角形 */
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.gl-img--error {
+  min-width: 200px;
+  min-height: 120px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.gl-cap {
+  margin-top: 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px;
+}
+
+.gl-cap-text {
+  font-family: var(--font-serif-song);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.82);
+  text-align: center;
+}
+
+.gl-cap-link {
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.gl-cap-link:hover,
+.gl-cap-link:focus-visible {
+  color: #fff;
+}
+
+.gl-cap-link:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+}
+
+.gl-count {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.gl-btn {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gl-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.gl-btn:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+}
+
+.gl-close {
+  top: 18px;
+  right: 18px;
+}
+
+.gl-prev {
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gl-next {
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-lightbox {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .gl-stage {
+    margin: 0 12px;
+  }
+
+  .gl-prev,
+  .gl-next {
+    top: auto;
+    bottom: 18px;
+    transform: none;
+  }
+
+  .gl-count {
+    top: 26px;
+  }
+
+  .gl-cap {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+}

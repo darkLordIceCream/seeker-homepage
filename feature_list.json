@@ -356,6 +356,14 @@
       "dependencies": ["feat-016", "feat-042"],
       "status": "done",
       "evidence": "浏览器实测（IAB）：桌面 1440 稳态零裁切 0.02%（双采样）、两行严格等高、sectionBottom=900 恰好一屏、墙宽 fitWall 1207px 呼吸中；#works hash 跳转两次复测精准落位；scrollspy 高亮「作品展示」、PageProgress 第二点、AnniversaryCard 角卡正常；移动端 390 主竖图满宽 351、稳态 0.06-0.11%、320 无横向溢出；暗色 #works 全形态正常；灯箱 1/8 计数/当前图 matches/←→/Esc 全过；七周年页 GALLERY_POOL 消费回归正常。修复：WorksSection onSwap 漏更 --ar/--fg（换图后槽比例停留首图）。init.sh 全绿（type-check 0 错、lint 0 错 65 存量警告、build 79 页——demo 删除后回落数）。截图 design-demos/homepage-gallery/shots/final-*。分支 feat/gallery-2.0"
+    },
+    {
+      "id": "feat-046",
+      "name": "Gallery 3.0 白盒美术馆门厅 + /gallery 作品档案馆",
+      "description": "首页画廊重构为白盒门厅（1 主作横图 + 1 竖图、博物馆标签、更多精彩入口、开场定妆+呼吸轮换）；新增 /gallery 档案馆（等高行 justified rows、No.XX 藏品编号、作者索引直开灯箱、缩略图网格）。GalleryArtCritic 评审 7.5/10 后 P0 全采纳：视口门控保定妆、槽内比例带宽（主作 1.48–1.62/竖图 0.657–0.686）、白盒余白下限 6vw、两段式换场（旧帧淡出→空墙→新帧淡入）、暗色 1px 内描边、作者索引替代单结果筛选。共享 gallery-lightbox.ts（灯箱=门厅与档案馆走廊，翻遍全池 33 件）",
+      "dependencies": ["feat-044"],
+      "status": "done",
+      "evidence": "./init.sh 全绿（type-check 0 错/lint 0 错/build 81 页）；浏览器实测：定妆第一眼亮色白盒成立、Hero 停 8s 门控不偷跑、墙宽 1267=1440−2×86.4 余白下限精确、两槽等高 575px 零裁切、竖图带内轮换+空墙换场实测、灯箱 25/33 翻页与 Esc/滚动锁、作者索引点沐开 2/33《静谧》、暗色内描边保直角、移动端竖图 56vh 主视觉+档案馆单列；缩略图 33 张已上传 R2 gallery/thumbs/（长边 960 WebP q82，网格加载 ~2.5MB 对比原图 ~20MB）；Critic 三轮迭代闭环：7.5→8.2→9.1 satisfied 放行（空墙幽灵框/灯箱熄灯/共线/PL.编号/6-10s/角卡让位/索引横滑/导航落地八项修复，用户删统计行+索引为最终形态 0a8f503）"
     }
   ]
 }

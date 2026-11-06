@@ -1,6 +1,6 @@
 /**
- * 首页「作品 Gallery」图单（2026-09 问卷收集版，39 张）—— 唯一的换图入口。
- * 未来更换作品只改这个文件；WorksSection 的布局与交互不动。
+ * 首页「作品 Gallery」图单（2026-09 问卷收集版，33 件）—— 唯一的换图入口。
+ * 未来更换作品只改这个文件；布局与交互不动。
  *
  * 数据来源（2026-09 成员问卷收集）：
  * - 全部图片存于 R2 `gallery/<作者ID>.jpg`（文件名即作者 ID），
@@ -8,7 +8,9 @@
  * - author 即作者 ID（问卷署名，原样保留）；title 来自文件名中的作品名后缀；
  * - alt 依据真实画面内容撰写；
  * - GALLERY_POOL 为全量池（单一事实来源）：
- *   · 首页 Gallery 2.0「丝带呼吸」（WorksSection）按宽高比从中分池随机轮换；
+ *   · 首页「白盒门厅」（WorksSection）按槽内比例带轮换，开场定妆见
+ *     GALLERY_OPENING（换定妆只改它）；
+ *   · 档案馆 /gallery 的展示序（藏品编号）见 archiveOrdered()；
  *   · 七周年板块的 HERO 背景、首页角卡与「留光成物」纪念物照片均从池中取图。
  */
 export interface GalleryImage {
@@ -28,7 +30,7 @@ export interface GalleryImage {
 
 const R2 = 'https://r2.xn--seeker-ng2jm403afb4a.club';
 
-/** 全量池（39 张）：首页画廊轮换 / 七周年 HERO 背景 / 首页角卡 / 纪念物取图来源 */
+/** 全量池（33 件）：门厅轮换 / 档案馆全览 / 七周年 HERO 背景 / 首页角卡 / 纪念物取图来源 */
 export const GALLERY_POOL: readonly GalleryImage[] = [
   {
     src: `${R2}/gallery/Feiyu.jpg`,
@@ -278,3 +280,47 @@ export const GALLERY_POOL: readonly GalleryImage[] = [
     alt: '麦田上空的星轨绕成同心圆，一点车灯划过田埂。',
   },
 ] as const;
+
+// —— 门厅定妆与档案馆策展序（Gallery 3.0）——
+
+/** 按 src 文件名片段取池内作品（配置错误在构建期抛错拦住） */
+const byKey = (key: string): GalleryImage => {
+  const hit = GALLERY_POOL.find(i => i.src.includes(key));
+  if (!hit) {
+    throw new Error(`gallery.ts：按片段「${key}」未找到作品，检查 GALLERY_OPENING / ARCHIVE_LEAD`);
+  }
+  return hit;
+};
+
+/**
+ * 首页门厅「开场定妆」：按序 [主作横图, 竖图]——第一眼永远固定的策展组合。
+ * 换定妆照只改这里的片段 key；两张必须分别落在 WorksSection 的主作带
+ * （宽高比 1.48–1.62）与竖图带（0.657–0.686）内，否则布局侧构建期抛错。
+ */
+export const GALLERY_OPENING = [byKey('不要回答'), byKey('静谧')] as const;
+
+/** 档案馆首屏策展序（No.01 起）：文件名片段 key 按展示顺序排列 */
+const ARCHIVE_LEAD: readonly string[] = [
+  '不要回答',
+  '静谧',
+  '武功山',
+  '雾都雨夜',
+  '蓝调下的阳明滩',
+  '松韵楼国旗满月',
+  'V.ter',
+  '绿鬣蜥',
+];
+
+/** 档案馆展示序 = 策展序先行 + 池序垫后；门厅灯箱的翻页序与此编号一致 */
+export const archiveOrdered = (): readonly GalleryImage[] => {
+  const lead = ARCHIVE_LEAD.map(byKey);
+  const rest = GALLERY_POOL.filter(i => !lead.includes(i));
+  return [...lead, ...rest];
+};
+
+/**
+ * 档案馆网格缩略图（长边 960 WebP q82，管线 scripts/make-gallery-thumbs.mjs，
+ * R2 `gallery/thumbs/<名>.webp`）；原图只进灯箱。
+ */
+export const thumbOf = (img: GalleryImage): string =>
+  img.src.replace('/gallery/', '/gallery/thumbs/').replace(/\.jpg$/, '.webp');

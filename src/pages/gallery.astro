@@ -1,0 +1,283 @@
+---
+/**
+ * /gallery 档案馆：全量作品「藏品目录」页（Gallery 3.0 二级展厅）。
+ * 排版 = 等高行 justified rows（Magnum / Leica Gallery 的挂墙方式）：行内
+ * 按宽高比分配宽度——flex-grow 与 flex-basis 均以 --ar 表达，浏览器换行
+ * 后行内等高——零裁切、直角、行序即阅读序（比 CSS columns 的列向阅读
+ * 更美术馆，键盘 Tab 顺序也与视觉一致）。
+ * 每件 PL.XX 藏品编号（plate，摄影集编号惯例；避开作者 @No.25 的"No."撞车）：
+ * 展示序 = 策展序（gallery.ts ARCHIVE_LEAD 先行）+
+ * 池序垫后，编号与首页门厅灯箱的翻页序一致。
+ * 灯箱与首页门厅共用 src/lib/gallery-lightbox.ts 与 gallery-lightbox.css。
+ * 网格读缩略图（gallery/thumbs/，长边 960 WebP，管线 scripts/make-gallery-thumbs.mjs），
+ * 原图只进灯箱；lazy 加载 + 宽高属性防 CLS。
+ */
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/gallery-lightbox.css';
+import { archiveOrdered, thumbOf, type GalleryImage } from '@/data/gallery';
+
+const ordered = archiveOrdered();
+const padNo = (n: number) => String(n).padStart(2, '0');
+const capOf = (img: GalleryImage) =>
+  img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
+const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
+---
+
+<Layout
+  description="Seeker追光者作品档案——小组成员的摄影作品目录，拍一张照片，交一个朋友"
+  title="作品档案 · Gallery — Seeker追光者"
+>
+  <Navigation />
+
+  <main class="archive-page" id="main-content">
+    <header class="arch-head">
+      <p class="arch-kicker">作品档案 · Collection</p>
+      <h1 class="arch-title">画廊 <span class="arch-en">Gallery</span></h1>
+    </header>
+
+    <section aria-label="全部作品" class="arch-wall">
+      {
+        ordered.map((img, i) => (
+          <figure class="arch-item" data-author={img.author} style={`--ar:${(img.w / img.h).toFixed(4)}`}>
+            <button
+              aria-label={`放大查看 ${capOf(img)}`}
+              class="shot"
+              data-author={img.author}
+              data-full={img.src}
+              data-title={img.title ?? ''}
+              type="button"
+            >
+              <img
+                alt={altOf(img)}
+                decoding="async"
+                height={img.h}
+                loading={i < 4 ? 'eager' : 'lazy'}
+                src={thumbOf(img)}
+                width={img.w}
+              />
+            </button>
+            <figcaption class="arch-cap">
+              <span class="arch-no">PL.{padNo(i + 1)}</span>
+              <span class="arch-label">{capOf(img)}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </section>
+  </main>
+
+  <Footer />
+
+  <div aria-label="查看大图" aria-modal="true" class="gl-lightbox" hidden role="dialog">
+    <button aria-label="关闭图片查看器" class="gl-btn gl-close" type="button">
+      <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+    </button>
+    <button aria-label="下一张作品" class="gl-btn gl-next" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+    <figure class="gl-stage">
+      <img alt="" class="gl-img" decoding="async" />
+      <figcaption class="gl-cap"><span class="gl-cap-text"></span></figcaption>
+    </figure>
+    <button aria-label="上一张作品" class="gl-btn gl-prev" type="button">
+      <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <p aria-live="polite" class="gl-count"></p>
+  </div>
+</Layout>
+
+<script>
+  import { initGalleryLightbox } from '@/lib/gallery-lightbox';
+  import { archiveOrdered } from '@/data/gallery';
+
+  const ordered = archiveOrdered();
+  const lightbox = document.querySelector<HTMLElement>('.gl-lightbox');
+  if (lightbox) {
+    const lb = initGalleryLightbox({
+      root: lightbox,
+      getSlides: () =>
+        ordered.map(i => ({ full: i.src, title: i.title ?? '', author: i.author })),
+    });
+
+    // 网格触发：打开在展示序中的位置（与藏品编号一致）
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('.arch-item .shot')) {
+      btn.addEventListener('click', () => {
+        const idx = ordered.findIndex(i => i.src === btn.dataset.full);
+        lb.open(idx >= 0 ? idx : 0);
+      });
+    }
+  }
+</script>
+
+<style>
+  .archive-page {
+    max-width: 1728px;
+    margin: 0 auto;
+    padding: 120px clamp(24px, 6vw, 96px) 120px;
+  }
+
+  /* —— 头部：大标题 —— */
+  .arch-kicker {
+    font-family: var(--font-archivo);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin: 0 0 16px;
+  }
+
+  .arch-title {
+    font-family: var(--font-serif-song);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--foreground);
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .arch-en {
+    font-family: var(--font-archivo);
+    font-size: 0.42em;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin-left: 12px;
+  }
+
+  /* —— 等高行 justified rows：grow/basis 均以 --ar 表达，换行后行内等高 —— */
+  .arch-wall {
+    --row-h: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px 24px;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 44px;
+  }
+
+  .arch-item {
+    flex: var(--ar) 1 calc(var(--ar) * var(--row-h));
+    min-width: 0;
+    margin: 0;
+  }
+
+  .shot {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    --shot-shadow:
+      0 1px 2px rgba(8, 41, 74, 0.08),
+      0 10px 26px -10px rgba(8, 41, 74, 0.18);
+    box-shadow: var(--shot-shadow);
+    transition:
+      box-shadow 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  :global(.dark) .shot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 1px rgba(234, 244, 255, 0.08);
+    pointer-events: none;
+  }
+
+  :global(.dark) .shot {
+    --shot-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.45),
+      0 10px 26px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .shot:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) {
+    .arch-item:hover .shot {
+      transform: translateY(-3px);
+      --shot-shadow:
+        0 2px 4px rgba(8, 41, 74, 0.08),
+        0 20px 40px -12px rgba(8, 41, 74, 0.26);
+    }
+
+    :global(.dark) .arch-item:hover .shot {
+      --shot-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.45),
+        0 20px 40px -12px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  /* —— 博物馆标签：藏品编号 + 作品名 @作者 —— */
+  .arch-cap {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .arch-no {
+    font-family: var(--font-archivo);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--muted-foreground);
+    opacity: 0.75;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .arch-label {
+    font-family: var(--font-serif-song);
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* —— 响应式行高 —— */
+  @media (max-width: 1023px) {
+    .arch-wall {
+      --row-h: 230px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .archive-page {
+      padding-top: 96px;
+      padding-bottom: 80px;
+    }
+
+    .arch-wall {
+      --row-h: 170px;
+      gap: 26px 16px;
+    }
+  }
+
+  /* 小屏：一行一件（美术馆的移动端也是一个展位一件作品） */
+  @media (max-width: 560px) {
+    .arch-item {
+      flex: 1 1 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shot {
+      transition: none;
+    }
+  }
+</style>

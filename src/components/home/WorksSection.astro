@@ -1,67 +1,59 @@
 ---
 /**
- * 首页第 2 屏「画廊 Gallery」：丝带呼吸（Gallery 2.0，feat-043）。
- * 等高丝带定理：一行内所有图等高时，行高 = 行宽 ÷ 各图宽高比之和（Σar）。
- * 实现：槽 flex-grow = 自身 ar、aspect-ratio = 自身 ar → 行永远满宽、等高、
- * 零裁切，与轮换出什么比例无关；换图时槽尺寸走 rAF 指数平滑（防抖，见脚本），
- * 整面墙如呼吸般重排。照片按原始比例随机轮换（每槽 3~6s 独立间隔，
- * 引擎见 src/lib/gallery-cycle.ts：预载交叉淡入、hover 暂停、防同屏重复）。
- * 满宽模型：桌面 6 张（主带 1 横 2 竖 + 辅带 3 横），两行同宽，墙宽由 fitWall
- * 依「两行高之和 = 视口高 − 固定开销」反解——严格一屏且标题可见（max-width
- * 1728px 防超宽屏行高爆表）；无 JS 时静态首图 flex + aspect-ratio 兜底。
- * 移动端：主带只留一张竖图满宽（竖图在窄屏才有冲击力），辅带 3 横矮带。
- * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（换作品只改那个文件）；R2 只读。
+ * 首页第 2 屏「画廊 Gallery」：白盒美术馆门厅（Gallery 3.0）。
+ * 策展语言：单一主作建立尺度 + 一件反差竖件建立张力 + 博物馆标签 +
+ * 一扇门（右上「更多精彩 →」进 /gallery 档案馆）——Hasselblad / Leica /
+ * Magnum 首页的共同语法；替代上一版「丝带呼吸」6 格随机拼贴（无主次、
+ * 视线无处落地）。
+ *
+ * 几何：两件作品等高满宽、零裁切、直角。行高 H = (W − gap)/Σar；墙宽由
+ * fitWall 双重反解——视口高预算（严格一屏且标题可见）与白盒余白下限
+ * clamp(48px, 6vw, 120px)（美术馆的墙不贴边），上限 1728px。
+ *
+ * 策展纪律（GalleryArtCritic P0）：
+ * - 开场定妆：第一眼永远固定为 GALLERY_OPENING 组合，轮换由
+ *   gallery-cycle.ts 的视口门控保证（进入视口才起表，Hero 停留不偷跑）；
+ * - 槽内锁比例带：主作 1.48–1.62 / 竖图 0.657–0.686，换图墙宽漂移
+ *   ±0.7% 不可感知；
+ * - 两段式换场：旧帧整幅淡出 → 空墙 150ms → 新帧淡入（展厅换灯），
+ *   替代大图交叉淡入中点的双曝叠影；错峰互斥 + 每槽洗牌袋。
+ *
+ * 移动端：竖图按高度预算居中作主视觉（9:16 类竖图在窄屏是原生构图），
+ * 横图隐藏。灯箱片单 = 档案馆展示序（可与 No.XX 编号对上），翻遍全池，
+ * 图注带「在档案馆查看 →」——灯箱是门厅与档案馆之间的走廊。
+ * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（单一事实来源）；R2 只读。
  */
-import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
+import '../../styles/gallery-lightbox.css';
+import { GALLERY_POOL, GALLERY_OPENING, type GalleryImage } from '@/data/gallery';
 
 const arOf = (img: GalleryImage) => img.w / img.h;
 
-/** 比例分池：横 1.2–2.2 / 竖 0.5–0.85（超宽与近方各成一类不入轮换池）。
- *  主带竖槽用 V_MAIN（0.6–0.85，排除 0.56 极端竖图），配合 fitWall 保证
- *  任何轮换组合都不超出首屏 */
-const H_POOL = GALLERY_POOL.filter(i => {
+/** 槽内比例带（P0：换图不越带，墙宽近乎恒定，只剩纯换场） */
+const H_BAND = GALLERY_POOL.filter(i => {
   const ar = arOf(i);
-  return ar >= 1.2 && ar < 2.2;
+  return ar >= 1.48 && ar <= 1.62;
 });
-const V_POOL = GALLERY_POOL.filter(i => {
+const V_BAND = GALLERY_POOL.filter(i => {
   const ar = arOf(i);
-  return ar >= 0.5 && ar < 0.85;
+  return ar >= 0.657 && ar <= 0.686;
 });
-const V_MAIN = V_POOL.filter(i => arOf(i) >= 0.6);
 
-/** 按文件名片段取指定首图（真实池内引用，不复制字段） */
-const pick = (pool: readonly GalleryImage[], key: string): GalleryImage => {
-  const hit = pool.find(i => i.src.includes(key));
-  if (!hit) {
-    throw new Error(`首页画廊首图缺失：${key}`);
-  }
-  return hit;
-};
+const [OPENING_H, OPENING_V] = GALLERY_OPENING;
 
-interface SlotCfg {
-  kind: 'h' | 'v' | 'v-main';
-  first: GalleryImage;
-  /** 移动端是否隐藏 */
-  mHide?: boolean;
+/** 定妆图必须落在对应比例带内（配置错位在构建期直接抛错拦住） */
+if (!H_BAND.includes(OPENING_H) || !V_BAND.includes(OPENING_V)) {
+  throw new Error('首页门厅定妆组合不在槽内比例带中——检查 GALLERY_OPENING 与 H_BAND/V_BAND');
 }
-
-/** 主带 3 张：1 横 2 竖（V_MAIN 池，满宽下行高约 420–470px）；辅带 3 张全横
- *  （满宽下行高约 280–340px）。桌面共 6 张——少而大，两行同宽铺满视口。
- *  移动端只保留主带竖图满宽 + 辅带 3 横矮带 */
-const MAIN_SLOTS: SlotCfg[] = [
-  { kind: 'h', first: pick(H_POOL, '心游万仞'), mHide: true },
-  { kind: 'v-main', first: pick(V_MAIN, 'Henry浩麟') },
-  { kind: 'v-main', first: pick(V_MAIN, '南迦巴瓦'), mHide: true },
-];
-const AUX_SLOTS: SlotCfg[] = [
-  { kind: 'h', first: pick(H_POOL, 'Michelle_Chen') },
-  { kind: 'h', first: pick(H_POOL, 'Tommic') },
-  { kind: 'h', first: pick(H_POOL, '王哼哼') },
-];
 
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 const capOf = (img: GalleryImage) =>
   img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
+
+/** 门厅两槽：主作横图 + 反差竖图，均为第一眼定妆（eager） */
+const SLOTS = [
+  { kind: 'h' as const, img: OPENING_H },
+  { kind: 'v' as const, img: OPENING_V },
+];
 ---
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
@@ -69,16 +61,19 @@ const capOf = (img: GalleryImage) =>
     <h2 class="gallery-title" id="works-title">
       画廊 <span class="gallery-en">Gallery</span>
     </h2>
+    <a class="gallery-more" href="/gallery/">
+      更多精彩 <span aria-hidden="true">→</span>
+    </a>
   </header>
 
   <div class="gallery-wall reveal" data-wall style="--reveal-delay:120ms">
-    <div class="ribbon-row ribbon-row--main" aria-label="主带作品">
+    <div aria-label="门厅作品" class="gallery-row" role="group">
       {
-        MAIN_SLOTS.map(cfg => {
-          const img = cfg.first;
+        SLOTS.map(cfg => {
+          const { img } = cfg;
           const ar = arOf(img).toFixed(4);
           return (
-            <figure class:list={['gslot', cfg.mHide && 'gslot--mhide']} data-kind={cfg.kind} style={`--ar:${ar};--fg:${ar}`}>
+            <figure class:list={['gslot', `gslot--${cfg.kind}`]} data-kind={cfg.kind} style={`--ar:${ar};--fg:${ar}`}>
               <button
                 aria-label={`放大查看 ${capOf(img)}`}
                 class="shot"
@@ -91,42 +86,9 @@ const capOf = (img: GalleryImage) =>
                   alt={altOf(img)}
                   class="gimg is-active"
                   decoding="async"
-                  fetchpriority={cfg.kind === 'h' ? 'high' : undefined}
+                  fetchpriority="high"
                   height={img.h}
-                  loading={cfg.kind === 'h' ? 'eager' : 'lazy'}
-                  src={img.src}
-                  width={img.w}
-                />
-                <img alt="" aria-hidden="true" class="gimg" decoding="async" />
-              </button>
-              <figcaption class="gcap"><span class="gcap-text">{capOf(img)}</span></figcaption>
-            </figure>
-          );
-        })
-      }
-    </div>
-
-    <div class="ribbon-row ribbon-row--aux" aria-label="辅带作品">
-      {
-        AUX_SLOTS.map(cfg => {
-          const img = cfg.first;
-          const ar = arOf(img).toFixed(4);
-          return (
-            <figure class:list={['gslot', cfg.mHide && 'gslot--mhide']} data-kind={cfg.kind} style={`--ar:${ar};--fg:${ar}`}>
-              <button
-                aria-label={`放大查看 ${capOf(img)}`}
-                class="shot"
-                data-author={img.author}
-                data-full={img.src}
-                data-title={img.title ?? ''}
-                type="button"
-              >
-                <img
-                  alt={altOf(img)}
-                  class="gimg is-active"
-                  decoding="async"
-                  height={img.h}
-                  loading="lazy"
+                  loading="eager"
                   src={img.src}
                   width={img.w}
                 />
@@ -149,7 +111,7 @@ const capOf = (img: GalleryImage) =>
     </button>
     <figure class="gl-stage">
       <img alt="" class="gl-img" decoding="async" />
-      <figcaption class="gl-cap"></figcaption>
+      <figcaption class="gl-cap"><span class="gl-cap-text"></span></figcaption>
     </figure>
     <button aria-label="上一张作品" class="gl-btn gl-prev" type="button">
       <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="26"><path d="M15 18l-6-6 6-6" /></svg>
@@ -160,45 +122,27 @@ const capOf = (img: GalleryImage) =>
 
 <script>
   import { startGalleryCycle } from '@/lib/gallery-cycle';
-  import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
+  import { initGalleryLightbox } from '@/lib/gallery-lightbox';
+  import { GALLERY_POOL, archiveOrdered, type GalleryImage } from '@/data/gallery';
 
   const arOf = (img: GalleryImage) => img.w / img.h;
-  const H_POOL = GALLERY_POOL.filter(i => {
+  const H_BAND = GALLERY_POOL.filter(i => {
     const ar = arOf(i);
-    return ar >= 1.2 && ar < 2.2;
+    return ar >= 1.48 && ar <= 1.62;
   });
-  const V_POOL = GALLERY_POOL.filter(i => {
+  const V_BAND = GALLERY_POOL.filter(i => {
     const ar = arOf(i);
-    return ar >= 0.5 && ar < 0.85;
+    return ar >= 0.657 && ar <= 0.686;
   });
-  const V_MAIN = V_POOL.filter(i => arOf(i) >= 0.6);
 
   const wall = document.querySelector<HTMLElement>('[data-wall]');
   const isDesktop = () => window.matchMedia('(min-width: 769px)').matches;
 
-  // —— 丝带几何：rAF 指数平滑（防抖核心）——
-  // 槽尺寸不使用 CSS transition：高频换图下 transition 被反复重定向，
-  // ease-in-out 重定向时速度瞬间归零再加速 = 全墙"刹车再起步"式抖动。
-  // JS 维护每槽 cur/tgt，rAF 循环指数趋近（速度 = k×(tgt−cur)，帧率无关，
-  // τ = 130ms；目标变化速度天然连续，不归零不超调；静止自动停循环）。
-  // 行几何 = 等高丝带定理：行高 H = (行宽 − gaps)/Σar，槽宽 = H × ar；
-  // 墙宽由 fitWall 依视口高预算反解（严格一屏）；无 JS 时槽回退
-  // flex-grow + aspect-ratio 兜底。
-  const WALL_MAX = 1728;
-  // 固定开销：区块留白 80（56+24）+ 标题行约 51+18 + 两行图注 52 ≈ 201，取 230 留余量
-  const FIXED_BUDGET = 230;
-  const BAND_GAP = 22;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const rowGap = (row: Element | null) =>
-    parseFloat(getComputedStyle(row ?? document.body).columnGap) || 0;
-
-  // —— 槽尺寸动画：rAF 指数平滑（防抖核心）——
-  // CSS transition 在高频换图下被反复重定向（8 槽平均 0.56s 一次 fitWall 全墙
-  // 重设目标 < 1.1s 过渡时长），ease-in-out 重定向时速度瞬间归零再加速——
-  // 全墙每半秒"刹车再起步"，比例差越大位移越大抖感越强。
-  // 指数平滑对目标变化速度天然连续（速度 = k×(tgt−cur)，不归零不超调），
-  // 静止后自动停循环。帧率无关：k = 1 − exp(−dt/τ)，τ = 130ms。
+  // —— 槽尺寸动画：rAF 指数平滑（沿用丝带版结论）——
+  // CSS transition 在高频换图下被反复重定向，ease-in-out 重定向时速度瞬间
+  // 归零再加速 = 全墙"刹车再起步"式抖动。指数平滑对目标变化速度天然连续
+  // （速度 = k×(tgt−cur)，不归零不超调），静止后自动停循环。
+  // 帧率无关：k = 1 − exp(−dt/τ)，τ = 130ms。
   interface SlotAnim {
     el: HTMLElement;
     cur: { w: number; h: number };
@@ -209,6 +153,7 @@ const capOf = (img: GalleryImage) =>
   let rafId = 0;
   let animRunning = false;
   let lastTick = 0;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const applySize = (a: SlotAnim) => {
     a.el.style.width = `${a.cur.w.toFixed(1)}px`;
@@ -251,6 +196,7 @@ const capOf = (img: GalleryImage) =>
     rafId = requestAnimationFrame(tick);
   };
 
+  // 等高定理：行高 H = (行宽 − gaps)/Σar，槽宽 = H × ar
   const layoutRow = (row: Element | null, rowW: number) => {
     if (!row) {return;}
     const slots = [...row.querySelectorAll<HTMLElement>('.gslot')].filter(
@@ -262,7 +208,8 @@ const capOf = (img: GalleryImage) =>
       0,
     );
     if (sum <= 0) {return;}
-    const gaps = rowGap(row) * (slots.length - 1);
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    const gaps = gap * (slots.length - 1);
     const h = (rowW - gaps) / sum;
     for (const g of slots) {
       const ar = parseFloat(g.style.getPropertyValue('--fg')) || 0;
@@ -289,7 +236,7 @@ const capOf = (img: GalleryImage) =>
     }
   };
 
-  /** 跨断点时清掉内联 px 布局与动画状态，交还给 CSS（移动端 flex + aspect-ratio 兜底） */
+  /** 跨断点时清掉内联 px 布局与动画状态，交还给 CSS（移动端兜底） */
   const clearLayout = () => {
     if (animRunning) {
       cancelAnimationFrame(rafId);
@@ -301,52 +248,59 @@ const capOf = (img: GalleryImage) =>
       g.style.removeProperty('width');
       g.style.removeProperty('height');
     });
+    document.querySelector<HTMLElement>('.gallery-head')?.style.removeProperty('max-width');
   };
+
+  // —— fitWall：双重反解（P0-3 视口高预算 + 白盒余白下限）——
+  const WALL_MAX = 1728;
+  // 固定开销：区块留白 80（56+24）+ 标题行约 70 + 图注约 27 ≈ 177，取 210 留余量
+  const FIXED_BUDGET = 210;
+  const ROW_GAP = 24;
 
   const fitWall = () => {
     if (!wall || !isDesktop()) {
       clearLayout();
       return;
     }
-    // 一屏反解：两行同宽，行高预算 = 视口高 − 固定开销（标题/图注/留白/带距）。
-    // H1+H2 = avail → (W−g1)/s1 + (W−g2)/s2 = avail → W 反解；上限 1728 防
-    // 超宽屏行高爆表。6 张组合（辅带 3 横 Σ≈4.3）反解结果 ≈ 1170–1220，
-    // 比旧 8 张版更宽——少而大与一屏在此组合下兼得。
-    const sOf = (sel: string) => {
-      const slots = [...(wall?.querySelectorAll<HTMLElement>(`${sel} .gslot`) ?? [])].filter(
-        g => getComputedStyle(g).display !== 'none',
-      );
-      const sum = slots.reduce(
-        (acc, g) => acc + (parseFloat(g.style.getPropertyValue('--fg')) || 0),
-        0,
-      );
-      return { sum, gaps: rowGap(wall?.querySelector(sel)) * Math.max(0, slots.length - 1) };
-    };
-    const r1 = sOf('.ribbon-row--main');
-    const r2 = sOf('.ribbon-row--aux');
-    if (r1.sum <= 0 || r2.sum <= 0) {return;}
-    const avail = Math.max(360, window.innerHeight - FIXED_BUDGET - BAND_GAP);
-    const w = Math.min(
-      WALL_MAX,
-      Math.max(320, (avail + r1.gaps / r1.sum + r2.gaps / r2.sum) / (1 / r1.sum + 1 / r2.sum)),
+    const slots = [...wall.querySelectorAll<HTMLElement>('.gslot')].filter(
+      g => getComputedStyle(g).display !== 'none',
     );
+    const sum = slots.reduce(
+      (acc, g) => acc + (parseFloat(g.style.getPropertyValue('--fg')) || 0),
+      0,
+    );
+    if (sum <= 0) {return;}
+    const gaps = ROW_GAP * Math.max(0, slots.length - 1);
+    // 高度预算：行高 = 视口高 − 固定开销（标题/图注/留白）
+    const availH = Math.max(360, window.innerHeight - FIXED_BUDGET);
+    const byHeight = availH * sum + gaps;
+    // 白盒余白下限：美术馆的墙不贴边（两侧 clamp(48px, 6vw, 120px)）
+    const margin = Math.min(120, Math.max(48, window.innerWidth * 0.06));
+    const byMargin = window.innerWidth - margin * 2;
+    const w = Math.min(WALL_MAX, Math.max(320, byHeight), Math.max(320, byMargin));
     wall.style.maxWidth = `${Math.round(w)}px`;
-    const realW = wall.clientWidth;
-    layoutRow(wall.querySelector('.ribbon-row--main'), realW);
-    layoutRow(wall.querySelector('.ribbon-row--aux'), realW);
+    // 标题牌与展墙共享同一条光学边线（P1-1：美术馆的基本礼貌）
+    const head = document.querySelector<HTMLElement>('.gallery-head');
+    if (head) {
+      head.style.maxWidth = `${Math.round(w)}px`;
+    }
+    layoutRow(wall.querySelector('.gallery-row'), wall.clientWidth);
   };
 
-  // —— 轮换：换图后更新槽位比例变量 → flex-grow/aspect-ratio 过渡 → 整墙呼吸重排 ——
-  const slots = [...document.querySelectorAll<HTMLElement>('.gslot')].map(el => ({
+  // —— 轮换：槽内比例带 + 视口门控（保定妆）+ 两段式换场 + 错峰 + 洗牌袋 ——
+  const cycleSlots = [...document.querySelectorAll<HTMLElement>('.gslot')].map(el => ({
     el,
-    pool:
-      el.dataset.kind === 'h'
-        ? H_POOL
-        : el.dataset.kind === 'v-main'
-          ? V_MAIN
-          : V_POOL,
+    pool: el.dataset.kind === 'h' ? H_BAND : V_BAND,
   }));
-  startGalleryCycle(slots, {
+  startGalleryCycle(cycleSlots, {
+    gateEl: document.getElementById('works') ?? undefined,
+    // 6–10s：门厅是「少而大」的策展，节奏是策展语气——3–6s 双槽错峰
+    // 平均约 2.2s 一次事件像轮播广告，单件 6–10s 才像展厅（Critic P1-3）
+    min: 6000,
+    max: 10000,
+    twoStage: { outMs: 700, gapMs: 150, inMs: 500 },
+    exclusive: true,
+    shuffle: true,
     onSwap: (el, img) => {
       const ar = arOf(img).toFixed(4);
       el.style.setProperty('--ar', ar);
@@ -360,170 +314,96 @@ const capOf = (img: GalleryImage) =>
     window.addEventListener('resize', fitWall, { passive: true });
   }
 
-  // —— 灯箱：点击照片全屏浏览，Esc 关闭、←→ 切换（渐进增强，无依赖） ——
+  // —— 灯箱：片单 = 档案馆展示序（编号一致），←/→ 翻遍全池，「在档案馆查看 →」——
   const lightbox = document.querySelector<HTMLElement>('.gl-lightbox');
-  const img = lightbox?.querySelector<HTMLImageElement>('.gl-img');
-  const cap = lightbox?.querySelector<HTMLElement>('.gl-cap');
-  const count = lightbox?.querySelector<HTMLElement>('.gl-count');
-  const shutters = [...document.querySelectorAll<HTMLButtonElement>('.shot')];
-
-  let current = -1;
-  let lastFocus: HTMLElement | null = null;
-
-  // 触发按钮的 dataset 会被轮换引擎实时更新（随机播放），打开/切换时现读
-  const readSlide = (index: number) => {
-    const d = shutters[index]?.dataset;
-    if (!d) {
-      return null;
+  if (lightbox) {
+    const ordered = archiveOrdered();
+    const lb = initGalleryLightbox({
+      root: lightbox,
+      archiveHref: '/gallery/',
+      getSlides: () =>
+        ordered.map(i => ({ full: i.src, title: i.title ?? '', author: i.author })),
+    });
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('.shot')) {
+      btn.addEventListener('click', () => {
+        const idx = ordered.findIndex(i => i.src === btn.dataset.full);
+        lb.open(idx >= 0 ? idx : 0);
+      });
     }
-    return { full: d.full ?? '', title: d.title ?? '', author: d.author ?? '' };
-  };
-
-  const renderSlide = () => {
-    const slide = readSlide(current);
-    if (!img || !cap || !count || !slide) {return;}
-    img.classList.remove('gl-img--error');
-    img.src = slide.full;
-    img.alt = slide.title
-      ? `《${slide.title}》——${slide.author}作品`
-      : `${slide.author}作品`;
-    cap.textContent = slide.title
-      ? `《${slide.title}》 @${slide.author}`
-      : `@${slide.author}`;
-    count.textContent = `${current + 1} / ${shutters.length}`;
-  };
-
-  const openLightbox = (index: number) => {
-    if (!lightbox) {return;}
-    current = index;
-    renderSlide();
-    lastFocus = document.activeElement as HTMLElement | null;
-    // 锁定 html 滚动（overflow 方案天然保留滚动位置）
-    document.documentElement.style.overflow = 'hidden';
-    lightbox.hidden = false;
-    lightbox.querySelector<HTMLElement>('.gl-close')?.focus();
-  };
-
-  const closeLightbox = () => {
-    if (!lightbox) {return;}
-    lightbox.hidden = true;
-    document.documentElement.style.overflow = '';
-    lastFocus?.focus();
-    current = -1;
-  };
-
-  const step = (delta: number) => {
-    if (current < 0 || shutters.length === 0) {return;}
-    current = (current + delta + shutters.length) % shutters.length;
-    renderSlide();
-  };
-
-  shutters.forEach((btn, i) => {
-    btn.addEventListener('click', () => openLightbox(i));
-  });
-  lightbox?.querySelector('.gl-close')?.addEventListener('click', closeLightbox);
-  lightbox?.querySelector('.gl-prev')?.addEventListener('click', () => step(-1));
-  lightbox?.querySelector('.gl-next')?.addEventListener('click', () => step(1));
-  // 点背景关闭（点在图片/按钮上不关）
-  lightbox?.addEventListener('click', e => {
-    if (e.target === lightbox) {closeLightbox();}
-  });
-
-  // 键盘：Esc 关闭 / ←→ 切换 / Tab 焦点圈禁在灯箱内
-  const FOCUSABLE = '.gl-close, .gl-prev, .gl-next';
-  document.addEventListener('keydown', e => {
-    if (current < 0 || !lightbox) {return;}
-    if (e.key === 'Escape') {
-      closeLightbox();
-    } else if (e.key === 'ArrowRight') {
-      step(1);
-    } else if (e.key === 'ArrowLeft') {
-      step(-1);
-    } else if (e.key === 'Tab') {
-      const items = [...lightbox.querySelectorAll<HTMLElement>(FOCUSABLE)];
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (!first || !last) {return;}
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-  });
-
-  // 触屏左右轻滑切换
-  let touchX = 0;
-  let touchY = 0;
-  lightbox?.addEventListener(
-    'touchstart',
-    e => {
-      const t = e.touches[0];
-      if (t) {
-        touchX = t.clientX;
-        touchY = t.clientY;
-      }
-    },
-    { passive: true },
-  );
-  lightbox?.addEventListener(
-    'touchend',
-    e => {
-      const t = e.changedTouches[0];
-      if (!t) {return;}
-      const dx = t.clientX - touchX;
-      const dy = t.clientY - touchY;
-      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        step(dx < 0 ? 1 : -1);
-      }
-    },
-    { passive: true },
-  );
-
-  // 加载失败：可理解的错误态，灯箱仍可关闭/切换
-  img?.addEventListener('error', () => {
-    if (current < 0 || !cap || !count) {return;}
-    img.classList.add('gl-img--error');
-    cap.textContent = '图片加载失败——请检查网络后重试，仍可切换其他作品或关闭查看器。';
-    count.textContent = `${current + 1} / ${shutters.length}`;
-  });
+  }
 </script>
 
 <style>
   .gallery-section {
     background: var(--background);
-    padding-top: 56px;
-    padding-bottom: 24px;
+    /* 展厅垂直居中：墙在剩余空间里居中悬挂，而非顶死在标题下方 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 
   .gallery-head {
     max-width: 1728px;
     width: 100%;
-    margin: 0 auto 18px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
   }
 
   .gallery-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
     font-weight: 700;
     color: var(--foreground);
     margin: 0;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
   }
 
   .gallery-en {
     font-family: var(--font-archivo);
-    font-size: 0.65em;
+    font-size: 0.42em;
     font-weight: 600;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
     color: var(--muted-foreground);
-    margin-left: 6px;
+    margin-left: 10px;
   }
 
-  /* —— 丝带墙：flex-grow = ar 是无 JS 兜底；JS 布局用槽宽高 px（见 fitWall），
-     满宽模型（max-width 1728 防超宽屏行高爆表）—— */
+  .gallery-more {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--link);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .gallery-more span {
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+
+  .gallery-more:hover,
+  .gallery-more:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .gallery-more:hover span {
+    transform: translateX(3px);
+  }
+
+  .gallery-more:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  /* —— 白盒墙：flex-grow = ar 是无 JS 兜底；JS 布局用槽宽高 px（见 fitWall）—— */
   .gallery-wall {
     width: 100%;
     max-width: 1728px;
@@ -533,15 +413,11 @@ const capOf = (img: GalleryImage) =>
     justify-content: center;
   }
 
-  .ribbon-row {
+  .gallery-row {
     display: flex;
-    gap: 22px;
+    gap: 24px;
     align-items: flex-start;
     min-width: 0;
-  }
-
-  .ribbon-row--aux {
-    margin-top: 22px;
     width: 100%;
   }
 
@@ -549,8 +425,7 @@ const capOf = (img: GalleryImage) =>
     flex: var(--fg) 1 0%;
     min-width: 0;
     margin: 0;
-    /* 桌面端槽尺寸由 rAF 指数平滑驱动（见 script），不使用 CSS transition：
-       CSS 过渡在高频换图下被反复重定向，速度归零再起步 = 抖动 */
+    /* 桌面端槽尺寸由 rAF 指数平滑驱动（见 script），不使用 CSS transition */
   }
 
   .shot {
@@ -561,8 +436,7 @@ const capOf = (img: GalleryImage) =>
     aspect-ratio: var(--ar);
     padding: 0;
     border: 0;
-    /* 透明底：交叉淡入期旧图的 letterbox 融入页面背景而非露出灰块
-       （比例差大时灰底面积大，是抖动/闪烁感的另一来源） */
+    /* 透明底：两段式换场的"空墙"期由页面底透出，而非露出灰块 */
     background: transparent;
     overflow: hidden;
     cursor: pointer;
@@ -576,10 +450,34 @@ const capOf = (img: GalleryImage) =>
       transform 0.4s ease;
   }
 
+  /* 暗色主题：夜景照片边缘会融进深底——极轻的 1px 内描边保住直角形 */
+  :global(.dark) .shot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 1px rgba(234, 244, 255, 0.08);
+    opacity: 1;
+    transition: opacity 700ms ease;
+    pointer-events: none;
+  }
+
   :global(.dark) .shot {
     --shot-shadow:
       0 1px 3px rgba(0, 0, 0, 0.45),
       0 14px 34px -10px rgba(0, 0, 0, 0.55);
+  }
+
+  /* 空墙纪律（两段式换场）：画框随旧画一起退场——阴影与暗色内描边
+     淡出到零，空墙期真的是墙，不残留幽灵框（Critic P0-1） */
+  .gslot.is-swapping .shot {
+    box-shadow: none;
+    transition:
+      box-shadow 700ms ease,
+      transform 0.4s ease;
+  }
+
+  :global(.dark) .gslot.is-swapping .shot::after {
+    opacity: 0;
   }
 
   .shot:focus-visible {
@@ -608,10 +506,6 @@ const capOf = (img: GalleryImage) =>
         transform 0.5s ease;
     }
 
-    .gslot:hover .gimg.is-active {
-      transform: scale(1.015);
-    }
-
     /* 悬停：照片轻微上浮、阴影加深，强化悬浮层次 */
     .gslot:hover .shot {
       transform: translateY(-4px);
@@ -627,10 +521,12 @@ const capOf = (img: GalleryImage) =>
     }
   }
 
+  /* 博物馆标签：衬线小字，克制 */
   .gcap {
-    margin-top: 8px;
-    font-size: 12px;
-    line-height: 1.5;
+    margin-top: 10px;
+    font-family: var(--font-serif-song);
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
     color: var(--muted-foreground);
     white-space: nowrap;
     overflow: hidden;
@@ -641,193 +537,65 @@ const capOf = (img: GalleryImage) =>
     transition: opacity 0.4s ease;
   }
 
-  /* —— 灯箱 —— */
-  .gl-lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 1010;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* 沉浸式深底：与主题无关，看图优先 */
-    background: rgba(12, 12, 18, 0.92);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    animation: gl-fade 0.25s ease-out;
-  }
-
-  .gl-lightbox[hidden] {
-    display: none;
-  }
-
-  @keyframes gl-fade {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  .gl-stage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 64px;
-    max-width: 100%;
-  }
-
-  /* 零裁切：完整显示原图，宽高自适应不强制填充 */
-  .gl-img {
-    display: block;
-    max-width: min(92vw, 1400px);
-    max-height: 78vh;
-    width: auto;
-    height: auto;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
-  }
-
-  .gl-img--error {
-    min-width: 200px;
-    min-height: 120px;
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  .gl-cap {
-    margin-top: 16px;
-    font-family: var(--font-serif-song);
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.82);
-    text-align: center;
-  }
-
-  .gl-count {
-    position: absolute;
-    top: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-family: var(--font-archivo);
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  .gl-btn {
-    position: absolute;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .gl-btn:hover {
-    background: rgba(255, 255, 255, 0.18);
-  }
-
-  .gl-btn:focus-visible {
-    outline: 2px solid var(--link);
-    outline-offset: 4px;
-  }
-
-  .gl-close {
-    top: 18px;
-    right: 18px;
-  }
-
-  .gl-prev {
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .gl-next {
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   /* —— reduced-motion：无轮换（脚本不启动），过渡一并移除 —— */
   @media (prefers-reduced-motion: reduce) {
     .gallery-wall,
     .gslot,
     .shot,
     .gimg,
-    .gcap-text,
-    .gl-lightbox {
+    .gcap-text {
       transition: none;
       animation: none;
     }
   }
 
-  /* —— 平板：辅带收窄、间距收紧 —— */
+  /* —— 平板：间距收紧 —— */
   @media (max-width: 1023px) {
-    .ribbon-row {
+    .gallery-row {
       gap: 16px;
     }
   }
 
-  /* —— 移动端：主带单竖图满宽 + 辅带 3 横矮带 —— */
+  /* —— 移动端：竖图按高度预算居中作主视觉，横图隐藏 —— */
   @media (max-width: 768px) {
     .gallery-section {
-      padding-top: 56px;
-      padding-bottom: 32px;
+      padding-top: 48px;
+      padding-bottom: 28px;
     }
 
     .gallery-head {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
-    .ribbon-row {
-      gap: 12px;
+    .gallery-title {
+      font-size: 1.6rem;
     }
 
-    .gslot--mhide {
+    .gallery-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .gslot--h {
       display: none;
     }
 
-    .ribbon-row--main .gslot[data-kind='h'] {
-      display: none;
+    .gslot--v {
+      flex: none;
+      width: auto;
     }
 
-    /* 移动端主带只剩单槽：绕开单 item flex-grow 分配怪癖，强制满宽 */
-    .ribbon-row--main .gslot:not(.gslot--mhide) {
-      flex: 1 1 100%;
-    }
-
-    .ribbon-row--aux {
-      margin-top: 16px;
-      max-width: none;
+    .gslot--v .shot {
+      width: min(88vw, calc(56vh * var(--ar)));
+      height: auto;
+      margin-inline: auto;
     }
 
     .gcap {
-      font-size: 11px;
-    }
-
-    .gl-stage {
-      margin: 0 12px;
-    }
-
-    .gl-prev,
-    .gl-next {
-      top: auto;
-      bottom: 18px;
-      transform: none;
-    }
-
-    .gl-count {
-      top: 26px;
+      text-align: center;
+      margin-inline: auto;
+      font-size: 11.5px;
     }
   }
 </style>
