@@ -2696,3 +2696,19 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 实测：init.sh 全绿；定妆第一眼/门控 8s 不偷跑/墙宽 1267 精确余白/空墙换场/灯箱键盘触屏/作者索引/暗色描边/移动端竖图 56vh 主视觉 + 档案馆单列 全过
 - 待办：ken
   burns（P2 可选）、导航「作品展示」是否改指 /gallery（等用户拍板，scrollspy 联动）
+
+### 2026-11-06 · Gallery 3.0 Critic 迭代循环闭环（第三轮终审 satisfied 9.1/10）
+
+- 迭代过程：首轮方案评审 7.5 → 实现 commit 0efcffd → 二轮成品评审 8.2
+  not-satisfied（放行集五条）→ 修复 ce08940 → 三轮终审 9.1 **satisfied 放行**
+- 二轮八项修复全部实测：空墙幽灵框（is-swapping 期 shadow:none）、灯箱 portal
+  body + z1400（计数「27 /
+  33」可读、壳层没入暗幕）、标题墙共线（87=87）、藏品编号 No.→PL.、轮换 6–10s、角卡看展让位（is-docked
+  left=1476）、移动端索引横滑（230→42px）、移动端导航落地阈值修复（min(0.6vh,
+  hero−70)，scrolled:true logo 深字）
+- 用户中途指令（0a8f503）：档案馆删「N 件作品 ·
+  M 位作者」统计行与作者索引——标题即门牌，Critic 认可为「更接近美术馆进门逻辑」，按此形态放行
+- Critic 独立复测方式：亲自上 4322 实机采样（双视口双主题、真实换场捕获、灯箱 portal/zIndex/滚动锁），非仅采信截图
+- 非阻塞遗留（后续优化清单）：① 灯箱开启时底部 dock 极淡微透，可令其隐没 ② 档案馆顶部留白可再压半档 ③ 导航「作品展示」是否改指 /gallery 待用户拍板
+- 环境备注：主工作区被并行会话切至 feat/bring-her-eyes-portfolio，gallery 全程在 worktree（seeker-gallery-worktree）+
+  4322 端口隔离开发
