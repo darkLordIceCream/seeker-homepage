@@ -1,18 +1,19 @@
 /**
- * 首页「作品 Gallery」图单（2026-09 问卷收集版，33 件）—— 唯一的换图入口。
- * 未来更换作品只改这个文件；布局与交互不动。
+ * 「作品 Gallery」图单—— 唯一的换图入口。未来更换作品只改这个文件。
  *
- * 数据来源（2026-09 成员问卷收集）：
- * - 全部图片存于 R2 `gallery/<作者ID>.jpg`（文件名即作者 ID），
- *   构建期统一长边 ≤2560 / JPEG q90 / 已去除 EXIF（含位置隐私）；
- * - author 即作者 ID（问卷署名，原样保留）；title 来自文件名中的作品名后缀；
- * - alt 依据真实画面内容撰写；
- * - GALLERY_POOL 为全量池（单一事实来源）：
- *   · 首页「白盒门厅」（WorksSection）按槽内比例带轮换，开场定妆见
- *     GALLERY_OPENING（换定妆只改它）；
- *   · 档案馆 /gallery 的展示序（藏品编号）见 archiveOrdered()；
- *   · 七周年板块的 HERO 背景、首页角卡与「留光成物」纪念物照片均从池中取图。
+ * 两层池（Gallery 3.1 起）：
+ * - GALLERY_POOL（33 件，2026-09 问卷收集版）：真名真 alt 的精选层。
+ *   全部图片存于 R2 `gallery/<作者ID>.jpg`（文件名即作者 ID），构建期统一
+ *   长边 ≤2560 / JPEG q90 / 已去除 EXIF（含位置隐私）；author 即作者 ID；
+ *   title 来自文件名作品名后缀；alt 依据真实画面内容撰写。七周年 HERO
+ *   背景、首页角卡与「留光成物」纪念物照片均从这层取图。
+ * - ARCHIVE_POOL（全素材池）：用户 2026-11-07 裁决——R2 除公益「带上她的
+ *   眼睛」外的全部图片皆可作画廊素材。= GALLERY_POOL + 《时间的故事》
+ *   全部期数 + 追光之旅（合成自 activity-image-meta.ts，剔画幅 ≥3 条幅）。
+ *   门厅随机轮换与档案馆全览都从这层取。
  */
+import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
+
 export interface GalleryImage {
   /** R2 绝对 URL */
   src: string;
@@ -281,25 +282,66 @@ export const GALLERY_POOL: readonly GalleryImage[] = [
   },
 ] as const;
 
-// —— 门厅定妆与档案馆策展序（Gallery 3.0）——
+// —— 全素材池与档案馆策展序（Gallery 3.1）——
 
 /** 按 src 文件名片段取池内作品（配置错误在构建期抛错拦住） */
 const byKey = (key: string): GalleryImage => {
   const hit = GALLERY_POOL.find(i => i.src.includes(key));
   if (!hit) {
-    throw new Error(`gallery.ts：按片段「${key}」未找到作品，检查 GALLERY_OPENING / ARCHIVE_LEAD`);
+    throw new Error(`gallery.ts：按片段「${key}」未找到作品，检查 ARCHIVE_LEAD`);
   }
   return hit;
 };
 
-/**
- * 首页门厅「开场定妆」：按序 [主作横图, 竖图]——第一眼永远固定的策展组合。
- * 换定妆照只改这里的片段 key；两张必须分别落在 WorksSection 的主作带
- * （宽高比 1.48–1.62）与竖图带（0.657–0.686）内，否则布局侧构建期抛错。
- */
-export const GALLERY_OPENING = [byKey('不要回答'), byKey('静谧')] as const;
+/** meta key → 期数标签（title/alt 用）；非活动图前缀返回 null */
+const periodOf = (key: string): string | null => {
+  let m = key.match(/^activities\/(?:story-of-time-)?(\d{4})-(\d{2})\//);
+  if (m) {
+    return `${m[1]}年${Number(m[2])}月`;
+  }
+  m = key.match(/^activities\/chasing-light\/(\d{4})\//);
+  if (m) {
+    return `追光之旅 ${m[1]}`;
+  }
+  return null;
+};
 
-/** 档案馆首屏策展序（No.01 起）：文件名片段 key 按展示顺序排列 */
+/**
+ * 活动图合成：meta 全量（2185 key）→ 除公益「带上她的眼睛」外全部 R2 摄影
+ * 图入池（用户 2026-11-07 裁决）。剔除画幅 ≥3 或 ≤1/3 的长卷条幅（等高挂墙
+ * 下不可展，60 张）。集体署名 Seeker追光者，title 即期数。
+ */
+const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_META).flatMap(
+  ([key, { w, h }]) => {
+    const period = periodOf(key);
+    if (!period) {
+      return [];
+    }
+    const ar = w / h;
+    if (ar >= 3 || ar <= 1 / 3) {
+      return [];
+    }
+    const isChasing = key.includes('chasing-light');
+    return [
+      {
+        src: `${R2}/${key}`,
+        w,
+        h,
+        author: 'Seeker追光者',
+        title: period,
+        alt: isChasing ? `追光之旅活动作品（${period}）。` : `《时间的故事》${period}期活动作品。`,
+      } satisfies GalleryImage,
+    ];
+  },
+);
+
+/**
+ * 全素材池（单一事实来源，Gallery 3.1 起）：问卷精选 33（真名真 alt，门厅
+ * SSR 首图与七周年等仍从这里取）+ 全部活动期数与追光之旅作品。
+ */
+export const ARCHIVE_POOL: readonly GalleryImage[] = [...GALLERY_POOL, ...activityImages];
+
+/** 档案馆首屏策展序（PL.01 起）：问卷精选先行，活动图按期数新→旧垫后 */
 const ARCHIVE_LEAD: readonly string[] = [
   '不要回答',
   '静谧',
@@ -311,16 +353,19 @@ const ARCHIVE_LEAD: readonly string[] = [
   '绿鬣蜥',
 ];
 
-/** 档案馆展示序 = 策展序先行 + 池序垫后；门厅灯箱的翻页序与此编号一致 */
+/** 档案馆展示序 = 策展序先行 + 问卷池序 + 活动图期数倒序；门厅灯箱翻页序与此一致 */
 export const archiveOrdered = (): readonly GalleryImage[] => {
   const lead = ARCHIVE_LEAD.map(byKey);
   const rest = GALLERY_POOL.filter(i => !lead.includes(i));
-  return [...lead, ...rest];
+  const acts = activityImages.slice().sort((a, b) => b.src.localeCompare(a.src));
+  return [...lead, ...rest, ...acts];
 };
 
 /**
- * 档案馆网格缩略图（长边 960 WebP q82，管线 scripts/make-gallery-thumbs.mjs，
- * R2 `gallery/thumbs/<名>.webp`）；原图只进灯箱。
+ * 全池网格缩略图（长边 960 WebP q82，管线 scripts/make-gallery-thumbs.mjs）：
+ * R2 `thumbs/<原 key 去扩展名>.webp` 镜像规则；原图只进灯箱。
  */
-export const thumbOf = (img: GalleryImage): string =>
-  img.src.replace('/gallery/', '/gallery/thumbs/').replace(/\.jpg$/, '.webp');
+export const thumbOf = (img: GalleryImage): string => {
+  const key = img.src.replace(`${R2}/`, '');
+  return `${R2}/thumbs/${key.replace(/\.(jpg|jpeg|png|webp)$/i, '')}.webp`;
+};

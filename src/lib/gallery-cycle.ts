@@ -43,6 +43,17 @@ export interface CycleOptions {
   onSwap?: (slotEl: HTMLElement, img: GalleryImage) => void;
   /** 这些槽跳过首轮等待、立即轮换（gateEl 存在时忽略——门控优先保住定妆） */
   immediateEls?: readonly HTMLElement[];
+  /**
+   * hydration 即随机化首图：启动时立刻对每槽随机换一张（不经门控——
+   * 页面加载在 Hero 阶段就换好，观众翻下来看到的第一眼就是随机的，
+   * 「点进去就是随机播放」）。各槽按换场时长错峰，互不撞 exclusive。
+   */
+  randomizeFirst?: boolean;
+  /**
+   * 门控起表后的首轮换图间隔（观众落定后第一张别挂太久）；
+   * 缺省用 min/max。
+   */
+  firstDelay?: { min: number; max: number };
 }
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -272,7 +283,12 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
     started = true;
     const immediate = new Set(opts.immediateEls ?? []);
     for (const slot of slots) {
-      schedule(slot, immediate.has(slot.el));
+      // 首轮换图用 firstDelay（观众落定后第一张别挂太久），此后回归 min/max
+      const d =
+        opts.firstDelay && immediate.has(slot.el)
+          ? rand(opts.firstDelay.min, opts.firstDelay.max)
+          : undefined;
+      schedule(slot, immediate.has(slot.el), d);
     }
   };
 
@@ -314,4 +330,20 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
       }
     }
   });
+
+  // —— hydration 即随机化首图：「点进去就是随机播放」——
+  // 页面加载时（多半还在 Hero）就对每槽随机换一张，观众翻下来看到的
+  // 第一眼已是随机结果。各槽按换场全程时长错峰，避免互斥撞车。
+  if (opts.randomizeFirst) {
+    slots.forEach((slot, i) => {
+      window.setTimeout(
+        () => {
+          if (document.contains(slot.el)) {
+            swap(slot);
+          }
+        },
+        i * (SWAP_WINDOW_MS + 100),
+      );
+    });
+  }
 }

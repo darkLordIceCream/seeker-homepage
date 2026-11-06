@@ -1,59 +1,47 @@
 ---
 /**
- * 首页第 2 屏「画廊 Gallery」：白盒美术馆门厅（Gallery 3.0）。
+ * 首页第 2 屏「画廊 Gallery」：白盒美术馆门厅（Gallery 3.1）。
  * 策展语言：单一主作建立尺度 + 一件反差竖件建立张力 + 博物馆标签 +
  * 一扇门（右上「更多精彩 →」进 /gallery 档案馆）——Hasselblad / Leica /
- * Magnum 首页的共同语法；替代上一版「丝带呼吸」6 格随机拼贴（无主次、
- * 视线无处落地）。
+ * Magnum 首页的共同语法。
  *
  * 几何：两件作品等高满宽、零裁切、直角。行高 H = (W − gap)/Σar；墙宽由
  * fitWall 双重反解——视口高预算（严格一屏且标题可见）与白盒余白下限
  * clamp(48px, 6vw, 120px)（美术馆的墙不贴边），上限 1728px。
  *
- * 策展纪律（GalleryArtCritic P0）：
- * - 开场定妆：第一眼永远固定为 GALLERY_OPENING 组合，轮换由
- *   gallery-cycle.ts 的视口门控保证（进入视口才起表，Hero 停留不偷跑）；
- * - 槽内锁比例带：主作 1.48–1.62 / 竖图 0.657–0.686，换图墙宽漂移
- *   ±0.7% 不可感知；
- * - 两段式换场：旧帧整幅淡出 → 空墙 150ms → 新帧淡入（展厅换灯），
- *   替代大图交叉淡入中点的双曝叠影；错峰互斥 + 每槽洗牌袋。
+ * 随机播放（用户 2026-11-07 裁决，取代 3.0 的固定定妆）：
+ * - hydration 即随机化首图（randomizeFirst）：页面加载时两槽就各自随机
+ *   换图，观众翻下来看到的第一眼已经是随机结果——「点进去就是随机播放」；
+ * - SSR 首图固定为问卷池两张（CLS 兜底 + no-JS），运行时立即被随机替换；
+ * - 门控起表后首轮换图 2.5–4.5s（第一张别挂太久），此后 6–10s 常规节奏；
+ * - 槽内锁比例带：主作 1.48–1.62 / 竖图 0.657–0.686，换图墙宽漂移不可感知；
+ * - 两段式换场（展厅换灯）+ 错峰互斥 + 洗牌袋。
  *
- * 移动端：竖图按高度预算居中作主视觉（9:16 类竖图在窄屏是原生构图），
- * 横图隐藏。灯箱片单 = 档案馆展示序（可与 No.XX 编号对上），翻遍全池，
- * 图注带「在档案馆查看 →」——灯箱是门厅与档案馆之间的走廊。
- * 数据来自 src/data/gallery.ts 的 GALLERY_POOL（单一事实来源）；R2 只读。
+ * 移动端：竖图按高度预算居中作主视觉，横图隐藏。灯箱片单 = 档案馆展示序，
+ * 翻遍全池（2100+ 件），图注带「在档案馆查看 →」。
+ * 数据来自 src/data/gallery.ts 的 ARCHIVE_POOL（单一事实来源）；R2 只读。
  */
 import '../../styles/gallery-lightbox.css';
-import { GALLERY_POOL, GALLERY_OPENING, type GalleryImage } from '@/data/gallery';
+import { GALLERY_POOL, type GalleryImage } from '@/data/gallery';
 
 const arOf = (img: GalleryImage) => img.w / img.h;
 
-/** 槽内比例带（P0：换图不越带，墙宽近乎恒定，只剩纯换场） */
-const H_BAND = GALLERY_POOL.filter(i => {
-  const ar = arOf(i);
-  return ar >= 1.48 && ar <= 1.62;
-});
-const V_BAND = GALLERY_POOL.filter(i => {
-  const ar = arOf(i);
-  return ar >= 0.657 && ar <= 0.686;
-});
-
-const [OPENING_H, OPENING_V] = GALLERY_OPENING;
-
-/** 定妆图必须落在对应比例带内（配置错位在构建期直接抛错拦住） */
-if (!H_BAND.includes(OPENING_H) || !V_BAND.includes(OPENING_V)) {
-  throw new Error('首页门厅定妆组合不在槽内比例带中——检查 GALLERY_OPENING 与 H_BAND/V_BAND');
-}
+/** SSR 首图（固定问卷池两张，仅作 hydration 前的 CLS 兜底，运行时即被随机替换） */
+const pickBy = (key: string): GalleryImage => {
+  const hit = GALLERY_POOL.find(i => i.src.includes(key));
+  if (!hit) {
+    throw new Error(`门厅 SSR 首图缺失：${key}`);
+  }
+  return hit;
+};
+const SLOTS = [
+  { kind: 'h' as const, img: pickBy('蓝调下的阳明滩') },
+  { kind: 'v' as const, img: pickBy('静谧') },
+];
 
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 const capOf = (img: GalleryImage) =>
   img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
-
-/** 门厅两槽：主作横图 + 反差竖图，均为第一眼定妆（eager） */
-const SLOTS = [
-  { kind: 'h' as const, img: OPENING_H },
-  { kind: 'v' as const, img: OPENING_V },
-];
 ---
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
@@ -123,14 +111,14 @@ const SLOTS = [
 <script>
   import { startGalleryCycle } from '@/lib/gallery-cycle';
   import { initGalleryLightbox } from '@/lib/gallery-lightbox';
-  import { GALLERY_POOL, archiveOrdered, type GalleryImage } from '@/data/gallery';
+  import { ARCHIVE_POOL, archiveOrdered, type GalleryImage } from '@/data/gallery';
 
   const arOf = (img: GalleryImage) => img.w / img.h;
-  const H_BAND = GALLERY_POOL.filter(i => {
+  const H_BAND = ARCHIVE_POOL.filter(i => {
     const ar = arOf(i);
     return ar >= 1.48 && ar <= 1.62;
   });
-  const V_BAND = GALLERY_POOL.filter(i => {
+  const V_BAND = ARCHIVE_POOL.filter(i => {
     const ar = arOf(i);
     return ar >= 0.657 && ar <= 0.686;
   });
@@ -294,8 +282,10 @@ const SLOTS = [
   }));
   startGalleryCycle(cycleSlots, {
     gateEl: document.getElementById('works') ?? undefined,
-    // 6–10s：门厅是「少而大」的策展，节奏是策展语气——3–6s 双槽错峰
-    // 平均约 2.2s 一次事件像轮播广告，单件 6–10s 才像展厅（Critic P1-3）
+    // 随机播放（用户 2026-11-07）：hydration 即随机换首图；观众落定后
+    // 首轮 2.5–4.5s 就换（第一张别挂太久），此后 6–10s 常规展厅节奏
+    randomizeFirst: true,
+    firstDelay: { min: 2500, max: 4500 },
     min: 6000,
     max: 10000,
     twoStage: { outMs: 700, gapMs: 150, inMs: 500 },

@@ -1,24 +1,30 @@
 /**
- * 档案馆缩略图管线（Gallery 3.0 /gallery，GalleryArtCritic P1-6）：
- * R2 原图（gallery/<名>.jpg，长边 2560 JPEG）→ 长边 960 WebP q82 →
- * R2 `gallery/thumbs/<名>.webp`。档案馆网格用缩略图，原图只进灯箱——
- * 33 张 2560px 原图直进几百像素的格子 ≈ 一次 20MB 的加载，不是展览级体验。
+ * 全池缩略图管线（Gallery 3.1，用户裁决：R2 除公益「带上她的眼睛」外全部
+ * 图片皆可作画廊素材）：R2 原图 → 长边 960 WebP q82 → R2
+ * `thumbs/<原 key 去扩展名>.webp` 镜像（gallery/Feiyu.jpg → thumbs/gallery/Feiyu.webp，
+ * activities/2026-01/01.webp → thumbs/activities/2026-01/01.webp）。
+ * 档案馆网格用缩略图，原图只进灯箱——2100+ 张 2560px 原图直进格子是
+ * 「一次几十 MB 的加载」，不是展览级体验。
+ *
+ * 池范围与 src/data/gallery.ts 的 ARCHIVE_POOL 保持一致：
+ * - gallery/*.jpg（问卷精选 33）
+ * - activities/**（活动期数 + 追光之旅；剔除画幅 ≥3 或 ≤1/3 的长卷条幅）
+ * - 不含 welfare/**（公益「带上她的眼睛」素材，用户明令排除）
  *
  * 用法：
- *   node scripts/make-gallery-thumbs.mjs            # 下载原图 → 生成 .gallery-thumbs-stage/
+ *   node scripts/make-gallery-thumbs.mjs            # 下载原图 → .gallery-thumbs-stage/
  *   node scripts/make-gallery-thumbs.mjs --upload   # 生成后逐个上传 R2
  *
- * ⚠️ R2 immutable 缓存坑（见 memory）：同 key 重传后 CDN 可能仍返旧内容。
- * 本脚本只写新 key（gallery/thumbs/ 首次生成安全）；若改参数重新生成并
- * 上传，请换目录（如 gallery/thumbs-v2/）或改文件名，勿原地覆盖。
+ * ⚠️ R2 immutable 缓存坑：同 key 重传后 CDN 可能仍返旧内容。本管线只写
+ * 首次 key；若改参数重新生成，请换目录（如 thumbs-v2/）勿原地覆盖。
  *
  * 上传命令（与 AGENTS.md 约定一致）：
- *   wrangler r2 object put seeker-homepage-assets/gallery/thumbs/<名>.webp \
+ *   wrangler r2 object put seeker-homepage-assets/thumbs/<key>.webp \
  *     --file <f> --remote --content-type image/webp \
  *     --cache-control "public, max-age=31536000, immutable"
  */
 import { execSync } from 'node:child_process';
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -29,56 +35,84 @@ const LONG_EDGE = 960;
 const WEBP_QUALITY = 82;
 const UPLOAD = process.argv.includes('--upload');
 
-/** 从 src/data/gallery.ts 抽全部作品文件名（不含扩展名） */
-const names = await readFile('src/data/gallery.ts', 'utf8').then(t => [
-  ...new Set([...t.matchAll(/\/gallery\/([^"`]+?)\.jpg/g)].map(m => decodeURIComponent(m[1]))),
-]);
-if (names.length === 0) {
-  throw new Error('未从 gallery.ts 解析到任何作品——检查正则与数据文件');
+/** 池清单：[R2 key, ...]——gallery.ts 问卷层 + activity-image-meta 活动层（剔条幅） */
+const keys = [
+  // 问卷精选 33：src/data/gallery.ts 内 /gallery/<名>.jpg
+  ...(await readFile('src/data/gallery.ts', 'utf8').then(t =>
+    [...t.matchAll(/\/gallery\/([^"`]+?)\.jpg/g)].map(m => `gallery/${m[1]}.jpg`),
+  )),
+  // 活动层：activity-image-meta.ts 全 key，剔画幅 ≥3 或 ≤1/3 长卷
+  ...(await readFile('src/lib/activity-image-meta.ts', 'utf8').then(t =>
+    [...t.matchAll(/'(activities\/[^']+)': \{ w: (\d+), h: (\d+) \}/g)]
+      .filter(([, , w, h]) => {
+        const ar = Number(w) / Number(h);
+        return ar < 3 && ar > 1 / 3;
+      })
+      .map(([, k]) => k),
+  )),
+];
+
+const unique = [...new Set(keys)];
+if (unique.length < 2000) {
+  throw new Error(`池解析异常：仅 ${unique.length} 项（预期 ~2150）——检查正则与数据文件`);
 }
-console.log(`共 ${names.length} 件作品`);
+console.log(`全池 ${unique.length} 张（thumbs/<key>.webp 镜像）`);
 
 await mkdir(STAGE, { recursive: true });
 
-let done = 0;
-for (const name of names) {
-  const outFile = path.join(STAGE, `${name}.webp`);
+/** 简易并发池（8 worker），任一失败即抛出 */
+async function pool(items, worker) {
+  let i = 0;
+  let ok = 0;
+  const run = async () => {
+    while (i < items.length) {
+      const item = items[i++];
+      await worker(item);
+      ok++;
+      if (ok % 100 === 0 || ok === items.length) {
+        console.log(`[${ok}/${items.length}]`);
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: 8 }, run));
+}
+
+const thumbPathOf = key => key.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+
+console.log('生成缩略图…');
+await pool(unique, async key => {
+  const outFile = path.join(STAGE, thumbPathOf(key));
   try {
     await writeFile(outFile, await readFile(outFile));
-    done++;
-    continue; // 已生成过（断点续跑）
+    return; // 断点续跑
   } catch {
     /* 首次生成 */
   }
-  const url = `${R2}/gallery/${encodeURIComponent(name)}.jpg`;
-  const res = await fetch(url);
+  await mkdir(path.dirname(outFile), { recursive: true });
+  const res = await fetch(`${R2}/${key.split('/').map(encodeURIComponent).join('/')}`);
   if (!res.ok) {
-    throw new Error(`原图拉取失败 ${res.status}：${url}`);
+    throw new Error(`原图拉取失败 ${res.status}：${key}`);
   }
   const webp = await sharp(Buffer.from(await res.arrayBuffer()))
     .resize(LONG_EDGE, LONG_EDGE, { fit: 'inside', withoutEnlargement: true })
     .webp({ quality: WEBP_QUALITY })
     .toBuffer();
   await writeFile(outFile, webp);
-  done++;
-  const kb = Math.round(webp.byteLength / 102.4) / 10;
-  console.log(`[${done}/${names.length}] ${name}.webp ${kb}KB`);
-}
+});
 
 if (!UPLOAD) {
-  console.log(`\n已生成 ${done} 张 → ${STAGE}/（未上传，加 --upload 上传 R2）`);
+  console.log(`\n已生成 ${unique.length} 张 → ${STAGE}/（未上传，加 --upload 上传 R2）`);
   process.exit(0);
 }
 
-const files = (await readdir(STAGE)).filter(f => f.endsWith('.webp'));
-console.log(`\n开始上传 ${files.length} 张到 ${BUCKET}/gallery/thumbs/ ...`);
-for (const f of files) {
-  const key = `gallery/thumbs/${f}`;
+console.log(`\n开始上传 ${unique.length} 张到 ${BUCKET}/thumbs/ …`);
+await pool(unique, key => {
+  const local = path.join(STAGE, thumbPathOf(key));
+  const thumbKey = `thumbs/${thumbPathOf(key)}`;
   execSync(
-    `npx wrangler r2 object put ${BUCKET}/${key} --file "${path.join(STAGE, f)}" --remote ` +
+    `npx wrangler r2 object put ${BUCKET}/${thumbKey} --file "${local}" --remote ` +
       `--content-type image/webp --cache-control "public, max-age=31536000, immutable"`,
     { stdio: ['ignore', 'ignore', 'pipe'] },
   );
-  console.log(`uploaded ${key}`);
-}
-console.log('\n上传完成——gallery.ts 的 thumbOf() 即刻生效。');
+});
+console.log('\n上传完成——thumbOf() 镜像规则即刻全池生效。');
