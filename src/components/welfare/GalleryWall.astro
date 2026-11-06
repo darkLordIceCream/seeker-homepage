@@ -1,177 +1,144 @@
 ---
-// 「小摄影师的作品集」画廊主体：主题分章 + 序列式观看器 + 缩放 lightbox
-// - 数据来自 src/data/welfare-gallery.ts（脚本生成，40 张定稿 + 5 主题）
-// - 章头排版借鉴杂志画册：超大幽灵期号 + 衬线主题名 + 编辑导语
-// - 观看器：一次一张不裁切（object-fit: contain），←/→ 翻页，可展开缩略图索引
-// - lightbox 移植自 photoreason/skills portfolio-site-builder（MIT）：
-//   点击点锚定缩放 1–4x、拖拽平移、分层 Esc、缩略图条（见脚本头部署名注释）
+/**
+ * 「小摄影师的作品集」画廊主体 v2 —— 参照七周年板块的图文语言重做：
+ * - 照片裸放：无相框、无阴影、无卡片底，直接在页面上看照片
+ * - 文字极简：章眉（编号+宋体章名+EN）与一行图注，删去导语/键盘提示等冗余
+ * - 双主题：跟随主站 .dark（暗夜藏蓝 / 纸张墨水），令牌对齐 --anniv-* 语系
+ * - 保留：序列观看（←→/按钮/触屏滑动）、灯箱（锚定缩放/拖拽平移）、LQIP、邻图预热、无 JS 降级
+ */
 import {
   WELFARE_GALLERY_THEMES,
   WELFARE_GALLERY_BATCH,
   type WelfareGalleryPhoto,
 } from '@/data/welfare-gallery';
 
-// 期数短标（「第1-2周」），从完整 label 里截取括号前部分
+const pad2 = (n: number) => String(n).padStart(2, '0');
 const batchShort = WELFARE_GALLERY_BATCH.label.split('（')[0];
-const pad = (n: number) => String(n).padStart(2, '0');
-
 const cap = (p: WelfareGalleryPhoto) => `${p.school} · ${batchShort}`;
 
-// LQIP 占位渐变：tone = "#top,#bottom"
-const phBg = (tone: string) => {
-  const [top, bottom] = tone.split(',');
-  return `linear-gradient(180deg, ${top}, ${bottom})`;
+// 常驻舞台底座：主色渐变（融入底色 alpha 55）
+const phBgGrad = (p: WelfareGalleryPhoto) => {
+  const [top, bottom] = p.tone.split(',');
+  return `linear-gradient(180deg, ${top}55, ${bottom}55)`;
 };
 
-// 预解析每章首图与期号（noUncheckedIndexedAccess 下 photos[0] 需要 guard）
+// 章节流（章间交接已按精简要求移除；保留章眉编号与锚点）
 const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
   const first = theme.photos[0];
   if (!first) {return [];}
-  return [
-    {
-      theme,
-      first,
-      no: pad(ti + 1),
-      count: theme.photos.length,
-    },
-  ];
+  return [{ theme, first, no: pad2(ti + 1), count: theme.photos.length }];
 });
 
-// 卡宽随照片纵横比收放：恒定高度 × 当前图宽 + 内衬（竖图不再浮在大卡中央）
-const fitW = (p: WelfareGalleryPhoto) =>
-  `calc((min(72vh, 700px) - 2 * clamp(8px, 1vw, 14px)) * ${(p.w / p.h).toFixed(4)} + 2 * clamp(8px, 1vw, 14px))`;
-
-// 章节流：附带下一辑信息（章间编辑交接行用）
-const flow = chapters.map((ch, i) => {
-  const next = chapters[i + 1];
-  return { ...ch, nextId: next?.theme.id, nextTitle: next?.theme.title };
-});
+const THEME_EN: Record<string, string> = {
+  portraits: 'Portraits',
+  playground: 'Playground',
+  classroom: 'In Class',
+  corners: 'Campus Corners',
+  hometown: 'Hometown',
+};
 ---
 
-<section aria-labelledby="bhe-gallery-title" class="bhe-gallery">
+<section class="bhe" aria-labelledby="bhe-title">
   <header class="g-hero">
-    <a class="g-back" href="/welfare/">
-      <span aria-hidden="true">←</span> 带上她的眼睛 · 图文手记
-    </a>
-    <p class="section-kicker">SEEKER 公益 · WELFARE</p>
-    <h1 class="g-title" id="bhe-gallery-title">小摄影师的作品集</h1>
+    <p class="g-kicker">SEEKER 公益 · WELFARE</p>
+    <h1 class="g-title" id="bhe-title">小摄影师的作品集</h1>
     <p class="g-dek">
-      每两周，我们把相机交到山里孩子手上，再把他们拍下的世界带回来。
-      这里，是每一次快门之后被留下来的那一张。
+      第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期 · {WELFARE_GALLERY_BATCH.label} ·
+      {WELFARE_GALLERY_BATCH.photoCount} 张照片 · {WELFARE_GALLERY_BATCH.schoolCount} 所学校
     </p>
-    <p class="g-stats">
-      <strong>第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期</strong>
-      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.label}
-      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.photoCount} 张照片
-      <span aria-hidden="true">·</span> {WELFARE_GALLERY_BATCH.schoolCount} 所学校
-    </p>
-    <nav aria-label="主题目录" class="g-toc">
+    <nav class="g-toc" aria-label="主题目录">
       {chapters.map(ch => (
         <a href={`#${ch.theme.id}`}>
-          <span class="g-toc-no">{ch.no}</span>
+          <span class="g-toc-no" aria-hidden="true">{ch.no}</span>
           {ch.theme.title}
         </a>
       ))}
     </nav>
   </header>
 
-  {flow.map((ch, ti) => (
-    <Fragment key={ch.theme.id}>
-    <section aria-label={`主题：${ch.theme.title}`} class="g-chapter" id={ch.theme.id}>
-      <header class="g-chapter-head reveal">
-        <span aria-hidden="true" class="g-chapter-no">{ch.no}</span>
-        <div class="g-chapter-text">
-          <h2 class="g-chapter-title">{ch.theme.title}</h2>
-          <p class="g-chapter-note">{ch.theme.note}</p>
-        </div>
-      </header>
-
-      <div
-        aria-label={`${ch.theme.title}，共 ${ch.count} 张`}         aria-roledescription="图片序列"         class="g-viewer reveal"         data-theme={ch.theme.id}         data-viewer         tabindex="0"
-      >
-        <figure class="g-stage">
-          <button
-            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)};--fit-w:${fitW(ch.first)};--fit-h:min(72vh, 700px)`}             type="button"
-          >
-            <span class="g-mount">
-              <img
-                alt={ch.first.alt}                 decoding="async"                 fetchpriority={ti === 0 ? 'high' : 'auto'}                 height={ch.first.h}                 loading={ti === 0 ? 'eager' : 'lazy'}                 src={ch.first.src}                 width={ch.first.w}
-              />
-            </span>
-          </button>
-          <figcaption class="g-caption">
-            <span class="g-caption-info">
-              <span class="g-caption-school">
-                <b class="g-caption-no" aria-hidden="true">{ch.no}</b>
-                {cap(ch.first)}
-              </span>
-              <span aria-live="polite" class="g-counter">1 / {ch.count}</span>
-            </span>
-            <span class="g-controls">
-              <button aria-label={`上一张（${ch.theme.title}）`} class="g-step" data-step="-1" type="button" disabled>←</button>
-              <button aria-label={`下一张（${ch.theme.title}）`} class="g-step" data-step="1" type="button">→</button>
-              <span aria-hidden="true" class="g-kbd-hint">← → 键翻页</span>
-            </span>
-          </figcaption>
-        </figure>
-
-        <details class="g-index">
-          <summary>全部照片 <span class="g-index-count">{ch.count}</span></summary>
-          <div class="g-thumbs" data-thumbs></div>
-        </details>
+  {chapters.map((ch, ti) => (
+    <section class="chap" id={ch.theme.id} aria-label={`主题：${ch.theme.title}`}>
+      <div class="chap-head">
+        <span class="chap-no" aria-hidden="true">{ch.no} / {pad2(chapters.length)}</span>
+        <h2 class="chap-zh">{ch.theme.title}</h2>
+        <span class="chap-en" aria-hidden="true">{THEME_EN[ch.theme.id] ?? ''}</span>
       </div>
+
+      <figure class="ph-stage" style={`--ph-stage-bg:${phBgGrad(ch.first)}`}>
+        <button
+          type="button"
+          class="ph g-shutter"
+          data-enlarge
+          data-theme={ch.theme.id}
+          style={`--ph-bg:${ch.first.tone}`}
+          aria-label={`放大查看：${ch.first.alt}`}
+        >
+          <img
+            src={ch.first.src}
+            alt={ch.first.alt}
+            width={ch.first.w}
+            height={ch.first.h}
+            loading={ti === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchpriority={ti === 0 ? 'high' : 'auto'}
+          />
+        </button>
+        <figcaption class="ph-cap">
+          <span class="ph-school">{cap(ch.first)}</span>
+          <span class="ph-ctrl">
+            <button aria-label={`上一张（${ch.theme.title}）`} class="ph-step" data-step="-1" type="button" disabled>←</button>
+            <span aria-live="polite" class="ph-count">1 / {ch.count}</span>
+            <button aria-label={`下一张（${ch.theme.title}）`} class="ph-step" data-step="1" type="button">→</button>
+          </span>
+        </figcaption>
+      </figure>
+
+      <details class="ph-index">
+        <summary>全部照片 <span class="ph-index-n">{ch.count}</span></summary>
+        <div class="ph-thumbs" data-thumbs></div>
+      </details>
     </section>
-      {ch.nextId && (
-        <a class="g-handoff reveal" href={`#${ch.nextId}`}>
-          <span class="g-handoff-label">下一辑</span>
-          <span class="g-handoff-title">{ch.nextTitle}</span>
-          <span class="g-handoff-arrow" aria-hidden="true">↓</span>
-        </a>
-      )}
-    </Fragment>
   ))}
 
-  <footer class="g-foot reveal">
-    <p class="g-foot-line">下一期，正在山里曝光。</p>
-    <a class="mini-cta g-foot-cta" href="/welfare/">
-      回到「带上她的眼睛」——读孩子们的故事 <span aria-hidden="true">→</span>
-    </a>
+  <footer class="g-foot">
+    <p>下一期，正在山里曝光。</p>
+    <a class="g-back" href="/welfare/">← 带上她的眼睛 · 图文手记</a>
   </footer>
 </section>
 
-<dialog aria-labelledby="lb-title" class="lb" id="bhe-lightbox">
+<dialog class="lb" id="bhe-lightbox" aria-labelledby="lb-title">
   <header class="lb-bar">
-    <div class="lb-bar-info">
+    <div class="lb-info">
       <span id="lb-title"></span>
-      <span aria-live="polite" class="lb-count" id="lb-count"></span>
+      <span class="lb-count" id="lb-count" aria-live="polite"></span>
     </div>
     <div class="lb-tools">
-      <button aria-expanded="false" class="lb-tool" id="lb-index-btn" type="button">全部照片</button>
-      <button aria-pressed="false" class="lb-tool" id="lb-zoom-btn" type="button">放大</button>
-      <label class="lb-zoom-range">
-        <input aria-label="缩放比例" disabled id="lb-zoom-input" max="400" min="100" step="10" type="range" value="100" />
-        <output for="lb-zoom-input" id="lb-zoom-out">100%</output>
+      <button class="lb-tool" id="lb-index-btn" type="button" aria-expanded="false">全部照片</button>
+      <button class="lb-tool" id="lb-zoom-btn" type="button" aria-pressed="false">放大</button>
+      <label class="lb-zoom">
+        <input id="lb-zoom-input" type="range" min="100" max="400" step="10" value="100" aria-label="缩放比例" disabled />
+        <output id="lb-zoom-out" for="lb-zoom-input">100%</output>
       </label>
-      <button aria-label="关闭大图" autofocus class="lb-tool lb-close" id="lb-close" type="button">×</button>
+      <button class="lb-tool lb-close" id="lb-close" type="button" autofocus aria-label="关闭大图">×</button>
     </div>
   </header>
   <div class="lb-stage">
-    <button aria-label="上一张" class="lb-nav lb-prev" id="lb-prev" type="button">‹</button>
+    <button class="lb-nav" id="lb-prev" type="button" aria-label="上一张">‹</button>
     <div class="lb-canvas" id="lb-canvas">
       <div class="lb-surface" id="lb-surface">
-        <button aria-label="放大或还原" class="lb-imgbtn" id="lb-imgbtn" type="button">
-          <img alt="" class="lb-img" draggable="false" id="lb-img" />
+        <button class="lb-imgbtn" id="lb-imgbtn" type="button" aria-label="放大或还原">
+          <img class="lb-img" id="lb-img" alt="" draggable="false" />
         </button>
       </div>
-      <p class="lb-error" hidden id="lb-error" role="status">这张照片暂时加载不出来。</p>
+      <p class="lb-error" id="lb-error" role="status" hidden>这张照片暂时加载不出来。</p>
     </div>
-    <button aria-label="下一张" class="lb-nav lb-next" id="lb-next" type="button">›</button>
+    <button class="lb-nav" id="lb-next" type="button" aria-label="下一张">›</button>
   </div>
   <footer class="lb-foot">
     <p class="lb-caption" id="lb-caption"></p>
     <div class="lb-thumbs" id="lb-thumbs"></div>
   </footer>
-  <section aria-labelledby="lb-sheet-title" class="lb-sheet" hidden id="lb-sheet">
+  <section class="lb-sheet" id="lb-sheet" aria-labelledby="lb-sheet-title" hidden>
     <h2 id="lb-sheet-title">全部照片</h2>
     <div class="lb-sheet-grid" id="lb-sheet-grid"></div>
   </section>
@@ -179,9 +146,8 @@ const flow = chapters.map((ch, i) => {
 
 <script>
   /*
-   * lightbox 交互移植自 photoreason/skills · portfolio-site-builder（MIT License）
+   * 灯箱交互移植自 photoreason/skills portfolio-site-builder（MIT License）
    * https://github.com/photoreason/skills —— 锚定缩放 / 拖拽平移 / 分层 Esc。
-   * 按「带上她的眼睛」的数据结构与站内 token 重写，样式独立。
    */
   import {
     WELFARE_GALLERY_THEMES,
@@ -194,99 +160,35 @@ const flow = chapters.map((ch, i) => {
   const seqs = new Map<string, Seq>(
     WELFARE_GALLERY_THEMES.map((t, i) => [
       t.id,
-      {
-        themeTitle: t.title,
-        photos: t.photos,
-        no: String(i + 1).padStart(2, '0'),
-      },
+      { themeTitle: t.title, photos: t.photos, no: String(i + 1).padStart(2, '0') },
     ]),
   );
-
-  // 期数短标（「第1-2周」），与模板侧同一截取规则
   const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
 
-  // 卡片尺寸 = 照片纵横比 + 均匀衬边：basis = min(内容高, 可用宽/宽高比)
-  // 宽幅封顶时高度同步收缩 → 任意画幅四边衬边恒等宽（桌面衬边基准 1vw∈[8,14]，移动 8px）
-  const fitBox = (p: WelfareGalleryPhoto, viewerW: number) => {
-    const ar = p.w / p.h;
-    const mobile = window.matchMedia('(max-width: 640px)').matches;
-    const frameH = mobile ? window.innerWidth * 0.6 : Math.min(window.innerHeight * 0.72, 700);
-    const pad = mobile ? 8 : Math.max(8, Math.min(14, window.innerWidth * 0.01));
-    const contentH = frameH - 2 * pad;
-    const availW = viewerW - 2 * pad;
-    const basisH = Math.min(contentH, availW / ar);
-    return { w: Math.round(basisH * ar + 2 * pad), h: Math.round(basisH + 2 * pad) };
-  };
-  const rerenderAll: Array<(v?: HTMLElement) => void> = [];
-  const rerenderOnLayout = () => {
-    document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(v => rerenderAll.forEach(fn => fn(v)));
-  };
-  window.matchMedia('(max-width: 640px)').addEventListener('change', rerenderOnLayout);
-  let resizeTimer = 0;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(rerenderOnLayout, 150);
-  });
-
-  // LQIP 占位渐变（与模板侧 phBg 同一规则）
-  const phBg = (tone: string) => {
-    const [top, bottom] = tone.split(',');
+  // LQIP 渐变（加载期占位）
+  const phBg = (p: WelfareGalleryPhoto) => {
+    const [top, bottom] = p.tone.split(',');
     return `linear-gradient(180deg, ${top}, ${bottom})`;
   };
 
-  /* ---------- 观看器：每章一次一张，←/→ 翻页 ---------- */
-  // 邻图预热：当前图就位后，idle 时把前后张拉进缓存（「预热」模式）
-  // 节流保护：saveData / 慢速连接不预热；Set 去重避免重复请求
-  const preheated = new Set<string>();
-  const navConn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  const saveData = navConn?.saveData === true;
-  const preheat = (photos: { src: string }[], i: number, active?: boolean) => {
-    if (saveData || active === false) { return; }
-    const idle = (cb: () => void) =>
-      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
-    idle(() => {
-      [i + 1, i - 1].forEach(j => {
-        const n = photos[((j % photos.length) + photos.length) % photos.length];
-        if (n && !preheated.has(n.src)) {
-          preheated.add(n.src);
-          const im = new Image();
-          im.src = n.src;
-        }
-      });
-    });
-  };
-
+  /* ---------- 观看器 ---------- */
   document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
     const seq = seqs.get(viewer.dataset.theme ?? '');
     if (!seq) {return;}
-    const {photos} = seq;
+    const photos = seq.photos;
 
-    const img = viewer.querySelector<HTMLImageElement>('.g-shutter img')!;
+    const img = viewer.querySelector<HTMLImageElement>('.ph img')!;
     const shutter = viewer.querySelector<HTMLButtonElement>('[data-enlarge]')!;
-    const schoolEl = viewer.querySelector<HTMLElement>('.g-caption-school')!;
-    const counterEl = viewer.querySelector<HTMLElement>('.g-counter')!;
+    const schoolEl = viewer.querySelector<HTMLElement>('.ph-school')!;
+    const counterEl = viewer.querySelector<HTMLElement>('.ph-count')!;
     const thumbsBox = viewer.querySelector<HTMLElement>('[data-thumbs]')!;
-    const details = viewer.querySelector<HTMLDetailsElement>('.g-index')!;
+    const details = viewer.querySelector<HTMLDetailsElement>('.ph-index')!;
     const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-step="-1"]')!;
     const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-step="1"]')!;
 
     let index = 0;
     let thumbsBuilt = false;
 
-    // 换页淡入：新图 load 后淡入，避免生硬跳变（reduced-motion 下 CSS 直接关闭过渡）
-    const fadeInOnLoad = () => {
-      img.classList.add('is-loading');
-      const reveal = () => { img.classList.remove('is-loading'); };
-      if (img.complete && img.naturalWidth > 0) {
-        // 已缓存：直接显示（rAF 在后台标签页会被挂起，不能作为恢复通道）
-        reveal();
-      } else {
-        img.addEventListener('load', reveal, { once: true });
-        img.addEventListener('error', reveal, { once: true });
-      }
-    };
-
-    // 箭头函数（声明在收窄之后），避免 function 提升破坏 seq 收窄
     const render = (i: number) => {
       index = Math.min(photos.length - 1, Math.max(0, i));
       const p = photos[index]!;
@@ -294,21 +196,32 @@ const flow = chapters.map((ch, i) => {
       img.width = p.w;
       img.height = p.h;
       img.alt = p.alt;
-      // 重建含章号的结构（textContent 会抹掉 <b> 章号）
-      schoolEl.innerHTML = `<b class="g-caption-no" aria-hidden="true">${seq.no}</b>${p.school} · ${BATCH_SHORT}`;
+      schoolEl.textContent = `${p.school} · ${BATCH_SHORT}`;
       counterEl.textContent = `${index + 1} / ${photos.length}`;
       prevBtn.disabled = index === 0;
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
-      shutter.style.setProperty('--ph-bg', phBg(p.tone));
-      const box = fitBox(p, viewer.clientWidth);
-      shutter.style.setProperty('--fit-w', box.w + 'px');
-      shutter.style.setProperty('--fit-h', box.h + 'px');
+      const [t, b] = p.tone.split(',');
+      // 常驻底座设在 stage 元素上（CSS 变量继承方向：父 → 子）
+      const stage = viewer.querySelector<HTMLElement>('.ph-stage')!;
+      stage.style.setProperty('--ph-stage-bg', `linear-gradient(180deg, ${t}55, ${b}55)`);
       fadeInOnLoad();
-      preheat(photos, index, viewer.classList.contains('in-view'));
+      preheat(photos, index);
       viewer
-        .querySelectorAll('.g-thumbs [data-photo]')
+        .querySelectorAll('.ph-thumbs [data-photo]')
         .forEach(el => el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index)));
+    };
+
+    // LQIP：加载期在照片原位显主色，就位后淡入（已缓存直接显示）
+    const fadeInOnLoad = () => {
+      img.classList.add('is-loading');
+      const reveal = () => { img.classList.remove('is-loading'); };
+      if (img.complete && img.naturalWidth > 0) {
+        reveal();
+      } else {
+        img.addEventListener('load', reveal, { once: true });
+        img.addEventListener('error', reveal, { once: true });
+      }
     };
 
     const buildThumbs = () => {
@@ -318,11 +231,11 @@ const flow = chapters.map((ch, i) => {
         const b = document.createElement('button');
         b.type = 'button';
         b.dataset.photo = String(i);
-        b.className = 'g-thumb';
-        b.style.background = phBg(p.tone); // 动态节点无 astro-cid，占位色走内联
+        b.className = 'ph-thumb';
+        b.style.background = phBg(p);
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
-        t.src = p.thumb; // 480px 变体，不拉原图
+        t.src = p.thumb;
         t.alt = '';
         t.loading = 'lazy';
         t.decoding = 'async';
@@ -352,22 +265,19 @@ const flow = chapters.map((ch, i) => {
       if (e.key === 'ArrowRight') { e.preventDefault(); render(index + 1); }
     });
 
-    // 触屏滑动翻页（物理感）：横向位移 >48px 且大于纵向 1.5 倍才算；
-    // 明显滑动后浏览器不会派发 click，不会误开 lightbox，仍加时间戳护栏
+    // 触屏滑动翻页（移动端主要手势）
     let touchStart: { x: number; y: number; t: number } | null = null;
     viewer.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'mouse') { return; }
+      if (e.pointerType === 'mouse') {return;}
       touchStart = { x: e.clientX, y: e.clientY, t: Date.now() };
     });
     viewer.addEventListener('pointerup', e => {
-      if (!touchStart) { return; }
+      if (!touchStart) {return;}
       const dx = e.clientX - touchStart.x;
       const dy = e.clientY - touchStart.y;
-      const dt = Date.now() - touchStart.t;
+      if (Date.now() - touchStart.t > 800) { touchStart = null; return; }
       touchStart = null;
-      if (dt > 800) { return; }
       if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        // 经 dataset 告知 lightbox 入口：滑动余波（400ms 内）不放大
         viewer.dataset.lastSwipe = String(Date.now());
         render(index + (dx < 0 ? 1 : -1));
       }
@@ -376,7 +286,27 @@ const flow = chapters.map((ch, i) => {
     render(0);
   });
 
-  /* ---------- lightbox ---------- */
+  /* ---------- 邻图预热 ---------- */
+  const preheated = new Set<string>();
+  const navConn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const saveData = navConn?.saveData === true;
+  const preheat = (photos: WelfareGalleryPhoto[], i: number) => {
+    if (saveData || !photos.length) {return;}
+    const idle = (cb: () => void) =>
+      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
+    idle(() => {
+      [i + 1, i - 1].forEach(j => {
+        const n = photos[((j % photos.length) + photos.length) % photos.length];
+        if (n && !preheated.has(n.src)) {
+          preheated.add(n.src);
+          const im = new Image();
+          im.src = n.src;
+        }
+      });
+    });
+  };
+
+  /* ---------- 灯箱 ---------- */
   const dialog = document.getElementById('bhe-lightbox') as HTMLDialogElement | null;
   if (dialog) {
     const lbImg = dialog.querySelector<HTMLImageElement>('#lb-img')!;
@@ -465,10 +395,10 @@ const flow = chapters.map((ch, i) => {
         b.type = 'button';
         b.dataset.photo = String(i);
         b.className = 'lb-thumb';
-        b.style.background = 'var(--paper-face)'; // 印样规格：纸面垫底，不放主色
+        b.style.background = phBg(p);
         b.setAttribute('aria-label', `第 ${i + 1} 张：${p.alt}`);
         const t = document.createElement('img');
-        t.src = p.thumb; // 480px 变体，不拉原图
+        t.src = p.thumb;
         t.alt = '';
         t.loading = 'lazy';
         t.decoding = 'async';
@@ -504,12 +434,11 @@ const flow = chapters.map((ch, i) => {
       lbError.hidden = true;
       setZoom(false);
       lbImg.classList.add('is-loading');
-      lbImgBtn.style.setProperty('--ph-bg', phBg(p.tone));
+      lbImgBtn.style.setProperty('--ph-bg', phBg(p));
       lbImg.src = p.src;
-      preheat(seq.photos, index);
       lbImg.alt = p.alt;
       lbTitle.textContent = seq.themeTitle;
-      lbCaption.textContent = `${seq.no} · ${p.school} · ${BATCH_SHORT}`;
+      lbCaption.textContent = `${p.school} · ${BATCH_SHORT}`;
       lbCount.textContent = `${index + 1} / ${seq.photos.length}`;
       lbPrev.disabled = index === 0;
       lbNext.disabled = index === seq.photos.length - 1;
@@ -526,7 +455,7 @@ const flow = chapters.map((ch, i) => {
       if (firstOpen) {
         buildThumbs();
         setSheet(false);
-        document.body.style.overflow = 'hidden'; // 模态期间锁背景滚动
+        document.body.style.overflow = 'hidden';
         dialog.showModal();
         if (!pushed) {
           history.pushState({ bheLb: true }, '');
@@ -538,7 +467,7 @@ const flow = chapters.map((ch, i) => {
 
     const close = (fromPop = false) => {
       if (!dialog.open) {return;}
-      document.body.style.overflow = ''; // 恢复背景滚动
+      document.body.style.overflow = '';
       dialog.close();
       setZoom(false);
       lbImg.removeAttribute('src');
@@ -553,7 +482,6 @@ const flow = chapters.map((ch, i) => {
       opener = null;
     };
 
-    // 数据文件里的期数短标（第1-2周）已由 BATCH_SHORT 提供
     dialog.addEventListener('cancel', e => {
       e.preventDefault();
       if (!lbSheet.hidden) {setSheet(false);}
@@ -561,10 +489,6 @@ const flow = chapters.map((ch, i) => {
       else {close();}
     });
     lbClose.addEventListener('click', () => close());
-    // 点击遮罩（::backdrop 区域）关闭：仅当点在 dialog 元素本身
-    dialog.addEventListener('click', e => {
-      if (e.target === dialog && !zoomed) { close(); }
-    });
     window.addEventListener('popstate', () => {
       if (dialog.open) {close(true);}
     });
@@ -601,26 +525,26 @@ const flow = chapters.map((ch, i) => {
       }).observe(lbCanvas, { box: 'border-box' });
     }
 
-    // 触屏滑动翻页：未缩放时横向 >48px 判定（缩放态交给原生滚动平移）
+    // 触屏滑动翻页（未缩放态）
     let lbTouch: { x: number; y: number; t: number } | null = null;
     lbCanvas.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'mouse' || zoomed) { return; }
+      if (e.pointerType === 'mouse' || zoomed) {return;}
       lbTouch = { x: e.clientX, y: e.clientY, t: Date.now() };
     });
     lbCanvas.addEventListener('pointerup', e => {
-      if (!lbTouch) { return; }
+      if (!lbTouch) {return;}
       const dx = e.clientX - lbTouch.x;
       const dy = e.clientY - lbTouch.y;
       const dt = Date.now() - lbTouch.t;
       lbTouch = null;
-      if (dt > 800) { return; }
+      if (dt > 800) {return;}
       if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         show(index + (dx < 0 ? 1 : -1));
       }
     });
     lbCanvas.addEventListener('pointercancel', () => { lbTouch = null; });
 
-    // 拖拽平移（鼠标）：click 与 drag 用位移阈值区分
+    // 拖拽平移（缩放态、鼠标）
     let drag: { x: number; y: number; left: number; top: number; moved: boolean } | null = null;
     lbCanvas.addEventListener('pointerdown', e => {
       if (!zoomed || e.pointerType !== 'mouse' || e.button !== 0) {return;}
@@ -651,7 +575,6 @@ const flow = chapters.map((ch, i) => {
       true,
     );
 
-    // 全页键盘：lightbox 内 ←/→；Esc 已由 dialog cancel 处理
     document.addEventListener('keydown', e => {
       if (!dialog.open) {return;}
       if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && e.target !== lbZoomInput) {
@@ -660,40 +583,19 @@ const flow = chapters.map((ch, i) => {
       }
     });
 
-    // 入口绑定：每章的放大按钮 → lightbox
     document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
       const id = viewer.dataset.theme ?? '';
       const btn = viewer.querySelector<HTMLButtonElement>('[data-enlarge]');
       btn?.addEventListener('click', () => {
-        // 触屏滑动翻页后的余波不打开 lightbox
         const lastSwipe = Number(viewer.dataset.lastSwipe ?? 0);
-        if (Date.now() - lastSwipe < 400) { return; }
-        const cur = Number(viewer.querySelector<HTMLElement>('.g-counter')!.textContent?.split(' / ')[0] ?? 1) - 1;
+        if (Date.now() - lastSwipe < 400) {return;}
+        const cur = Number(viewer.querySelector<HTMLElement>('.ph-count')!.textContent?.split(' / ')[0] ?? 1) - 1;
         openAt(id, cur, btn);
       });
     });
   }
 
-  /* ---------- 目录 scrollspy：高亮当前所在主题 ---------- */
-  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.g-toc a')];
-  if (tocLinks.length) {
-    const byHash = new Map(tocLinks.map(a => [a.getAttribute('href') ?? '', a]));
-    const spy = new IntersectionObserver(
-      entries => {
-        entries.forEach(en => {
-          const link = byHash.get(`#${en.target.id}`);
-          if (!link) { return; }
-          if (en.isIntersecting) {
-            tocLinks.forEach(a => a.classList.toggle('is-active', a === link));
-          }
-        });
-      },
-      { rootMargin: '-35% 0px -55% 0px' },
-    );
-    document.querySelectorAll('.g-chapter').forEach(sec => spy.observe(sec));
-  }
-
-  /* ---------- 入场动画：滚动到可视区时加 .in-view ---------- */
+  /* ---------- 入场动画 ---------- */
   const revealables = document.querySelectorAll('.reveal');
   if (revealables.length) {
     const io = new IntersectionObserver(
@@ -712,102 +614,81 @@ const flow = chapters.map((ch, i) => {
 </script>
 
 <style>
-  /* ===== 页面骨架 ===== */
-  .bhe-gallery {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 96px clamp(16px, 5vw, 32px) 48px;
+  /* ===== 页面骨架：双主题（暗夜藏蓝 / 纸张墨水），令牌对齐七周年语系 ===== */
+  .bhe {
+    --g-bg: #04101e;
+    --g-fg: #eaf4ff;
+    --g-sub: rgba(234, 244, 255, 0.6);
+    --g-faint: rgba(234, 244, 255, 0.34);
+    --g-line: rgba(234, 244, 255, 0.12);
+    --g-border-strong: rgba(234, 244, 255, 0.3);
+    --g-hairline: rgba(234, 244, 255, 0.14);
+    --g-accent: #2e86de;
+    background: var(--g-bg);
+    color: var(--g-fg);
+    min-height: 100vh;
+    max-width: none;
+    padding: 88px clamp(16px, 5vw, 40px) 96px;
   }
 
-  /* —— 首屏：编辑部刊头 —— */
+  :global(.dark) .bhe {
+    --g-bg: #f7fafd;
+    --g-fg: #14283d;
+    --g-sub: rgba(20, 40, 61, 0.6);
+    --g-faint: rgba(20, 40, 61, 0.34);
+    --g-line: rgba(20, 40, 61, 0.14);
+    --g-border-strong: rgba(20, 40, 61, 0.32);
+    --g-hairline: rgba(20, 40, 61, 0.12);
+    --g-accent: #06427e;
+  }
+
   .g-hero {
-    max-width: 760px;
-    margin: 0 auto;
+    max-width: 860px;
+    margin: 0 auto clamp(56px, 9vh, 96px);
     text-align: center;
   }
 
-  .g-back {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+  .g-kicker {
     font-family: var(--font-archivo);
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    color: var(--muted-foreground);
-    text-decoration: none;
-    margin-bottom: 26px;
-    transition: color 0.2s ease;
-  }
-
-  .g-back span {
-    transition: transform 0.25s ease;
-  }
-
-  .g-back:hover {
-    color: var(--link);
-  }
-
-  @media (hover: hover) {
-    .g-back:hover span {
-      transform: translateX(-3px);
-    }
-  }
-
-  .g-back:focus-visible {
-    outline: 2px solid var(--link);
-    outline-offset: 4px;
-    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: var(--g-accent);
+    margin: 0 0 14px;
   }
 
   .g-title {
     font-family: var(--font-serif-song);
-    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-size: clamp(2rem, 5.4vw, 3.2rem);
     font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--foreground);
-    margin: 0 0 20px;
+    letter-spacing: 0.1em;
+    color: var(--g-fg);
+    margin: 0 0 16px;
     line-height: 1.2;
   }
 
   .g-dek {
-    font-size: 16px;
-    line-height: 1.9;
-    color: var(--muted-foreground);
-    margin: 0 auto 20px;
-    text-wrap: balance;
-  }
-
-  .g-stats {
     font-family: var(--font-archivo);
     font-size: 13px;
-    letter-spacing: 0.08em;
-    color: var(--paper-sub);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    justify-content: center;
-    margin: 0 0 28px;
-  }
-
-  .g-stats strong {
-    color: var(--link);
-    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--g-sub);
+    margin: 0 0 22px;
   }
 
   .g-toc {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px 20px;
+    gap: 8px 22px;
     padding-top: 20px;
-    border-top: 1px solid var(--divider);
+    border-top: 1px solid var(--g-line);
   }
 
   .g-toc a {
     font-family: var(--font-archivo);
     font-size: 13px;
     letter-spacing: 0.06em;
-    color: var(--muted-foreground);
+    color: var(--g-sub);
     text-decoration: none;
     display: inline-flex;
     align-items: baseline;
@@ -815,247 +696,185 @@ const flow = chapters.map((ch, i) => {
     transition: color 0.2s ease;
   }
 
-  .g-toc a:hover,
-  .g-toc a.is-active {
-    color: var(--link);
-  }
-
-  .g-toc a.is-active .g-toc-no {
-    -webkit-text-fill-color: initial;
-    font-weight: 700;
+  .g-toc a:hover {
+    color: var(--g-accent);
   }
 
   .g-toc-no {
     font-size: 11px;
-    color: var(--link);
+    color: var(--g-accent);
   }
 
   .g-toc a:focus-visible {
-    outline: 2px solid var(--link);
+    outline: 2px solid var(--g-accent);
     outline-offset: 4px;
     border-radius: 4px;
   }
 
-  /* —— 章节：超大幽灵期号 + 衬线标题 —— */
-  .g-chapter {
-    margin-top: clamp(88px, 14vh, 150px);
-    /* 锚点跳转时给导航留出高度，章头不被切 */
+  /* ===== 章节：七周年式章眉 + 裸照片 ===== */
+  .chap {
+    max-width: 1200px;
+    margin: 0 auto clamp(72px, 12vh, 128px);
+    padding-top: 28px;
     scroll-margin-top: 96px;
   }
 
-  .g-chapter-head {
+  .chap-head {
     display: flex;
-    align-items: flex-end;
-    gap: clamp(16px, 4vw, 36px);
-    margin-bottom: 36px;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: clamp(1.4rem, 3.5vw, 2.4rem);
   }
 
-  .g-chapter-no {
+  .chap-no {
     font-family: var(--font-archivo);
-    font-size: clamp(4rem, 10vw, 7.5rem);
-    font-weight: 700;
-    line-height: 0.82;
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--divider);
-    user-select: none;
-    flex: none;
-    transform: translateY(6px);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: var(--g-accent);
   }
 
-  .g-chapter-title {
+  .chap-zh {
+    margin: 0;
     font-family: var(--font-serif-song);
-    font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+    font-size: clamp(1.8rem, 4.6vw, 2.9rem);
     font-weight: 700;
-    color: var(--foreground);
-    margin: 0 0 10px;
+    letter-spacing: 0.12em;
     line-height: 1.25;
+    color: var(--g-fg);
   }
 
-  .g-chapter-note {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--muted-foreground);
-    max-width: 560px;
+  .chap-en {
+    font-family: var(--font-archivo);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--g-faint);
+  }
+
+  /* —— 照片：裸放，恒定舞台高度，contain 不裁切 —— */
+  .ph-stage {
     margin: 0;
+    /* 常驻 LQIP 底座：主色调渐变永远在照片槽里（裸放版的「遮羞布」），
+       融入主题底色（浅色主题降饱和），照片就位后覆盖其上 */
+    background: var(--ph-stage-bg, transparent);
   }
 
-  /* —— 观看器：一次一张，不裁切 —— */
-  .g-viewer {
-    outline: none;
-  }
-
-  .g-viewer:focus-visible .g-shutter {
-    outline: 2px solid var(--link);
-    outline-offset: 6px;
-  }
-
-  .g-stage {
-    margin: 0;
-  }
-
-  .g-shutter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* 卡宽/高由照片纵横比 + 均匀衬边精确定义（JS 渲染 --fit-w/--fit-h）：
-       恒定的是「衬边宽度」，画框随画幅在钳制范围内收放——四边永远等宽 */
-    width: min(100%, var(--fit-w, 100%));
-    margin: 0 auto;
-    height: var(--fit-h, min(72vh, 700px));
-    padding: clamp(8px, 1vw, 14px);
-    background: var(--paper-face);
-    border: 1px solid var(--divider);
-    border-radius: 6px;
-    box-shadow: var(--paper-shadow);
-    cursor: zoom-in;
-    /* 宽度随横竖图收放时平滑呼吸（与淡入同时序；reduced-motion 下关闭） */
-    transition:
-      box-shadow 0.35s ease,
-      width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* 白卡纸装裱：照片悬浮在白色卡纸上，发丝线勾边 */
-  /* 卡纸即画框内容区（透明底）：整框一层均匀色场托住照片，无「垫张」感 */
-  .g-mount {
+  .ph {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: min(72vh, 700px);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    /* 1px 发丝线：救亮天空/暗边缘照片与纸底的融合 */
+    outline: 1px solid var(--g-hairline);
+    outline-offset: -1px;
   }
 
-  @media (hover: hover) {
-    .g-shutter:hover {
-      box-shadow: var(--paper-shadow-lift);
-    }
-  }
-
-  .g-shutter img {
+  .ph img {
     width: auto;
     height: auto;
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     transition: opacity 0.35s ease;
-    /* LQIP 只在加载期出现在照片自身位置，画框常驻安静 */
     background: var(--ph-bg, transparent);
   }
 
-
-  .g-shutter img.is-loading {
+  .ph img.is-loading {
     opacity: 0;
   }
 
-  .g-caption {
+  .ph:focus-visible {
+    outline: 2px solid var(--g-accent);
+    outline-offset: 6px;
+  }
+
+  .ph-cap {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    padding: 12px 2px 0;
+    padding: 10px 2px 0;
   }
 
-  .g-caption-info {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 10px;
-    min-width: 0;
-  }
-
-  .g-caption-school {
+  .ph-school {
     font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.1em;
-    color: var(--paper-sub);
+    color: var(--g-sub);
   }
 
-  /* 周次/日期区间不允许拦腰断行 */
-  .g-caption-info,
-  .g-caption-info * {
-    white-space: nowrap;
-  }
-
-  .g-caption-no {
-    color: var(--link);
-    font-weight: 600;
-  }
-
-  .g-controls {
+  .ph-ctrl {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     flex: none;
   }
 
-  .g-counter {
+  .ph-count {
     font-family: var(--font-archivo);
     font-size: 12px;
     letter-spacing: 0.14em;
-    color: var(--paper-sub);
+    color: var(--g-sub);
     font-variant-numeric: tabular-nums;
     min-width: 52px;
     text-align: center;
   }
 
-  .g-kbd-hint {
-    font-family: var(--font-archivo);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--paper-sub);
-    opacity: 0.75;
-    margin-left: 4px;
-  }
-
-  @media (hover: none), (max-width: 760px) {
-    .g-kbd-hint {
-      display: none;
-    }
-  }
-
-  .g-step {
+  .ph-step {
     font-family: var(--font-archivo);
     width: 44px;
-    height: 36px;
-    border: 1px solid var(--divider);
+    height: 34px;
+    border: 1px solid var(--g-border-strong);
     border-radius: 6px;
-    background: var(--background);
-    color: var(--foreground);
+    background: none;
+    color: var(--g-fg);
     font-size: 15px;
     cursor: pointer;
     transition:
       border-color 0.2s ease,
       color 0.2s ease,
+      background 0.2s ease,
       transform 0.15s ease;
   }
 
-  .g-step:hover {
-    border-color: var(--link);
-    color: var(--link);
+  @media (hover: hover) {
+    .ph-step:hover:not(:disabled) {
+      background: var(--g-accent);
+      border-color: var(--g-accent);
+      color: var(--g-bg);
+    }
   }
 
-  .g-step:active {
+  .ph-step:active:not(:disabled) {
     transform: scale(0.94);
   }
 
-  .g-step:disabled {
+  .ph-step:disabled {
     opacity: 0.35;
     cursor: default;
     pointer-events: none;
   }
 
-  .g-step:focus-visible {
-    outline: 2px solid var(--link);
+  .ph-step:focus-visible {
+    outline: 2px solid var(--g-accent);
     outline-offset: 3px;
   }
 
-  .g-index {
-    margin-top: 18px;
+  .ph-index {
+    margin-top: 16px;
   }
 
-  .g-index summary {
+  .ph-index summary {
     font-family: var(--font-archivo);
     font-size: 13px;
     letter-spacing: 0.08em;
-    color: var(--muted-foreground);
+    color: var(--g-sub);
     cursor: pointer;
     list-style: none;
     display: inline-flex;
@@ -1063,166 +882,117 @@ const flow = chapters.map((ch, i) => {
     gap: 6px;
   }
 
-  .g-index summary::-webkit-details-marker {
+  .ph-index summary::-webkit-details-marker {
     display: none;
   }
 
-  .g-index summary::before {
+  .ph-index summary::before {
     content: '+';
-    color: var(--link);
+    color: var(--g-accent);
     font-size: 15px;
   }
 
-  .g-index[open] summary::before {
+  .ph-index[open] summary::before {
     content: '−';
   }
 
-  .g-index summary:hover {
-    color: var(--link);
+  .ph-index summary:hover {
+    color: var(--g-accent);
   }
 
-  .g-index-count {
-    color: var(--link);
+  .ph-index-n {
+    color: var(--g-accent);
     font-variant-numeric: tabular-nums;
   }
 
-  .g-thumbs {
+  .ph-thumbs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
     margin-top: 14px;
   }
 
-  .g-thumb {
+  .ph-thumb {
     padding: 0;
-    border: 1px solid var(--divider);
+    border: 1px solid var(--g-line);
     border-radius: 4px;
     overflow: hidden;
-    background: var(--ph-bg, var(--paper-face));
     cursor: pointer;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
 
-  .g-thumb img {
+  .ph-thumb img {
     display: block;
     width: 100%;
     height: 90px;
     object-fit: cover;
   }
 
-  .g-thumb:hover {
-    border-color: var(--link);
+  .ph-thumb:hover {
+    border-color: var(--g-accent);
     transform: translateY(-2px);
   }
 
-  .g-thumb[aria-current='true'] {
-    border-color: var(--link);
-    box-shadow: 0 0 0 1px var(--link);
+  .ph-thumb[aria-current='true'] {
+    border-color: var(--g-accent);
+    box-shadow: 0 0 0 1px var(--g-accent);
   }
 
-  .g-thumb:focus-visible {
-    outline: 2px solid var(--link);
+  .ph-thumb:focus-visible {
+    outline: 2px solid var(--g-accent);
     outline-offset: 2px;
   }
 
-  .g-handoff {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-top: clamp(40px, 7vh, 72px);
-    padding: 18px 0;
-    border-top: 1px solid var(--divider);
-    text-decoration: none;
-    width: fit-content;
+  .g-foot {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    border-top: 1px solid var(--g-line);
+    padding-top: 40px;
   }
 
-  .g-handoff-label {
-    font-family: var(--font-archivo);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: var(--paper-sub);
-  }
-
-  .g-handoff-title {
+  .g-foot p {
     font-family: var(--font-serif-song);
-    font-size: 16px;
-    letter-spacing: 0.06em;
-    color: var(--foreground);
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    color: var(--g-sub);
+    margin: 0 0 14px;
+  }
+
+  .g-back {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--g-accent);
+    text-decoration: none;
     transition: color 0.2s ease;
   }
 
-  .g-handoff-arrow {
-    font-family: var(--font-archivo);
-    color: var(--link);
-    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  .g-back:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
-  @media (hover: hover) {
-    .g-handoff:hover .g-handoff-title {
-      color: var(--link);
-    }
-
-    .g-handoff:hover .g-handoff-arrow {
-      transform: translateY(3px);
-    }
-  }
-
-  .g-handoff:focus-visible {
-    outline: 2px solid var(--link);
+  .g-back:focus-visible {
+    outline: 2px solid var(--g-accent);
     outline-offset: 4px;
     border-radius: 4px;
   }
 
-  .g-foot {
-    margin-top: clamp(48px, 8vh, 88px);
-    text-align: center;
-    border-top: 1px solid var(--divider);
-    padding-top: 40px;
-  }
-
-  .g-foot-line {
-    font-family: var(--font-serif-song);
-    font-size: 15px;
-    letter-spacing: 0.12em;
-    color: var(--paper-sub);
-    margin: 0 0 8px;
-  }
-
-  .g-foot-cta {
-    justify-content: center;
-    display: flex;
-  }
-
-  /* —— 无 JS 降级：html:not(.js) 下画廊退化为静态照片墙，隐藏依赖 JS 的控件 ——
-     <details> 的缩略图由 JS 构建（无 JS 为空壳）→ 隐藏；
-     照片卡保留纸面外观，仅去点击暗示；交接行是纯锚点链接 → 保留。 —— */
-  html:not(.js) .g-nav,
-  html:not(.js) .g-index {
-    display: none;
-  }
-
-  html:not(.js) .g-shutter {
-    cursor: default;
-    pointer-events: none;
-  }
-
-  /* ===== lightbox（移植并重写自 portfolio-site-builder，MIT） ===== */
+  /* ===== 灯箱 ===== */
   .lb {
-    border: none;
+    border: 1px solid var(--g-line);
     padding: 0;
     width: min(1280px, 96vw);
     height: min(860px, 92vh);
-    /* UA dialog 样式带 max-width/height 限制，会夹住移动端全屏 */
     max-width: none;
     max-height: none;
-    border-radius: 12px;
-    background: var(--paper-face);
-    color: var(--paper-ink);
-    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    background: var(--g-bg);
+    color: var(--g-fg);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /* 进出过渡：@starting-style 入场，allow-discrete 出场（Chrome DevRel 模式） */
     opacity: 0;
     translate: 0 18px;
     transition:
@@ -1243,8 +1013,7 @@ const flow = chapters.map((ch, i) => {
   }
 
   .lb::backdrop {
-    background: rgba(8, 16, 26, 0.82);
-    backdrop-filter: blur(6px);
+    background: rgba(4, 10, 18, 0.86);
     opacity: 0;
     transition: opacity 0.32s ease, overlay 0.32s allow-discrete, display 0.32s allow-discrete;
   }
@@ -1263,11 +1032,11 @@ const flow = chapters.map((ch, i) => {
     align-items: center;
     gap: 12px;
     padding: 12px 18px;
-    border-bottom: 1px solid var(--divider);
+    border-bottom: 1px solid var(--g-line);
     flex: none;
   }
 
-  .lb-bar-info {
+  .lb-info {
     display: flex;
     align-items: baseline;
     gap: 12px;
@@ -1286,7 +1055,7 @@ const flow = chapters.map((ch, i) => {
   .lb-count {
     font-family: var(--font-archivo);
     font-size: 12px;
-    color: var(--paper-sub);
+    color: var(--g-sub);
     font-variant-numeric: tabular-nums;
     flex: none;
   }
@@ -1303,17 +1072,17 @@ const flow = chapters.map((ch, i) => {
     font-size: 12px;
     letter-spacing: 0.05em;
     padding: 6px 10px;
-    border: 1px solid var(--divider);
+    border: 1px solid var(--g-line);
     border-radius: 6px;
-    background: transparent;
-    color: var(--paper-ink);
+    background: none;
+    color: var(--g-fg);
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
   }
 
   .lb-tool:hover:not(:disabled) {
-    border-color: var(--link);
-    color: var(--link);
+    border-color: var(--g-accent);
+    color: var(--g-accent);
   }
 
   .lb-tool:disabled {
@@ -1322,7 +1091,7 @@ const flow = chapters.map((ch, i) => {
   }
 
   .lb-tool:focus-visible {
-    outline: 2px solid var(--link);
+    outline: 2px solid var(--g-accent);
     outline-offset: 2px;
   }
 
@@ -1332,21 +1101,21 @@ const flow = chapters.map((ch, i) => {
     padding: 4px 12px;
   }
 
-  .lb-zoom-range {
+  .lb-zoom {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  .lb-zoom-range input {
+  .lb-zoom input {
     width: 110px;
-    accent-color: var(--link);
+    accent-color: var(--g-accent);
   }
 
-  .lb-zoom-range output {
+  .lb-zoom output {
     font-family: var(--font-archivo);
     font-size: 11px;
-    color: var(--paper-sub);
+    color: var(--g-sub);
     min-width: 38px;
     font-variant-numeric: tabular-nums;
   }
@@ -1362,19 +1131,15 @@ const flow = chapters.map((ch, i) => {
     flex: none;
     width: 52px;
     border: none;
-    background: transparent;
-    color: var(--paper-sub);
+    background: none;
+    color: var(--g-sub);
     font-size: 30px;
     cursor: pointer;
     transition: color 0.2s ease;
   }
 
-  .lb-nav:hover:not([hidden]) {
-    color: var(--link);
-  }
-
-  .lb-nav[hidden] {
-    visibility: hidden;
+  .lb-nav:hover:not(:disabled) {
+    color: var(--g-accent);
   }
 
   .lb-nav:disabled {
@@ -1388,10 +1153,8 @@ const flow = chapters.map((ch, i) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--paper-face);
-    position: relative;
-    /* 大图不顶格：上下留呼吸位（zoom 态由 is-zoomed 滚动，不影响） */
     padding: 18px 0;
+    position: relative;
   }
 
   .lb-canvas.is-zoomed {
@@ -1424,7 +1187,7 @@ const flow = chapters.map((ch, i) => {
     height: 100%;
     object-fit: contain;
     user-select: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
   }
 
   .lb-img.is-loading {
@@ -1436,22 +1199,22 @@ const flow = chapters.map((ch, i) => {
     inset: auto 0 20px;
     text-align: center;
     font-size: 13px;
-    color: var(--paper-sub);
+    color: var(--g-sub);
     margin: 0;
   }
 
   .lb-foot {
     flex: none;
     padding: 10px 18px 12px;
-    border-top: 1px solid var(--divider);
+    border-top: 1px solid var(--g-line);
   }
 
   .lb-caption {
-    font-size: 13px;
-    color: var(--paper-sub);
-    margin: 0 0 8px;
     font-family: var(--font-archivo);
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--g-sub);
+    margin: 0 0 8px;
   }
 
   .lb-thumbs {
@@ -1464,12 +1227,10 @@ const flow = chapters.map((ch, i) => {
 
   .lb-thumb,
   .lb-sheet-grid button {
-    flex: none;
     padding: 0;
-    border: 1px solid var(--divider);
+    border: 1px solid var(--g-line);
     border-radius: 4px;
     overflow: hidden;
-    background: var(--ph-bg, transparent);
     cursor: pointer;
     transition: border-color 0.2s ease;
   }
@@ -1484,19 +1245,25 @@ const flow = chapters.map((ch, i) => {
 
   .lb-thumb:hover,
   .lb-sheet-grid button:hover {
-    border-color: var(--link);
+    border-color: var(--g-accent);
   }
 
   .lb-thumb[aria-current='true'],
   .lb-sheet-grid button[aria-current='true'] {
-    border-color: var(--link);
-    box-shadow: 0 0 0 1px var(--link);
+    border-color: var(--g-accent);
+    box-shadow: 0 0 0 1px var(--g-accent);
+  }
+
+  .lb-thumb:focus-visible,
+  .lb-sheet-grid button:focus-visible {
+    outline: 2px solid var(--g-accent);
+    outline-offset: 2px;
   }
 
   .lb-sheet {
     position: absolute;
     inset: 0;
-    background: var(--paper-face);
+    background: var(--g-bg);
     overflow-y: auto;
     padding: 56px 24px 24px;
   }
@@ -1505,7 +1272,7 @@ const flow = chapters.map((ch, i) => {
     font-family: var(--font-serif-song);
     font-size: 20px;
     margin: 0 0 18px;
-    color: var(--paper-ink);
+    color: var(--g-fg);
   }
 
   .lb-sheet-grid {
@@ -1521,46 +1288,22 @@ const flow = chapters.map((ch, i) => {
 
   /* —— 移动端 —— */
   @media (max-width: 640px) {
-    .g-caption {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .bhe-gallery {
+    .bhe {
       padding-top: 72px;
     }
 
-    .g-chapter-head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .g-chapter-no {
-      font-size: 3.4rem;
-      transform: none;
-    }
-
-    .g-shutter {
-      /* 宽度沿用 base 的 min(100%, var(--fit-w))：移动端公式以 60vw 为基准 */
+    .ph {
       height: 60vw;
-      padding: 8px;
-      border-radius: 4px;
-    }
-
-    .g-shutter img {
-      max-height: 100%;
     }
 
     .lb {
       width: 100vw;
       height: 100dvh;
-      max-height: 100dvh;
       border-radius: 0;
     }
 
-    .lb-zoom-range {
-      display: none; /* 移动端用双指/滚动代替滑杆 */
+    .lb-zoom {
+      display: none;
     }
 
     .lb-nav {
@@ -1571,36 +1314,36 @@ const flow = chapters.map((ch, i) => {
     .lb-sheet {
       padding: 64px 16px 16px;
     }
+
+    .ph-cap {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
   }
 
   /* —— 减少动效 —— */
   @media (prefers-reduced-motion: reduce) {
-    .g-shutter,
-    .g-step,
-    .g-thumb,
-    .lb-tool,
-    .g-shutter img,
-    .lb-img,
+    .ph,
+    .ph img,
+    .ph-step,
+    .ph-thumb,
     .lb,
-    .lb::backdrop {
+    .lb::backdrop,
+    .lb-img,
+    .lb-tool {
       transition: none;
+    }
+
+    .ph img.is-loading,
+    .lb-img.is-loading {
+      opacity: 1;
     }
 
     .lb,
     .lb::backdrop {
       opacity: 1;
       translate: none;
-    }
-
-    .g-shutter img.is-loading,
-    .lb-img.is-loading {
-      opacity: 1;
-    }
-
-    html.js .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
     }
   }
 </style>
