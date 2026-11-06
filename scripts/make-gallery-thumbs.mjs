@@ -23,7 +23,8 @@
  *     --file <f> --remote --content-type image/webp \
  *     --cache-control "public, max-age=31536000, immutable"
  */
-import { execSync } from 'node:child_process';
+import { exec as execCb } from 'node:child_process';
+import { promisify } from 'node:util';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -60,8 +61,8 @@ console.log(`全池 ${unique.length} 张（thumbs/<key>.webp 镜像）`);
 
 await mkdir(STAGE, { recursive: true });
 
-/** 简易并发池（8 worker），任一失败即抛出 */
-async function pool(items, worker) {
+/** 简易并发池（上传 20 / 生成 8 worker），任一失败即抛出 */
+async function pool(items, worker, width = 8) {
   let i = 0;
   let ok = 0;
   const run = async () => {
@@ -74,7 +75,7 @@ async function pool(items, worker) {
       }
     }
   };
-  await Promise.all(Array.from({ length: 8 }, run));
+  await Promise.all(Array.from({ length: width }, run));
 }
 
 const thumbPathOf = key => key.replace(/\.(jpg|jpeg|png)$/i, '.webp');
@@ -106,13 +107,29 @@ if (!UPLOAD) {
 }
 
 console.log(`\n开始上传 ${unique.length} 张到 ${BUCKET}/thumbs/ …`);
-await pool(unique, key => {
-  const local = path.join(STAGE, thumbPathOf(key));
-  const thumbKey = `thumbs/${thumbPathOf(key)}`;
-  execSync(
-    `npx wrangler r2 object put ${BUCKET}/${thumbKey} --file "${local}" --remote ` +
-      `--content-type image/webp --cache-control "public, max-age=31536000, immutable"`,
-    { stdio: ['ignore', 'ignore', 'pipe'] },
-  );
-});
+// ⚠️ 必须用异步 exec（execSync 会阻塞事件循环把并发池退化成串行，实测教训）。
+// npx wrangler 每次 spawn ~2.5s，20 真并发 ≈ 8/s。单个失败不炸全局：
+// 记入 failed，结尾汇总（重跑幂等续传）
+const exec = promisify(execCb);
+const failed = [];
+await pool(
+  unique,
+  async key => {
+    const local = path.join(STAGE, thumbPathOf(key));
+    const thumbKey = `thumbs/${thumbPathOf(key)}`;
+    try {
+      await exec(
+        `npx wrangler r2 object put ${BUCKET}/${thumbKey} --file "${local}" --remote ` +
+          `--content-type image/webp --cache-control "public, max-age=31536000, immutable"`,
+      );
+    } catch {
+      failed.push(key);
+    }
+  },
+  20,
+);
+if (failed.length > 0) {
+  console.error(`\n${failed.length} 张上传失败（重跑本命令幂等续传）：`, failed.slice(0, 10));
+  process.exit(1);
+}
 console.log('\n上传完成——thumbOf() 镜像规则即刻全池生效。');
