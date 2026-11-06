@@ -8,8 +8,6 @@
  * 每件 PL.XX 藏品编号（plate，摄影集编号惯例；避开作者 @No.25 的"No."撞车）：
  * 展示序 = 策展序（gallery.ts ARCHIVE_LEAD 先行）+
  * 池序垫后，编号与首页门厅灯箱的翻页序一致。
- * 作者索引 = 博物馆 Artist Index 惯例：33 位作者每人 1 件，点击直接在
- * 灯箱打开该作者那一件，不制造「过滤后只剩一张图」的中间态。
  * 灯箱与首页门厅共用 src/lib/gallery-lightbox.ts 与 gallery-lightbox.css。
  * 网格读缩略图（gallery/thumbs/，长边 960 WebP，管线 scripts/make-gallery-thumbs.mjs），
  * 原图只进灯箱；lazy 加载 + 宽高属性防 CLS。
@@ -18,12 +16,9 @@ import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/gallery-lightbox.css';
-import { GALLERY_POOL, archiveOrdered, thumbOf, type GalleryImage } from '@/data/gallery';
+import { archiveOrdered, thumbOf, type GalleryImage } from '@/data/gallery';
 
 const ordered = archiveOrdered();
-const authors = [...new Set(GALLERY_POOL.map(i => i.author))].sort(
-  new Intl.Collator('zh-Hans-CN').compare,
-);
 const padNo = (n: number) => String(n).padStart(2, '0');
 const capOf = (img: GalleryImage) =>
   img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
@@ -40,21 +35,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     <header class="arch-head">
       <p class="arch-kicker">作品档案 · Collection</p>
       <h1 class="arch-title">画廊 <span class="arch-en">Gallery</span></h1>
-      <p class="arch-meta">{ordered.length} 件作品 · {authors.length} 位作者</p>
     </header>
-
-    <nav aria-label="作者索引" class="arch-index">
-      <span class="arch-index-label">作者索引</span>
-      <div class="arch-index-links">
-        {
-          authors.map(a => (
-            <button class="arch-index-link" data-author={a} type="button">
-              {a}
-            </button>
-          ))
-        }
-      </div>
-    </nav>
 
     <section aria-label="全部作品" class="arch-wall">
       {
@@ -127,16 +108,6 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
         lb.open(idx >= 0 ? idx : 0);
       });
     }
-
-    // 作者索引：点击直接在灯箱打开该作者那一件
-    for (const link of document.querySelectorAll<HTMLButtonElement>('.arch-index-link')) {
-      link.addEventListener('click', () => {
-        const idx = ordered.findIndex(i => i.author === link.dataset.author);
-        if (idx >= 0) {
-          lb.open(idx);
-        }
-      });
-    }
   }
 </script>
 
@@ -147,7 +118,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     padding: 120px clamp(24px, 6vw, 96px) 120px;
   }
 
-  /* —— 头部：大标题 + 统计行 —— */
+  /* —— 头部：大标题 —— */
   .arch-kicker {
     font-family: var(--font-archivo);
     font-size: 11px;
@@ -177,65 +148,6 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     margin-left: 12px;
   }
 
-  .arch-meta {
-    font-family: var(--font-archivo);
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    color: var(--muted-foreground);
-    margin: 16px 0 0;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* —— 作者索引：博物馆 Artist Index，点击直开灯箱 —— */
-  .arch-index {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 20px;
-    align-items: baseline;
-  }
-
-  .arch-index-label {
-    font-family: var(--font-archivo);
-    font-size: 11px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--muted-foreground);
-    white-space: nowrap;
-  }
-
-  .arch-index-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 16px;
-  }
-
-  .arch-index-link {
-    appearance: none;
-    background: none;
-    border: 0;
-    padding: 0;
-    font-family: var(--font-archivo);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: var(--muted-foreground);
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-
-  .arch-index-link:hover,
-  .arch-index-link:focus-visible {
-    color: var(--link);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .arch-index-link:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 3px;
-  }
-
   /* —— 等高行 justified rows：grow/basis 均以 --ar 表达，换行后行内等高 —— */
   .arch-wall {
     --row-h: 300px;
@@ -244,7 +156,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     gap: 34px 24px;
     align-items: flex-start;
     width: 100%;
-    margin-top: 34px;
+    margin-top: 44px;
   }
 
   .arch-item {
@@ -354,26 +266,6 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
       --row-h: 170px;
       gap: 26px 16px;
     }
-
-    /* 作者索引收进单行横滑：移动端第一屏还给摄影，花名册不占一屏（P1-5） */
-    .arch-index {
-      gap: 10px;
-    }
-
-    .arch-index-links {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-    }
-
-    .arch-index-links::-webkit-scrollbar {
-      display: none;
-    }
-
-    .arch-index-link {
-      white-space: nowrap;
-    }
   }
 
   /* 小屏：一行一件（美术馆的移动端也是一个展位一件作品） */
@@ -384,8 +276,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .shot,
-    .arch-index-link {
+    .shot {
       transition: none;
     }
   }
