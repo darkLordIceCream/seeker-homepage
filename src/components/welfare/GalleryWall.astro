@@ -171,6 +171,27 @@ const THEME_EN: Record<string, string> = {
     return `linear-gradient(180deg, ${top}, ${bottom})`;
   };
 
+  /* ---------- 邻图预热 ---------- */
+  const preheated = new Set<string>();
+  const navConn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const saveData = navConn?.saveData === true;
+  const preheat = (photos: WelfareGalleryPhoto[], i: number) => {
+    if (saveData || !photos.length) {return;}
+    const idle = (cb: () => void) =>
+      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
+    idle(() => {
+      [i + 1, i - 1].forEach(j => {
+        const n = photos[((j % photos.length) + photos.length) % photos.length];
+        if (n && !preheated.has(n.src)) {
+          preheated.add(n.src);
+          const im = new Image();
+          im.src = n.src;
+        }
+      });
+    });
+  };
+
+
   /* ---------- 观看器 ---------- */
   document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
     const seq = seqs.get(viewer.dataset.theme ?? '');
@@ -202,9 +223,19 @@ const THEME_EN: Record<string, string> = {
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       const [t, b] = p.tone.split(',');
-      // 常驻底座设在 stage 元素上（CSS 变量继承方向：父 → 子）
+      // 底座设在 stage 元素上（CSS 变量继承方向：父 → 子）
       const stage = viewer.querySelector<HTMLElement>('.ph-stage')!;
       stage.style.setProperty('--ph-stage-bg', `linear-gradient(180deg, ${t}55, ${b}55)`);
+      stage.classList.remove('loaded');
+      // 图注行宽度对齐照片渲染盒（「图注属于这张照片」），窄屏回落 100%
+      const capRow = viewer.querySelector<HTMLElement>('.ph-cap')!;
+      const ar = p.w / p.h;
+      const mobile = window.matchMedia('(max-width: 640px)').matches;
+      const frameH = mobile ? window.innerWidth * 0.6 : Math.min(window.innerHeight * 0.72, 700);
+      const pad2v = mobile ? 8 : Math.max(8, Math.min(14, window.innerWidth * 0.01));
+      const photoW = Math.min(viewer.clientWidth - 2 * pad2v, (frameH - 2 * pad2v) * ar);
+      capRow.style.width = mobile ? '100%' : `${Math.round(photoW + 2 * pad2v)}px`;
+      capRow.style.margin = '0 auto';
       fadeInOnLoad();
       preheat(photos, index);
       viewer
@@ -212,12 +243,19 @@ const THEME_EN: Record<string, string> = {
         .forEach(el => el.setAttribute('aria-current', String(Number((el as HTMLElement).dataset.photo) === index)));
     };
 
-    // LQIP：加载期在照片原位显主色，就位后淡入（已缓存直接显示）
+    // LQIP：加载期在照片原位显主色，就位后淡入 + 舞台 tint 淡出（已缓存直接显示）
     const fadeInOnLoad = () => {
       img.classList.add('is-loading');
-      const reveal = () => { img.classList.remove('is-loading'); };
+      const reveal = () => {
+        img.classList.remove('is-loading');
+        const stage = viewer.querySelector('.ph-stage');
+        // 双 rAF 确保照片先完成不透明度过渡，再淡出底座
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          stage?.classList.add('loaded');
+        }));
+      };
       if (img.complete && img.naturalWidth > 0) {
-        reveal();
+        requestAnimationFrame(reveal);
       } else {
         img.addEventListener('load', reveal, { once: true });
         img.addEventListener('error', reveal, { once: true });
@@ -285,26 +323,6 @@ const THEME_EN: Record<string, string> = {
 
     render(0);
   });
-
-  /* ---------- 邻图预热 ---------- */
-  const preheated = new Set<string>();
-  const navConn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  const saveData = navConn?.saveData === true;
-  const preheat = (photos: WelfareGalleryPhoto[], i: number) => {
-    if (saveData || !photos.length) {return;}
-    const idle = (cb: () => void) =>
-      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
-    idle(() => {
-      [i + 1, i - 1].forEach(j => {
-        const n = photos[((j % photos.length) + photos.length) % photos.length];
-        if (n && !preheated.has(n.src)) {
-          preheated.add(n.src);
-          const im = new Image();
-          im.src = n.src;
-        }
-      });
-    });
-  };
 
   /* ---------- 灯箱 ---------- */
   const dialog = document.getElementById('bhe-lightbox') as HTMLDialogElement | null;
@@ -755,9 +773,13 @@ const THEME_EN: Record<string, string> = {
   /* —— 照片：裸放，恒定舞台高度，contain 不裁切 —— */
   .ph-stage {
     margin: 0;
-    /* 常驻 LQIP 底座：主色调渐变永远在照片槽里（裸放版的「遮羞布」），
-       融入主题底色（浅色主题降饱和），照片就位后覆盖其上 */
+    /* LQIP 底座只做加载态：照片就位后 tint 过渡淡出，回归纯纸底裸照片 */
     background: var(--ph-stage-bg, transparent);
+    transition: background 0.6s ease;
+  }
+
+  .ph-stage.loaded {
+    background: transparent;
   }
 
   .ph {
@@ -770,9 +792,6 @@ const THEME_EN: Record<string, string> = {
     border: 0;
     background: none;
     cursor: zoom-in;
-    /* 1px 发丝线：救亮天空/暗边缘照片与纸底的融合 */
-    outline: 1px solid var(--g-hairline);
-    outline-offset: -1px;
   }
 
   .ph img {
@@ -783,6 +802,9 @@ const THEME_EN: Record<string, string> = {
     object-fit: contain;
     transition: opacity 0.35s ease;
     background: var(--ph-bg, transparent);
+    /* 1px 发丝线：裸放唯一合法边界（贴照片渲染盒，救亮天空/暗边缘融合） */
+    outline: 1px solid var(--g-hairline);
+    outline-offset: -1px;
   }
 
   .ph img.is-loading {
