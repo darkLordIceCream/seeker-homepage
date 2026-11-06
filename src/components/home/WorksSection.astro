@@ -41,7 +41,11 @@ const SLOTS = [
 
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 const capOf = (img: GalleryImage) =>
-  img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
+  img.title
+    ? `《${img.title}》 @${img.author}`
+    : img.series
+      ? `${img.series} · @${img.author}`
+      : `@${img.author}`;
 ---
 
 <section aria-labelledby="works-title" class="section gallery-section" id="works">
@@ -111,7 +115,12 @@ const capOf = (img: GalleryImage) =>
 <script>
   import { startGalleryCycle } from '@/lib/gallery-cycle';
   import { initGalleryLightbox } from '@/lib/gallery-lightbox';
-  import { ARCHIVE_POOL, archiveOrdered, type GalleryImage } from '@/data/gallery';
+  import {
+    ARCHIVE_POOL,
+    GALLERY_POOL,
+    archiveOrdered,
+    type GalleryImage,
+  } from '@/data/gallery';
 
   const arOf = (img: GalleryImage) => img.w / img.h;
   const H_BAND = ARCHIVE_POOL.filter(i => {
@@ -122,6 +131,24 @@ const capOf = (img: GalleryImage) =>
     const ar = arOf(i);
     return ar >= 0.657 && ar <= 0.686;
   });
+
+  // 门厅首抽精选层（Critic P1 随机下限）：问卷池 ∪ 每期封面，按带过滤。
+  // hydration 首抽从这里随机（每次访问依然不同），此后轮换回归全带池——
+  // 「随机的新鲜感」与「第一眼下限」兼得
+  const DOOR_POOL = [
+    ...GALLERY_POOL,
+    ...ARCHIVE_POOL.filter(i => i.src.endsWith('cover.webp')),
+  ];
+  const doorPoolOf = (kind: 'h' | 'v') => {
+    const pool = DOOR_POOL.filter(i => {
+      const ar = arOf(i);
+      return kind === 'h' ? ar >= 1.48 && ar <= 1.62 : ar >= 0.657 && ar <= 0.686;
+    });
+    if (pool.length === 0) {
+      throw new Error(`门厅首抽精选层 ${kind} 池为空——检查 DOOR_POOL 与比例带`);
+    }
+    return pool;
+  };
 
   const wall = document.querySelector<HTMLElement>('[data-wall]');
   const isDesktop = () => window.matchMedia('(min-width: 769px)').matches;
@@ -275,11 +302,16 @@ const capOf = (img: GalleryImage) =>
     layoutRow(wall.querySelector('.gallery-row'), wall.clientWidth);
   };
 
-  // —— 轮换：槽内比例带 + 视口门控（保定妆）+ 两段式换场 + 错峰 + 洗牌袋 ——
-  const cycleSlots = [...document.querySelectorAll<HTMLElement>('.gslot')].map(el => ({
-    el,
-    pool: el.dataset.kind === 'h' ? H_BAND : V_BAND,
-  }));
+  // —— 轮换：槽内比例带 + 视口门控 + 两段式换场 + 错峰 + 洗牌袋 ——
+  // 首抽走精选层（firstPool），此后轮换回归全带池
+  const cycleSlots = [...document.querySelectorAll<HTMLElement>('.gslot')].map(el => {
+    const kind = el.dataset.kind === 'h' ? 'h' : 'v';
+    return {
+      el,
+      pool: kind === 'h' ? H_BAND : V_BAND,
+      firstPool: doorPoolOf(kind),
+    };
+  });
   startGalleryCycle(cycleSlots, {
     gateEl: document.getElementById('works') ?? undefined,
     // 随机播放（用户 2026-11-07）：hydration 即随机换首图；观众落定后
@@ -312,7 +344,12 @@ const capOf = (img: GalleryImage) =>
       root: lightbox,
       archiveHref: '/gallery/',
       getSlides: () =>
-        ordered.map(i => ({ full: i.src, title: i.title ?? '', author: i.author })),
+        ordered.map(i => ({
+          full: i.src,
+          title: i.title ?? '',
+          series: i.series,
+          author: i.author,
+        })),
     });
     for (const btn of document.querySelectorAll<HTMLButtonElement>('.shot')) {
       btn.addEventListener('click', () => {

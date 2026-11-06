@@ -24,6 +24,8 @@ export interface CycleSlot {
   el: HTMLElement;
   /** 该槽的候选池（调用方按槽内比例带过滤，如主作 1.48–1.62 / 竖图 0.657–0.686） */
   pool: readonly GalleryImage[];
+  /** 首抽池（可选，randomizeFirst 用）：精选层，与轮换池解耦——随机下限机制 */
+  firstPool?: readonly GalleryImage[];
 }
 
 export interface CycleOptions {
@@ -104,10 +106,13 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
   const bags = new Map<HTMLElement, GalleryImage[]>();
   const lastPicked = new Map<HTMLElement, GalleryImage>();
 
-  const pickShuffled = (slot: CycleSlot): GalleryImage | undefined => {
+  const pickShuffled = (
+    slot: CycleSlot,
+    pool: readonly GalleryImage[],
+  ): GalleryImage | undefined => {
     let bag = bags.get(slot.el);
     if (!bag || bag.length === 0) {
-      bag = shuffled(slot.pool);
+      bag = shuffled(pool);
       const last = lastPicked.get(slot.el);
       if (last && bag.length > 1 && bag[0]?.src === last.src) {
         bag[0] = bag[1]!;
@@ -129,16 +134,17 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
   // —— exclusive 全局互斥：同一时刻至多一个槽在换场 ——
   let swapping = false;
 
-  const swap = (slot: CycleSlot) => {
+  const swap = (slot: CycleSlot, poolOverride?: readonly GalleryImage[]) => {
+    const activePool = poolOverride ?? slot.pool;
     const cur = state.get(slot.el);
     let picked: GalleryImage | undefined;
     if (opts.shuffle) {
-      picked = pickShuffled(slot);
+      picked = pickShuffled(slot, activePool);
     } else {
       const busy = busySrc(slot.el);
       // 随机取一张非当前、不与他槽重复的（最多尝试 8 次）
       for (let i = 0; i < 8; i++) {
-        const cand = slot.pool[Math.floor(Math.random() * slot.pool.length)];
+        const cand = activePool[Math.floor(Math.random() * activePool.length)];
         if (cand && cand.src !== cur?.src && !busy.has(cand.src)) {
           picked = cand;
           break;
@@ -283,11 +289,9 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
     started = true;
     const immediate = new Set(opts.immediateEls ?? []);
     for (const slot of slots) {
-      // 首轮换图用 firstDelay（观众落定后第一张别挂太久），此后回归 min/max
-      const d =
-        opts.firstDelay && immediate.has(slot.el)
-          ? rand(opts.firstDelay.min, opts.firstDelay.max)
-          : undefined;
+      // 首轮换图对全部槽用 firstDelay（观众落定后第一张别挂太久——
+      // 此前误限定在 immediateEls 上成死代码，Critic P0 抓出），此后回归 min/max
+      const d = opts.firstDelay ? rand(opts.firstDelay.min, opts.firstDelay.max) : undefined;
       schedule(slot, immediate.has(slot.el), d);
     }
   };
@@ -339,7 +343,8 @@ export function startGalleryCycle(slots: CycleSlot[], opts: CycleOptions = {}): 
       window.setTimeout(
         () => {
           if (document.contains(slot.el)) {
-            swap(slot);
+            // 首抽走精选层（firstPool），此后轮换回归槽内全带池
+            swap(slot, slot.firstPool);
           }
         },
         i * (SWAP_WINDOW_MS + 100),

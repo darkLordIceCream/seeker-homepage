@@ -19,9 +19,13 @@ import '../styles/gallery-lightbox.css';
 import { archiveOrdered, thumbOf, type GalleryImage } from '@/data/gallery';
 
 const ordered = archiveOrdered();
-const padNo = (n: number) => String(n).padStart(2, '0');
+const padNo = (n: number) => String(n).padStart(4, '0');
 const capOf = (img: GalleryImage) =>
-  img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
+  img.title
+    ? `《${img.title}》 @${img.author}`
+    : img.series
+      ? `${img.series} · @${img.author}`
+      : `@${img.author}`;
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 ---
 
@@ -98,7 +102,12 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     const lb = initGalleryLightbox({
       root: lightbox,
       getSlides: () =>
-        ordered.map(i => ({ full: i.src, title: i.title ?? '', author: i.author })),
+        ordered.map(i => ({
+          full: i.src,
+          title: i.title ?? '',
+          series: i.series,
+          author: i.author,
+        })),
     });
 
     // 网格触发：打开在展示序中的位置（与藏品编号一致）

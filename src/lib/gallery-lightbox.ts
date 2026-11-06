@@ -22,6 +22,8 @@ export interface LightboxSlide {
   full: string;
   /** 作品名（无题作品传空串） */
   title: string;
+  /** 所属系列（活动图期数，如「2021年9月」；无作品名时以「series · @author」呈现） */
+  series?: string;
   /** 作者 ID */
   author: string;
 }
@@ -69,7 +71,11 @@ export function initGalleryLightbox({
     img.classList.remove('gl-img--error');
     img.src = slide.full;
     img.alt = slide.title ? `《${slide.title}》——${slide.author}作品` : `${slide.author}作品`;
-    capText.textContent = slide.title ? `《${slide.title}》 @${slide.author}` : `@${slide.author}`;
+    capText.textContent = slide.title
+      ? `《${slide.title}》 @${slide.author}`
+      : slide.series
+        ? `${slide.series} · @${slide.author}`
+        : `@${slide.author}`;
     count.textContent = `${current + 1} / ${getSlides().length}`;
   };
 

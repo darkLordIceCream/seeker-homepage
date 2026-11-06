@@ -23,8 +23,10 @@ export interface GalleryImage {
   h: number;
   /** 作者 ID（问卷署名，即 R2 文件名） */
   author: string;
-  /** 作品名（问卷文件名中的作品名后缀，无题作品省略） */
+  /** 作品名（问卷文件名中的作品名后缀，无题作品省略；书名号只给真作品名） */
   title?: string;
+  /** 所属系列（活动图期数，如「2021年9月」；图注以「series · @author」呈现） */
+  series?: string;
   /** 无障碍描述 */
   alt: string;
 }
@@ -293,7 +295,7 @@ const byKey = (key: string): GalleryImage => {
   return hit;
 };
 
-/** meta key → 期数标签（title/alt 用）；非活动图前缀返回 null */
+/** meta key → 期数标签（series/alt 用）；非活动图前缀返回 null */
 const periodOf = (key: string): string | null => {
   let m = key.match(/^activities\/(?:story-of-time-)?(\d{4})-(\d{2})\//);
   if (m) {
@@ -308,13 +310,15 @@ const periodOf = (key: string): string | null => {
 
 /**
  * 活动图合成：meta 全量（2185 key）→ 除公益「带上她的眼睛」外全部 R2 摄影
- * 图入池（用户 2026-11-07 裁决）。剔除画幅 ≥3 或 ≤1/3 的长卷条幅（等高挂墙
- * 下不可展，60 张）。集体署名 Seeker追光者，title 即期数。
+ * 图入池（用户 2026-11-07 裁决）。剔除两类非摄影物料：画幅 ≥3 或 ≤1/3 的
+ * 长卷条幅（60 张，等高挂墙不可展）、committee.webp（每期 SEEKER logo
+ * 拼贴设计图 64 张，期数包装物料而非作品——Critic P0）。集体署名
+ * Seeker追光者；期数放 series（书名号只给真作品名，Critic P2）。
  */
 const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_META).flatMap(
   ([key, { w, h }]) => {
     const period = periodOf(key);
-    if (!period) {
+    if (!period || key.endsWith('committee.webp')) {
       return [];
     }
     const ar = w / h;
@@ -328,7 +332,7 @@ const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_ME
         w,
         h,
         author: 'Seeker追光者',
-        title: period,
+        series: period,
         alt: isChasing ? `追光之旅活动作品（${period}）。` : `《时间的故事》${period}期活动作品。`,
       } satisfies GalleryImage,
     ];
@@ -336,12 +340,30 @@ const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_ME
 );
 
 /**
+ * 活动图时序键：期数 (年,月) 大小值——档案墙按此降序才是真「新→旧」。
+ * （src 字符串直排会把 2026-XX 排到 story-of-time-2025 之后，Critic P0；
+ * 追光之旅作为专项赛块统一后置。）
+ */
+const activityOrderKey = new Map<string, number>();
+for (const img of activityImages) {
+  const key = img.src.replace(`${R2}/`, '');
+  const m = key.match(/^activities\/(?:story-of-time-)?(\d{4})-(\d{2})\//);
+  if (m) {
+    activityOrderKey.set(img.src, Number(m[1]) * 12 + Number(m[2]));
+  } else {
+    // 追光之旅专项块后置：负值域在降序里统一垫在全部故事期之后，年内再降序
+    const y = key.match(/^activities\/chasing-light\/(\d{4})\//)?.[1];
+    activityOrderKey.set(img.src, y ? Number(y) * 12 - 1e6 : -1e7);
+  }
+}
+
+/**
  * 全素材池（单一事实来源，Gallery 3.1 起）：问卷精选 33（真名真 alt，门厅
  * SSR 首图与七周年等仍从这里取）+ 全部活动期数与追光之旅作品。
  */
 export const ARCHIVE_POOL: readonly GalleryImage[] = [...GALLERY_POOL, ...activityImages];
 
-/** 档案馆首屏策展序（PL.01 起）：问卷精选先行，活动图按期数新→旧垫后 */
+/** 档案馆首屏策展序（PL.0001 起）：问卷精选先行，活动图按期数新→旧垫后 */
 const ARCHIVE_LEAD: readonly string[] = [
   '不要回答',
   '静谧',
@@ -353,11 +375,25 @@ const ARCHIVE_LEAD: readonly string[] = [
   '绿鬣蜥',
 ];
 
-/** 档案馆展示序 = 策展序先行 + 问卷池序 + 活动图期数倒序；门厅灯箱翻页序与此一致 */
+/** 期内按文件名数字序（01→47，cover 尾随） */
+const byFile = (a: string, b: string) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+
+/**
+ * 档案馆展示序 = 策展序先行 + 问卷池序 + 活动图期数 (年,月) 新→旧
+ * （追光之旅专项块后置）；门厅灯箱翻页序与此一致。
+ */
 export const archiveOrdered = (): readonly GalleryImage[] => {
   const lead = ARCHIVE_LEAD.map(byKey);
   const rest = GALLERY_POOL.filter(i => !lead.includes(i));
-  const acts = activityImages.slice().sort((a, b) => b.src.localeCompare(a.src));
+  const acts = activityImages.slice().sort((a, b) => {
+    const va = activityOrderKey.get(a.src) ?? 0;
+    const vb = activityOrderKey.get(b.src) ?? 0;
+    if (va !== vb) {
+      return vb - va;
+    }
+    return byFile(a.src, b.src);
+  });
   return [...lead, ...rest, ...acts];
 };
 
