@@ -91,7 +91,7 @@ const flow = chapters.map((ch, i) => {
       >
         <figure class="g-stage">
           <button
-            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)};--fit-w:${fitW(ch.first)}`}             type="button"
+            aria-label={`放大查看：${ch.first.alt}`}             class="g-shutter"             data-enlarge             style={`--ph-bg:${phBg(ch.first.tone)};--fit-w:${fitW(ch.first)};--fit-h:min(72vh, 700px)`}             type="button"
           >
             <span class="g-mount">
               <img
@@ -205,17 +205,28 @@ const flow = chapters.map((ch, i) => {
   // 期数短标（「第1-2周」），与模板侧同一截取规则
   const BATCH_SHORT = WELFARE_GALLERY_BATCH.label.split('（')[0];
 
-  // 卡宽随照片纵横比收放：桌面以 72vh 内容高为基准，移动端以 60vw 为基准
-  // （两套都用「内容高度 × 宽高比 + 衬边」公式，保证四边等宽）
-  const mobileMq = window.matchMedia('(max-width: 640px)');
-  const fitW = (p: WelfareGalleryPhoto) => {
-    const ar = (p.w / p.h).toFixed(4);
-    return mobileMq.matches
-      ? `calc((60vw - 16px) * ${ar} + 16px)`
-      : `calc((min(72vh, 700px) - 2 * clamp(8px, 1vw, 14px)) * ${ar} + 2 * clamp(8px, 1vw, 14px))`;
+  // 卡片尺寸 = 照片纵横比 + 均匀衬边：basis = min(内容高, 可用宽/宽高比)
+  // 宽幅封顶时高度同步收缩 → 任意画幅四边衬边恒等宽（桌面衬边基准 1vw∈[8,14]，移动 8px）
+  const fitBox = (p: WelfareGalleryPhoto, viewerW: number) => {
+    const ar = p.w / p.h;
+    const mobile = window.matchMedia('(max-width: 640px)').matches;
+    const frameH = mobile ? window.innerWidth * 0.6 : Math.min(window.innerHeight * 0.72, 700);
+    const pad = mobile ? 8 : Math.max(8, Math.min(14, window.innerWidth * 0.01));
+    const contentH = frameH - 2 * pad;
+    const availW = viewerW - 2 * pad;
+    const basisH = Math.min(contentH, availW / ar);
+    return { w: Math.round(basisH * ar + 2 * pad), h: Math.round(basisH + 2 * pad) };
   };
-  const rerenderAll: Array<() => void> = [];
-  mobileMq.addEventListener('change', () => rerenderAll.forEach(fn => fn()));
+  const rerenderAll: Array<(v?: HTMLElement) => void> = [];
+  const rerenderOnLayout = () => {
+    document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(v => rerenderAll.forEach(fn => fn(v)));
+  };
+  window.matchMedia('(max-width: 640px)').addEventListener('change', rerenderOnLayout);
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(rerenderOnLayout, 150);
+  });
 
   // LQIP 占位渐变（与模板侧 phBg 同一规则）
   const phBg = (tone: string) => {
@@ -290,7 +301,9 @@ const flow = chapters.map((ch, i) => {
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
       shutter.style.setProperty('--ph-bg', phBg(p.tone));
-      shutter.style.setProperty('--fit-w', fitW(p));
+      const box = fitBox(p, viewer.clientWidth);
+      shutter.style.setProperty('--fit-w', box.w + 'px');
+      shutter.style.setProperty('--fit-h', box.h + 'px');
       fadeInOnLoad();
       preheat(photos, index, viewer.classList.contains('in-view'));
       viewer
@@ -884,10 +897,11 @@ const flow = chapters.map((ch, i) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* 卡宽随照片收放（水平居中），高度恒定（垂直零漂移） */
+    /* 卡宽/高由照片纵横比 + 均匀衬边精确定义（JS 渲染 --fit-w/--fit-h）：
+       恒定的是「衬边宽度」，画框随画幅在钳制范围内收放——四边永远等宽 */
     width: min(100%, var(--fit-w, 100%));
     margin: 0 auto;
-    height: min(72vh, 700px);
+    height: var(--fit-h, min(72vh, 700px));
     padding: clamp(8px, 1vw, 14px);
     background: var(--paper-face);
     border: 1px solid var(--divider);
