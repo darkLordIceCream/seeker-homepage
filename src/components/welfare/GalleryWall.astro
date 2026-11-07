@@ -16,11 +16,6 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 const batchShort = WELFARE_GALLERY_BATCH.label.split('（')[0];
 const cap = (p: WelfareGalleryPhoto) => `${p.school} · ${batchShort}`;
 
-// 常驻舞台底座：主色渐变（融入底色 alpha 55）
-const phBgGrad = (p: WelfareGalleryPhoto) => {
-  const [top, bottom] = p.tone.split(',');
-  return `linear-gradient(180deg, ${top}55, ${bottom}55)`;
-};
 
 // 章节流（章间交接已按精简要求移除；保留章眉编号与锚点）
 const chapters = WELFARE_GALLERY_THEMES.flatMap((theme, ti) => {
@@ -64,7 +59,7 @@ const THEME_EN: Record<string, string> = {
         <span class="chap-en" aria-hidden="true">{THEME_EN[ch.theme.id] ?? ''}</span>
       </div>
 
-      <figure class="ph-stage" style={`--ph-stage-bg:${phBgGrad(ch.first)}`}>
+      <figure class="ph-stage">
         <button
           type="button"
           class="ph g-shutter"
@@ -222,11 +217,6 @@ const THEME_EN: Record<string, string> = {
       prevBtn.disabled = index === 0;
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
-      const [t, b] = p.tone.split(',');
-      // 底座设在 stage 元素上（CSS 变量继承方向：父 → 子）
-      const stage = viewer.querySelector<HTMLElement>('.ph-stage')!;
-      stage.style.setProperty('--ph-stage-bg', `linear-gradient(180deg, ${t}55, ${b}55)`);
-      stage.classList.remove('loaded');
       // 图注行宽度对齐照片渲染盒（「图注属于这张照片」），窄屏回落 100%
       const capRow = viewer.querySelector<HTMLElement>('.ph-cap')!;
       const ar = p.w / p.h;
@@ -246,14 +236,7 @@ const THEME_EN: Record<string, string> = {
     // LQIP：加载期在照片原位显主色，就位后淡入 + 舞台 tint 淡出（已缓存直接显示）
     const fadeInOnLoad = () => {
       img.classList.add('is-loading');
-      const reveal = () => {
-        img.classList.remove('is-loading');
-        const stage = viewer.querySelector('.ph-stage');
-        // 双 rAF 确保照片先完成不透明度过渡，再淡出底座
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          stage?.classList.add('loaded');
-        }));
-      };
+      const reveal = () => { img.classList.remove('is-loading'); };
       if (img.complete && img.naturalWidth > 0) {
         requestAnimationFrame(reveal);
       } else {
@@ -773,13 +756,6 @@ const THEME_EN: Record<string, string> = {
   /* —— 照片：裸放，恒定舞台高度，contain 不裁切 —— */
   .ph-stage {
     margin: 0;
-    /* LQIP 底座只做加载态：照片就位后 tint 过渡淡出，回归纯纸底裸照片 */
-    background: var(--ph-stage-bg, transparent);
-    transition: background 0.6s ease;
-  }
-
-  .ph-stage.loaded {
-    background: transparent;
   }
 
   .ph {
@@ -802,9 +778,6 @@ const THEME_EN: Record<string, string> = {
     object-fit: contain;
     transition: opacity 0.35s ease;
     background: var(--ph-bg, transparent);
-    /* 1px 发丝线：裸放唯一合法边界（贴照片渲染盒，救亮天空/暗边缘融合） */
-    outline: 1px solid var(--g-hairline);
-    outline-offset: -1px;
   }
 
   .ph img.is-loading {
@@ -1357,7 +1330,6 @@ const THEME_EN: Record<string, string> = {
       transition: none;
     }
 
-    .ph img.is-loading,
     .lb-img.is-loading {
       opacity: 1;
     }
