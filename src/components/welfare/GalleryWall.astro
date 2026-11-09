@@ -615,24 +615,8 @@ const THEME_EN: Record<string, string> = {
 </script>
 
 <style>
-  /* ===== 页面骨架：双主题（暗夜藏蓝 / 纸张墨水），令牌对齐七周年语系 ===== */
+  /* ===== 页面骨架：双主题（日间纸张墨水 / 夜间藏蓝），跟随主站 .dark 切换 ===== */
   .bhe {
-    --g-bg: #04101e;
-    --g-fg: #eaf4ff;
-    --g-sub: rgba(234, 244, 255, 0.6);
-    --g-faint: rgba(234, 244, 255, 0.34);
-    --g-line: rgba(234, 244, 255, 0.12);
-    --g-border-strong: rgba(234, 244, 255, 0.3);
-    --g-hairline: rgba(234, 244, 255, 0.14);
-    --g-accent: #2e86de;
-    background: var(--g-bg);
-    color: var(--g-fg);
-    min-height: 100vh;
-    max-width: none;
-    padding: 88px clamp(16px, 5vw, 40px) 96px;
-  }
-
-  :global(.dark) .bhe {
     --g-bg: #f7fafd;
     --g-fg: #14283d;
     --g-sub: rgba(20, 40, 61, 0.6);
@@ -641,6 +625,22 @@ const THEME_EN: Record<string, string> = {
     --g-border-strong: rgba(20, 40, 61, 0.32);
     --g-hairline: rgba(20, 40, 61, 0.12);
     --g-accent: #06427e;
+    background: var(--g-bg);
+    color: var(--g-fg);
+    min-height: 100vh;
+    max-width: none;
+    padding: 88px clamp(16px, 5vw, 40px) 96px;
+  }
+
+  :global(.dark) .bhe {
+    --g-bg: #04101e;
+    --g-fg: #eaf4ff;
+    --g-sub: rgba(234, 244, 255, 0.6);
+    --g-faint: rgba(234, 244, 255, 0.34);
+    --g-line: rgba(234, 244, 255, 0.12);
+    --g-border-strong: rgba(234, 244, 255, 0.3);
+    --g-hairline: rgba(234, 244, 255, 0.14);
+    --g-accent: #2e86de;
   }
 
   .g-hero {
