@@ -13,6 +13,7 @@
  *   门厅随机轮换与档案馆全览都从这层取。
  */
 import { ACTIVITY_IMAGE_META } from '@/lib/activity-image-meta';
+import { ACTIVITY_CREDITS } from '@/data/activity-credits.generated';
 
 export interface GalleryImage {
   /** R2 绝对 URL */
@@ -312,8 +313,10 @@ const periodOf = (key: string): string | null => {
  * 活动图合成：meta 全量（2185 key）→ 除公益「带上她的眼睛」外全部 R2 摄影
  * 图入池（用户 2026-11-07 裁决）。剔除两类非摄影物料：画幅 ≥3 或 ≤1/3 的
  * 长卷条幅（60 张，等高挂墙不可展）、committee.webp（每期 SEEKER logo
- * 拼贴设计图 64 张，期数包装物料而非作品——Critic P0）。集体署名
- * Seeker追光者；期数放 series（书名号只给真作品名，Critic P2）。
+ * 拼贴设计图 64 张，期数包装物料而非作品——Critic P0）。
+ * 署名来自内容集合逐图数据（activity-credits.generated.ts，真名+手记；
+ * 《时间的故事》~99% 覆盖、追光之旅获奖作品含真作品名），未覆盖者兜底
+ * 集体署名 Seeker追光者。
  */
 const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_META).flatMap(
   ([key, { w, h }]) => {
@@ -325,15 +328,21 @@ const activityImages: readonly GalleryImage[] = Object.entries(ACTIVITY_IMAGE_ME
     if (ar >= 3 || ar <= 1 / 3) {
       return [];
     }
-    const isChasing = key.includes('chasing-light');
+    const credit = ACTIVITY_CREDITS[key];
+    const alt = credit
+      ? credit.title
+        ? `《${credit.title}》——${credit.author}作品（${credit.award}，${credit.series}）。${credit.note}`
+        : `${credit.note}（${credit.series}期·${credit.author}摄）。`
+      : `《时间的故事》${period}期活动作品。`;
     return [
       {
         src: `${R2}/${key}`,
         w,
         h,
-        author: 'Seeker追光者',
+        author: credit?.author ?? 'Seeker追光者',
+        title: credit?.title || undefined,
         series: period,
-        alt: isChasing ? `追光之旅活动作品（${period}）。` : `《时间的故事》${period}期活动作品。`,
+        alt,
       } satisfies GalleryImage,
     ];
   },
@@ -363,7 +372,7 @@ for (const img of activityImages) {
  */
 export const ARCHIVE_POOL: readonly GalleryImage[] = [...GALLERY_POOL, ...activityImages];
 
-/** 档案馆首屏策展序（PL.0001 起）：问卷精选先行，活动图按期数新→旧垫后 */
+/** 档案馆无 JS 兜底序：问卷精选先行，活动图按期数新→旧垫后（有 JS 时墙面每次随机重排） */
 const ARCHIVE_LEAD: readonly string[] = [
   '不要回答',
   '静谧',

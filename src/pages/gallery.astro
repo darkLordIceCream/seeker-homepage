@@ -28,6 +28,18 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
   description="Seeker追光者作品档案——小组成员的摄影作品目录，拍一张照片，交一个朋友"
   title="作品档案 · Gallery — Seeker追光者"
 >
+  <Fragment slot="head">
+    <!-- 揭幕门控（Critic P1-1）：墙在洗牌完成前不可见——观众不许看见布展员
+         挂画（SSR 固定序闪现 + 2094 节点重排位移都被这层吃掉）。
+         2.5s 强制揭幕兜底：模块脚本失败也不许把墙永久藏掉。 -->
+    <script is:inline>
+      document.documentElement.classList.add('gallery-shuffling');
+      window.setTimeout(function () {
+        document.documentElement.classList.remove('gallery-shuffling');
+        document.documentElement.classList.add('gallery-shuffled');
+      }, 2500);
+    </script>
+  </Fragment>
   <Navigation />
 
   <main class="archive-page" id="main-content">
@@ -38,8 +50,8 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 
     <section aria-label="全部作品" class="arch-wall">
       {
-        ordered.map((img, i) => (
-          <figure class="arch-item" data-author={img.author} style={`--ar:${(img.w / img.h).toFixed(4)}`}>
+        ordered.map(img => (
+          <figure class="arch-item" style={`--ar:${(img.w / img.h).toFixed(4)}`}>
             <button
               aria-label={`放大查看 ${capOf(img)}`}
               class="shot"
@@ -53,7 +65,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
                 alt={altOf(img)}
                 decoding="async"
                 height={img.h}
-                loading={i < 4 ? 'eager' : 'lazy'}
+                loading="lazy"
                 src={thumbOf(img)}
                 width={img.w}
               />
@@ -108,20 +120,23 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     wall?.appendChild(fig);
   }
 
-  /** 灯箱片单 = 洗牌后的墙上序（现读触发按钮 dataset，永远与画面一致） */
-  const slidesOf = () =>
-    figures.map(fig => {
-      const d = fig.querySelector<HTMLButtonElement>('.shot')?.dataset;
-      return {
-        full: d?.full ?? '',
-        title: d?.title ?? '',
-        series: d?.series || undefined,
-        author: d?.author ?? '',
-      };
-    });
+  // 揭幕：洗牌完成，墙亮出来
+  document.documentElement.classList.remove('gallery-shuffling');
+  document.documentElement.classList.add('gallery-shuffled');
+
+  /** 灯箱片单 = 洗牌后的墙上序（重挂后 DOM 已冻结，缓存一次与现读等价） */
+  const slides = figures.map(fig => {
+    const d = fig.querySelector<HTMLButtonElement>('.shot')?.dataset;
+    return {
+      full: d?.full ?? '',
+      title: d?.title ?? '',
+      series: d?.series || undefined,
+      author: d?.author ?? '',
+    };
+  });
 
   if (lightbox) {
-    const lb = initGalleryLightbox({ root: lightbox, getSlides: slidesOf });
+    const lb = initGalleryLightbox({ root: lightbox, getSlides: () => slides });
     for (const fig of figures) {
       fig.querySelector('.shot')?.addEventListener('click', () => {
         const idx = figures.indexOf(fig);
@@ -242,6 +257,11 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     }
   }
 
+  /* —— 揭幕门控（Critic P1-1）：洗牌完成前墙不可见（占位保留，滚动条不跳） —— */
+  :global(html.gallery-shuffling:not(.gallery-shuffled)) .arch-wall {
+    visibility: hidden;
+  }
+
   /* —— 博物馆标签：作品名 @作者（藏品编号已按用户裁决移除） —— */
   .arch-cap {
     margin-top: 10px;
@@ -252,9 +272,12 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     font-size: 12.5px;
     letter-spacing: 0.05em;
     color: var(--muted-foreground);
-    white-space: nowrap;
+    /* 窄幅竖图下标签不截断作品名——两行 clamp（Critic P2） */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.5;
   }
 
   /* —— 响应式行高 —— */
