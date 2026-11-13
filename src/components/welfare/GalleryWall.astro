@@ -219,15 +219,7 @@ const THEME_EN: Record<string, string> = {
       prevBtn.disabled = index === 0;
       nextBtn.disabled = index === photos.length - 1;
       shutter.setAttribute('aria-label', `放大查看：${p.alt}`);
-      // 图注行宽度对齐照片渲染盒（「图注属于这张照片」），窄屏回落 100%
-      const capRow = viewer.querySelector<HTMLElement>('.ph-cap')!;
-      const ar = p.w / p.h;
-      const mobile = window.matchMedia('(max-width: 640px)').matches;
-      const frameH = mobile ? window.innerWidth * 0.6 : Math.min(window.innerHeight * 0.72, 700);
-      const pad2v = mobile ? 8 : Math.max(8, Math.min(14, window.innerWidth * 0.01));
-      const photoW = Math.min(viewer.clientWidth - 2 * pad2v, (frameH - 2 * pad2v) * ar);
-      capRow.style.width = mobile ? '100%' : `${Math.round(photoW + 2 * pad2v)}px`;
-      capRow.style.margin = '0 auto';
+      // 图注行恒定占满内容列：翻页按钮位置固定（横竖图切换不漂移，鼠标不必反复移动）
       fadeInOnLoad();
       preheat(photos, index);
       viewer
