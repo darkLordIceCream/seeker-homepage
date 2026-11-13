@@ -1,16 +1,16 @@
 ---
 /**
- * /gallery 档案馆：全量作品「藏品目录」页（Gallery 3.0 二级展厅）。
+ * /gallery 档案馆：全量作品「接触印样墙」（Gallery 3.1 二级展厅）。
  * 排版 = 等高行 justified rows（Magnum / Leica Gallery 的挂墙方式）：行内
  * 按宽高比分配宽度——flex-grow 与 flex-basis 均以 --ar 表达，浏览器换行
- * 后行内等高——零裁切、直角、行序即阅读序（比 CSS columns 的列向阅读
- * 更美术馆，键盘 Tab 顺序也与视觉一致）。
- * 每件 PL.XX 藏品编号（plate，摄影集编号惯例；避开作者 @No.25 的"No."撞车）：
- * 展示序 = 策展序（gallery.ts ARCHIVE_LEAD 先行）+
- * 池序垫后，编号与首页门厅灯箱的翻页序一致。
+ * 后行内等高——零裁切、直角、行序即阅读序。
+ * 挂墙顺序每次点开随机（用户 2026-11-14 裁决）：SSR 固定序仅作无 JS 兜底，
+ * hydration 即 Fisher-Yates 洗牌重挂 DOM；灯箱片单与翻页序随洗牌后的
+ * DOM 序（墙上位置 ↔ 灯箱位置始终联动）。
+ * 图注只留作品名 @作者（用户裁决：藏品编号已删；无题作品仅 @作者）。
  * 灯箱与首页门厅共用 src/lib/gallery-lightbox.ts 与 gallery-lightbox.css。
- * 网格读缩略图（gallery/thumbs/，长边 960 WebP，管线 scripts/make-gallery-thumbs.mjs），
- * 原图只进灯箱；lazy 加载 + 宽高属性防 CLS。
+ * 网格读缩略图（thumbs/<key>.webp，长边 960 WebP，管线
+ * scripts/make-gallery-thumbs.mjs），原图只进灯箱；lazy + 宽高属性防 CLS。
  */
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
@@ -19,7 +19,6 @@ import '../styles/gallery-lightbox.css';
 import { archiveOrdered, thumbOf, type GalleryImage } from '@/data/gallery';
 
 const ordered = archiveOrdered();
-const padNo = (n: number) => String(n).padStart(2, '0');
 const capOf = (img: GalleryImage) =>
   img.title ? `《${img.title}》 @${img.author}` : `@${img.author}`;
 const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
@@ -29,6 +28,18 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
   description="Seeker追光者作品档案——小组成员的摄影作品目录，拍一张照片，交一个朋友"
   title="作品档案 · Gallery — Seeker追光者"
 >
+  <Fragment slot="head">
+    <!-- 揭幕门控（Critic P1-1）：墙在洗牌完成前不可见——观众不许看见布展员
+         挂画（SSR 固定序闪现 + 2094 节点重排位移都被这层吃掉）。
+         2.5s 强制揭幕兜底：模块脚本失败也不许把墙永久藏掉。 -->
+    <script is:inline>
+      document.documentElement.classList.add('gallery-shuffling');
+      window.setTimeout(() => {
+        document.documentElement.classList.remove('gallery-shuffling');
+        document.documentElement.classList.add('gallery-shuffled');
+      }, 2500);
+    </script>
+  </Fragment>
   <Navigation />
 
   <main class="archive-page" id="main-content">
@@ -39,13 +50,14 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 
     <section aria-label="全部作品" class="arch-wall">
       {
-        ordered.map((img, i) => (
-          <figure class="arch-item" data-author={img.author} style={`--ar:${(img.w / img.h).toFixed(4)}`}>
+        ordered.map(img => (
+          <figure class="arch-item" style={`--ar:${(img.w / img.h).toFixed(4)}`}>
             <button
               aria-label={`放大查看 ${capOf(img)}`}
               class="shot"
               data-author={img.author}
               data-full={img.src}
+              data-series={img.series ?? ''}
               data-title={img.title ?? ''}
               type="button"
             >
@@ -53,13 +65,12 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
                 alt={altOf(img)}
                 decoding="async"
                 height={img.h}
-                loading={i < 4 ? 'eager' : 'lazy'}
+                loading="lazy"
                 src={thumbOf(img)}
                 width={img.w}
               />
             </button>
             <figcaption class="arch-cap">
-              <span class="arch-no">PL.{padNo(i + 1)}</span>
               <span class="arch-label">{capOf(img)}</span>
             </figcaption>
           </figure>
@@ -90,21 +101,45 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
 
 <script>
   import { initGalleryLightbox } from '@/lib/gallery-lightbox';
-  import { archiveOrdered } from '@/data/gallery';
 
-  const ordered = archiveOrdered();
   const lightbox = document.querySelector<HTMLElement>('.gl-lightbox');
-  if (lightbox) {
-    const lb = initGalleryLightbox({
-      root: lightbox,
-      getSlides: () =>
-        ordered.map(i => ({ full: i.src, title: i.title ?? '', author: i.author })),
-    });
+  const wall = document.querySelector<HTMLElement>('.arch-wall');
+  const figures = [...(wall?.querySelectorAll<HTMLElement>('.arch-item') ?? [])];
 
-    // 网格触发：打开在展示序中的位置（与藏品编号一致）
-    for (const btn of document.querySelectorAll<HTMLButtonElement>('.arch-item .shot')) {
-      btn.addEventListener('click', () => {
-        const idx = ordered.findIndex(i => i.src === btn.dataset.full);
+  // —— 每次点开随机排墙（用户 2026-11-14 裁决）：Fisher-Yates 洗牌后按
+  // 新序重挂 DOM（SSR 固定序仅无 JS 兜底）；灯箱片单随洗牌后的 DOM 序，
+  // 墙上位置 ↔ 灯箱位置始终联动 ——
+  for (let i = figures.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const a = figures[i]!;
+    const b = figures[j]!;
+    figures[i] = b;
+    figures[j] = a;
+  }
+  for (const fig of figures) {
+    wall?.appendChild(fig);
+  }
+
+  // 揭幕：洗牌完成，墙亮出来
+  document.documentElement.classList.remove('gallery-shuffling');
+  document.documentElement.classList.add('gallery-shuffled');
+
+  /** 灯箱片单 = 洗牌后的墙上序（重挂后 DOM 已冻结，缓存一次与现读等价） */
+  const slides = figures.map(fig => {
+    const d = fig.querySelector<HTMLButtonElement>('.shot')?.dataset;
+    return {
+      full: d?.full ?? '',
+      title: d?.title ?? '',
+      series: d?.series || undefined,
+      author: d?.author ?? '',
+    };
+  });
+
+  if (lightbox) {
+    const lb = initGalleryLightbox({ root: lightbox, getSlides: () => slides });
+    for (const fig of figures) {
+      fig.querySelector('.shot')?.addEventListener('click', () => {
+        const idx = figures.indexOf(fig);
         lb.open(idx >= 0 ? idx : 0);
       });
     }
@@ -222,21 +257,14 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     }
   }
 
-  /* —— 博物馆标签：藏品编号 + 作品名 @作者 —— */
-  .arch-cap {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+  /* —— 揭幕门控（Critic P1-1）：洗牌完成前墙不可见（占位保留，滚动条不跳） —— */
+  :global(html.gallery-shuffling:not(.gallery-shuffled)) .arch-wall {
+    visibility: hidden;
   }
 
-  .arch-no {
-    font-family: var(--font-archivo);
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--muted-foreground);
-    opacity: 0.75;
-    font-variant-numeric: tabular-nums;
+  /* —— 博物馆标签：作品名 @作者（藏品编号已按用户裁决移除） —— */
+  .arch-cap {
+    margin-top: 10px;
   }
 
   .arch-label {
@@ -244,9 +272,12 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
     font-size: 12.5px;
     letter-spacing: 0.05em;
     color: var(--muted-foreground);
-    white-space: nowrap;
+    /* 窄幅竖图下标签不截断作品名——两行 clamp（Critic P2） */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.5;
   }
 
   /* —— 响应式行高 —— */

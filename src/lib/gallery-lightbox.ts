@@ -5,7 +5,8 @@
  *
  * 片单制：打开与翻页时经 getSlides() 现读当前片单——门厅传全池展示序
  * （灯箱成为门厅与档案馆之间的走廊，可 ←/→ 翻遍全部作品），档案馆传
- * 同一展示序（与藏品编号 No.XX 一致）。计数「N / 总数」永远与片单一致。
+ * 洗牌后的墙上序（每次到访随机，墙上位置 ↔ 灯箱位置联动）。
+ * 计数「N / 总数」永远与片单一致。
  *
  * 触发按钮由调用方绑定（打开序位因页面而异），本引擎只负责灯箱本体；
  * 返回 { open, close } 句柄供调用方打开指定序位。
@@ -22,6 +23,8 @@ export interface LightboxSlide {
   full: string;
   /** 作品名（无题作品传空串） */
   title: string;
+  /** 所属系列（活动图期数，如「2021年9月」；无作品名时以「series · @author」呈现） */
+  series?: string;
   /** 作者 ID */
   author: string;
 }
@@ -69,7 +72,11 @@ export function initGalleryLightbox({
     img.classList.remove('gl-img--error');
     img.src = slide.full;
     img.alt = slide.title ? `《${slide.title}》——${slide.author}作品` : `${slide.author}作品`;
-    capText.textContent = slide.title ? `《${slide.title}》 @${slide.author}` : `@${slide.author}`;
+    capText.textContent = slide.title
+      ? `《${slide.title}》 @${slide.author}`
+      : slide.series
+        ? `${slide.series} · @${slide.author}`
+        : `@${slide.author}`;
     count.textContent = `${current + 1} / ${getSlides().length}`;
   };
 

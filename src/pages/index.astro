@@ -8,15 +8,9 @@ import ActsSection from '../components/home/ActsSection.astro';
 import AboutSection from '../components/home/AboutSection.astro';
 import PageProgress from '../components/home/PageProgress.astro';
 import AnniversaryCard from '../components/anniversary/AnniversaryCard.astro';
-import { GALLERY_OPENING } from '@/data/gallery';
 ---
 
 <Layout description="Seeker追光者官网，拍一张照片，交一个朋友" title="Seeker追光者">
-  <Fragment slot="head">
-    <!-- 门厅定妆图预载：/ 与 /#works 落地时第一眼不能等图（P1-7） -->
-    <link as="image" fetchpriority="high" href={GALLERY_OPENING[0].src} rel="preload" />
-    <link as="image" fetchpriority="high" href={GALLERY_OPENING[1].src} rel="preload" />
-  </Fragment>
   <Navigation />
   <PageProgress />
   <main class="snap-scroll" id="main-content">
