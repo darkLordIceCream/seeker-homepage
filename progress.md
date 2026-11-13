@@ -2729,3 +2729,16 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   check 0 错
 - Critic 协议：凭复测数据放行，无需再走完整评审
 - P2 遗留：移动端隐藏槽仍拉原图、懒加载空框内衬色、404 缩略图 CDN 缓存自愈、墙尾长卷专条
+
+### 2026-11-14 · 档案馆随机排墙 + 图注极简 + 真署名上墙（同分支追加，未推送）
+
+- 用户裁决：①
+  PL 藏品编号删、图注只留作品名@作者 ② 每次点开墙序随机（028e706：hydration
+  Fisher-Yates 重挂 DOM，灯箱片单随 DOM 序联动）
+- Critic 备案评审：工程忠实性干净，但抓 P1——洗牌重排前 SSR 定序闪现（2094 节点位移 +
+  CLS 回归）→ 揭幕门控修复（head inline 类 + visibility 门控 + 2.5s 兜底）
+- 用户指正「作品名都成了@Seeker追光者」→ 挖内容集合真数据（f938373）：build-activity-credits.mjs 解析 66 期 entries +
+  4 届追光 → activity-credits.generated.ts
+  2009 条真署名（故事 ~99% 覆盖）；author=真名、追光作品回归书名号、alt=作者手记
+- 复测：满墙真名（@张伟靖/@卿/@柯雷…）、灯箱联动 187/2094《怪天气》@纯黑的林桑、astro
+  check/lint 0 错、揭幕状态机正常
