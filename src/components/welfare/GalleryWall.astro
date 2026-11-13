@@ -197,8 +197,10 @@ const THEME_EN: Record<string, string> = {
     const shutter = viewer.querySelector<HTMLButtonElement>('[data-enlarge]')!;
     const schoolEl = viewer.querySelector<HTMLElement>('.ph-school')!;
     const counterEl = viewer.querySelector<HTMLElement>('.ph-count')!;
-    const thumbsBox = viewer.querySelector<HTMLElement>('[data-thumbs]')!;
-    const details = viewer.querySelector<HTMLDetailsElement>('.ph-index')!;
+    // 缩略图索引在 figure 外（.chap 内），从章容器查询；可空守卫防止模板演化时静默断链
+    const chap = viewer.closest<HTMLElement>('.chap') ?? viewer;
+    const thumbsBox = chap.querySelector<HTMLElement>('[data-thumbs]');
+    const details = chap.querySelector<HTMLDetailsElement>('.ph-index');
     const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-step="-1"]')!;
     const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-step="1"]')!;
 
@@ -246,7 +248,7 @@ const THEME_EN: Record<string, string> = {
     };
 
     const buildThumbs = () => {
-      if (thumbsBuilt) {return;}
+      if (thumbsBuilt || !thumbsBox || !details) {return;}
       thumbsBuilt = true;
       photos.forEach((p, i) => {
         const b = document.createElement('button');
@@ -273,8 +275,8 @@ const THEME_EN: Record<string, string> = {
       render(index);
     };
 
-    details.addEventListener('toggle', () => {
-      if (details.open) {buildThumbs();}
+    details?.addEventListener('toggle', () => {
+      if (details?.open) {buildThumbs();}
     });
 
     viewer.querySelectorAll<HTMLButtonElement>('[data-step]').forEach(btn => {
