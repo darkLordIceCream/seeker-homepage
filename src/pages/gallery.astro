@@ -34,7 +34,7 @@ const altOf = (img: GalleryImage) => `${img.alt}（作者：${img.author}）`;
          2.5s 强制揭幕兜底：模块脚本失败也不许把墙永久藏掉。 -->
     <script is:inline>
       document.documentElement.classList.add('gallery-shuffling');
-      window.setTimeout(function () {
+      window.setTimeout(() => {
         document.documentElement.classList.remove('gallery-shuffling');
         document.documentElement.classList.add('gallery-shuffled');
       }, 2500);
