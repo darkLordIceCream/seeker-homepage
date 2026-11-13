@@ -59,7 +59,7 @@ const THEME_EN: Record<string, string> = {
         <span class="chap-en" aria-hidden="true">{THEME_EN[ch.theme.id] ?? ''}</span>
       </div>
 
-      <figure class="ph-stage">
+      <figure class="ph-stage" data-viewer data-theme={ch.theme.id}>
         <button
           type="button"
           class="ph g-shutter"
