@@ -215,7 +215,7 @@ const THEME_EN: Record<string, string> = {
   document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(viewer => {
     const seq = seqs.get(viewer.dataset.theme ?? '');
     if (!seq) {return;}
-    const photos = seq.photos;
+    const { photos } = seq;
 
     const img = viewer.querySelector<HTMLImageElement>('.ph img')!;
     const shutter = viewer.querySelector<HTMLButtonElement>('[data-enlarge]')!;
