@@ -464,6 +464,11 @@ const THEME_EN: Record<string, string> = {
       markThumbs();
     };
 
+    // 开灯箱时的视口位置：关闭（含 history.back() 引发的异步恢复）后统一拉回，
+    // 防 Chrome 对 pushState 条目的滚动恢复把视口拖到别处（曾现「关灯箱落底部」）
+    let openerScroll = 0;
+    let pendingRestore = false;
+
     const openAt = (seqId: string, i: number, from: HTMLElement) => {
       const s = seqs.get(seqId);
       if (!s) {return;}
@@ -472,6 +477,7 @@ const THEME_EN: Record<string, string> = {
       index = i;
       opener = from;
       if (firstOpen) {
+        openerScroll = window.scrollY;
         buildThumbs();
         setSheet(false);
         document.body.style.overflow = 'hidden';
@@ -493,12 +499,14 @@ const THEME_EN: Record<string, string> = {
       imageReady = false;
       if (pushed && !fromPop) {
         pushed = false;
+        pendingRestore = true;
         history.back();
       } else {
         pushed = false;
       }
       opener?.focus({ preventScroll: true });
       opener = null;
+      window.scrollTo({ top: openerScroll, behavior: 'instant' });
     };
 
     dialog.addEventListener('cancel', e => {
@@ -510,6 +518,11 @@ const THEME_EN: Record<string, string> = {
     lbClose.addEventListener('click', () => close());
     window.addEventListener('popstate', () => {
       if (dialog.open) {close(true);}
+      // history.back() 的浏览器侧滚动恢复是异步的：到来后把视口拉回开灯箱位置
+      if (pendingRestore) {
+        pendingRestore = false;
+        window.scrollTo({ top: openerScroll, behavior: 'instant' });
+      }
     });
 
     lbPrev.addEventListener('click', () => show(index - 1));
