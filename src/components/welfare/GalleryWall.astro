@@ -482,6 +482,9 @@ const THEME_EN: Record<string, string> = {
         setSheet(false);
         document.body.style.overflow = 'hidden';
         dialog.showModal();
+        // showModal 聚焦首元素会同步把底层视口滚到 dialog 的 DOM 位置（页面底部），
+        // 半透明背板下可见——立即拉回用户开灯箱时的位置
+        window.scrollTo({ top: openerScroll, behavior: 'instant' });
         if (!pushed) {
           history.pushState({ bheLb: true }, '');
           pushed = true;
