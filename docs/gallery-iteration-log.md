@@ -262,3 +262,21 @@ to fetch——代理此刻未正确处理浏览器到该域名的请求。代码
 **Critic 快评**：图底关系干净，竖图侧色带彻底消失，verdict:
 deliverable（约 7.8，底部信息行拥挤为下轮候选）。
 **验证**：横图/竖图 stage 背景 transparent，边缘均匀。
+
+## 用户反馈修复 #5（2026-11-13）翻页失效——data-viewer 断链双重根因
+
+**用户反馈**：「翻页不了，是照片没加载的原因吗」——不是加载问题，是 JS 绑定整体静默死亡。
+**根因（两层）**：
+
+1. v2 重写模板时 `figure.ph-stage` 丢失 `data-viewer data-theme` 属性 →
+   viewer 选择器落空（78ad878 修复）
+2. 修复属性后仍翻不动：v2 把 `details.ph-index`
+   移到 figure 外（.chap 内），而 JS 仍在 viewer（figure）作用域内查询
+   `[data-thumbs]`/`.ph-index` 并带 `!` 非空断言 → `details.addEventListener`
+   在 null 上 TypeError →
+   forEach 回调死亡 → 翻页/键盘/滑动/灯箱全部未绑定（ef54d53 修复：改从 `.chap`
+   容器查询 + 可空守卫）
+   **教训**：重写模板删元素时必须同步审计 JS 对同批节点的引用；`!`
+   非空断言会把 DOM 演化风险延迟到运行时爆炸。**线上验证必须跑完整交互链（翻页/灯箱开合），SSR
+   HTML 对 ≠ 页面活。**
+   **验证**（896da0f3 预览实测）：五章翻页（按钮+键盘）全通、计数与 src 同步、灯箱开/翻/关+body 滚动锁恢复全通。
