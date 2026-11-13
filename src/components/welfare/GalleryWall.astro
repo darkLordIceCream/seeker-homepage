@@ -114,7 +114,7 @@ const THEME_EN: Record<string, string> = {
         <input id="lb-zoom-input" type="range" min="100" max="400" step="10" value="100" aria-label="缩放比例" disabled />
         <output id="lb-zoom-out" for="lb-zoom-input">100%</output>
       </label>
-      <button class="lb-tool lb-close" id="lb-close" type="button" autofocus aria-label="关闭大图">×</button>
+      <button class="lb-tool lb-close" id="lb-close" type="button" aria-label="关闭大图">×</button>
     </div>
   </header>
   <div class="lb-stage">
@@ -153,6 +153,26 @@ const THEME_EN: Record<string, string> = {
   // 本页每次进入都从顶部开始：浏览器的滚动位置恢复（刷新/同链接重导航）会把
   // 上次停留的位置（常为页面底部）平滑滚回来，被读成「点进网页自动跳到底部」
   if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
+  // Chrome 重导航还会恢复焦点元素——灯箱按钮位于 DOM 末尾（页面底部），
+  // 焦点滚动经 scroll-behavior: smooth 放大成「平滑跳到底部」动画。
+  // 兜底：进入时若焦点落在未打开的灯箱内则交还，视口拉回顶部；
+  // 用户一旦主动交互（滚动/点击/按键）就不再干预。
+  let userMoved = false;
+  const markMoved = () => { userMoved = true; };
+  window.addEventListener('wheel', markMoved, { once: true, passive: true });
+  window.addEventListener('touchmove', markMoved, { once: true, passive: true });
+  window.addEventListener('keydown', markMoved, { once: true });
+  window.addEventListener('mousedown', markMoved, { once: true });
+  const snapTop = () => {
+    if (userMoved) {return;}
+    const ae = document.activeElement as HTMLElement | null;
+    const inClosedDialog = ae?.closest('dialog') && !(ae.closest('dialog') as HTMLDialogElement).open;
+    if (inClosedDialog) {ae?.blur();}
+    if (window.scrollY !== 0) { window.scrollTo({ top: 0, behavior: 'instant' }); }
+  };
+  snapTop();
+  window.addEventListener('load', snapTop);
 
   interface Seq { themeTitle: string; photos: WelfareGalleryPhoto[]; no: string }
 
