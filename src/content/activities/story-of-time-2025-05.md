@@ -134,13 +134,6 @@ entries:
     caption: |-
       《编伞》
       探访泸州分水岭油纸伞非遗，在太阳直射之下，娴熟的编伞嬢嬢在一把巨大的油纸伞后对油纸伞的内部进行穿线工作。
-  - author: '衣羊'
-    group: '人文纪实组'
-    images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-05/22.webp
-    caption: |-
-      《有福之州》
-      有福之州具像化，一瞬间让我看到了老有所依，少有所长，壮有所用，同框出现，让我意识到，或许真正的福气就是当下。
   - author: '牧之也很Zane'
     group: '人文纪实组'
     images:

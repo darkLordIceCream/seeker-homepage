@@ -97,11 +97,6 @@ entries:
     images:
       - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-08/14.webp
     caption: '一卷又一卷，映照光阴，是时间的故事'
-  - author: '衣羊'
-    group: '人文'
-    images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2024-08/15.webp
-    caption: '《努力活着》一树生长，万物盛夏。一个普通的午后，一条普通的街道，横幅上的字眼仿佛也在预示着自己，如今生存压力如此紧张的社会，只要我们双手还在劳动，何愁养不活自己。愿君共勉！！'
   - author: 'Kkbbr'
     group: '人文'
     images:

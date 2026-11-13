@@ -85,13 +85,6 @@ entries:
     caption: |-
       《丘比特之箭》
       成都居然藏着这样一座爱心岛，航拍视角下，像是丘比特之箭击中了这座小岛，这大概就是属于成都的浪漫吧。
-  - author: '衣羊'
-    group: '城市建筑组'
-    images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/story-of-time-2025-11/11.webp
-    caption: |-
-      《夜幕下的夹缝》
-      总是不自觉将视觉聚焦在一些宏大的建筑中，却忽略了很多平凡普通的视角，或许才是这座城市真正的样子。
   - author: 'Liiiin'
     group: '城市建筑组'
     images:

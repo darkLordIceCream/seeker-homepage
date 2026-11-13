@@ -171,12 +171,6 @@ entries:
       - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-01/25.webp
     caption: '那天在深圳博物馆，看到这个电梯很有意思，但是常规拍法都是高速快门抓拍有顺序的电梯，差点意思，我想到用时间合成的方法，快门抓拍中间的同伴，然后慢门拍摄两侧的电梯，最终得到了这张图片。'
   - date: '1月25日'
-    title: '冬日限定茅家埠三姐妹'
-    author: '衣羊'
-    images:
-      - https://r2.xn--seeker-ng2jm403afb4a.club/activities/2026-01/26.webp
-    caption: '本来奔着世纪朝霞去的，结果事以愿违。清晨的天气一点光亮都没，反而起了阵阵浓雾。竟意外收获一张别样感觉的片子，就像人生一样，永远不知道意外和惊喜谁先到来。'
-  - date: '1月25日'
     title: '冰上圆舞曲'
     author: '耗子吃得饱-'
     images:
