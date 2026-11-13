@@ -150,6 +150,10 @@ const THEME_EN: Record<string, string> = {
     type WelfareGalleryPhoto,
   } from '@/data/welfare-gallery';
 
+  // 本页每次进入都从顶部开始：浏览器的滚动位置恢复（刷新/同链接重导航）会把
+  // 上次停留的位置（常为页面底部）平滑滚回来，被读成「点进网页自动跳到底部」
+  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
   interface Seq { themeTitle: string; photos: WelfareGalleryPhoto[]; no: string }
 
   const seqs = new Map<string, Seq>(
