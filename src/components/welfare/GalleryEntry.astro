@@ -1,0 +1,205 @@
+---
+// 「带上她的眼睛」落地页入口：小摄影师的作品集（v2 精简版）
+// 文字只留一句；瓷砖为裸 thumb 图 + 小标签，与画廊页裸照片语言一致
+import {
+  WELFARE_GALLERY_THEMES,
+  WELFARE_GALLERY_BATCH,
+} from '@/data/welfare-gallery';
+
+const tiles = WELFARE_GALLERY_THEMES.flatMap((theme, i) => {
+  const first = theme.photos[0];
+  if (!first) {return [];}
+  return [
+    {
+      src: first.thumb,
+      alt: first.alt,
+      title: theme.title,
+      no: String(i + 1).padStart(2, '0'),
+    },
+  ];
+});
+---
+
+<section class="gallery-entry" aria-labelledby="gallery-entry-title">
+  <header class="entry-head reveal">
+    <p class="entry-kicker">SEEKER 公益 · WELFARE</p>
+    <h2 class="entry-title" id="gallery-entry-title">小摄影师的作品集</h2>
+    <p class="entry-lead">
+      第 {WELFARE_GALLERY_BATCH.id.replace('w', '')} 期 · {WELFARE_GALLERY_BATCH.photoCount} 张 ·
+      {WELFARE_GALLERY_BATCH.schoolCount} 所学校 · 每两周更新
+    </p>
+  </header>
+
+  <div class="entry-tiles">
+    {tiles.map(tile => (
+      <a
+        class="tile reveal"
+        href="/welfare/gallery/"
+        style={`--reveal-delay:${tiles.indexOf(tile) * 0.08}s`}
+        aria-label={`主题「${tile.title}」，进入小摄影师的作品集`}
+      >
+        <img src={tile.src} alt={tile.alt} loading="lazy" decoding="async" />
+        <span class="tile-name"><span aria-hidden="true" class="tile-no">{tile.no}</span>{tile.title}</span>
+      </a>
+    ))}
+  </div>
+
+  <a class="entry-cta" href="/welfare/gallery/">
+    走进小摄影师的作品集 <span aria-hidden="true">→</span>
+  </a>
+</section>
+
+<script>
+  const els = document.querySelectorAll('.gallery-entry .reveal');
+  if (els.length) {
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in-view');
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px' },
+    );
+    els.forEach(el => io.observe(el));
+  }
+</script>
+
+<style>
+  .gallery-entry {
+    max-width: 1080px;
+    margin: 72px auto 0;
+    padding: 0 clamp(16px, 5vw, 24px) 8px;
+    text-align: center;
+  }
+
+  .entry-head {
+    max-width: 620px;
+    margin: 0 auto 40px;
+  }
+
+  .entry-kicker {
+    font-family: var(--font-archivo);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    color: var(--link);
+    margin: 0 0 12px;
+  }
+
+  .entry-title {
+    font-family: var(--font-serif-song);
+    font-size: clamp(1.7rem, 3.8vw, 2.4rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 12px;
+    line-height: 1.25;
+  }
+
+  .entry-lead {
+    font-family: var(--font-archivo);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+
+  .entry-tiles {
+    display: flex;
+    justify-content: center;
+    gap: clamp(10px, 2.5vw, 22px);
+  }
+
+  .tile {
+    display: block;
+    width: clamp(120px, 16vw, 172px);
+    flex: none;
+    text-decoration: none;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    scroll-snap-align: center;
+  }
+
+  @media (hover: hover) {
+    .tile:hover {
+      transform: translateY(-6px);
+    }
+  }
+
+  .tile:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  .tile img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .tile-name {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--font-archivo);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+  }
+
+  .tile-no {
+    color: var(--link);
+    margin-right: 5px;
+  }
+
+  .entry-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 30px;
+    color: var(--link);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+  }
+
+  .entry-cta span {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) {
+    .entry-cta:hover span {
+      transform: translateX(4px);
+    }
+  }
+
+  .entry-cta:hover {
+    color: var(--link);
+  }
+
+  .entry-cta:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .gallery-entry {
+      margin-top: 56px;
+    }
+
+    .entry-tiles {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 8px 4px 20px;
+      scroll-snap-type: x proximity;
+    }
+  }
+</style>

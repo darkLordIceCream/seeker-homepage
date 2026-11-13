@@ -2681,6 +2681,60 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
   / 辅带横图 ~400×278、稳态零裁切 0.15%（截图 2.74% 为换图交叉淡入瞬态）、无溢出；type-check
   0 错
 
+## 2026-11-04 00:30-01:15 · feat/bring-her-eyes-portfolio · 小摄影师的作品集 v1
+
+- 编辑五步（接触印样 64 张 / 1280 候选 → 定稿 40 张 /
+  5 主题）+ 素材管线（scripts/welfare-gallery/import.py，PIL 压缩长边 2560 q82 →
+  public/r2-preview 预览，R2 只存入选图）+ 画廊页 /welfare/gallery/（GalleryWall：幽灵期号章头 + 序列观看器 + 移植 photoreason/skills
+  MIT 的锚定缩放/拖拽平移 lightbox）+ 落地页入口 GalleryEntry
+- 验证：type-check 0 错、lint 0 错（93 警告为基线+非空断言）、build
+  84 页、浏览器实测桌面/375px + 翻页/放大/缩放/分层 Esc/history 全通过
+- 待办：用户过目 40 张定稿（/tmp/prs-curation/checkpoint.html）→
+  R2 上传 → 数据切 R2 URL
+- 2026-11-04
+  01:40 迭代2：GalleryWall 换页淡入（viewer+lightbox，reduced-motion 降级）、触屏滑动翻页（>48px 横向判定 +
+  dataset 时间戳护栏防误开 lightbox）；暗色模式截图核验通过；IAB 截图合成器过期帧伪影再次确认（dlgOpen=false 时仍可截到残影，以 evaluate 状态为准）
+- 2026-11-04
+  01:55 迭代3：LQIP 主色占位——import.py 提取上/下半部平均色（tone="#top,#bottom"），章图/缩略图/lightbox 大图/入口瓷砖加载期显示照片主色渐变（底片感）；坑：Astro
+  scoped
+  CSS 不匹配 JS 动态创建节点（无 astro-cid），动态缩略图改内联 background；feature_list.json 登记 feat-046（现场取 max=45
+  → 046 防撞号）
+- 2026-11-04 02:45 迭代4：导航回路（Foreground
+  Web「清晰回列表之路」）——画廊 hero 返回链「← 带上她的眼睛 · 图文手记」+ 页脚 CTA「回到…读孩子们的故事」双向闭环；第一章首图 fetchpriority=high（LCP 候选）；入口 CTA
+  hover 箭头位移 + 瓷砖 hover 阴影升起（物理手感）
+- 2026-11-04 03:45 迭代5：邻图预热（rIC/300ms
+  fallback，±1 张，saveData 跳过，按章 in-view 门控——修复首屏预取 19 请求→6 请求）、目录 scrollspy（35%-45% 视口带判定，手动/同步验证通过；后台标签页 IO 回调挂起是环境限制非代码问题）、观看器大图占比提升（72vh/700px，移动端 60vw）
+- 2026-11-04 05:00 迭代6：lightbox 进出过渡（@starting-style + allow-discrete +
+  ::backdrop 独立过渡，无支持浏览器直开降级）、章间编辑交接行「下一辑 · XX
+  ↓」（skill 模板 quiet
+  handoff 同款，Fragment 包裹修复 JSX 多根；排障：早期误写块体 map 体导致级联解析错误，重写 map 开头修复）、lightbox 打开时 body 滚动锁定
+- 2026-11-04
+  05:45 迭代7：无 JS 降级审查——html:not(.js) 下隐藏 .g-nav/.g-index（details 缩略图靠 JS 构建），.g-shutter 退化为静态照片卡（去点击暗示），照片/caption/交接行/入口瓷砖全部可用；待办：项目无 sitemap 集成（加 @astrojs/sitemap 属依赖决策，留给用户），og:image 待 R2 上传后接入（当前为相对预览路径不可作 OG）
+- 2026-11-04
+  06:45 迭代8：lightbox 触屏滑动翻页（非缩放态横向 >48px，缩放态保留原生平移）、点击遮罩关闭（桌面）；修复 UA
+  dialog max-width 夹住移动端全屏（375px 只剩 337px →
+  max-width:none 修复，375×812 全屏验证）；375px 全链路复查通过（滑翻/滚动锁/缩略图条/交接行）
+- 2026-11-04 07:50 迭代9（收尾）：全链路终检（type-check/lint/build
+  0 错，浏览器 QA
+  0 失效资源/0 坏图/meta 正确，桌面+375px 均过）；session-handoff.md 重写为晨间交接（旧内容为 feat-015 时代过期状态）；自动化至 08:00 由下一次 cron 触发自停
+
+### 2026-11-05~11-14 · feat/bring-her-eyes-portfolio · 小摄影师的作品集 精修与 v2 定稿（收尾摘要）
+
+- 2026-11-05 装裱精修 7 轮（Critic 6.5→7.98）+ 策展落地（Editor「零编排错误」）→
+  R5 收口 8.6；细节全记 docs/gallery-iteration-log.md
+- 2026-11-06 用户放行 R2 上传：40 原图 + 40
+  thumb（immutable 头），数据切 R2 绝对 URL（d9c42c1）
+- 2026-11-07 用户否定装裱路线（「不要相框和阴影直接放图片、文字精简、参考七周年但不照抄」）→
+  v2 裸照片重设计（恒定舞台 contain、极简图注、三行章眉、双主题 .bhe），Critic
+  8.6 deliverable
+- 2026-11-13 用户报「翻页不了」→ 双重根因修复（data-viewer 属性丢失 +
+  ph-index 作用域 TypeError 断链）
+- 2026-11-14 用户报「按钮跟随照片移动」→ 图注行恒定满宽按钮固定（Critic 8.1
+  deliverable）；用户报「点进网页自动跳底」→
+  Chrome 焦点恢复链修复（删 autofocus + scrollRestoration=manual +
+  snapTop 兜底 + 灯箱视口锚定 openerScroll）
+- 终验：五章翻页（按钮+键盘）、灯箱开合/翻页/滚动锁恢复全通，y=1200 开关灯箱零漂移、重导航停顶部；type-check/lint/build 全绿
+
 ### 2026-11-06 · Gallery 3.0 白盒美术馆门厅 + /gallery 档案馆（feat/gallery-redesign 分支）
 
 - 用户命题：国际摄影展览级观感、Hero 翻下来第一眼是靶心、简洁大气主页 + 内容丰富的二级页（入口点不点两可）；入口文案定「更多精彩 →」

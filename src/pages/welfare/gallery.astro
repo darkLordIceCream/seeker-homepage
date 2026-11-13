@@ -1,0 +1,34 @@
+---
+// 「小摄影师的作品集」——带上她的眼睛 · 孩子们的照片画廊
+// 数据：src/data/welfare-gallery.ts（每期由 scripts/welfare-gallery/import.py 生成）
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import GalleryWall from '../../components/welfare/GalleryWall.astro';
+import { WELFARE_GALLERY_BATCH } from '@/data/welfare-gallery';
+
+const title = `小摄影师的作品集 | Seeker公益`;
+const description = `「带上她的眼睛」公益摄影课孩子们的作品集：第 ${WELFARE_GALLERY_BATCH.id.replace('w', '')} 期 ${WELFARE_GALLERY_BATCH.photoCount} 张照片，来自 ${WELFARE_GALLERY_BATCH.schoolCount} 所学校的摄影课堂。每两周更新。`;
+---
+
+<Layout description={description} title={title}>
+  <SEOHead canonical="/welfare/gallery/" description={description} title={title} />
+  <Navigation />
+
+  <main id="main-content">
+    <GalleryWall />
+  </main>
+
+  <Footer />
+
+  <style>
+    /* 长滚动作品集页：导航底色提至近实心，避免章头幽灵期号透过玻璃底产生鬼影 */
+    :global(html .navigation.navigation--solid),
+    :global(html .navigation.navigation--solid.scrolled) {
+      background: color-mix(in srgb, var(--background) 94%, transparent);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      backdrop-filter: blur(20px) saturate(200%);
+    }
+  </style>
+</Layout>

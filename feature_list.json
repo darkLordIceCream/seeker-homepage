@@ -372,6 +372,14 @@
       "dependencies": ["feat-046"],
       "status": "done",
       "evidence": "astro check 0 错；Critic 3.1 评审 7.6 not-satisfied → 放行集 P0×3 修复后按协议凭复测数据放行：门控后首换落 2.5–4.5s 窗口、墙序 2061 项零违规、committee 零残留、首抽抽中精选层；追加：档案馆随机排墙+PL 移除（用户裁决 028e706，Critic P1 揭幕门控随修）+真署名上墙（activity-credits.generated.ts 2009 条，用户指正 f938373）——满墙真名实测、灯箱 187/2094 联动、astro check/lint 0 错"
+    },
+    {
+      "id": "feat-048",
+      "name": "小摄影师的作品集——带上她的眼睛作品集画廊（v2 裸照片）",
+      "description": "公益板块新增学生作品集：/welfare/gallery/ 按主题分章（第1期40张/14校/5主题：他们看镜头、操场与游戏、课堂之间、校园一角、窗外）。v2 按用户方向重设计：裸照片（无相框无阴影、恒定舞台 contain）、极简图注（校名·周次+计数+固定位置翻页按钮，图注行恒定满宽横竖图零漂移）、七周年式三行章眉、双主题（.bhe 局部令牌跟随主站 .dark）。章内序列观看（线性翻页+键盘+触屏滑动+端点禁用+缩略图索引按需构建+邻图预热 rIC+saveData+无 JS 降级）。灯箱移植 photoreason/skills MIT（锚定缩放 1-4x、拖拽平移、分层 Esc、pushState 关闭+视口锚定开/关零漂移）。落地页 /welfare/ 入口区块（裸 thumb 瓷砖+CTA）。素材管线 scripts/welfare-gallery/import.py：精选清单→PIL 压缩(长边2560/WebP q82)+thumb 变体+LQIP tone 提取→生成 src/data/welfare-gallery.ts（生成物勿手改）→wrangler 上传命令；R2 只存入选图（40 原图+40 thumb 已上传，immutable 头），URL 不含学生姓名；署名保留字段暂不展示。",
+      "status": "done",
+      "branch": "feat/bring-her-eyes-portfolio",
+      "evidence": "GalleryArtCritic 六维轨迹 6.5→8.6 deliverable（v2 重设计终局）→按钮固定轮 8.1 deliverable；用户实测反馈三轮修复：翻页断链（data-viewer 属性丢失+ph-index 作用域 TypeError）、按钮位置固定（图注行满宽）、重进页面跳底（Chrome 焦点恢复链：删 autofocus+scrollRestoration=manual+snapTop 兜底+showModal/关闭视口锚定）。终验线上实测：五章翻页（按钮+键盘）全通、灯箱开合/翻页/滚动锁恢复全通、y=1200 开关灯箱零漂移、重导航停顶部、移动端 375px。type-check 0 错、lint 0 错、build 81 页。全程轨迹 docs/gallery-iteration-log.md"
     }
   ]
 }

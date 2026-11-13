@@ -7,6 +7,8 @@ export default [
   {
     ignores: [
       '.astro/**',
+      // 自动生成（scripts/welfare-gallery/import.py）：引号风格与生成器绑定
+      'src/data/welfare-gallery.ts',
       '.husky/**',
       '.agents/**',
       'dist/**',

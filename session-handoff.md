@@ -1,64 +1,63 @@
-# Session Handoff
+# Session Handoff — 「小摄影师的作品集」画廊（2026-11-04 夜间自动化）
 
-## Current Objective
+> 给早上的你：夜间自动化迭代已完成 9 轮，画廊功能完整、全链路验证通过。本文档说明现状与你早上要做的事。
 
-- Goal: 文档更新以反映施工页面功能（feat-015）的完成状态
-- Current status: 施工页面功能已完成并合并到 main，文档正在同步更新
-- Branch: docs/update-harness-for-under-construction
+## 现状
 
-## Completed This Session
+- **分支**：`feat/bring-her-eyes-portfolio`（9 个提交，未合并 main，未推送远端）
+- **画廊页**：`/welfare/gallery/`（dev server 仍在 4321 端口跑着，可直接看）
+- **入口**：`/welfare/` 落地页文章堆叠之下「小摄影师的作品集」区块
+- **选片**：40 张 / 5 主题（他们看镜头 10 · 操场与游戏 8 · 课堂之间 8
+  · 校园一角 7 · 窗外 7）
+- **未上 R2**：照片目前在 `public/r2-preview/`
+  本地预览路径渲染（已 git 排除，不入库）
 
-- [x] 施工中占位页面（feat-015）— 完整开发、验证、合并
-  - 创建 /under-construction 统一占位页面
-  - 摄影主题趣味风设计：SVG 相机/胶卷装饰 + 渐变文字 + fadeInUp 动画
-  - 导航栏 25 个占位链接 + 页脚 4 个快速链接统一指向 /under-construction
-  - noindex SEO meta + 返回首页按钮
-  - PR #7 已合并（fast-forward merge）
-  - F1-F4 验证全部通过
-  - 用户后续修改了页面副标题文案（commit fe76839）
-- [x] 更新 feature_list.json — 添加 feat-015 施工页面条目，重新编号 feat-016~019
-- [x] 更新 progress.md — 记录施工页面完成状态、决策、文件变更
-- [x] 更新 README.md — 项目结构添加 under-construction.astro
-- [x] 更新 README-zh.md — 项目结构添加 under-construction.astro
+## 功能清单（每轮一个提交）
 
-## Verification Evidence
+| commit    | 内容                                                                                                          |
+| --------- | ------------------------------------------------------------------------------------------------------------- |
+| `bbeb722` | v1：主题分章 + 序列观看器 + lightbox（锚定缩放/拖拽平移，移植 photoreason/skills MIT）+ 落地页入口 + 导入管线 |
+| `a6d2223` | 换页淡入、触屏滑动翻页、暗色模式核验                                                                          |
+| `f18ab43` | LQIP 主色占位（上/下半部平均色渐变）+ feat-046 登记                                                           |
+| `d2b186b` | 导航回路（返回链 + 页脚 CTA）、LCP fetchpriority、入口 hover 手感                                             |
+| `5ee5a7b` | 邻图预热（首屏请求 19→6）、目录 scrollspy、大图占比提升                                                       |
+| `b405afb` | lightbox 进出过渡（@starting-style）、章间「下一辑」交接行、滚动锁定                                          |
+| `a3d0fdc` | 无 JS 降级（静态照片墙）                                                                                      |
+| `00e09f0` | lightbox 触屏滑翻、点遮罩关闭、UA dialog max-width 全屏修复                                                   |
 
-| Check      | Command               | Result | Notes                      |
-| ---------- | --------------------- | ------ | -------------------------- |
-| build      | `pnpm build`          | ✓ 通过 | 3 个页面构建成功           |
-| type-check | `pnpm type-check`     | ✓ 通过 | 0 errors                   |
-| lint       | `pnpm lint`           | ✓ 通过 | 0 errors（1 预存 warning） |
-| F1 合规    | Plan Compliance Audit | ✓ 通过 | 0 违规                     |
-| F2 质量    | Code Quality Review   | ✓ 通过 | type-check + lint + build  |
-| F3 QA      | Real Manual QA        | ✓ 通过 | 29 个链接全部正确          |
-| F4 范围    | Scope Fidelity Check  | ✓ 通过 | 实现与计划 1:1 对应        |
+## 你早上要做的事
 
-## Files Changed
+### 1. 过目定稿（10 分钟）
 
-- `feature_list.json` - 添加 feat-015 施工页面条目，重新编号后续功能
-- `progress.md` - 更新施工页面完成状态、决策、文件变更、验证证据
-- `README.md` - 项目结构添加 under-construction.astro
-- `README-zh.md` - 项目结构添加 under-construction.astro
-- `session-handoff.md` - 更新为当前状态
+- 浏览器打开 **`/tmp/prs-curation/checkpoint.html`**（40 张按主题排序 +
+  alt + 出处）
+- 或直接看 `/welfare/gallery/` 实页
+- 不满意的图告诉我替换（1280 张候选印样还在 /tmp/prs-curation/ 可回查）
 
-## Decisions Made
+### 2. 确认后上 R2（我来跑）
 
-- **施工页面统一路由**: 所有占位链接统一指向 /under-construction，不带查询参数
-- **摄影主题趣味风**: SVG 相机/胶卷装饰 + 渐变文字 + 趣味文案
-- **功能编号调整**: 施工页面插入为 feat-015，后续功能顺延为 feat-016~019
+- 执行 `python3 scripts/welfare-gallery/import.py --r2`
+  重新生成数据（切 R2 绝对 URL）
+- 按脚本打印的 40 条 `wrangler r2 object put`
+  命令上传（只传入选图，immutable 缓存头）
+- 清理 `public/r2-preview/`（本地排除目录，直接删）
+- 提交 + 推送 → Cloudflare Pages 自动部署
 
-## Blockers / Risks
+### 3. 遗留决策（不急）
 
-- 无当前阻塞项
+- **og:image**：待 R2 上传后把首图绝对 URL 接进 gallery.astro 的 SEOHead
+- **sitemap**：项目没有 @astrojs/sitemap 集成，要不要加是依赖决策
+- **署名**：数据文件已保留 author/age 字段，未来要展示只改 GalleryWall 显示逻辑
+
+## 已知事项
+
+- 并行会话 `feat/gallery-polish`（Gallery
+  Lab 实验）在隔壁分支跑，与本项目无冲突；共享工作区有切分支前科，**合并前确认分支状态**
+- dev server 是夜间自动化留下的（4321 端口），不用可杀
+- 素材原片（1280 张）始终只在桌面，R2 只有 40 张入选
 
 ## Next Session Startup
 
-1. Read `AGENTS.md`.
-2. Read `feature_list.json` and `progress.md`.
-3. Review this handoff.
-4. Run `./init.sh` or the documented verification command before editing.
-
-## Recommended Next Step
-
-- 合并文档更新 PR 到 main
-- 后续可继续实现 feat-016（作品展示画廊）到 feat-019（加入小组入口）的功能
+1. Read `AGENTS.md`、本文件、`progress.md` 末尾 9 条迭代记录
+2. `git branch --show-current` 确认在 `feat/bring-her-eyes-portfolio`
+3. `./init.sh` 验证基线
