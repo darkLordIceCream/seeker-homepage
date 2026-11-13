@@ -457,10 +457,17 @@ const anchor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     }
   });
 
-  // 滚过第一屏 60% 后，导航切换为玻璃实底
+  // 滚过第一屏 60% 后，导航切换为玻璃实底。
+  // 阈值不高于 Hero 实际高度：移动端视频首屏矮（16:9 ≈ 56vw，可能低于
+  // 0.6×视口高），按 0.6 阈值会永远不落地——logo 白字压亮底不可读
   const navigation = document.querySelector('.navigation');
+  const hero = document.querySelector<HTMLElement>('.banner');
   const onScroll = () => {
-    navigation?.classList.toggle('scrolled', window.scrollY > window.innerHeight * 0.6);
+    const threshold = Math.min(
+      window.innerHeight * 0.6,
+      Math.max(80, (hero?.offsetHeight ?? window.innerHeight) - 70),
+    );
+    navigation?.classList.toggle('scrolled', window.scrollY > threshold);
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

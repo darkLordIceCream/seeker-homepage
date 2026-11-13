@@ -2717,3 +2717,82 @@ shadcn 变量名上直接换值为 Seeker 色板 + 新增 --seeker-navy/blue/sky
 - 2026-11-04 07:50 迭代9（收尾）：全链路终检（type-check/lint/build
   0 错，浏览器 QA
   0 失效资源/0 坏图/meta 正确，桌面+375px 均过）；session-handoff.md 重写为晨间交接（旧内容为 feat-015 时代过期状态）；自动化至 08:00 由下一次 cron 触发自停
+
+### 2026-11-05~11-14 · feat/bring-her-eyes-portfolio · 小摄影师的作品集 精修与 v2 定稿（收尾摘要）
+
+- 2026-11-05 装裱精修 7 轮（Critic 6.5→7.98）+ 策展落地（Editor「零编排错误」）→
+  R5 收口 8.6；细节全记 docs/gallery-iteration-log.md
+- 2026-11-06 用户放行 R2 上传：40 原图 + 40
+  thumb（immutable 头），数据切 R2 绝对 URL（d9c42c1）
+- 2026-11-07 用户否定装裱路线（「不要相框和阴影直接放图片、文字精简、参考七周年但不照抄」）→
+  v2 裸照片重设计（恒定舞台 contain、极简图注、三行章眉、双主题 .bhe），Critic
+  8.6 deliverable
+- 2026-11-13 用户报「翻页不了」→ 双重根因修复（data-viewer 属性丢失 +
+  ph-index 作用域 TypeError 断链）
+- 2026-11-14 用户报「按钮跟随照片移动」→ 图注行恒定满宽按钮固定（Critic 8.1
+  deliverable）；用户报「点进网页自动跳底」→
+  Chrome 焦点恢复链修复（删 autofocus + scrollRestoration=manual +
+  snapTop 兜底 + 灯箱视口锚定 openerScroll）
+- 终验：五章翻页（按钮+键盘）、灯箱开合/翻页/滚动锁恢复全通，y=1200 开关灯箱零漂移、重导航停顶部；type-check/lint/build 全绿
+
+### 2026-11-06 · Gallery 3.0 白盒美术馆门厅 + /gallery 档案馆（feat/gallery-redesign 分支）
+
+- 用户命题：国际摄影展览级观感、Hero 翻下来第一眼是靶心、简洁大气主页 + 内容丰富的二级页（入口点不点两可）；入口文案定「更多精彩 →」
+- GalleryArtCritic 评审 7.5/10：骨架第一次对了，但定妆+轮换+等高满宽互相打架、墙会贴边；P0 六条全采纳，定妆换血为组合 A《不要回答》+《静谧》（原候选两张城市夜景同族单调）
+- WorksSection 重写：两件作品等高满宽零裁切、fitWall 双重反解（视口高预算 + 水平余白下限 clamp(48,6vw,120)）、展厅垂直居中、衬线大标题与墙同格线
+- gallery-cycle.ts 扩展：gateEl 视口门控（t0=进视口，首换 ≥t0+3s）、twoStage 两段式换场（700ms 淡出→150ms 空墙→500ms 淡入）、exclusive 全局错峰、shuffle 每槽洗牌袋（防 7 张小池连重）
+- 新增 /gallery：justified
+  rows（flex-grow/basis 均用 --ar 表达，换行行内等高）、No.01–33 编号（ARCHIVE_LEAD 策展序先行）、作者索引直开灯箱（33 位作者每人 1 件，chips 过滤是死胡同）、统计行
+- 共享化：gallery-lightbox.ts（片单制 getSlides + archiveHref 走廊链接）+
+  gallery-lightbox.css；门厅灯箱翻遍全池且翻页序=藏品编号序
+- 缩略图管线 scripts/make-gallery-thumbs.mjs：33 张长边 960 WebP q82 → R2
+  gallery/thumbs/（immutable 新 key 无缓存坑），网格 ~2.5MB 替代 ~20MB 原图墙
+- 实测：init.sh 全绿；定妆第一眼/门控 8s 不偷跑/墙宽 1267 精确余白/空墙换场/灯箱键盘触屏/作者索引/暗色描边/移动端竖图 56vh 主视觉 + 档案馆单列 全过
+- 待办：ken
+  burns（P2 可选）、导航「作品展示」是否改指 /gallery（等用户拍板，scrollspy 联动）
+
+### 2026-11-06 · Gallery 3.0 Critic 迭代循环闭环（第三轮终审 satisfied 9.1/10）
+
+- 迭代过程：首轮方案评审 7.5 → 实现 commit 0efcffd → 二轮成品评审 8.2
+  not-satisfied（放行集五条）→ 修复 ce08940 → 三轮终审 9.1 **satisfied 放行**
+- 二轮八项修复全部实测：空墙幽灵框（is-swapping 期 shadow:none）、灯箱 portal
+  body + z1400（计数「27 /
+  33」可读、壳层没入暗幕）、标题墙共线（87=87）、藏品编号 No.→PL.、轮换 6–10s、角卡看展让位（is-docked
+  left=1476）、移动端索引横滑（230→42px）、移动端导航落地阈值修复（min(0.6vh,
+  hero−70)，scrolled:true logo 深字）
+- 用户中途指令（0a8f503）：档案馆删「N 件作品 ·
+  M 位作者」统计行与作者索引——标题即门牌，Critic 认可为「更接近美术馆进门逻辑」，按此形态放行
+- Critic 独立复测方式：亲自上 4322 实机采样（双视口双主题、真实换场捕获、灯箱 portal/zIndex/滚动锁），非仅采信截图
+- 非阻塞遗留（后续优化清单）：① 灯箱开启时底部 dock 极淡微透，可令其隐没 ② 档案馆顶部留白可再压半档 ③ 导航「作品展示」是否改指 /gallery 待用户拍板
+- 环境备注：主工作区被并行会话切至 feat/bring-her-eyes-portfolio，gallery 全程在 worktree（seeker-gallery-worktree）+
+  4322 端口隔离开发
+
+### 2026-11-07 · Gallery 3.1 素材池扩容 + 随机播放（feat/gallery-random-pool 分支，未推送）
+
+- 用户三条裁决：①
+  R2 除公益外全部图片可作画廊素材 ② 点进去就是随机播放 ③ 第一张图别挂太久
+- ARCHIVE_POOL = 问卷 33 + 《时间的故事》全部期数 + 追光之旅（meta 2185
+  key 合成，剔长卷条幅 60 + committee 拼贴 64）→ 2094 件全池
+- randomizeFirst：hydration 即随机换首图（门厅 SSR 首图仅 CLS 兜底）；firstDelay 门控后首轮 2.5–4.5s，此后 6–10s
+- 档案馆全池上墙（justified rows +
+  PL 四位编号 + 缩略图 thumbs/<key>.webp 镜像 2094 张已传 R2）
+- Critic 3.1 评审 7.6 not-satisfied
+  → 放行集三项 P0 修复（aa1591f）：firstDelay 死代码真接线（自报数据被 Critic 复现证伪——首换实测当时是 randomizeFirst 时长误读）、墙序期数数值降序（src 直排把 2026-XX 垫底）、committee 剔除；随车 P1 首抽精选层（firstPool：问卷 ∪
+  cover，随机下限）+ P2 图注 series 去书名号
+- 复测全过：门控后首换落窗、墙序 2061 项零违规（故事降序 + 追光后置）、墙面 committee 零残留、首抽抽中问卷精选；astro
+  check 0 错
+- Critic 协议：凭复测数据放行，无需再走完整评审
+- P2 遗留：移动端隐藏槽仍拉原图、懒加载空框内衬色、404 缩略图 CDN 缓存自愈、墙尾长卷专条
+
+### 2026-11-14 · 档案馆随机排墙 + 图注极简 + 真署名上墙（同分支追加，未推送）
+
+- 用户裁决：①
+  PL 藏品编号删、图注只留作品名@作者 ② 每次点开墙序随机（028e706：hydration
+  Fisher-Yates 重挂 DOM，灯箱片单随 DOM 序联动）
+- Critic 备案评审：工程忠实性干净，但抓 P1——洗牌重排前 SSR 定序闪现（2094 节点位移 +
+  CLS 回归）→ 揭幕门控修复（head inline 类 + visibility 门控 + 2.5s 兜底）
+- 用户指正「作品名都成了@Seeker追光者」→ 挖内容集合真数据（f938373）：build-activity-credits.mjs 解析 66 期 entries +
+  4 届追光 → activity-credits.generated.ts
+  2009 条真署名（故事 ~99% 覆盖）；author=真名、追光作品回归书名号、alt=作者手记
+- 复测：满墙真名（@张伟靖/@卿/@柯雷…）、灯箱联动 187/2094《怪天气》@纯黑的林桑、astro
+  check/lint 0 错、揭幕状态机正常

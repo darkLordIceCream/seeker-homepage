@@ -359,11 +359,27 @@
     },
     {
       "id": "feat-046",
-      "name": "小摄影师的作品集——带上她的眼睛作品集画廊",
-      "description": "公益板块新增学生作品集：/welfare/gallery/ 按主题分章（第1期40张/14校/5主题：他们看镜头、操场与游戏、课堂之间、校园一角、窗外），章内序列式观看（一次一张不裁切+缩略图索引+←→/键盘/触屏滑动），lightbox 移植 photoreason/skills MIT（锚定缩放1-4x、拖拽平移、分层Esc、history返回关闭、LQIP 主色占位渐变）。落地页 /welfare/ 新增入口区块（五主题首图拍立得瓷砖+CTA）。素材管线 scripts/welfare-gallery/import.py：每两周一批，精选清单→PIL压缩(长边2560/WebP q82)+主色提取→生成 src/data/welfare-gallery.ts 与 wrangler 上传命令；R2 只存入选图，URL 不含学生姓名；署名保留字段暂不展示。数据文件为生成物（eslint/prettier 忽略）。",
-      "status": "in_progress",
+      "name": "Gallery 3.0 白盒美术馆门厅 + /gallery 作品档案馆",
+      "description": "首页画廊重构为白盒门厅（1 主作横图 + 1 竖图、博物馆标签、更多精彩入口、开场定妆+呼吸轮换）；新增 /gallery 档案馆（等高行 justified rows、No.XX 藏品编号、作者索引直开灯箱、缩略图网格）。GalleryArtCritic 评审 7.5/10 后 P0 全采纳：视口门控保定妆、槽内比例带宽（主作 1.48–1.62/竖图 0.657–0.686）、白盒余白下限 6vw、两段式换场（旧帧淡出→空墙→新帧淡入）、暗色 1px 内描边、作者索引替代单结果筛选。共享 gallery-lightbox.ts（灯箱=门厅与档案馆走廊，翻遍全池 33 件）",
+      "dependencies": ["feat-044"],
+      "status": "done",
+      "evidence": "./init.sh 全绿（type-check 0 错/lint 0 错/build 81 页）；浏览器实测：定妆第一眼亮色白盒成立、Hero 停 8s 门控不偷跑、墙宽 1267=1440−2×86.4 余白下限精确、两槽等高 575px 零裁切、竖图带内轮换+空墙换场实测、灯箱 25/33 翻页与 Esc/滚动锁、作者索引点沐开 2/33《静谧》、暗色内描边保直角、移动端竖图 56vh 主视觉+档案馆单列；缩略图 33 张已上传 R2 gallery/thumbs/（长边 960 WebP q82，网格加载 ~2.5MB 对比原图 ~20MB）；Critic 三轮迭代闭环：7.5→8.2→9.1 satisfied 放行（空墙幽灵框/灯箱熄灯/共线/PL.编号/6-10s/角卡让位/索引横滑/导航落地八项修复，用户删统计行+索引为最终形态 0a8f503）"
+    },
+    {
+      "id": "feat-047",
+      "name": "Gallery 3.1 素材池扩容 + 门厅随机播放 + 档案馆全池上墙",
+      "description": "用户三条裁决：R2 除公益外全部图片入池（ARCHIVE_POOL 2094 件 = 问卷 33 + 活动期数 + 追光之旅，剔条幅与 committee 拼贴）；门厅随机播放（randomizeFirst hydration 首抽精选层 + firstDelay 门控后首轮 2.5–4.5s）；档案馆全池上墙（缩略图镜像 thumbs/<key>.webp 2094 张）",
+      "dependencies": ["feat-046"],
+      "status": "done",
+      "evidence": "astro check 0 错；Critic 3.1 评审 7.6 not-satisfied → 放行集 P0×3 修复后按协议凭复测数据放行：门控后首换落 2.5–4.5s 窗口、墙序 2061 项零违规、committee 零残留、首抽抽中精选层；追加：档案馆随机排墙+PL 移除（用户裁决 028e706，Critic P1 揭幕门控随修）+真署名上墙（activity-credits.generated.ts 2009 条，用户指正 f938373）——满墙真名实测、灯箱 187/2094 联动、astro check/lint 0 错"
+    },
+    {
+      "id": "feat-048",
+      "name": "小摄影师的作品集——带上她的眼睛作品集画廊（v2 裸照片）",
+      "description": "公益板块新增学生作品集：/welfare/gallery/ 按主题分章（第1期40张/14校/5主题：他们看镜头、操场与游戏、课堂之间、校园一角、窗外）。v2 按用户方向重设计：裸照片（无相框无阴影、恒定舞台 contain）、极简图注（校名·周次+计数+固定位置翻页按钮，图注行恒定满宽横竖图零漂移）、七周年式三行章眉、双主题（.bhe 局部令牌跟随主站 .dark）。章内序列观看（线性翻页+键盘+触屏滑动+端点禁用+缩略图索引按需构建+邻图预热 rIC+saveData+无 JS 降级）。灯箱移植 photoreason/skills MIT（锚定缩放 1-4x、拖拽平移、分层 Esc、pushState 关闭+视口锚定开/关零漂移）。落地页 /welfare/ 入口区块（裸 thumb 瓷砖+CTA）。素材管线 scripts/welfare-gallery/import.py：精选清单→PIL 压缩(长边2560/WebP q82)+thumb 变体+LQIP tone 提取→生成 src/data/welfare-gallery.ts（生成物勿手改）→wrangler 上传命令；R2 只存入选图（40 原图+40 thumb 已上传，immutable 头），URL 不含学生姓名；署名保留字段暂不展示。",
+      "status": "done",
       "branch": "feat/bring-her-eyes-portfolio",
-      "evidence": "commit bbeb722(v1)+a6d2223(淡入/滑动)+本轮 LQIP；type-check 0 错、lint 0 错、build 81 页、IAB 实测翻页/滑动/缩放/暗色模式通过"
+      "evidence": "GalleryArtCritic 六维轨迹 6.5→8.6 deliverable（v2 重设计终局）→按钮固定轮 8.1 deliverable；用户实测反馈三轮修复：翻页断链（data-viewer 属性丢失+ph-index 作用域 TypeError）、按钮位置固定（图注行满宽）、重进页面跳底（Chrome 焦点恢复链：删 autofocus+scrollRestoration=manual+snapTop 兜底+showModal/关闭视口锚定）。终验线上实测：五章翻页（按钮+键盘）全通、灯箱开合/翻页/滚动锁恢复全通、y=1200 开关灯箱零漂移、重导航停顶部、移动端 375px。type-check 0 错、lint 0 错、build 81 页。全程轨迹 docs/gallery-iteration-log.md"
     }
   ]
 }
